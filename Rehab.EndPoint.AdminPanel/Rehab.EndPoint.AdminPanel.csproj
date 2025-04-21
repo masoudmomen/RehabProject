@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Rehab.Application\Rehab.Application.csproj" />
     <ProjectReference Include="..\Rehab.Persistence\Rehab.Persistence.csproj" />
   </ItemGroup>
 

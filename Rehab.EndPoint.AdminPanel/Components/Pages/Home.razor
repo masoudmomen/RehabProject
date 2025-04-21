@@ -1,7 +1,50 @@
 ﻿@page "/"
+@using AutoMapper
+@using Rehab.EndPoint.AdminPanel.Viewmodels;
+
+
+@inject IUserService UserService
+@inject IMapper mapper
 
 <PageTitle>Home</PageTitle>
 
 <h1>Hello, world!</h1>
 
 Welcome to your new app.
+
+<EditForm Model="User" OnValidSubmit="Add">
+
+</EditForm>
+
+
+@if(userList is not null)
+{
+    foreach (var item in userList)
+    {
+        <div>@item.Name</div>
+    }
+}
+
+
+
+
+@code{
+    public UserViewmodel User { get; set; }
+    private List<UserViewmodel>? userList;
+
+    private void Add()
+    {
+        if (User is not null)
+        {
+            UserService.Add();
+        }
+    }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        userList = mapper.Map<List<UserViewmodel>>(UserService.GetAll());
+    }
+
+
+}

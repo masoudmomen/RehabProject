@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Rehab.Application.Contexts;
+using Rehab.Application.Users;
 using Rehab.EndPoint.AdminPanel.Components;
 using Rehab.Persistence.Contexts;
 
@@ -15,6 +16,10 @@ var connection = builder.Configuration["ConnectionString:sqlServer"];
 builder.Services.AddDbContext<DatabaseContext>(option => option.UseSqlServer(connection));
 #endregion
 
+
+#region IOC
+builder.Services.AddTransient<IUserService, UserService>();
+#endregion
 
 
 
