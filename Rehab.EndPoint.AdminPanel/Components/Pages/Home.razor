@@ -12,39 +12,49 @@
 
 Welcome to your new app.
 
-<EditForm Model="User" OnValidSubmit="Add">
+<form method="post" @onsubmit="AddUser" @formname="AddUserForm" data-enhance="true">
+    <AntiforgeryToken></AntiforgeryToken>
+    <InputText @bind-Value="User!.Name"></InputText>
+    <button type="submit" class="btn btn-success">Save</button>
+</form>
 
-</EditForm>
 
-
-@if(userList is not null)
+@* @if(userList is not null)
 {
     foreach (var item in userList)
     {
         <div>@item.Name</div>
     }
-}
+} *@
 
 
 
 
 @code{
-    public UserViewmodel User { get; set; }
-    private List<UserViewmodel>? userList;
+    [SupplyParameterFromForm]
+    private UserViewmodel? User { get; set; }
 
-    private void Add()
+    protected override void OnInitialized() => User ??= new();
+
+    // private List<UserViewmodel>? userList;
+
+    public void AddUser()
     {
-        if (User is not null)
+        if (!string.IsNullOrEmpty(User!.Name))
         {
-            UserService.Add();
+            var result = UserService.Add(mapper.Map<UserDto>(User));
+            if (result != null)
+            {
+                User = new();
+            }
         }
     }
 
-    protected override void OnInitialized()
-    {
-        base.OnInitialized();
-        userList = mapper.Map<List<UserViewmodel>>(UserService.GetAll());
-    }
+    // protected override void OnInitialized()
+    // {
+    //     base.OnInitialized();
+    //     userList = mapper.Map<List<UserViewmodel>>(UserService.GetAll());
+    // }
 
 
 }

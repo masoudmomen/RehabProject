@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Rehab.Application.Contexts;
 using Rehab.EndPoint.Web.Components;
+using Rehab.Infrastructure.MappingProfile;
 using Rehab.Persistence.Contexts;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,6 +15,9 @@ var connection = builder.Configuration["ConnectionString:sqlServer"];
 builder.Services.AddDbContext<DatabaseContext>(option=>option.UseSqlServer(connection));
 #endregion
 
+#region IOC
+builder.Services.AddAutoMapper(typeof(CommonMappingProfile)); //Mapper
+#endregion
 
 
 var app = builder.Build();

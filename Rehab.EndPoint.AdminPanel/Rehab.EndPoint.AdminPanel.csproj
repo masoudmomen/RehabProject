@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Rehab.Application\Rehab.Application.csproj" />
+    <ProjectReference Include="..\Rehab.Infrastructure\Rehab.Infrastructure.csproj" />
     <ProjectReference Include="..\Rehab.Persistence\Rehab.Persistence.csproj" />
   </ItemGroup>
 
