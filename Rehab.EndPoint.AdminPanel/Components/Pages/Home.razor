@@ -8,9 +8,6 @@
 
 <PageTitle>Home</PageTitle>
 
-<h1>Hello, world!</h1>
-
-Welcome to your new app.
 
 <form method="post" @onsubmit="AddUser" @formname="AddUserForm" data-enhance="true">
     <AntiforgeryToken></AntiforgeryToken>
@@ -19,13 +16,13 @@ Welcome to your new app.
 </form>
 
 
-@* @if(userList is not null)
+@if(userList is not null)
 {
     foreach (var item in userList)
     {
         <div>@item.Name</div>
     }
-} *@
+}
 
 
 
@@ -34,9 +31,8 @@ Welcome to your new app.
     [SupplyParameterFromForm]
     private UserViewmodel? User { get; set; }
 
-    protected override void OnInitialized() => User ??= new();
 
-    // private List<UserViewmodel>? userList;
+    public List<UserViewmodel>? userList { get; set; }
 
     public void AddUser()
     {
@@ -45,16 +41,17 @@ Welcome to your new app.
             var result = UserService.Add(mapper.Map<UserDto>(User));
             if (result != null)
             {
+                userList?.Add(User);
                 User = new();
             }
         }
     }
 
-    // protected override void OnInitialized()
-    // {
-    //     base.OnInitialized();
-    //     userList = mapper.Map<List<UserViewmodel>>(UserService.GetAll());
-    // }
-
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        User ??= new();
+        userList = mapper.Map<List<UserViewmodel>>(UserService.GetAll());
+    }
 
 }
