@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Rehab.Domain.Facilities;
 using Rehab.Domain.Users;
 using System;
 using System.Collections.Generic;
@@ -11,6 +12,7 @@ namespace Rehab.Application.Contexts
     public interface IDatabaseContext
     {
         DbSet<User> Users { get; set; }
+        DbSet<Facility> Facilities { get; set; }
         int SaveChanges();
         int SaveChanges(bool acceptAllChangesOnSuccess);
         Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default);
