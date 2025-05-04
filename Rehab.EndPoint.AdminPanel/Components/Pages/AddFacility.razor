@@ -1,0 +1,22 @@
+﻿@using Rehab.EndPoint.AdminPanel.Viewmodels
+<h3>AddFacility</h3>
+<form method="post" @onsubmit="Add" @formname="addFacilityForm" data-enhance="true">
+    <div class="row">
+        <div class="col-4">
+            <label for="exampleInputEmail1" class="form-label">Email address</label>
+            <InputText @bind-Value="Facility.Name" type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"></InputText>
+        </div>
+    </div>
+</form>
+@code {
+    [SupplyParameterFromForm]
+    public FacilityViewmodel Facility { get; set; } = new();
+
+
+
+    private void Add()
+    {
+
+    }
+
+}
