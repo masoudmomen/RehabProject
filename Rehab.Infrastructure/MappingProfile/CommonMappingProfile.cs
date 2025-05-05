@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using Rehab.Application.Facilities;
 using Rehab.Application.Users;
+using Rehab.Domain.Facilities;
 using Rehab.Domain.Users;
 using System;
 using System.Collections.Generic;
@@ -15,6 +17,7 @@ namespace Rehab.Infrastructure.MappingProfile
         public CommonMappingProfile() 
         {
             CreateMap<User, UserDto>().ReverseMap();
+            CreateMap<Facility, FacilityDto>().ReverseMap();
         }
     }
 }

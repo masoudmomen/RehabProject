@@ -1,10 +1,38 @@
-﻿@using Rehab.EndPoint.AdminPanel.Viewmodels
+﻿@page "/facility/add"
+@using AutoMapper
+@using Rehab.Application.Common
+@using Rehab.Application.Facilities
+@using Rehab.EndPoint.AdminPanel.CommonService
+@using Rehab.EndPoint.AdminPanel.Viewmodels
+@inject IFacilityService FacilityService
+@inject AutoMapper.IMapper mapper
+
+
+
 <h3>AddFacility</h3>
 <form method="post" @onsubmit="Add" @formname="addFacilityForm" data-enhance="true">
+    <AntiforgeryToken></AntiforgeryToken>
     <div class="row">
         <div class="col-4">
-            <label for="exampleInputEmail1" class="form-label">Email address</label>
-            <InputText @bind-Value="Facility.Name" type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"></InputText>
+            <label for="name" class="form-label">Name</label>
+            <InputText @bind-Value="Facility.Name" class="form-control" id="name"></InputText>
+        </div>
+        <div class="col-4">
+            <label for="address" class="form-label">Address</label>
+            <InputText @bind-Value="Facility.Address" class="form-control" id="address"></InputText>
+        </div>
+        <div class="col-4">
+            <label for="phoneNumber" class="form-label">PhoneNumber</label>
+            <InputText @bind-Value="Facility.PhoneNumber" class="form-control" id="phoneNumber"></InputText>
+        </div>
+    </div>
+
+    <div class="row">
+        <Rehab.EndPoint.AdminPanel.Components.Controls.UsaStateCitySelectorComponent></Rehab.EndPoint.AdminPanel.Components.Controls.UsaStateCitySelectorComponent>
+    </div>
+    <div class="row mt-1">
+        <div class="col-4">
+            <button type="submit" class="btn btn-primary">Add</button>
         </div>
     </div>
 </form>
@@ -12,11 +40,20 @@
     [SupplyParameterFromForm]
     public FacilityViewmodel Facility { get; set; } = new();
 
+    private BaseDto<FacilityDto> AddResult = new();
+
 
 
     private void Add()
     {
-
+        if(Facility is not null)
+        {
+            AddResult = FacilityService.Add(mapper.Map<FacilityDto>(Facility));
+        }
     }
 
+
+
+
+    
 }

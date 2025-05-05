@@ -1,7 +1,9 @@
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Rehab.Application.Contexts;
+using Rehab.Application.Facilities;
 using Rehab.Application.Users;
+using Rehab.EndPoint.AdminPanel.CommonService;
 using Rehab.EndPoint.AdminPanel.Components;
 using Rehab.EndPoint.AdminPanel.MappingProfile;
 using Rehab.Persistence.Contexts;
@@ -23,6 +25,9 @@ builder.Services.AddDbContext<DatabaseContext>(option => option.UseSqlServer(con
 builder.Services.AddAutoMapper(typeof(CommonMappingProfile)); //Mapper
 builder.Services.AddAutoMapper(typeof(Rehab.Infrastructure.MappingProfile.CommonMappingProfile)); //Mapper
 builder.Services.AddTransient<IUserService, UserService>();
+builder.Services.AddTransient<IFacilityService, FacilityService>();
+
+builder.Services.AddScoped<LocationService>();
 #endregion
 
 
