@@ -1,8 +1,8 @@
 ﻿@using Rehab.EndPoint.AdminPanel.CommonService
 
- <div class="col-4">
-    <select @onchange="OnStateChanged" class="form-select">
-        <option disabled selected>Choose a State</option>
+<div class="col-4">
+    <select @onchange="OnStateChanged" value="@SelectedState" class="form-select">
+        <option value="">Choose a State</option>
         @foreach(var s in States)
         {
             <option value="@s">@s</option>
@@ -10,16 +10,16 @@
     </select>
 </div>
 <div class="col-4">
-    @if(Cities?.Any() == true)
-    {
-        <select @bind="@SelectedCity" class="form-select mt-2">
-            <option disabled selected>Choose a City</option>
-            @foreach(var c in Cities)
-            {
-                <option value="@c">@c</option>
-            }
-        </select>
-    }
+    @* @if(Cities?.Any() == true)
+    { *@
+    <select @bind="@SelectedCity" class="form-select mt-2">
+        <option value="">Choose a City</option>
+        @foreach(var c in Cities)
+        {
+            <option value="@c">@c</option>
+        }
+    </select>
+    @* } *@
 </div>
 
 @inject LocationService LocationService
@@ -27,6 +27,7 @@
     //مربوط به api شهر و استان
     private List<string> States = new();
     private List<string> Cities = new();
+
     private string? SelectedState;
     private string? SelectedCity;
 
@@ -38,10 +39,13 @@
     private async Task OnStateChanged(ChangeEventArgs e)
     {
         SelectedState = e.Value?.ToString();
+        Console.WriteLine($"SelectedState changed to: {SelectedState}");
         if (!string.IsNullOrEmpty(SelectedState))
         {
             Cities = await LocationService.GetCitiesAsync(SelectedState);
             SelectedCity = null;
+            Console.WriteLine($"Cities loaded: {Cities.Count}");
+            StateHasChanged();
         }
     }
 }

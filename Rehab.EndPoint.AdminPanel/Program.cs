@@ -26,7 +26,7 @@ builder.Services.AddAutoMapper(typeof(CommonMappingProfile)); //Mapper
 builder.Services.AddAutoMapper(typeof(Rehab.Infrastructure.MappingProfile.CommonMappingProfile)); //Mapper
 builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<IFacilityService, FacilityService>();
-
+builder.Services.AddHttpClient();
 builder.Services.AddScoped<LocationService>();
 #endregion
 
