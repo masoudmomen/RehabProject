@@ -28,7 +28,19 @@
     </div>
 
     <div class="row">
-        <Rehab.EndPoint.AdminPanel.Components.Controls.UsaStateCitySelectorComponent></Rehab.EndPoint.AdminPanel.Components.Controls.UsaStateCitySelectorComponent>
+
+        
+
+        @* <select onkeydown="OnStateChanged" class="form-select">
+            <option value="">Choose a State</option>
+            @foreach (var s in States)
+            {
+                <option value="@s">@s</option>
+            }
+        </select> *@
+
+
+        @* <Rehab.EndPoint.AdminPanel.Components.Controls.UsaStateCitySelectorComponent></Rehab.EndPoint.AdminPanel.Components.Controls.UsaStateCitySelectorComponent> *@
     </div>
     <div class="row mt-1">
         <div class="col-4">
@@ -36,6 +48,10 @@
         </div>
     </div>
 </form>
+
+
+<button type="button" @onclick="OnStateChanged">test</button>
+@inject LocationService LocationService
 @code {
     [SupplyParameterFromForm]
     public FacilityViewmodel Facility { get; set; } = new();
@@ -55,5 +71,22 @@
 
 
 
+
+    //مربوط به api شهر و استان
+    private List<string> States = new();
+    private List<string> Cities = new();
+
+    private string? SelectedState;
+    private string? SelectedCity;
+
+    protected override async Task OnInitializedAsync()
+    {
+        States = await LocationService.GetStatesAsync();
+    }
+
+    private void OnStateChanged()
+    {
+        Console.WriteLine($"SelectedState changed");
+    }
     
 }

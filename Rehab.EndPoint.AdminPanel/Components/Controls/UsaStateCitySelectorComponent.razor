@@ -1,7 +1,7 @@
 ﻿@using Rehab.EndPoint.AdminPanel.CommonService
 
 <div class="col-4">
-    <select @onchange="OnStateChanged" value="@SelectedState" class="form-select">
+    <select @onclick="OnStateChanged" class="form-select">
         <option value="">Choose a State</option>
         @foreach(var s in States)
         {
@@ -36,16 +36,23 @@
         States = await LocationService.GetStatesAsync();
     }
 
-    private async Task OnStateChanged(ChangeEventArgs e)
+    private void OnStateChanged()
     {
-        SelectedState = e.Value?.ToString();
-        Console.WriteLine($"SelectedState changed to: {SelectedState}");
-        if (!string.IsNullOrEmpty(SelectedState))
-        {
-            Cities = await LocationService.GetCitiesAsync(SelectedState);
-            SelectedCity = null;
-            Console.WriteLine($"Cities loaded: {Cities.Count}");
-            StateHasChanged();
-        }
+        Console.WriteLine($"SelectedState changed");
     }
+
+
+
+    // private async Task OnStateChanged(ChangeEventArgs e)
+    // {
+    //     SelectedState = e.Value?.ToString();
+    //     Console.WriteLine($"SelectedState changed to: {SelectedState}");
+    //     if (!string.IsNullOrEmpty(SelectedState))
+    //     {
+    //         Cities = await LocationService.GetCitiesAsync(SelectedState);
+    //         SelectedCity = null;
+    //         Console.WriteLine($"Cities loaded: {Cities.Count}");
+    //         StateHasChanged();
+    //     }
+    // }
 }
