@@ -1,7 +1,12 @@
 ﻿@using Rehab.EndPoint.AdminPanel.CommonService
+@rendermode InteractiveServer
+@inject LocationService LocationService
+
+
 
 <div class="col-4">
-    <select @onclick="OnStateChanged" class="form-select">
+    <label for="state" class="form-label">State</label>
+    <select @onchange="OnStateChanged" id="state" class="form-select">
         <option value="">Choose a State</option>
         @foreach(var s in States)
         {
@@ -10,19 +15,19 @@
     </select>
 </div>
 <div class="col-4">
-    @* @if(Cities?.Any() == true)
-    { *@
-    <select @bind="@SelectedCity" class="form-select mt-2">
+    <label for="city" class="form-label">City</label>
+    @if(Cities?.Any() == true)
+    {
+    <select @bind="@SelectedCity" id="city" class="form-select">
         <option value="">Choose a City</option>
         @foreach(var c in Cities)
         {
             <option value="@c">@c</option>
         }
     </select>
-    @* } *@
+    }
 </div>
 
-@inject LocationService LocationService
 @code {
     //مربوط به api شهر و استان
     private List<string> States = new();
@@ -36,23 +41,14 @@
         States = await LocationService.GetStatesAsync();
     }
 
-    private void OnStateChanged()
+    private async Task OnStateChanged(ChangeEventArgs e)
     {
-        Console.WriteLine($"SelectedState changed");
+        SelectedState = e.Value?.ToString();
+        if (!string.IsNullOrEmpty(SelectedState))
+        {
+            Cities = await LocationService.GetCitiesAsync(SelectedState);
+            SelectedCity = null;
+            StateHasChanged();
+        }
     }
-
-
-
-    // private async Task OnStateChanged(ChangeEventArgs e)
-    // {
-    //     SelectedState = e.Value?.ToString();
-    //     Console.WriteLine($"SelectedState changed to: {SelectedState}");
-    //     if (!string.IsNullOrEmpty(SelectedState))
-    //     {
-    //         Cities = await LocationService.GetCitiesAsync(SelectedState);
-    //         SelectedCity = null;
-    //         Console.WriteLine($"Cities loaded: {Cities.Count}");
-    //         StateHasChanged();
-    //     }
-    // }
 }

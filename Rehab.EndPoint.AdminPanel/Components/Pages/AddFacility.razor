@@ -28,30 +28,35 @@
     </div>
 
     <div class="row">
-
-        
-
-        @* <select onkeydown="OnStateChanged" class="form-select">
-            <option value="">Choose a State</option>
-            @foreach (var s in States)
-            {
-                <option value="@s">@s</option>
-            }
-        </select> *@
-
-
-        @* <Rehab.EndPoint.AdminPanel.Components.Controls.UsaStateCitySelectorComponent></Rehab.EndPoint.AdminPanel.Components.Controls.UsaStateCitySelectorComponent> *@
+        <Rehab.EndPoint.AdminPanel.Components.Controls.UsaStateCitySelectorComponent></Rehab.EndPoint.AdminPanel.Components.Controls.UsaStateCitySelectorComponent>
+        <div class="col-4">
+            <label for="webSite" class="form-label">WebSite</label>
+            <InputText @bind-Value="Facility.WebSite" class="form-control" id="webSite"></InputText>
+        </div>
     </div>
+
+    <div class="row">
+        <div class="col-4">
+            <label for="name" class="form-label">Name</label>
+            <InputText @bind-Value="Facility.Email" class="form-control" id="name"></InputText>
+        </div>
+        <div class="col-4">
+            <label for="address" class="form-label">Address</label>
+            <InputText @bind-Value="Facility.Address" class="form-control" id="address"></InputText>
+        </div>
+        <div class="col-4">
+            <label for="phoneNumber" class="form-label">PhoneNumber</label>
+            <InputText @bind-Value="Facility.PhoneNumber" class="form-control" id="phoneNumber"></InputText>
+        </div>
+    </div>
+
     <div class="row mt-1">
         <div class="col-4">
             <button type="submit" class="btn btn-primary">Add</button>
         </div>
     </div>
 </form>
-
-
-<button type="button" @onclick="OnStateChanged">test</button>
-@inject LocationService LocationService
+ 
 @code {
     [SupplyParameterFromForm]
     public FacilityViewmodel Facility { get; set; } = new();
@@ -67,26 +72,4 @@
             AddResult = FacilityService.Add(mapper.Map<FacilityDto>(Facility));
         }
     }
-
-
-
-
-
-    //مربوط به api شهر و استان
-    private List<string> States = new();
-    private List<string> Cities = new();
-
-    private string? SelectedState;
-    private string? SelectedCity;
-
-    protected override async Task OnInitializedAsync()
-    {
-        States = await LocationService.GetStatesAsync();
-    }
-
-    private void OnStateChanged()
-    {
-        Console.WriteLine($"SelectedState changed");
-    }
-    
 }
