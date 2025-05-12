@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Rehab.Domain.Facilities;
+using Rehab.Domain.Insurances;
 using Rehab.Domain.Users;
 using System;
 using System.Collections.Generic;
@@ -13,6 +14,7 @@ namespace Rehab.Application.Contexts
     {
         DbSet<User> Users { get; set; }
         DbSet<Facility> Facilities { get; set; }
+        DbSet<Insurance> Insurances { get; set; }
         int SaveChanges();
         int SaveChanges(bool acceptAllChangesOnSuccess);
         Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default);

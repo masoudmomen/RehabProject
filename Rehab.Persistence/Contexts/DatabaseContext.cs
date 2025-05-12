@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Rehab.Application.Contexts;
 using Rehab.Domain.Facilities;
+using Rehab.Domain.Insurances;
 using Rehab.Domain.Users;
 using System;
 using System.Collections.Generic;
@@ -24,5 +25,6 @@ namespace Rehab.Persistence.Contexts
         //DbSets : 
         public DbSet<User> Users { get; set; }
         public DbSet<Facility> Facilities { get; set; }
+        public DbSet<Insurance> Insurances { get; set; }
     }
 }

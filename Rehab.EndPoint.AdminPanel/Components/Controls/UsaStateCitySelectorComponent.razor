@@ -16,16 +16,17 @@
 </div>
 <div class="col-4">
     <label for="city" class="form-label">City</label>
-    @if(Cities?.Any() == true)
-    {
+    
     <select @bind="@SelectedCity" id="city" class="form-select">
         <option value="">Choose a City</option>
-        @foreach(var c in Cities)
+        @if(Cities?.Any() == true)
         {
-            <option value="@c">@c</option>
+            @foreach(var c in Cities)
+            {
+                <option value="@c">@c</option>
+            }
         }
     </select>
-    }
 </div>
 
 @code {
