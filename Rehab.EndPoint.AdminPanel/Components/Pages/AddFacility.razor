@@ -6,6 +6,17 @@
 @using Rehab.EndPoint.AdminPanel.Viewmodels
 @inject IFacilityService FacilityService
 @inject AutoMapper.IMapper mapper
+@inject IJSRuntime JS
+@rendermode InteractiveServer
+
+
+<!-- Spinner Start -->
+<div id="spinner" class=" bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center show">
+    <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+        <span class="sr-only">Loading...</span>
+    </div>
+</div>
+<!-- Spinner End -->
 
 
 
@@ -50,6 +61,18 @@
         </div>
     </div>
 
+    <div class="row">
+        <div class="col-8">
+            <label for="name" class="form-label">Accreditation</label>
+            <textarea  class="form-control" id=""></textarea>
+        </div>
+        
+        <div class="col-4">
+            <label for="phoneNumber" class="form-label">PhoneNumber</label>
+            <InputText @bind-Value="Facility.PhoneNumber" class="form-control" id="phoneNumber"></InputText>
+        </div>
+    </div>
+
     <div class="row mt-1">
         <div class="col-4">
             <button type="submit" class="btn btn-primary">Add</button>
@@ -63,7 +86,26 @@
 
     private BaseDto<FacilityDto> AddResult = new();
 
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        Console.WriteLine($"first render is : {firstRender}");
+        if (firstRender)
+        {
+            await LoadScriptAsync("js/AddFacility/spinner.js");
+        }
+    }
 
+    private async Task LoadScriptAsync(string src)
+    {
+        await JS.InvokeVoidAsync("eval", $@"
+            (() => {{
+                let script = document.createElement('script');
+                script.src = '{src}';
+                script.async = true;
+                document.head.appendChild(script);
+            }})();
+        ");
+    }
 
     private void Add()
     {

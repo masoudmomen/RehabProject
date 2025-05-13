@@ -1,4 +1,4 @@
-﻿Name-
+Name-
 City-
 State-
 Website-
@@ -7,16 +7,17 @@ About Facility-
 Logo
 Phone Number-
 Email-
-Insurance
+Insurance-
 isverified-
 Founded-
-Accreditation
+Accreditation -- string
 Occupancy-
 Who We Treat-
 Languages ?
 Levels Of Care
 Drugs
 Clinical Services
-Amenities?
+Amenities? -----------------[icon - title - [tags]]
 Tags for program ?
 Languages-
+provider's policy --string
