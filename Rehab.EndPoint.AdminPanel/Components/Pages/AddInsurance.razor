@@ -1,0 +1,40 @@
+﻿@page "/insurance/add"
+@using Rehab.Application.Insurances
+@using Rehab.EndPoint.AdminPanel.Viewmodels
+@inject Rehab.Application.Insurances.IInsuranceService InsuranceService
+@inject AutoMapper.IMapper mapper
+@rendermode InteractiveServer
+@inject AlertService AlertService
+
+<div class="w-75 mx-auto p-4">
+    <h3>AddInsurance</h3>
+
+    <EditForm Model="Insurance" OnValidSubmit="Add" class="form-control ">
+        <AntiforgeryToken></AntiforgeryToken>
+        <DataAnnotationsValidator></DataAnnotationsValidator>
+        <ValidationSummary class="text-danger" />
+        <InputText @bind-Value="Insurance.Name" class="form-control my-2"></InputText>
+        <InputFile @bind-Value="Insurance.Logo" class="form-control my-2"></InputFile>
+        <InputTextArea @bind-Value="Insurance.Description" class="form-control my-2"></InputTextArea>
+
+        <button class="btn btn-primary my-2">Add</button>
+    </EditForm>
+</div>
+
+
+@code {
+    public InsuranceViewmodel Insurance { get; set; } = new();
+    public ResultViewmodel<InsuranceViewmodel> Result { get; set; } = new();
+
+    private async Task Add()
+    {
+        if (Insurance is not null)
+        {
+            var insuranceDto = mapper.Map<InsuranceDto>(Insurance);
+            BaseDto<InsuranceDto> result = InsuranceService.Add(insuranceDto);
+            Result = mapper.Map<ResultViewmodel<InsuranceViewmodel>>(result);
+            if (Result.Success) Insurance = new();
+            await AlertService.ShowAsync(Result.Message,Result.Status);
+        }
+    }
+}

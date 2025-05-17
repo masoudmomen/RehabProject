@@ -11,7 +11,7 @@ Insurance-
 isverified-
 Founded-
 Accreditation -- string
-Occupancy-
+Occupancy- --string
 Who We Treat-
 Languages ?
 Levels Of Care
@@ -19,5 +19,4 @@ Drugs
 Clinical Services
 Amenities? -----------------[icon - title - [tags]]
 Tags for program ?
-Languages-
 provider's policy --string

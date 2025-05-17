@@ -1,7 +1,9 @@
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Rehab.Application.Common;
 using Rehab.Application.Contexts;
 using Rehab.Application.Facilities;
+using Rehab.Application.Insurances;
 using Rehab.Application.Users;
 using Rehab.EndPoint.AdminPanel.CommonService;
 using Rehab.EndPoint.AdminPanel.Components;
@@ -26,8 +28,10 @@ builder.Services.AddAutoMapper(typeof(CommonMappingProfile)); //Mapper
 builder.Services.AddAutoMapper(typeof(Rehab.Infrastructure.MappingProfile.CommonMappingProfile)); //Mapper
 builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<IFacilityService, FacilityService>();
+builder.Services.AddTransient<IInsuranceService, InsuranceService>();
 builder.Services.AddHttpClient();
 builder.Services.AddScoped<LocationService>();
+builder.Services.AddScoped<AlertService>();
 #endregion
 
 

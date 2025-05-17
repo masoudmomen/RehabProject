@@ -275,3 +275,9 @@
     background: var(--dark);
     border-color: var(--primary);
 }
+
+.alertPosition{
+    position:relative;
+    left: 12.5%;
+    z-index:1000;
+}

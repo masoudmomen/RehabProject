@@ -15,7 +15,7 @@ namespace Rehab.Domain.Facilities
         public string City { get; set; } = string.Empty;
         public string State { get; set; } = string.Empty;
         public string Address { get; set; } = string.Empty;
-        public string WhoWeTreat { get; set; } = string.Empty;
+        public short? WhoWeTreat { get; set; } 
         public string Description { get; set; } = string.Empty;
         public string PhoneNumber { get; set; } = string.Empty;
         public string WebSite { get; set; } = string.Empty;

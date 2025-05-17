@@ -1,0 +1,41 @@
+﻿@rendermode InteractiveServer
+
+@if (visible)
+{
+    <div class="@AlertClass alert-dismissible fade show mt-1 w-75 alertPosition" role="alert">
+        <i class="fa fa-exclamation-circle me-2"></i>@Message
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+@code {
+    [Inject] private AlertService AlertService { get; set; } = default!;
+
+    private bool visible = false;
+    private string Message { get; set; } = "";
+    private string AlertClass { get; set; } = "";
+
+    protected override void OnInitialized()
+    {
+        AlertService.OnShow += ShowAlert;
+    }
+
+
+    private async Task ShowAlert(string message, string type)
+    {
+        Message = message;
+        AlertClass = $"alert alert-{type}";
+        visible = true;
+        StateHasChanged();
+
+        await Task.Delay(3000);
+        await Hide();
+    }
+
+    private Task Hide()
+    {
+        visible = false;
+        StateHasChanged();
+        return Task.CompletedTask;
+    }
+}

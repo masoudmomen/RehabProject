@@ -1,4 +1,7 @@
-﻿using Rehab.Application.Common;
+﻿using AutoMapper;
+using Rehab.Application.Common;
+using Rehab.Application.Contexts;
+using Rehab.Domain.Insurances;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +13,33 @@ namespace Rehab.Application.Insurances
     public interface IInsuranceService
     {
         BaseDto<InsuranceDto> Add(InsuranceDto insurance);
+        List<InsuranceDto> GetList();
+    }
+
+    public class InsuranceService : IInsuranceService
+    {
+        private readonly IDatabaseContext context;
+        private readonly IMapper mapper;
+
+        public InsuranceService(IDatabaseContext context,IMapper mapper)
+        {
+            this.context = context;
+            this.mapper = mapper;
+        }
+        public BaseDto<InsuranceDto> Add(InsuranceDto insurance)
+        {
+            if (insurance == null) return BaseDto<InsuranceDto>.FailureResult("The Insurance data is null!");
+
+            context.Insurances.Add(mapper.Map<Insurance>(insurance));
+            if (context.SaveChanges() > 0) return BaseDto<InsuranceDto>.SuccessResult(insurance, "Insurance Added successfully.");
+
+            return BaseDto<InsuranceDto>.FailureResult("Operation Failed! Please try another time!");
+        }
+
+        public List<InsuranceDto> GetList()
+        {
+            return mapper.Map<List<InsuranceDto>>(context.Insurances.ToList());
+        }
     }
 
     public class InsuranceDto

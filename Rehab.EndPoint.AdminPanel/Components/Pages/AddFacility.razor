@@ -1,110 +1,99 @@
 ﻿@page "/facility/add"
 @using AutoMapper
-@using Rehab.Application.Common
 @using Rehab.Application.Facilities
-@using Rehab.EndPoint.AdminPanel.CommonService
 @using Rehab.EndPoint.AdminPanel.Viewmodels
 @inject IFacilityService FacilityService
 @inject AutoMapper.IMapper mapper
-@inject IJSRuntime JS
 @rendermode InteractiveServer
 
-
-<!-- Spinner Start -->
-<div id="spinner" class=" bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center show">
-    <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
-        <span class="sr-only">Loading...</span>
-    </div>
-</div>
-<!-- Spinner End -->
 
 
 
 <h3>AddFacility</h3>
-<form method="post" @onsubmit="Add" @formname="addFacilityForm" data-enhance="true">
-    <AntiforgeryToken></AntiforgeryToken>
-    <div class="row">
-        <div class="col-4">
-            <label for="name" class="form-label">Name</label>
-            <InputText @bind-Value="Facility.Name" class="form-control" id="name"></InputText>
-        </div>
-        <div class="col-4">
-            <label for="address" class="form-label">Address</label>
-            <InputText @bind-Value="Facility.Address" class="form-control" id="address"></InputText>
-        </div>
-        <div class="col-4">
-            <label for="phoneNumber" class="form-label">PhoneNumber</label>
-            <InputText @bind-Value="Facility.PhoneNumber" class="form-control" id="phoneNumber"></InputText>
-        </div>
+@if (IsLoading)
+{
+    <!-- Spinner Start -->
+    <div class="d-flex justify-content-center align-items-center" style="height: 200px;">
+        <div class="spinner-border text-primary" role="status"></div>
     </div>
+    <!-- Spinner End -->
+}
+else
+{
+    <form method="post" @onsubmit="Add" @formname="addFacilityForm" data-enhance="true">
+        <AntiforgeryToken></AntiforgeryToken>
+        <div class="row">
+            <div class="col-4">
+                <label for="name" class="form-label">Name</label>
+                <InputText @bind-Value="Facility.Name" class="form-control" id="name"></InputText>
+            </div>
+            <div class="col-4">
+                <label for="address" class="form-label">Address</label>
+                <InputText @bind-Value="Facility.Address" class="form-control" id="address"></InputText>
+            </div>
+            <div class="col-4">
+                <label for="phoneNumber" class="form-label">PhoneNumber</label>
+                <InputText @bind-Value="Facility.PhoneNumber" class="form-control" id="phoneNumber"></InputText>
+            </div>
+        </div>
 
-    <div class="row">
-        <Rehab.EndPoint.AdminPanel.Components.Controls.UsaStateCitySelectorComponent></Rehab.EndPoint.AdminPanel.Components.Controls.UsaStateCitySelectorComponent>
-        <div class="col-4">
-            <label for="webSite" class="form-label">WebSite</label>
-            <InputText @bind-Value="Facility.WebSite" class="form-control" id="webSite"></InputText>
+        <div class="row">
+            <Rehab.EndPoint.AdminPanel.Components.Controls.UsaStateCitySelectorComponent></Rehab.EndPoint.AdminPanel.Components.Controls.UsaStateCitySelectorComponent>
+            <div class="col-4">
+                <label for="webSite" class="form-label">WebSite</label>
+                <InputText @bind-Value="Facility.WebSite" class="form-control" id="webSite"></InputText>
+            </div>
         </div>
-    </div>
 
-    <div class="row">
-        <div class="col-4">
-            <label for="name" class="form-label">Name</label>
-            <InputText @bind-Value="Facility.Email" class="form-control" id="name"></InputText>
+        <div class="row">
+            <div class="col-4">
+                <label for="name" class="form-label">Name</label>
+                <InputText @bind-Value="Facility.Email" class="form-control" id="name"></InputText>
+            </div>
+            <div class="col-4">
+                <label for="address" class="form-label">Address</label>
+                <InputText @bind-Value="Facility.Address" class="form-control" id="address"></InputText>
+            </div>
+            <div class="col-4">
+                <label for="phoneNumber" class="form-label">PhoneNumber</label>
+                <InputText @bind-Value="Facility.PhoneNumber" class="form-control" id="phoneNumber"></InputText>
+            </div>
         </div>
-        <div class="col-4">
-            <label for="address" class="form-label">Address</label>
-            <InputText @bind-Value="Facility.Address" class="form-control" id="address"></InputText>
-        </div>
-        <div class="col-4">
-            <label for="phoneNumber" class="form-label">PhoneNumber</label>
-            <InputText @bind-Value="Facility.PhoneNumber" class="form-control" id="phoneNumber"></InputText>
-        </div>
-    </div>
 
-    <div class="row">
-        <div class="col-8">
-            <label for="name" class="form-label">Accreditation</label>
-            <textarea  class="form-control" id=""></textarea>
-        </div>
-        
-        <div class="col-4">
-            <label for="phoneNumber" class="form-label">PhoneNumber</label>
-            <InputText @bind-Value="Facility.PhoneNumber" class="form-control" id="phoneNumber"></InputText>
-        </div>
-    </div>
+        <div class="row">
+            <div class="col-8">
+                <label for="name" class="form-label">Accreditation</label>
+                <textarea class="form-control" id=""></textarea>
+            </div>
 
-    <div class="row mt-1">
-        <div class="col-4">
-            <button type="submit" class="btn btn-primary">Add</button>
+            <div class="col-4">
+                <label for="phoneNumber" class="form-label">PhoneNumber</label>
+                <InputText @bind-Value="Facility.PhoneNumber" class="form-control" id="phoneNumber"></InputText>
+            </div>
         </div>
-    </div>
-</form>
- 
+
+        <div class="row mt-1">
+            <div class="col-4">
+                <button type="submit" class="btn btn-primary">Add</button>
+            </div>
+        </div>
+    </form>
+}
+
+
+
 @code {
     [SupplyParameterFromForm]
     public FacilityViewmodel Facility { get; set; } = new();
+    private bool IsLoading = true;
 
     private BaseDto<FacilityDto> AddResult = new();
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+    protected override async Task OnInitializedAsync()
     {
-        Console.WriteLine($"first render is : {firstRender}");
-        if (firstRender)
-        {
-            await LoadScriptAsync("js/AddFacility/spinner.js");
-        }
-    }
-
-    private async Task LoadScriptAsync(string src)
-    {
-        await JS.InvokeVoidAsync("eval", $@"
-            (() => {{
-                let script = document.createElement('script');
-                script.src = '{src}';
-                script.async = true;
-                document.head.appendChild(script);
-            }})();
-        ");
+        IsLoading = true;
+        await Task.Delay(1000);
+        IsLoading = false;
     }
 
     private void Add()
