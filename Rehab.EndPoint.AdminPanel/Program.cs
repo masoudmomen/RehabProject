@@ -32,6 +32,7 @@ builder.Services.AddTransient<IInsuranceService, InsuranceService>();
 builder.Services.AddHttpClient();
 builder.Services.AddScoped<LocationService>();
 builder.Services.AddScoped<AlertService>();
+builder.Services.AddScoped<IImageUploaderService, ImageUploaderService>();
 #endregion
 
 

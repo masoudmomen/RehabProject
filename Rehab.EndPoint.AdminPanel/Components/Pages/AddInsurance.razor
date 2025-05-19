@@ -5,6 +5,8 @@
 @inject AutoMapper.IMapper mapper
 @rendermode InteractiveServer
 @inject AlertService AlertService
+@inject IWebHostEnvironment Env
+@inject IImageUploaderService Uploader
 
 <div class="w-75 mx-auto p-4">
     <h3>AddInsurance</h3>
@@ -14,7 +16,7 @@
         <DataAnnotationsValidator></DataAnnotationsValidator>
         <ValidationSummary class="text-danger" />
         <InputText @bind-Value="Insurance.Name" class="form-control my-2"></InputText>
-        <InputFile @bind-Value="Insurance.Logo" class="form-control my-2"></InputFile>
+        <InputFile OnChange="HandleSelected" class="form-control my-2" accept="image/*" />
         <InputTextArea @bind-Value="Insurance.Description" class="form-control my-2"></InputTextArea>
 
         <button class="btn btn-primary my-2">Add</button>
@@ -30,11 +32,21 @@
     {
         if (Insurance is not null)
         {
+            Insurance.Logo = UploadedPaths[0];
             var insuranceDto = mapper.Map<InsuranceDto>(Insurance);
             BaseDto<InsuranceDto> result = InsuranceService.Add(insuranceDto);
             Result = mapper.Map<ResultViewmodel<InsuranceViewmodel>>(result);
             if (Result.Success) Insurance = new();
             await AlertService.ShowAsync(Result.Message,Result.Status);
         }
+    }
+
+    List<string> UploadedPaths = new();
+
+    private async Task HandleSelected(InputFileChangeEventArgs e)
+    {
+        var files = e.GetMultipleFiles();
+        var paths = await Uploader.UploadAsync(files, Env.WebRootPath, "uploads");
+        UploadedPaths.AddRange(paths);
     }
 }

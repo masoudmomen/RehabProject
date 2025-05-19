@@ -1,0 +1,51 @@
+﻿@using Rehab.EndPoint.AdminPanel.Viewmodels
+@inject Rehab.Application.Insurances.IInsuranceService InsuranceService
+@inject AutoMapper.IMapper mapper
+@rendermode InteractiveServer
+@page "/insurances"
+
+<h3>Insurances</h3>
+@if(InsurancesList is not null)
+{
+    <div class="container-fluid pt-4 px-4">
+        <div class="row g-4">
+                    <div class="col-sm-12 col-xl-6">
+                        <div class="bg-light rounded h-100 p-4">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Logo</th>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @{ var i = 0;}
+                                    @foreach (var item in InsurancesList)
+                                    {
+                                        i++;
+                                        <tr>
+                                            <th scope="row">@i</th>
+                                            <td>
+                                                <img src="@item.Logo" width="30" height="30" />
+                                            </td>
+                                            <td>@item.Name</td>
+                                            <td>@item.Description</td>
+                                        </tr>
+                                    }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+         </div>
+    </div>
+}
+@code {
+    public List<InsuranceViewmodel> InsurancesList { get; set; } = new();
+
+    protected override void OnInitialized()
+    {
+        InsurancesList = mapper.Map<List<InsuranceViewmodel>>(InsuranceService.GetList());
+    }
+}
