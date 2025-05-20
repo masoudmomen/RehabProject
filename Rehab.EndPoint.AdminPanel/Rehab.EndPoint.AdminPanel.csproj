@@ -21,4 +21,8 @@
     <ProjectReference Include="..\Rehab.Persistence\Rehab.Persistence.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Properties\PublishProfiles\" />
+  </ItemGroup>
+
 </Project>

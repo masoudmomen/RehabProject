@@ -48,7 +48,8 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+app.UsePathBase("/admin");
+app.UseRouting();
 app.UseStaticFiles();
 app.UseAntiforgery();
 
