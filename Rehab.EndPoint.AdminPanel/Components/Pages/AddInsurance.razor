@@ -9,7 +9,7 @@
 @inject IImageUploaderService Uploader
 
 <div class="w-75 mx-auto p-4">
-    <h3>AddInsurance</h3>
+    <h3>Add Insurance</h3>
 
     <EditForm Model="Insurance" OnValidSubmit="Add" class="form-control ">
         <AntiforgeryToken></AntiforgeryToken>
@@ -46,7 +46,7 @@
     private async Task HandleSelected(InputFileChangeEventArgs e)
     {
         var files = e.GetMultipleFiles();
-        var paths = await Uploader.UploadAsync(files, Env.WebRootPath, "uploads");
+        var paths = await Uploader.UploadAsync(files, Env.WebRootPath, "uploads/insurances");
         UploadedPaths.AddRange(paths);
     }
 }
