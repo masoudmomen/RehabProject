@@ -32,7 +32,7 @@
     {
         if (Insurance is not null)
         {
-            Insurance.Logo = UploadedPaths[0];
+            Insurance.Logo = !string.IsNullOrEmpty(UploadedPaths[0]) ? UploadedPaths[0] :"";
             var insuranceDto = mapper.Map<InsuranceDto>(Insurance);
             BaseDto<InsuranceDto> result = InsuranceService.Add(insuranceDto);
             Result = mapper.Map<ResultViewmodel<InsuranceViewmodel>>(result);

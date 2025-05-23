@@ -1,57 +1,110 @@
-﻿@using Rehab.EndPoint.AdminPanel.Viewmodels
+﻿@using Rehab.Application.Insurances
+@using Rehab.EndPoint.AdminPanel.Components.Controls
+@using Rehab.EndPoint.AdminPanel.Viewmodels
 @inject Rehab.Application.Insurances.IInsuranceService InsuranceService
 @inject AutoMapper.IMapper mapper
 @rendermode InteractiveServer
+@inject AlertService AlertService
+@inject IWebHostEnvironment Env
+@inject IImageUploaderService Uploader
 @page "/insurances"
 
 <div class="w-75 mx-auto p-4">
-<h3>Insurances</h3>
-@if(InsurancesList is not null)
-{
-    <div class="row g-4">
+    <h3>Insurances</h3>
+    @if(InsurancesList is not null)
+    {
+        <div class="row g-4">
             <div class="col-sm-12 col-xl-6 w-100">
-                    <div class="bg-light rounded h-100 p-4">
+                <div class="bg-light rounded h-100 p-4">
                     <table class="table table-responsive-lg">
-                            <thead>
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Logo</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Description</th>
+                                <th scope="col">Operation</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{ var i = 0;}
+                            @foreach (var item in InsurancesList)
+                            {
+                                i++;
                                 <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">Logo</th>
-                                    <th scope="col">Name</th>
-                                    <th scope="col">Description</th>
-                                    <th scope="col">Operation</th>
+                                    <th scope="row">@i</th>
+                                    <td>
+                                        <img src="@item.Logo" width="30" height="30" />
+                                    </td>
+                                    <td>@item.Name</td>
+                                    <td>@item.Description</td>
+                                    <td>
+                                        <i class="fa fa-edit" title="Edit Insurance" @onclick="()=>OpenModal(item)"></i>
+                                        &ensp;&ensp;&ensp;&ensp;
+                                        <i class="fa fa-trash" title="Delete Insurance"></i>
+                                    </td>
                                 </tr>
-                            </thead>
-                            <tbody>
-                                @{ var i = 0;}
-                                @foreach (var item in InsurancesList)
-                                {
-                                    i++;
-                                    <tr>
-                                        <th scope="row">@i</th>
-                                        <td>
-                                            <img src="@item.Logo" width="30" height="30" />
-                                        </td>
-                                        <td>@item.Name</td>
-                                        <td>@item.Description</td>
-                                        <td>
-                                            <i class="fa fa-edit" title="Edit Insurance"></i>
-                                            &ensp;&ensp;&ensp;&ensp;
-                                            <i class="fa fa-trash" title="Delete Insurance"></i>
-                                        </td>
-                                    </tr>
-                                }
-                    </tbody>
-                </table>
+                            }
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
-        </div>
-}
+    }
 </div>
+
+
+<ModalComponent @rendermode="InteractiveServer"
+TModel="InsuranceViewmodel"
+Title="Edit Insurance"
+Model="@EditInsurance"
+OnValidSubmit="@Update"
+@ref="modal"
+>
+    <div class="form-group">
+        <label>Name</label>
+        <InputText class="form-control" @bind-Value="EditInsurance.Name" />
+        <InputFile OnChange="HandleSelected" class="form-control my-2" accept="image/*" />
+        <InputTextArea @bind-Value="EditInsurance.Description" class="form-control my-2"></InputTextArea>
+    </div>
+</ModalComponent>
+
 @code {
+    public InsuranceViewmodel EditInsurance { get; set; } = new();
+    private ModalComponent<InsuranceViewmodel> modal;
+    public ResultViewmodel<InsuranceViewmodel> Result { get; set; } = new();
+
+    void OpenModal(InsuranceViewmodel insurance)
+    {
+        EditInsurance = insurance;
+        modal.Show();
+    }
+
+    private async Task Update(InsuranceViewmodel insurance)
+    {
+        // update insurance
+        EditInsurance.Logo = !string.IsNullOrEmpty(UploadedPaths[0]) ? UploadedPaths[0] : "";
+        BaseDto<InsuranceDto> result = InsuranceService.Update(mapper.Map<InsuranceDto>(EditInsurance));
+        Result = mapper.Map<ResultViewmodel<InsuranceViewmodel>>(result);
+        if (Result.Success) EditInsurance = new();
+        await AlertService.ShowAsync(Result.Message, Result.Status);
+        
+    }
+
     public List<InsuranceViewmodel> InsurancesList { get; set; } = new();
 
     protected override void OnInitialized()
     {
         InsurancesList = mapper.Map<List<InsuranceViewmodel>>(InsuranceService.GetList());
+    }
+
+
+    List<string> UploadedPaths = new();
+
+    private async Task HandleSelected(InputFileChangeEventArgs e)
+    {
+        var files = e.GetMultipleFiles();
+        var paths = await Uploader.UploadAsync(files, Env.WebRootPath, "uploads/insurances");
+        UploadedPaths.AddRange(paths);
     }
 }
