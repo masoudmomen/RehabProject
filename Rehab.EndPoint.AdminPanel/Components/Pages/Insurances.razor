@@ -82,8 +82,14 @@ OnValidSubmit="@Update"
 
     private async Task Update(InsuranceViewmodel insurance)
     {
-        // update insurance
-        EditInsurance.Logo = !string.IsNullOrEmpty(UploadedPaths[0]) ? UploadedPaths[0] : "";
+        if (UploadedPaths.Count > 0)
+        {
+            insurance.Logo = UploadedPaths[0];
+        }
+        else
+        {
+            insurance.Logo = "";
+        }
         BaseDto<InsuranceDto> result = InsuranceService.Update(mapper.Map<InsuranceDto>(EditInsurance));
         Result = mapper.Map<ResultViewmodel<InsuranceViewmodel>>(result);
         if (Result.Success) EditInsurance = new();
