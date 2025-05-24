@@ -15,7 +15,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorComponents().AddInteractiveServerComponents();
 builder.Services.AddRazorPages();
-
+builder.Services.AddServerSideBlazor()
+    .AddCircuitOptions(options => { options.DetailedErrors = true; });
 #region Connection String
 builder.Services.AddScoped<IDatabaseContext, DatabaseContext>();
 var connection = builder.Configuration["ConnectionString:sqlServer"];
@@ -48,7 +49,7 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UsePathBase("/admin");
+//app.UsePathBase("/admin"); for publish
 app.UseRouting();
 app.UseStaticFiles();
 app.UseAntiforgery();
