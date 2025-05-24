@@ -49,7 +49,9 @@ namespace Rehab.Application.Insurances
             var insuranceForUpdate = context.Insurances.Find(insurance.Id);
             if(insuranceForUpdate is null) return BaseDto<InsuranceDto>.FailureResult("The Insurance not find!");
 
-            insuranceForUpdate = mapper.Map<Insurance>(insurance);
+            if (insurance.Logo == "") insurance.Logo = insuranceForUpdate.Logo;
+            mapper.Map(insurance, insuranceForUpdate);
+            //context.Insurances.Update(insuranceForUpdate);
             if (context.SaveChanges() > 0) return BaseDto<InsuranceDto>.SuccessResult(insurance, "Insurance Updated successfully.");
 
             return BaseDto<InsuranceDto>.FailureResult("Operation Failed! Please try another time!");

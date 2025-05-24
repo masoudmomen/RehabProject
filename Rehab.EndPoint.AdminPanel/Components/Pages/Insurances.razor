@@ -1,6 +1,7 @@
 ﻿@using Rehab.Application.Insurances
 @using Rehab.EndPoint.AdminPanel.Components.Controls
 @using Rehab.EndPoint.AdminPanel.Viewmodels
+@using System.Text.Json
 @inject Rehab.Application.Insurances.IInsuranceService InsuranceService
 @inject AutoMapper.IMapper mapper
 @rendermode InteractiveServer
@@ -39,7 +40,7 @@
                                     <td>@item.Name</td>
                                     <td>@item.Description</td>
                                     <td>
-                                        <i class="fa fa-edit" title="Edit Insurance" @onclick="()=>OpenModal(item)"></i>
+                                        <i class="fa fa-edit cursor-pointer" title="Edit Insurance" @onclick="()=>OpenModal(item)"></i>
                                         &ensp;&ensp;&ensp;&ensp;
                                         <i class="fa fa-trash" title="Delete Insurance"></i>
                                     </td>
@@ -57,15 +58,15 @@
 <ModalComponent @rendermode="InteractiveServer"
 TModel="InsuranceViewmodel"
 Title="Edit Insurance"
-Model="@EditInsurance"
+Model="@tempInsurance"
 OnValidSubmit="@Update"
 @ref="modal"
 >
     <div class="form-group">
         <label>Name</label>
-        <InputText class="form-control" @bind-Value="EditInsurance.Name" />
+        <InputText class="form-control" @bind-Value="tempInsurance.Name" />
         <InputFile OnChange="HandleSelected" class="form-control my-2" accept="image/*" />
-        <InputTextArea @bind-Value="EditInsurance.Description" class="form-control my-2"></InputTextArea>
+        <InputTextArea @bind-Value="tempInsurance.Description" class="form-control my-2"></InputTextArea>
     </div>
 </ModalComponent>
 
@@ -73,14 +74,15 @@ OnValidSubmit="@Update"
     public InsuranceViewmodel EditInsurance { get; set; } = new();
     private ModalComponent<InsuranceViewmodel> modal;
     public ResultViewmodel<InsuranceViewmodel> Result { get; set; } = new();
-
+    private InsuranceViewmodel? tempInsurance = new();
     void OpenModal(InsuranceViewmodel insurance)
     {
-        EditInsurance = insurance;
+        tempInsurance = JsonSerializer.Deserialize<InsuranceViewmodel>(
+            JsonSerializer.Serialize(insurance));
         modal.Show();
     }
 
-    private async Task Update(InsuranceViewmodel insurance)
+    private  void Update(InsuranceViewmodel insurance)
     {
         if (UploadedPaths.Count > 0)
         {
@@ -90,11 +92,12 @@ OnValidSubmit="@Update"
         {
             insurance.Logo = "";
         }
-        BaseDto<InsuranceDto> result = InsuranceService.Update(mapper.Map<InsuranceDto>(EditInsurance));
+        BaseDto<InsuranceDto> result = InsuranceService.Update(mapper.Map<InsuranceDto>(insurance));
         Result = mapper.Map<ResultViewmodel<InsuranceViewmodel>>(result);
-        if (Result.Success) EditInsurance = new();
-        await AlertService.ShowAsync(Result.Message, Result.Status);
-        
+        if (Result.Success) 
+            InsurancesList = mapper.Map<List<InsuranceViewmodel>>(InsuranceService.GetList());
+        AlertService.ShowAsync(Result.Message, Result.Status);
+
     }
 
     public List<InsuranceViewmodel> InsurancesList { get; set; } = new();
@@ -113,4 +116,5 @@ OnValidSubmit="@Update"
         var paths = await Uploader.UploadAsync(files, Env.WebRootPath, "uploads/insurances");
         UploadedPaths.AddRange(paths);
     }
+
 }
