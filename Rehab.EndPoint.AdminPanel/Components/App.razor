@@ -33,7 +33,7 @@
     <link href="css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Template Stylesheet -->
-    <link href="css/style.css" rel="stylesheet">
+    <link href="css/style.css?v=@version" rel="stylesheet">
     <HeadOutlet />
 </head>
 
@@ -58,3 +58,12 @@
 </body>
 
 </html>
+
+@inject IConfiguration Configuration
+@code{
+    private string? version = "";
+    protected override void OnInitialized()
+    {
+        version = Configuration["StaticFileVersion"];
+    }
+}
