@@ -6,6 +6,7 @@
     <div class="modal-backdrop">
         <div class="modal-content">
             <h3>@Title</h3>
+            <hr />
             <EditForm Model="Model" OnValidSubmit="HandleValidSubmit">
                 <AntiforgeryToken></AntiforgeryToken>
                 <DataAnnotationsValidator />
@@ -17,8 +18,8 @@
                 }
 
                 <div class="modal-actions">
-                    <button type="submit" class="btn btn-primary">Apply Changes</button>
-                    <button type="button" class="btn btn-secondary" @onclick="Close">Cancel</button>
+                    <button type="submit" class="@OkButtonClass">@OkButton</button>
+                    <button type="button" class="btn btn-secondary" @onclick="Close">@CancelButton</button>
                 </div>
             </EditForm>
         </div>
@@ -29,6 +30,9 @@
     [Parameter] public TModel Model { get; set; }
     [Parameter] public RenderFragment ChildContent { get; set; }
     [Parameter] public EventCallback<TModel> OnValidSubmit { get; set; }
+    [Parameter] public string OkButton { get; set; }
+    [Parameter] public string CancelButton { get; set; }
+    [Parameter] public string OkButtonClass { get; set; }
 
 
     public bool IsVisible { get; set; }
