@@ -38,11 +38,11 @@
                                         <img src="@item.Logo" width="30" height="30" />
                                     </td>
                                     <td>@item.Name</td>
-                                    <td>@item.Description</td>
+                                    <td><p style="max-width:400px">@item.Description</p></td>
                                     <td>
-                                        <i class="fa fa-edit cursor-pointer" title="Edit Insurance" @onclick="()=>OpenModal(item)"></i>
+                                        <i class="fa fa-edit cursor-pointer" title="Edit Insurance" @onclick="()=>OpenEditModal(item)"></i>
                                         &ensp;&ensp;&ensp;&ensp;
-                                        <i class="fa fa-trash" title="Delete Insurance"></i>
+                                        <i class="fa fa-trash cursor-pointer" title="Delete Insurance" @onclick="()=>OpenDeleteModal(item)"></i>
                                     </td>
                                 </tr>
                             }
@@ -54,35 +54,88 @@
     }
 </div>
 
-
+<!-- #region Edit Modal -->
 <ModalComponent @rendermode="InteractiveServer"
 TModel="InsuranceViewmodel"
 Title="Edit Insurance"
+OkButton="Apply Changes"
+OkButtonClass="btn btn-primary"
+CancelButton="Cancel"
 Model="@tempInsurance"
 OnValidSubmit="@Update"
-@ref="modal"
->
+@ref="EditModal">
     <div class="form-group">
         <label>Name</label>
         <InputText class="form-control" @bind-Value="tempInsurance.Name" />
-        <InputFile OnChange="HandleSelected" class="form-control my-2" accept="image/*" />
+        <label>Logo</label>
+        <div class="row">
+            <div class="col-10">
+                <InputFile OnChange="HandleSelected" class="form-control my-2" accept="image/*" />
+            </div>
+            <div class="col-2">
+                <img src="@((UploadedPaths.Count>0) ? UploadedPaths[0] : tempInsurance.Logo)" width="40" height="40" />
+            </div>
+        </div>
+
+        <label>Description</label>
         <InputTextArea @bind-Value="tempInsurance.Description" class="form-control my-2"></InputTextArea>
     </div>
 </ModalComponent>
+<!-- #endregion Edit Modal --> 
+
+
+<!-- #region Delete Modal -->
+<ModalComponent @rendermode="InteractiveServer"
+TModel="InsuranceViewmodel"
+Title="Delete Insurance"
+OkButton="Yes, I am Sure"
+OkButtonClass="btn btn-danger"
+CancelButton="Cancel"
+Model="@EditInsurance"
+OnValidSubmit="@Delete"
+@ref="DeleteModal">
+    <h6 class="text-muted">Do you really want to Delete this Insurance?</h6>
+    <div class="container mb-5">
+        <div class="row m-3">
+            <div class="col-4">Name</div>
+            <div class="col-8">@EditInsurance.Name</div>
+        </div>
+        <div class="row m-3">
+            <div class="col-4">Logo</div>
+            <div class="col-8"><img src="@EditInsurance.Logo" width="40" height="40" /></div>
+        </div>
+        <div class="row m-3">
+            <div class="col-4">Description</div>
+            <div class="col-8"><p>@EditInsurance.Description</p></div>
+        </div>
+    </div>
+</ModalComponent>
+<!-- #endregion Delete Modal -->
+
 
 @code {
     public InsuranceViewmodel EditInsurance { get; set; } = new();
-    private ModalComponent<InsuranceViewmodel> modal;
+    private ModalComponent<InsuranceViewmodel> EditModal;
+    private ModalComponent<InsuranceViewmodel> DeleteModal;
     public ResultViewmodel<InsuranceViewmodel> Result { get; set; } = new();
     private InsuranceViewmodel? tempInsurance = new();
-    void OpenModal(InsuranceViewmodel insurance)
+    void OpenEditModal(InsuranceViewmodel insurance)
     {
+        //depth copy
         tempInsurance = JsonSerializer.Deserialize<InsuranceViewmodel>(
             JsonSerializer.Serialize(insurance));
-        modal.Show();
+
+        UploadedPaths.Clear();
+        EditModal.Show();
     }
 
-    private  void Update(InsuranceViewmodel insurance)
+    void OpenDeleteModal(InsuranceViewmodel insurance)
+    {
+        EditInsurance = insurance;
+        DeleteModal.Show();
+    }
+
+    private void Update(InsuranceViewmodel insurance)
     {
         if (UploadedPaths.Count > 0)
         {
@@ -112,9 +165,19 @@ OnValidSubmit="@Update"
 
     private async Task HandleSelected(InputFileChangeEventArgs e)
     {
+        UploadedPaths.Clear();
         var files = e.GetMultipleFiles();
         var paths = await Uploader.UploadAsync(files, Env.WebRootPath, "uploads/insurances");
         UploadedPaths.AddRange(paths);
     }
 
+
+    private void Delete(InsuranceViewmodel insurance)
+    {
+        var result = InsuranceService.Delete(mapper.Map<InsuranceDto>(insurance));
+        Result = mapper.Map<ResultViewmodel<InsuranceViewmodel>>(result); 
+        if (Result.Success)
+            InsurancesList = mapper.Map<List<InsuranceViewmodel>>(InsuranceService.GetList());
+        AlertService.ShowAsync(Result.Message, Result.Status);
+    }
 }

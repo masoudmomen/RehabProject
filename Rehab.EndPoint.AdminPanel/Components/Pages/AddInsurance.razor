@@ -15,8 +15,11 @@
         <AntiforgeryToken></AntiforgeryToken>
         <DataAnnotationsValidator></DataAnnotationsValidator>
         <ValidationSummary class="text-danger" />
+        <label>Name</label>
         <InputText @bind-Value="Insurance.Name" class="form-control my-2"></InputText>
+        <label>Logo</label>
         <InputFile OnChange="HandleSelected" class="form-control my-2" accept="image/*" />
+        <label>Description</label>
         <InputTextArea @bind-Value="Insurance.Description" class="form-control my-2"></InputTextArea>
 
         <button class="btn btn-primary my-2">Add</button>

@@ -15,6 +15,8 @@ namespace Rehab.Application.Insurances
         BaseDto<InsuranceDto> Add(InsuranceDto insurance);
         List<InsuranceDto> GetList();
         BaseDto<InsuranceDto> Update(InsuranceDto insurance);
+
+        BaseDto<InsuranceDto> Delete(InsuranceDto insurance);
     }
 
     public class InsuranceService : IInsuranceService
@@ -33,6 +35,19 @@ namespace Rehab.Application.Insurances
 
             context.Insurances.Add(mapper.Map<Insurance>(insurance));
             if (context.SaveChanges() > 0) return BaseDto<InsuranceDto>.SuccessResult(insurance, "Insurance Added successfully.");
+
+            return BaseDto<InsuranceDto>.FailureResult("Operation Failed! Please try another time!");
+        }
+
+        public BaseDto<InsuranceDto> Delete(InsuranceDto insurance)
+        {
+            if (insurance is null) return BaseDto<InsuranceDto>.FailureResult("The Insurance data is null!");
+
+            var result = context.Insurances.FirstOrDefault(c => c.Id == insurance.Id);
+            if (result == null) return BaseDto<InsuranceDto>.FailureResult("The Insurance not find!");
+
+            context.Insurances.Remove(result);
+            if (context.SaveChanges() > 0) return BaseDto<InsuranceDto>.SuccessResult(insurance, "Insurance Deleted successfully.");
 
             return BaseDto<InsuranceDto>.FailureResult("Operation Failed! Please try another time!");
         }
