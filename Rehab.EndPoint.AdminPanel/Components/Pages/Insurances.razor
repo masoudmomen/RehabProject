@@ -37,11 +37,17 @@
                                     <td>
                                         <img src="@item.Logo" width="30" height="30" />
                                     </td>
-                                    <td>@item.Name</td>
-                                    <td><p style="max-width:400px">@item.Description</p></td>
+                                    <td style="max-width:200px;max-height:50px;overflow:hidden;">@item.Name</td>
+                                    <td>
+                                        <p style="max-width:400px;max-height:50px;overflow-y:auto">
+                                            @item.Description
+                                        </p>
+                                    </td>
                                     <td>
                                         <i class="fa fa-edit cursor-pointer" title="Edit Insurance" @onclick="()=>OpenEditModal(item)"></i>
-                                        &ensp;&ensp;&ensp;&ensp;
+                                        &ensp;&ensp;&ensp;
+                                        <i class="fa fa-image cursor-pointer" title="Show Image" @onclick="()=>OpenImageModal(item)"></i>
+                                        &ensp;&ensp;&ensp;
                                         <i class="fa fa-trash cursor-pointer" title="Delete Insurance" @onclick="()=>OpenDeleteModal(item)"></i>
                                     </td>
                                 </tr>
@@ -95,28 +101,41 @@ Model="@EditInsurance"
 OnValidSubmit="@Delete"
 @ref="DeleteModal">
     <h6 class="text-muted">Do you really want to Delete this Insurance?</h6>
-    <div class="container mb-5">
-        <div class="row m-3">
+    <div class="container mb-2 px-0">
+        <div class="row my-3">
             <div class="col-4">Name</div>
             <div class="col-8">@EditInsurance.Name</div>
         </div>
-        <div class="row m-3">
+        <div class="row my-3">
             <div class="col-4">Logo</div>
             <div class="col-8"><img src="@EditInsurance.Logo" width="40" height="40" /></div>
         </div>
-        <div class="row m-3">
+        <div class="row my-3">
             <div class="col-4">Description</div>
-            <div class="col-8"><p>@EditInsurance.Description</p></div>
+            <div class="col-8">
+                <p style="max-width:400px;max-height:150px;overflow-y:auto">@EditInsurance.Description</p>
+            </div>
         </div>
     </div>
 </ModalComponent>
 <!-- #endregion Delete Modal -->
+
+<!-- #region Image Modal -->
+<ImageModalComponent @rendermode="InteractiveServer"
+Title="Insurance's Logo Image"
+Image="@Image"
+Model="EditInsurance"
+@ref="ImageModal">
+</ImageModalComponent>
+<!-- #endregion Image Modal -->
 
 
 @code {
     public InsuranceViewmodel EditInsurance { get; set; } = new();
     private ModalComponent<InsuranceViewmodel> EditModal;
     private ModalComponent<InsuranceViewmodel> DeleteModal;
+    public ImageModalComponent<InsuranceViewmodel> ImageModal;
+    public string? Image { get; set; } = string.Empty;
     public ResultViewmodel<InsuranceViewmodel> Result { get; set; } = new();
     private InsuranceViewmodel? tempInsurance = new();
     void OpenEditModal(InsuranceViewmodel insurance)
@@ -133,6 +152,12 @@ OnValidSubmit="@Delete"
     {
         EditInsurance = insurance;
         DeleteModal.Show();
+    }
+
+    void OpenImageModal(InsuranceViewmodel insurance)
+    {
+        Image = insurance.Logo;
+        ImageModal?.Show();
     }
 
     private void Update(InsuranceViewmodel insurance)
