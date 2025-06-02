@@ -47,7 +47,11 @@
             var insuranceDto = mapper.Map<InsuranceDto>(Insurance);
             BaseDto<InsuranceDto> result = InsuranceService.Add(insuranceDto);
             Result = mapper.Map<ResultViewmodel<InsuranceViewmodel>>(result);
-            if (Result.Success) Insurance = new();
+            if (Result.Success)
+            {
+                Insurance = new();
+                UploadedPaths.Clear();
+            }
             await AlertService.ShowAsync(Result.Message,Result.Status);
         }
     }

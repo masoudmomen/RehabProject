@@ -1,0 +1,205 @@
+﻿@using Rehab.Application.WhoWeTreat
+@using Rehab.EndPoint.AdminPanel.Components.Controls
+@using Rehab.EndPoint.AdminPanel.Viewmodels
+@using System.Text.Json
+@inject Rehab.Application.WhoWeTreat.IWwtService WwtService
+@inject AutoMapper.IMapper mapper
+@rendermode InteractiveServer
+@inject AlertService AlertService
+@inject IWebHostEnvironment Env
+@inject IImageUploaderService Uploader
+@page "/wwts"
+
+<div class="w-75 mx-auto p-4">
+    <h3>Wwts</h3>
+    @if (WwtsList is not null)
+    {
+        <div class="row g-4">
+            <div class="col-sm-12 col-xl-6 w-100">
+                <div class="bg-light rounded h-100 p-4">
+                    <table class="table table-responsive-lg">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Logo</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Description</th>
+                                <th scope="col">Operation</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                var i = 0;
+                            }
+                            @foreach (var item in WwtsList)
+                            {
+                                i++;
+                                <tr>
+                                    <th scope="row">@i</th>
+                                    <td>
+                                        <img src="@item.Logo" width="30" height="30" />
+                                    </td>
+                                    <td style="max-width:200px;max-height:50px;overflow:hidden;">@item.Name</td>
+                                    <td>
+                                        <p style="max-width:400px;max-height:50px;overflow-y:auto">
+                                            @item.Description
+                                        </p>
+                                    </td>
+                                    <td>
+                                        <i class="fa fa-edit cursor-pointer" title="Edit Wwt" @onclick="()=>OpenEditModal(item)"></i>
+                                        &ensp;&ensp;&ensp;
+                                        <i class="fa fa-image cursor-pointer" title="Show Image" @onclick="()=>OpenImageModal(item)"></i>
+                                        &ensp;&ensp;&ensp;
+                                        <i class="fa fa-trash cursor-pointer" title="Delete Wwt" @onclick="()=>OpenDeleteModal(item)"></i>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<!-- #region Edit Modal -->
+<ModalComponent @rendermode="InteractiveServer"
+                TModel="WwtViewmodel"
+                Title="Edit Wwt"
+                OkButton="Apply Changes"
+                OkButtonClass="btn btn-primary"
+                CancelButton="Cancel"
+                Model="@tempWwt"
+                OnValidSubmit="@Update"
+                @ref="EditModal">
+    <div class="form-group">
+        <label>Name</label>
+        <InputText class="form-control" @bind-Value="tempWwt.Name" />
+        <label>Logo</label>
+        <div class="row">
+            <div class="col-10">
+                <InputFile OnChange="HandleSelected" class="form-control my-2" accept="image/*" />
+            </div>
+            <div class="col-2">
+                <img src="@((UploadedPaths.Count>0) ? UploadedPaths[0] : tempWwt.Logo)" width="40" height="40" />
+            </div>
+        </div>
+
+        <label>Description</label>
+        <InputTextArea @bind-Value="tempWwt.Description" class="form-control my-2"></InputTextArea>
+    </div>
+</ModalComponent>
+<!-- #endregion Edit Modal -->
+<!-- #region Delete Modal -->
+<ModalComponent @rendermode="InteractiveServer"
+                TModel="WwtViewmodel"
+                Title="Delete Wwt"
+                OkButton="Yes, I am Sure"
+                OkButtonClass="btn btn-danger"
+                CancelButton="Cancel"
+                Model="@EditWwt"
+                OnValidSubmit="@Delete"
+                @ref="DeleteModal">
+    <h6 class="text-muted">Do you really want to Delete this Wwt?</h6>
+    <div class="container mb-2 px-0">
+        <div class="row my-3">
+            <div class="col-4">Name</div>
+            <div class="col-8">@EditWwt.Name</div>
+        </div>
+        <div class="row my-3">
+            <div class="col-4">Logo</div>
+            <div class="col-8"><img src="@EditWwt.Logo" width="40" height="40" /></div>
+        </div>
+        <div class="row my-3">
+            <div class="col-4">Description</div>
+            <div class="col-8">
+                <p style="max-width:400px;max-height:150px;overflow-y:auto">@EditWwt.Description</p>
+            </div>
+        </div>
+    </div>
+</ModalComponent>
+<!-- #endregion Delete Modal -->
+<!-- #region Image Modal -->
+<ImageModalComponent @rendermode="InteractiveServer"
+                     Title="Wwt's Logo Image"
+                     Image="@Image"
+                     Model="EditWwt"
+                     @ref="ImageModal">
+</ImageModalComponent>
+<!-- #endregion Image Modal -->
+@code {
+    public WwtViewmodel EditWwt { get; set; } = new();
+    private ModalComponent<WwtViewmodel> EditModal;
+    private ModalComponent<WwtViewmodel> DeleteModal;
+    public ImageModalComponent<WwtViewmodel> ImageModal;
+    public string? Image { get; set; } = string.Empty;
+    public ResultViewmodel<WwtViewmodel> Result { get; set; } = new();
+    private WwtViewmodel? tempWwt = new();
+    void OpenEditModal(WwtViewmodel wwt)
+    {
+        //depth copy
+        tempWwt = JsonSerializer.Deserialize<WwtViewmodel>(
+            JsonSerializer.Serialize(wwt));
+
+        UploadedPaths.Clear();
+        EditModal.Show();
+    }
+
+    void OpenDeleteModal(WwtViewmodel wwt)
+    {
+        EditWwt = wwt;
+        DeleteModal.Show();
+    }
+
+    void OpenImageModal(WwtViewmodel wwt)
+    {
+        Image = wwt.Logo;
+        ImageModal?.Show();
+    }
+
+    private void Update(WwtViewmodel wwt)
+    {
+        if (UploadedPaths.Count > 0)
+        {
+            wwt.Logo = UploadedPaths[0];
+        }
+        else
+        {
+            wwt.Logo = "";
+        }
+        BaseDto<WwtDto> result = WwtService.Update(mapper.Map<WwtDto>(wwt));
+        Result = mapper.Map<ResultViewmodel<WwtViewmodel>>(result);
+        if (Result.Success)
+            WwtsList = mapper.Map<List<WwtViewmodel>>(WwtService.GetList());
+        AlertService.ShowAsync(Result.Message, Result.Status);
+
+    }
+
+    public List<WwtViewmodel> WwtsList { get; set; } = new();
+
+    protected override void OnInitialized()
+    {
+        WwtsList = mapper.Map<List<WwtViewmodel>>(WwtService.GetList());
+    }
+
+
+    List<string> UploadedPaths = new();
+
+    private async Task HandleSelected(InputFileChangeEventArgs e)
+    {
+        UploadedPaths.Clear();
+        var files = e.GetMultipleFiles();
+        var paths = await Uploader.UploadAsync(files, Env.WebRootPath, "uploads/wwts");
+        UploadedPaths.AddRange(paths);
+    }
+
+
+    private void Delete(WwtViewmodel wwt)
+    {
+        var result = WwtService.Delete(mapper.Map<WwtDto>(wwt));
+        Result = mapper.Map<ResultViewmodel<WwtViewmodel>>(result);
+        if (Result.Success)
+            WwtsList = mapper.Map<List<WwtViewmodel>>(WwtService.GetList());
+        AlertService.ShowAsync(Result.Message, Result.Status);
+    }
+}

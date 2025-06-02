@@ -1,0 +1,205 @@
+﻿@using Rehab.Application.Highlights
+@using Rehab.EndPoint.AdminPanel.Components.Controls
+@using Rehab.EndPoint.AdminPanel.Viewmodels
+@using System.Text.Json
+@inject Rehab.Application.Highlights.IHighlightService HighlightService
+@inject AutoMapper.IMapper mapper
+@rendermode InteractiveServer
+@inject AlertService AlertService
+@inject IWebHostEnvironment Env
+@inject IImageUploaderService Uploader
+@page "/highlights"
+
+<div class="w-75 mx-auto p-4">
+    <h3>Highlights</h3>
+    @if (HighlightsList is not null)
+    {
+        <div class="row g-4">
+            <div class="col-sm-12 col-xl-6 w-100">
+                <div class="bg-light rounded h-100 p-4">
+                    <table class="table table-responsive-lg">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Logo</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Description</th>
+                                <th scope="col">Operation</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                var i = 0;
+                            }
+                            @foreach (var item in HighlightsList)
+                            {
+                                i++;
+                                <tr>
+                                    <th scope="row">@i</th>
+                                    <td>
+                                        <img src="@item.Logo" width="30" height="30" />
+                                    </td>
+                                    <td style="max-width:200px;max-height:50px;overflow:hidden;">@item.Name</td>
+                                    <td>
+                                        <p style="max-width:400px;max-height:50px;overflow-y:auto">
+                                            @item.Description
+                                        </p>
+                                    </td>
+                                    <td>
+                                        <i class="fa fa-edit cursor-pointer" title="Edit Highlight" @onclick="()=>OpenEditModal(item)"></i>
+                                        &ensp;&ensp;&ensp;
+                                        <i class="fa fa-image cursor-pointer" title="Show Image" @onclick="()=>OpenImageModal(item)"></i>
+                                        &ensp;&ensp;&ensp;
+                                        <i class="fa fa-trash cursor-pointer" title="Delete Highlight" @onclick="()=>OpenDeleteModal(item)"></i>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<!-- #region Edit Modal -->
+<ModalComponent @rendermode="InteractiveServer"
+                TModel="HighlightViewmodel"
+                Title="Edit Highlight"
+                OkButton="Apply Changes"
+                OkButtonClass="btn btn-primary"
+                CancelButton="Cancel"
+                Model="@tempHighlight"
+                OnValidSubmit="@Update"
+                @ref="EditModal">
+    <div class="form-group">
+        <label>Name</label>
+        <InputText class="form-control" @bind-Value="tempHighlight.Name" />
+        <label>Logo</label>
+        <div class="row">
+            <div class="col-10">
+                <InputFile OnChange="HandleSelected" class="form-control my-2" accept="image/*" />
+            </div>
+            <div class="col-2">
+                <img src="@((UploadedPaths.Count>0) ? UploadedPaths[0] : tempHighlight.Logo)" width="40" height="40" />
+            </div>
+        </div>
+
+        <label>Description</label>
+        <InputTextArea @bind-Value="tempHighlight.Description" class="form-control my-2"></InputTextArea>
+    </div>
+</ModalComponent>
+<!-- #endregion Edit Modal -->
+<!-- #region Delete Modal -->
+<ModalComponent @rendermode="InteractiveServer"
+                TModel="HighlightViewmodel"
+                Title="Delete Highlight"
+                OkButton="Yes, I am Sure"
+                OkButtonClass="btn btn-danger"
+                CancelButton="Cancel"
+                Model="@EditHighlight"
+                OnValidSubmit="@Delete"
+                @ref="DeleteModal">
+    <h6 class="text-muted">Do you really want to Delete this Highlight?</h6>
+    <div class="container mb-2 px-0">
+        <div class="row my-3">
+            <div class="col-4">Name</div>
+            <div class="col-8">@EditHighlight.Name</div>
+        </div>
+        <div class="row my-3">
+            <div class="col-4">Logo</div>
+            <div class="col-8"><img src="@EditHighlight.Logo" width="40" height="40" /></div>
+        </div>
+        <div class="row my-3">
+            <div class="col-4">Description</div>
+            <div class="col-8">
+                <p style="max-width:400px;max-height:150px;overflow-y:auto">@EditHighlight.Description</p>
+            </div>
+        </div>
+    </div>
+</ModalComponent>
+<!-- #endregion Delete Modal -->
+<!-- #region Image Modal -->
+<ImageModalComponent @rendermode="InteractiveServer"
+                     Title="Highlight's Logo Image"
+                     Image="@Image"
+                     Model="EditHighlight"
+                     @ref="ImageModal">
+</ImageModalComponent>
+<!-- #endregion Image Modal -->
+@code {
+    public HighlightViewmodel EditHighlight { get; set; } = new();
+    private ModalComponent<HighlightViewmodel> EditModal;
+    private ModalComponent<HighlightViewmodel> DeleteModal;
+    public ImageModalComponent<HighlightViewmodel> ImageModal;
+    public string? Image { get; set; } = string.Empty;
+    public ResultViewmodel<HighlightViewmodel> Result { get; set; } = new();
+    private HighlightViewmodel? tempHighlight = new();
+    void OpenEditModal(HighlightViewmodel highlight)
+    {
+        //depth copy
+        tempHighlight = JsonSerializer.Deserialize<HighlightViewmodel>(
+            JsonSerializer.Serialize(highlight));
+
+        UploadedPaths.Clear();
+        EditModal.Show();
+    }
+
+    void OpenDeleteModal(HighlightViewmodel highlight)
+    {
+        EditHighlight = highlight;
+        DeleteModal.Show();
+    }
+
+    void OpenImageModal(HighlightViewmodel highlight)
+    {
+        Image = highlight.Logo;
+        ImageModal?.Show();
+    }
+
+    private void Update(HighlightViewmodel highlight)
+    {
+        if (UploadedPaths.Count > 0)
+        {
+            highlight.Logo = UploadedPaths[0];
+        }
+        else
+        {
+            highlight.Logo = "";
+        }
+        BaseDto<HighlightDto> result = HighlightService.Update(mapper.Map<HighlightDto>(highlight));
+        Result = mapper.Map<ResultViewmodel<HighlightViewmodel>>(result);
+        if (Result.Success)
+            HighlightsList = mapper.Map<List<HighlightViewmodel>>(HighlightService.GetList());
+        AlertService.ShowAsync(Result.Message, Result.Status);
+
+    }
+
+    public List<HighlightViewmodel> HighlightsList { get; set; } = new();
+
+    protected override void OnInitialized()
+    {
+        HighlightsList = mapper.Map<List<HighlightViewmodel>>(HighlightService.GetList());
+    }
+
+
+    List<string> UploadedPaths = new();
+
+    private async Task HandleSelected(InputFileChangeEventArgs e)
+    {
+        UploadedPaths.Clear();
+        var files = e.GetMultipleFiles();
+        var paths = await Uploader.UploadAsync(files, Env.WebRootPath, "uploads/highlights");
+        UploadedPaths.AddRange(paths);
+    }
+
+
+    private void Delete(HighlightViewmodel highlight)
+    {
+        var result = HighlightService.Delete(mapper.Map<HighlightDto>(highlight));
+        Result = mapper.Map<ResultViewmodel<HighlightViewmodel>>(result);
+        if (Result.Success)
+            HighlightsList = mapper.Map<List<HighlightViewmodel>>(HighlightService.GetList());
+        AlertService.ShowAsync(Result.Message, Result.Status);
+    }
+}

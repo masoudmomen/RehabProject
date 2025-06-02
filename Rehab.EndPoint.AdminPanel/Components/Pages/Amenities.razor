@@ -1,0 +1,205 @@
+﻿@using Rehab.Application.Amenities
+@using Rehab.EndPoint.AdminPanel.Components.Controls
+@using Rehab.EndPoint.AdminPanel.Viewmodels
+@using System.Text.Json
+@inject Rehab.Application.Amenities.IAmenityService AmenityService
+@inject AutoMapper.IMapper mapper
+@rendermode InteractiveServer
+@inject AlertService AlertService
+@inject IWebHostEnvironment Env
+@inject IImageUploaderService Uploader
+@page "/amenities"
+
+<div class="w-75 mx-auto p-4">
+    <h3>Amenities</h3>
+    @if (AmenitiesList is not null)
+    {
+        <div class="row g-4">
+            <div class="col-sm-12 col-xl-6 w-100">
+                <div class="bg-light rounded h-100 p-4">
+                    <table class="table table-responsive-lg">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Logo</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Description</th>
+                                <th scope="col">Operation</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                var i = 0;
+                            }
+                            @foreach (var item in AmenitiesList)
+                            {
+                                i++;
+                                <tr>
+                                    <th scope="row">@i</th>
+                                    <td>
+                                        <img src="@item.Logo" width="30" height="30" />
+                                    </td>
+                                    <td style="max-width:200px;max-height:50px;overflow:hidden;">@item.Name</td>
+                                    <td>
+                                        <p style="max-width:400px;max-height:50px;overflow-y:auto">
+                                            @item.Description
+                                        </p>
+                                    </td>
+                                    <td>
+                                        <i class="fa fa-edit cursor-pointer" title="Edit Insurance" @onclick="()=>OpenEditModal(item)"></i>
+                                        &ensp;&ensp;&ensp;
+                                        <i class="fa fa-image cursor-pointer" title="Show Image" @onclick="()=>OpenImageModal(item)"></i>
+                                        &ensp;&ensp;&ensp;
+                                        <i class="fa fa-trash cursor-pointer" title="Delete Insurance" @onclick="()=>OpenDeleteModal(item)"></i>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<!-- #region Edit Modal -->
+<ModalComponent @rendermode="InteractiveServer"
+                TModel="AmenityViewmodel"
+                Title="Edit Amenity"
+                OkButton="Apply Changes"
+                OkButtonClass="btn btn-primary"
+                CancelButton="Cancel"
+                Model="@tempAmenity"
+                OnValidSubmit="@Update"
+                @ref="EditModal">
+    <div class="form-group">
+        <label>Name</label>
+        <InputText class="form-control" @bind-Value="tempAmenity.Name" />
+        <label>Logo</label>
+        <div class="row">
+            <div class="col-10">
+                <InputFile OnChange="HandleSelected" class="form-control my-2" accept="image/*" />
+            </div>
+            <div class="col-2">
+                <img src="@((UploadedPaths.Count>0) ? UploadedPaths[0] : tempAmenity.Logo)" width="40" height="40" />
+            </div>
+        </div>
+
+        <label>Description</label>
+        <InputTextArea @bind-Value="tempAmenity.Description" class="form-control my-2"></InputTextArea>
+    </div>
+</ModalComponent>
+<!-- #endregion Edit Modal -->
+<!-- #region Delete Modal -->
+<ModalComponent @rendermode="InteractiveServer"
+                TModel="AmenityViewmodel"
+                Title="Delete Amenity"
+                OkButton="Yes, I am Sure"
+                OkButtonClass="btn btn-danger"
+                CancelButton="Cancel"
+                Model="@EditAmenity"
+                OnValidSubmit="@Delete"
+                @ref="DeleteModal">
+    <h6 class="text-muted">Do you really want to Delete this Amenity?</h6>
+    <div class="container mb-2 px-0">
+        <div class="row my-3">
+            <div class="col-4">Name</div>
+            <div class="col-8">@EditAmenity.Name</div>
+        </div>
+        <div class="row my-3">
+            <div class="col-4">Logo</div>
+            <div class="col-8"><img src="@EditAmenity.Logo" width="40" height="40" /></div>
+        </div>
+        <div class="row my-3">
+            <div class="col-4">Description</div>
+            <div class="col-8">
+                <p style="max-width:400px;max-height:150px;overflow-y:auto">@EditAmenity.Description</p>
+            </div>
+        </div>
+    </div>
+</ModalComponent>
+<!-- #endregion Delete Modal -->
+<!-- #region Image Modal -->
+<ImageModalComponent @rendermode="InteractiveServer"
+                     Title="Amenity's Logo Image"
+                     Image="@Image"
+                     Model="EditAmenity"
+                     @ref="ImageModal">
+</ImageModalComponent>
+<!-- #endregion Image Modal -->
+@code {
+    public AmenityViewmodel EditAmenity { get; set; } = new();
+    private ModalComponent<AmenityViewmodel> EditModal;
+    private ModalComponent<AmenityViewmodel> DeleteModal;
+    public ImageModalComponent<AmenityViewmodel> ImageModal;
+    public string? Image { get; set; } = string.Empty;
+    public ResultViewmodel<AmenityViewmodel> Result { get; set; } = new();
+    private AmenityViewmodel? tempAmenity = new();
+    void OpenEditModal(AmenityViewmodel amenity)
+    {
+        //depth copy
+        tempAmenity = JsonSerializer.Deserialize<AmenityViewmodel>(
+            JsonSerializer.Serialize(amenity));
+
+        UploadedPaths.Clear();
+        EditModal.Show();
+    }
+
+    void OpenDeleteModal(AmenityViewmodel amenity)
+    {
+        EditAmenity = amenity;
+        DeleteModal.Show();
+    }
+
+    void OpenImageModal(AmenityViewmodel amenity)
+    {
+        Image = amenity.Logo;
+        ImageModal?.Show();
+    }
+
+    private void Update(AmenityViewmodel amenity)
+    {
+        if (UploadedPaths.Count > 0)
+        {
+            amenity.Logo = UploadedPaths[0];
+        }
+        else
+        {
+            amenity.Logo = "";
+        }
+        BaseDto<AmenityDto> result = AmenityService.Update(mapper.Map<AmenityDto>(amenity));
+        Result = mapper.Map<ResultViewmodel<AmenityViewmodel>>(result);
+        if (Result.Success)
+            AmenitiesList = mapper.Map<List<AmenityViewmodel>>(AmenityService.GetList());
+        AlertService.ShowAsync(Result.Message, Result.Status);
+
+    }
+
+    public List<AmenityViewmodel> AmenitiesList { get; set; } = new();
+
+    protected override void OnInitialized()
+    {
+        AmenitiesList = mapper.Map<List<AmenityViewmodel>>(AmenityService.GetList());
+    }
+
+
+    List<string> UploadedPaths = new();
+
+    private async Task HandleSelected(InputFileChangeEventArgs e)
+    {
+        UploadedPaths.Clear();
+        var files = e.GetMultipleFiles();
+        var paths = await Uploader.UploadAsync(files, Env.WebRootPath, "uploads/amenities");
+        UploadedPaths.AddRange(paths);
+    }
+
+
+    private void Delete(AmenityViewmodel amenity)
+    {
+        var result = AmenityService.Delete(mapper.Map<AmenityDto>(amenity));
+        Result = mapper.Map<ResultViewmodel<AmenityViewmodel>>(result);
+        if (Result.Success)
+            AmenitiesList = mapper.Map<List<AmenityViewmodel>>(AmenityService.GetList());
+        AlertService.ShowAsync(Result.Message, Result.Status);
+    }
+}

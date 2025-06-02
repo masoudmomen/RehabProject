@@ -1,7 +1,7 @@
-﻿@page "/accreditation/add"
-@using Rehab.Application.Accreditations
+﻿@page "/wwt/add"
+@using Rehab.Application.WhoWeTreat
 @using Rehab.EndPoint.AdminPanel.Viewmodels
-@inject Rehab.Application.Accreditations.IAccreditationService AccreditationService
+@inject Rehab.Application.WhoWeTreat.IWwtService WwtService
 @inject AutoMapper.IMapper mapper
 @rendermode InteractiveServer
 @inject AlertService AlertService
@@ -9,18 +9,18 @@
 @inject IImageUploaderService Uploader
 
 <div class="w-75 mx-auto p-4">
-    <h3>Add Accreditation</h3>
+    <h3>Add Wwt</h3>
 
-    <EditForm Model="Accreditation" OnValidSubmit="Add" class="form-control" FormName="AddAccreditationForm">
+    <EditForm Model="Wwt" OnValidSubmit="Add" class="form-control" FormName="AddWwtForm">
         <AntiforgeryToken></AntiforgeryToken>
         <DataAnnotationsValidator></DataAnnotationsValidator>
         <ValidationSummary class="text-danger" />
         <label>Name</label>
-        <InputText @bind-Value="Accreditation.Name" class="form-control my-2"></InputText>
+        <InputText @bind-Value="Wwt.Name" class="form-control my-2"></InputText>
         <label>Logo</label>
         <InputFile OnChange="HandleSelected" class="form-control my-2" accept="image/*" />
         <label>Description</label>
-        <InputTextArea @bind-Value="Accreditation.Description" class="form-control my-2"></InputTextArea>
+        <InputTextArea @bind-Value="Wwt.Description" class="form-control my-2"></InputTextArea>
 
         <button class="btn btn-primary my-2">Add</button>
     </EditForm>
@@ -28,28 +28,28 @@
 
 
 @code {
-    public AccreditationViewmodel Accreditation { get; set; } = new();
-    public ResultViewmodel<AccreditationViewmodel> Result { get; set; } = new();
+    public WwtViewmodel Wwt { get; set; } = new();
+    public ResultViewmodel<WwtViewmodel> Result { get; set; } = new();
 
     private async Task Add()
     {
-        if (Accreditation is not null)
+        if (Wwt is not null)
         {
             if (UploadedPaths.Count > 0)
             {
-                Accreditation.Logo = UploadedPaths[0];
+                Wwt.Logo = UploadedPaths[0];
             }
             else
             {
-                Accreditation.Logo = "";
+                Wwt.Logo = "";
             }
 
-            var accreditationDto = mapper.Map<AccreditationDto>(Accreditation);
-            BaseDto<AccreditationDto> result = AccreditationService.Add(accreditationDto);
-            Result = mapper.Map<ResultViewmodel<AccreditationViewmodel>>(result);
+            var wwtDto = mapper.Map<WwtDto>(Wwt);
+            BaseDto<WwtDto> result = WwtService.Add(wwtDto);
+            Result = mapper.Map<ResultViewmodel<WwtViewmodel>>(result);
             if (Result.Success)
             {
-                Accreditation = new();
+                Wwt = new();
                 UploadedPaths.Clear();
             }
             await AlertService.ShowAsync(Result.Message, Result.Status);
@@ -61,7 +61,7 @@
     private async Task HandleSelected(InputFileChangeEventArgs e)
     {
         var files = e.GetMultipleFiles();
-        var paths = await Uploader.UploadAsync(files, Env.WebRootPath, "uploads/accreditations");
+        var paths = await Uploader.UploadAsync(files, Env.WebRootPath, "uploads/wwts");
         UploadedPaths.AddRange(paths);
     }
 }
