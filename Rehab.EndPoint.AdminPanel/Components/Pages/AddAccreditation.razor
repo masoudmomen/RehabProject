@@ -1,0 +1,67 @@
+﻿@page "/accreditation/add"
+@using Rehab.Application.Accreditations
+@using Rehab.EndPoint.AdminPanel.Viewmodels
+@inject Rehab.Application.Accreditations.IAccreditationService AccreditationService
+@inject AutoMapper.IMapper mapper
+@rendermode InteractiveServer
+@inject AlertService AlertService
+@inject IWebHostEnvironment Env
+@inject IImageUploaderService Uploader
+
+<div class="w-75 mx-auto p-4">
+    <h3>Add Accreditation</h3>
+
+    <EditForm Model="Accreditation" OnValidSubmit="Add" class="form-control" FormName="AddAccreditationForm">
+        <AntiforgeryToken></AntiforgeryToken>
+        <DataAnnotationsValidator></DataAnnotationsValidator>
+        <ValidationSummary class="text-danger" />
+        <label>Name</label>
+        <InputText @bind-Value="Accreditation.Name" class="form-control my-2"></InputText>
+        <label>Logo</label>
+        <InputFile OnChange="HandleSelected" class="form-control my-2" accept="image/*" />
+        <label>Description</label>
+        <InputTextArea @bind-Value="Accreditation.Description" class="form-control my-2"></InputTextArea>
+
+        <button class="btn btn-primary my-2">Add</button>
+    </EditForm>
+</div>
+
+
+@code {
+    public AccreditationViewmodel Accreditation { get; set; } = new();
+    public ResultViewmodel<AccreditationViewmodel> Result { get; set; } = new();
+
+    private async Task Add()
+    {
+        if (Accreditation is not null)
+        {
+            if (UploadedPaths.Count > 0)
+            {
+                Accreditation.Logo = UploadedPaths[0];
+            }
+            else
+            {
+                Accreditation.Logo = "";
+            }
+
+            var accreditationDto = mapper.Map<AccreditationDto>(Accreditation);
+            BaseDto<AccreditationDto> result = AccreditationService.Add(accreditationDto);
+            Result = mapper.Map<ResultViewmodel<AccreditationViewmodel>>(result);
+            if (Result.Success)
+            {
+                Accreditation = new();
+                UploadedPaths.Clear();
+            }
+            await AlertService.ShowAsync(Result.Message, Result.Status);
+        }
+    }
+
+    List<string> UploadedPaths = new();
+
+    private async Task HandleSelected(InputFileChangeEventArgs e)
+    {
+        var files = e.GetMultipleFiles();
+        var paths = await Uploader.UploadAsync(files, Env.WebRootPath, "uploads/accreditations");
+        UploadedPaths.AddRange(paths);
+    }
+}

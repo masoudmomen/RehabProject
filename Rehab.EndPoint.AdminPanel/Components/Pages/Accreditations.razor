@@ -1,18 +1,18 @@
-﻿@using Rehab.Application.Insurances
+﻿@using Rehab.Application.Accreditations
 @using Rehab.EndPoint.AdminPanel.Components.Controls
 @using Rehab.EndPoint.AdminPanel.Viewmodels
 @using System.Text.Json
-@inject Rehab.Application.Insurances.IInsuranceService InsuranceService
+@inject Rehab.Application.Accreditations.IAccreditationService AccreditationService
 @inject AutoMapper.IMapper mapper
 @rendermode InteractiveServer
 @inject AlertService AlertService
 @inject IWebHostEnvironment Env
 @inject IImageUploaderService Uploader
-@page "/insurances"
+@page "/accreditations"
 
 <div class="w-75 mx-auto p-4">
-    <h3>Insurances</h3>
-    @if(InsurancesList is not null)
+    <h3>Accreditations</h3>
+    @if (AccreditationsList is not null)
     {
         <div class="row g-4">
             <div class="col-sm-12 col-xl-6 w-100">
@@ -28,8 +28,10 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @{ var i = 0;}
-                            @foreach (var item in InsurancesList)
+                            @{
+                                var i = 0;
+                            }
+                            @foreach (var item in AccreditationsList)
                             {
                                 i++;
                                 <tr>
@@ -62,127 +64,122 @@
 
 <!-- #region Edit Modal -->
 <ModalComponent @rendermode="InteractiveServer"
-TModel="InsuranceViewmodel"
-Title="Edit Insurance"
-OkButton="Apply Changes"
-OkButtonClass="btn btn-primary"
-CancelButton="Cancel"
-Model="@tempInsurance"
-OnValidSubmit="@Update"
-@ref="EditModal">
+                TModel="AccreditationViewmodel"
+                Title="Edit Accreditation"
+                OkButton="Apply Changes"
+                OkButtonClass="btn btn-primary"
+                CancelButton="Cancel"
+                Model="@tempAccreditation"
+                OnValidSubmit="@Update"
+                @ref="EditModal">
     <div class="form-group">
         <label>Name</label>
-        <InputText class="form-control" @bind-Value="tempInsurance.Name" />
+        <InputText class="form-control" @bind-Value="tempAccreditation.Name" />
         <label>Logo</label>
         <div class="row">
             <div class="col-10">
                 <InputFile OnChange="HandleSelected" class="form-control my-2" accept="image/*" />
             </div>
             <div class="col-2">
-                <img src="@((UploadedPaths.Count>0) ? UploadedPaths[0] : tempInsurance.Logo)" width="40" height="40" />
+                <img src="@((UploadedPaths.Count>0) ? UploadedPaths[0] : tempAccreditation.Logo)" width="40" height="40" />
             </div>
         </div>
 
         <label>Description</label>
-        <InputTextArea @bind-Value="tempInsurance.Description" class="form-control my-2"></InputTextArea>
+        <InputTextArea @bind-Value="tempAccreditation.Description" class="form-control my-2"></InputTextArea>
     </div>
 </ModalComponent>
-<!-- #endregion Edit Modal --> 
-
-
+<!-- #endregion Edit Modal -->
 <!-- #region Delete Modal -->
 <ModalComponent @rendermode="InteractiveServer"
-TModel="InsuranceViewmodel"
-Title="Delete Insurance"
-OkButton="Yes, I am Sure"
-OkButtonClass="btn btn-danger"
-CancelButton="Cancel"
-Model="@EditInsurance"
-OnValidSubmit="@Delete"
-@ref="DeleteModal">
-    <h6 class="text-muted">Do you really want to Delete this Insurance?</h6>
+                TModel="AccreditationViewmodel"
+                Title="Delete Accreditation"
+                OkButton="Yes, I am Sure"
+                OkButtonClass="btn btn-danger"
+                CancelButton="Cancel"
+                Model="@EditAccreditation"
+                OnValidSubmit="@Delete"
+                @ref="DeleteModal">
+    <h6 class="text-muted">Do you really want to Delete this Accreditation?</h6>
     <div class="container mb-2 px-0">
         <div class="row my-3">
             <div class="col-4">Name</div>
-            <div class="col-8">@EditInsurance.Name</div>
+            <div class="col-8">@EditAccreditation.Name</div>
         </div>
         <div class="row my-3">
             <div class="col-4">Logo</div>
-            <div class="col-8"><img src="@EditInsurance.Logo" width="40" height="40" /></div>
+            <div class="col-8"><img src="@EditAccreditation.Logo" width="40" height="40" /></div>
         </div>
         <div class="row my-3">
             <div class="col-4">Description</div>
             <div class="col-8">
-                <p style="max-width:400px;max-height:150px;overflow-y:auto">@EditInsurance.Description</p>
+                <p style="max-width:400px;max-height:150px;overflow-y:auto">@EditAccreditation.Description</p>
             </div>
         </div>
     </div>
 </ModalComponent>
 <!-- #endregion Delete Modal -->
-
 <!-- #region Image Modal -->
 <ImageModalComponent @rendermode="InteractiveServer"
-Title="Insurance's Logo Image"
-Image="@Image"
-Model="EditInsurance"
-@ref="ImageModal">
+                     Title="Accreditation's Logo Image"
+                     Image="@Image"
+                     Model="EditAccreditation"
+                     @ref="ImageModal">
 </ImageModalComponent>
 <!-- #endregion Image Modal -->
-
-
 @code {
-    public InsuranceViewmodel EditInsurance { get; set; } = new();
-    private ModalComponent<InsuranceViewmodel> EditModal;
-    private ModalComponent<InsuranceViewmodel> DeleteModal;
-    public ImageModalComponent<InsuranceViewmodel> ImageModal;
+    public AccreditationViewmodel EditAccreditation { get; set; } = new();
+    private ModalComponent<AccreditationViewmodel> EditModal;
+    private ModalComponent<AccreditationViewmodel> DeleteModal;
+    public ImageModalComponent<AccreditationViewmodel> ImageModal;
     public string? Image { get; set; } = string.Empty;
-    public ResultViewmodel<InsuranceViewmodel> Result { get; set; } = new();
-    private InsuranceViewmodel? tempInsurance = new();
-    void OpenEditModal(InsuranceViewmodel insurance)
+    public ResultViewmodel<AccreditationViewmodel> Result { get; set; } = new();
+    private AccreditationViewmodel? tempAccreditation = new();
+    void OpenEditModal(AccreditationViewmodel accreditation)
     {
         //depth copy
-        tempInsurance = JsonSerializer.Deserialize<InsuranceViewmodel>(
-            JsonSerializer.Serialize(insurance));
+        tempAccreditation = JsonSerializer.Deserialize<AccreditationViewmodel>(
+            JsonSerializer.Serialize(accreditation));
 
         UploadedPaths.Clear();
         EditModal.Show();
     }
 
-    void OpenDeleteModal(InsuranceViewmodel insurance)
+    void OpenDeleteModal(AccreditationViewmodel accreditation)
     {
-        EditInsurance = insurance;
+        EditAccreditation = accreditation;
         DeleteModal.Show();
     }
 
-    void OpenImageModal(InsuranceViewmodel insurance)
+    void OpenImageModal(AccreditationViewmodel accreditation)
     {
-        Image = insurance.Logo;
+        Image = accreditation.Logo;
         ImageModal?.Show();
     }
 
-    private void Update(InsuranceViewmodel insurance)
+    private void Update(AccreditationViewmodel accreditation)
     {
         if (UploadedPaths.Count > 0)
         {
-            insurance.Logo = UploadedPaths[0];
+            accreditation.Logo = UploadedPaths[0];
         }
         else
         {
-            insurance.Logo = "";
+            accreditation.Logo = "";
         }
-        BaseDto<InsuranceDto> result = InsuranceService.Update(mapper.Map<InsuranceDto>(insurance));
-        Result = mapper.Map<ResultViewmodel<InsuranceViewmodel>>(result);
-        if (Result.Success) 
-            InsurancesList = mapper.Map<List<InsuranceViewmodel>>(InsuranceService.GetList());
+        BaseDto<AccreditationDto> result = AccreditationService.Update(mapper.Map<AccreditationDto>(accreditation));
+        Result = mapper.Map<ResultViewmodel<AccreditationViewmodel>>(result);
+        if (Result.Success)
+            AccreditationsList = mapper.Map<List<AccreditationViewmodel>>(AccreditationService.GetList());
         AlertService.ShowAsync(Result.Message, Result.Status);
 
     }
 
-    public List<InsuranceViewmodel> InsurancesList { get; set; } = new();
+    public List<AccreditationViewmodel> AccreditationsList { get; set; } = new();
 
     protected override void OnInitialized()
     {
-        InsurancesList = mapper.Map<List<InsuranceViewmodel>>(InsuranceService.GetList());
+        AccreditationsList = mapper.Map<List<AccreditationViewmodel>>(AccreditationService.GetList());
     }
 
 
@@ -192,17 +189,17 @@ Model="EditInsurance"
     {
         UploadedPaths.Clear();
         var files = e.GetMultipleFiles();
-        var paths = await Uploader.UploadAsync(files, Env.WebRootPath, "uploads/insurances");
+        var paths = await Uploader.UploadAsync(files, Env.WebRootPath, "uploads/accreditations");
         UploadedPaths.AddRange(paths);
     }
 
 
-    private void Delete(InsuranceViewmodel insurance)
+    private void Delete(AccreditationViewmodel accreditation)
     {
-        var result = InsuranceService.Delete(mapper.Map<InsuranceDto>(insurance));
-        Result = mapper.Map<ResultViewmodel<InsuranceViewmodel>>(result); 
+        var result = AccreditationService.Delete(mapper.Map<AccreditationDto>(accreditation));
+        Result = mapper.Map<ResultViewmodel<AccreditationViewmodel>>(result);
         if (Result.Success)
-            InsurancesList = mapper.Map<List<InsuranceViewmodel>>(InsuranceService.GetList());
+            AccreditationsList = mapper.Map<List<AccreditationViewmodel>>(AccreditationService.GetList());
         AlertService.ShowAsync(Result.Message, Result.Status);
     }
 }

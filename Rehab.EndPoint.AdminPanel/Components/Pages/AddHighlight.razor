@@ -1,0 +1,67 @@
+﻿@page "/highlight/add"
+@using Rehab.Application.Highlights
+@using Rehab.EndPoint.AdminPanel.Viewmodels
+@inject Rehab.Application.Highlights.IHighlightService HighlightService
+@inject AutoMapper.IMapper mapper
+@rendermode InteractiveServer
+@inject AlertService AlertService
+@inject IWebHostEnvironment Env
+@inject IImageUploaderService Uploader
+
+<div class="w-75 mx-auto p-4">
+    <h3>Add Highlight</h3>
+
+    <EditForm Model="Highlight" OnValidSubmit="Add" class="form-control" FormName="AddHighlightForm">
+        <AntiforgeryToken></AntiforgeryToken>
+        <DataAnnotationsValidator></DataAnnotationsValidator>
+        <ValidationSummary class="text-danger" />
+        <label>Name</label>
+        <InputText @bind-Value="Highlight.Name" class="form-control my-2"></InputText>
+        <label>Logo</label>
+        <InputFile OnChange="HandleSelected" class="form-control my-2" accept="image/*" />
+        <label>Description</label>
+        <InputTextArea @bind-Value="Highlight.Description" class="form-control my-2"></InputTextArea>
+
+        <button class="btn btn-primary my-2">Add</button>
+    </EditForm>
+</div>
+
+
+@code {
+    public HighlightViewmodel Highlight { get; set; } = new();
+    public ResultViewmodel<HighlightViewmodel> Result { get; set; } = new();
+
+    private async Task Add()
+    {
+        if (Highlight is not null)
+        {
+            if (UploadedPaths.Count > 0)
+            {
+                Highlight.Logo = UploadedPaths[0];
+            }
+            else
+            {
+                Highlight.Logo = "";
+            }
+
+            var highlightDto = mapper.Map<HighlightDto>(Highlight);
+            BaseDto<HighlightDto> result = HighlightService.Add(highlightDto);
+            Result = mapper.Map<ResultViewmodel<HighlightViewmodel>>(result);
+            if (Result.Success)
+            {
+                Highlight = new();
+                UploadedPaths.Clear();
+            }
+            await AlertService.ShowAsync(Result.Message, Result.Status);
+        }
+    }
+
+    List<string> UploadedPaths = new();
+
+    private async Task HandleSelected(InputFileChangeEventArgs e)
+    {
+        var files = e.GetMultipleFiles();
+        var paths = await Uploader.UploadAsync(files, Env.WebRootPath, "uploads/highlights");
+        UploadedPaths.AddRange(paths);
+    }
+}

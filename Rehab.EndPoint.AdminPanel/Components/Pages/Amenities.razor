@@ -1,18 +1,18 @@
-﻿@using Rehab.Application.Insurances
+﻿@using Rehab.Application.Amenities
 @using Rehab.EndPoint.AdminPanel.Components.Controls
 @using Rehab.EndPoint.AdminPanel.Viewmodels
 @using System.Text.Json
-@inject Rehab.Application.Insurances.IInsuranceService InsuranceService
+@inject Rehab.Application.Amenities.IAmenityService AmenityService
 @inject AutoMapper.IMapper mapper
 @rendermode InteractiveServer
 @inject AlertService AlertService
 @inject IWebHostEnvironment Env
 @inject IImageUploaderService Uploader
-@page "/insurances"
+@page "/amenities"
 
 <div class="w-75 mx-auto p-4">
-    <h3>Insurances</h3>
-    @if(InsurancesList is not null)
+    <h3>Amenities</h3>
+    @if (AmenitiesList is not null)
     {
         <div class="row g-4">
             <div class="col-sm-12 col-xl-6 w-100">
@@ -28,8 +28,10 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @{ var i = 0;}
-                            @foreach (var item in InsurancesList)
+                            @{
+                                var i = 0;
+                            }
+                            @foreach (var item in AmenitiesList)
                             {
                                 i++;
                                 <tr>
@@ -62,127 +64,122 @@
 
 <!-- #region Edit Modal -->
 <ModalComponent @rendermode="InteractiveServer"
-TModel="InsuranceViewmodel"
-Title="Edit Insurance"
-OkButton="Apply Changes"
-OkButtonClass="btn btn-primary"
-CancelButton="Cancel"
-Model="@tempInsurance"
-OnValidSubmit="@Update"
-@ref="EditModal">
+                TModel="AmenityViewmodel"
+                Title="Edit Amenity"
+                OkButton="Apply Changes"
+                OkButtonClass="btn btn-primary"
+                CancelButton="Cancel"
+                Model="@tempAmenity"
+                OnValidSubmit="@Update"
+                @ref="EditModal">
     <div class="form-group">
         <label>Name</label>
-        <InputText class="form-control" @bind-Value="tempInsurance.Name" />
+        <InputText class="form-control" @bind-Value="tempAmenity.Name" />
         <label>Logo</label>
         <div class="row">
             <div class="col-10">
                 <InputFile OnChange="HandleSelected" class="form-control my-2" accept="image/*" />
             </div>
             <div class="col-2">
-                <img src="@((UploadedPaths.Count>0) ? UploadedPaths[0] : tempInsurance.Logo)" width="40" height="40" />
+                <img src="@((UploadedPaths.Count>0) ? UploadedPaths[0] : tempAmenity.Logo)" width="40" height="40" />
             </div>
         </div>
 
         <label>Description</label>
-        <InputTextArea @bind-Value="tempInsurance.Description" class="form-control my-2"></InputTextArea>
+        <InputTextArea @bind-Value="tempAmenity.Description" class="form-control my-2"></InputTextArea>
     </div>
 </ModalComponent>
-<!-- #endregion Edit Modal --> 
-
-
+<!-- #endregion Edit Modal -->
 <!-- #region Delete Modal -->
 <ModalComponent @rendermode="InteractiveServer"
-TModel="InsuranceViewmodel"
-Title="Delete Insurance"
-OkButton="Yes, I am Sure"
-OkButtonClass="btn btn-danger"
-CancelButton="Cancel"
-Model="@EditInsurance"
-OnValidSubmit="@Delete"
-@ref="DeleteModal">
-    <h6 class="text-muted">Do you really want to Delete this Insurance?</h6>
+                TModel="AmenityViewmodel"
+                Title="Delete Amenity"
+                OkButton="Yes, I am Sure"
+                OkButtonClass="btn btn-danger"
+                CancelButton="Cancel"
+                Model="@EditAmenity"
+                OnValidSubmit="@Delete"
+                @ref="DeleteModal">
+    <h6 class="text-muted">Do you really want to Delete this Amenity?</h6>
     <div class="container mb-2 px-0">
         <div class="row my-3">
             <div class="col-4">Name</div>
-            <div class="col-8">@EditInsurance.Name</div>
+            <div class="col-8">@EditAmenity.Name</div>
         </div>
         <div class="row my-3">
             <div class="col-4">Logo</div>
-            <div class="col-8"><img src="@EditInsurance.Logo" width="40" height="40" /></div>
+            <div class="col-8"><img src="@EditAmenity.Logo" width="40" height="40" /></div>
         </div>
         <div class="row my-3">
             <div class="col-4">Description</div>
             <div class="col-8">
-                <p style="max-width:400px;max-height:150px;overflow-y:auto">@EditInsurance.Description</p>
+                <p style="max-width:400px;max-height:150px;overflow-y:auto">@EditAmenity.Description</p>
             </div>
         </div>
     </div>
 </ModalComponent>
 <!-- #endregion Delete Modal -->
-
 <!-- #region Image Modal -->
 <ImageModalComponent @rendermode="InteractiveServer"
-Title="Insurance's Logo Image"
-Image="@Image"
-Model="EditInsurance"
-@ref="ImageModal">
+                     Title="Amenity's Logo Image"
+                     Image="@Image"
+                     Model="EditAmenity"
+                     @ref="ImageModal">
 </ImageModalComponent>
 <!-- #endregion Image Modal -->
-
-
 @code {
-    public InsuranceViewmodel EditInsurance { get; set; } = new();
-    private ModalComponent<InsuranceViewmodel> EditModal;
-    private ModalComponent<InsuranceViewmodel> DeleteModal;
-    public ImageModalComponent<InsuranceViewmodel> ImageModal;
+    public AmenityViewmodel EditAmenity { get; set; } = new();
+    private ModalComponent<AmenityViewmodel> EditModal;
+    private ModalComponent<AmenityViewmodel> DeleteModal;
+    public ImageModalComponent<AmenityViewmodel> ImageModal;
     public string? Image { get; set; } = string.Empty;
-    public ResultViewmodel<InsuranceViewmodel> Result { get; set; } = new();
-    private InsuranceViewmodel? tempInsurance = new();
-    void OpenEditModal(InsuranceViewmodel insurance)
+    public ResultViewmodel<AmenityViewmodel> Result { get; set; } = new();
+    private AmenityViewmodel? tempAmenity = new();
+    void OpenEditModal(AmenityViewmodel amenity)
     {
         //depth copy
-        tempInsurance = JsonSerializer.Deserialize<InsuranceViewmodel>(
-            JsonSerializer.Serialize(insurance));
+        tempAmenity = JsonSerializer.Deserialize<AmenityViewmodel>(
+            JsonSerializer.Serialize(amenity));
 
         UploadedPaths.Clear();
         EditModal.Show();
     }
 
-    void OpenDeleteModal(InsuranceViewmodel insurance)
+    void OpenDeleteModal(AmenityViewmodel amenity)
     {
-        EditInsurance = insurance;
+        EditAmenity = amenity;
         DeleteModal.Show();
     }
 
-    void OpenImageModal(InsuranceViewmodel insurance)
+    void OpenImageModal(AmenityViewmodel amenity)
     {
-        Image = insurance.Logo;
+        Image = amenity.Logo;
         ImageModal?.Show();
     }
 
-    private void Update(InsuranceViewmodel insurance)
+    private void Update(AmenityViewmodel amenity)
     {
         if (UploadedPaths.Count > 0)
         {
-            insurance.Logo = UploadedPaths[0];
+            amenity.Logo = UploadedPaths[0];
         }
         else
         {
-            insurance.Logo = "";
+            amenity.Logo = "";
         }
-        BaseDto<InsuranceDto> result = InsuranceService.Update(mapper.Map<InsuranceDto>(insurance));
-        Result = mapper.Map<ResultViewmodel<InsuranceViewmodel>>(result);
-        if (Result.Success) 
-            InsurancesList = mapper.Map<List<InsuranceViewmodel>>(InsuranceService.GetList());
+        BaseDto<AmenityDto> result = AmenityService.Update(mapper.Map<AmenityDto>(amenity));
+        Result = mapper.Map<ResultViewmodel<AmenityViewmodel>>(result);
+        if (Result.Success)
+            AmenitiesList = mapper.Map<List<AmenityViewmodel>>(AmenityService.GetList());
         AlertService.ShowAsync(Result.Message, Result.Status);
 
     }
 
-    public List<InsuranceViewmodel> InsurancesList { get; set; } = new();
+    public List<AmenityViewmodel> AmenitiesList { get; set; } = new();
 
     protected override void OnInitialized()
     {
-        InsurancesList = mapper.Map<List<InsuranceViewmodel>>(InsuranceService.GetList());
+        AmenitiesList = mapper.Map<List<AmenityViewmodel>>(AmenityService.GetList());
     }
 
 
@@ -192,17 +189,17 @@ Model="EditInsurance"
     {
         UploadedPaths.Clear();
         var files = e.GetMultipleFiles();
-        var paths = await Uploader.UploadAsync(files, Env.WebRootPath, "uploads/insurances");
+        var paths = await Uploader.UploadAsync(files, Env.WebRootPath, "uploads/amenities");
         UploadedPaths.AddRange(paths);
     }
 
 
-    private void Delete(InsuranceViewmodel insurance)
+    private void Delete(AmenityViewmodel amenity)
     {
-        var result = InsuranceService.Delete(mapper.Map<InsuranceDto>(insurance));
-        Result = mapper.Map<ResultViewmodel<InsuranceViewmodel>>(result); 
+        var result = AmenityService.Delete(mapper.Map<AmenityDto>(amenity));
+        Result = mapper.Map<ResultViewmodel<AmenityViewmodel>>(result);
         if (Result.Success)
-            InsurancesList = mapper.Map<List<InsuranceViewmodel>>(InsuranceService.GetList());
+            AmenitiesList = mapper.Map<List<AmenityViewmodel>>(AmenityService.GetList());
         AlertService.ShowAsync(Result.Message, Result.Status);
     }
 }

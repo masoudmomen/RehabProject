@@ -1,0 +1,67 @@
+﻿@page "/amenity/add"
+@using Rehab.Application.Amenities
+@using Rehab.EndPoint.AdminPanel.Viewmodels
+@inject Rehab.Application.Amenities.IAmenityService AmenityService
+@inject AutoMapper.IMapper mapper
+@rendermode InteractiveServer
+@inject AlertService AlertService
+@inject IWebHostEnvironment Env
+@inject IImageUploaderService Uploader
+
+<div class="w-75 mx-auto p-4">
+    <h3>Add Amenity</h3>
+
+    <EditForm Model="Amenity" OnValidSubmit="Add" class="form-control" FormName="AddAmenityForm">
+        <AntiforgeryToken></AntiforgeryToken>
+        <DataAnnotationsValidator></DataAnnotationsValidator>
+        <ValidationSummary class="text-danger" />
+        <label>Name</label>
+        <InputText @bind-Value="Amenity.Name" class="form-control my-2"></InputText>
+        <label>Logo</label>
+        <InputFile OnChange="HandleSelected" class="form-control my-2" accept="image/*" />
+        <label>Description</label>
+        <InputTextArea @bind-Value="Amenity.Description" class="form-control my-2"></InputTextArea>
+
+        <button class="btn btn-primary my-2">Add</button>
+    </EditForm>
+</div>
+
+
+@code {
+    public AmenityViewmodel Amenity { get; set; } = new();
+    public ResultViewmodel<AmenityViewmodel> Result { get; set; } = new();
+
+    private async Task Add()
+    {
+        if (Amenity is not null)
+        {
+            if (UploadedPaths.Count > 0)
+            {
+                Amenity.Logo = UploadedPaths[0];
+            }
+            else
+            {
+                Amenity.Logo = "";
+            }
+
+            var amenityDto = mapper.Map<AmenityDto>(Amenity);
+            BaseDto<AmenityDto> result = AmenityService.Add(amenityDto);
+            Result = mapper.Map<ResultViewmodel<AmenityViewmodel>>(result);
+            if (Result.Success)
+            {
+                Amenity = new();
+                UploadedPaths.Clear();
+            }
+            await AlertService.ShowAsync(Result.Message, Result.Status);
+        }
+    }
+
+    List<string> UploadedPaths = new();
+
+    private async Task HandleSelected(InputFileChangeEventArgs e)
+    {
+        var files = e.GetMultipleFiles();
+        var paths = await Uploader.UploadAsync(files, Env.WebRootPath, "uploads/amenities");
+        UploadedPaths.AddRange(paths);
+    }
+}
