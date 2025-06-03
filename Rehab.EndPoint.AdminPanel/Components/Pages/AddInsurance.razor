@@ -12,7 +12,6 @@
     <h3>Add Insurance</h3>
 
     <EditForm Model="Insurance" OnValidSubmit="Add" class="form-control" FormName="AddInsuranceForm">
-        <AntiforgeryToken></AntiforgeryToken>
         <DataAnnotationsValidator></DataAnnotationsValidator>
         <ValidationSummary class="text-danger" />
         <label>Name</label>
@@ -21,8 +20,15 @@
         <InputFile OnChange="HandleSelected" class="form-control my-2" accept="image/*" />
         <label>Description</label>
         <InputTextArea @bind-Value="Insurance.Description" class="form-control my-2"></InputTextArea>
+        @if (isAddBtnActive)
+        {
+            <button class="btn btn-primary my-2">Add</button>
+        }
+        else
+        {
+            <button class="btn btn-outline-danger my-2" disabled>Add</button>
+        }
 
-        <button class="btn btn-primary my-2">Add</button>
     </EditForm>
 </div>
 
@@ -30,6 +36,7 @@
 @code {
     public InsuranceViewmodel Insurance { get; set; } = new();
     public ResultViewmodel<InsuranceViewmodel> Result { get; set; } = new();
+    private bool isAddBtnActive = true;
 
     private async Task Add()
     {
@@ -60,8 +67,15 @@
 
     private async Task HandleSelected(InputFileChangeEventArgs e)
     {
+        isAddBtnActive = false;
+        StateHasChanged();
         var files = e.GetMultipleFiles();
         var paths = await Uploader.UploadAsync(files, Env.WebRootPath, "uploads/insurances");
+        UploadedPaths.Clear();
         UploadedPaths.AddRange(paths);
+        if (UploadedPaths.Count > 0)
+        {
+            isAddBtnActive = true;
+        }
     }
 }

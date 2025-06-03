@@ -8,8 +8,8 @@
             <h3>@Title</h3>
             <hr />
             <EditForm Model="Model" OnValidSubmit="HandleValidSubmit">
-                <AntiforgeryToken></AntiforgeryToken>
-                <DataAnnotationsValidator />
+                @*                 <AntiforgeryToken></AntiforgeryToken>
+ *@                <DataAnnotationsValidator />
                 <ValidationSummary />
 
                 @if(ChildContent != null)
@@ -18,7 +18,14 @@
                 }
 
                 <div class="modal-actions">
-                    <button type="submit" class="@OkButtonClass">@OkButton</button>
+                    @if (isAddBtnActive)
+                    {
+                        <button type="submit" class="@OkButtonClass">@OkButton</button>
+                    }
+                    else
+                    {
+                        <button class="btn btn-outline-danger" disabled>@OkButton</button>
+                    }
                     <button type="button" class="btn btn-secondary" @onclick="Close">@CancelButton</button>
                 </div>
             </EditForm>
@@ -33,16 +40,27 @@
     [Parameter] public string OkButton { get; set; }
     [Parameter] public string CancelButton { get; set; }
     [Parameter] public string OkButtonClass { get; set; }
+    private bool isAddBtnActive = true;
 
 
     public bool IsVisible { get; set; }
 
-    public void Show() => IsVisible = true;
+    public void Show()
+    {
+        IsVisible = true;
+        InvokeAsync(StateHasChanged);
+    } 
     public void Close() 
     {
         IsVisible = false;
+        InvokeAsync(StateHasChanged);
     }
 
+    public void SetIsAddBtnActive(bool value)
+    {
+        isAddBtnActive = value;
+        InvokeAsync(StateHasChanged);
+    }
 
     private async Task HandleValidSubmit()
     {

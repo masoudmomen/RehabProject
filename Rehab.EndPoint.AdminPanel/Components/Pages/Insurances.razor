@@ -138,6 +138,7 @@ Model="EditInsurance"
     public string? Image { get; set; } = string.Empty;
     public ResultViewmodel<InsuranceViewmodel> Result { get; set; } = new();
     private InsuranceViewmodel? tempInsurance = new();
+
     void OpenEditModal(InsuranceViewmodel insurance)
     {
         //depth copy
@@ -190,10 +191,15 @@ Model="EditInsurance"
 
     private async Task HandleSelected(InputFileChangeEventArgs e)
     {
+        EditModal.SetIsAddBtnActive(false);
         UploadedPaths.Clear();
         var files = e.GetMultipleFiles();
         var paths = await Uploader.UploadAsync(files, Env.WebRootPath, "uploads/insurances");
         UploadedPaths.AddRange(paths);
+        if (UploadedPaths.Count > 0)
+        {
+            EditModal.SetIsAddBtnActive(true);
+        }
     }
 
 

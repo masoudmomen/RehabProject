@@ -6,7 +6,7 @@
     <div class="custom-modal-overlay">
         <div class="custom-modal-content">
             <button type="button" class="btn-close" @onclick="Close"
-                    style="position: absolute; top: 6px; right: 6px;z-index:2000"></button>
+            style="position: absolute; top: 6px; right: 6px;z-index:2000"></button>
             <img src="@Image" class="img-fluid custom-image" />
         </div>
     </div>
@@ -17,6 +17,10 @@
     [Parameter] public string Image { get; set; }
     public bool IsVisible { get; set; }
 
-    public void Show() => IsVisible = true;
+    public void Show()
+    {
+        IsVisible = true;
+        InvokeAsync(StateHasChanged);
+    }
     public void Close() => IsVisible = false;
 }
