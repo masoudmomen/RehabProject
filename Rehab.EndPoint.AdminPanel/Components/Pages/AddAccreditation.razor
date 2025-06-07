@@ -12,17 +12,22 @@
     <h3>Add Accreditation</h3>
 
     <EditForm Model="Accreditation" OnValidSubmit="Add" class="form-control" FormName="AddAccreditationForm">
-        <AntiforgeryToken></AntiforgeryToken>
         <DataAnnotationsValidator></DataAnnotationsValidator>
         <ValidationSummary class="text-danger" />
-        <label>Name</label>
+        <label>Accreditation Name</label>
         <InputText @bind-Value="Accreditation.Name" class="form-control my-2"></InputText>
-        <label>Logo</label>
+        <label>Accreditation Icon</label>
         <InputFile OnChange="HandleSelected" class="form-control my-2" accept="image/*" />
-        <label>Description</label>
+        <label>Accreditation Description</label>
         <InputTextArea @bind-Value="Accreditation.Description" class="form-control my-2"></InputTextArea>
-
-        <button class="btn btn-primary my-2">Add</button>
+        @if (isAddBtnActive)
+        {
+            <button class="btn btn-primary my-2">Add</button>
+        }
+        else
+        {
+            <button class="btn btn-outline-danger my-2" disabled>Add</button>
+        }
     </EditForm>
 </div>
 
@@ -30,6 +35,7 @@
 @code {
     public AccreditationViewmodel Accreditation { get; set; } = new();
     public ResultViewmodel<AccreditationViewmodel> Result { get; set; } = new();
+    private bool isAddBtnActive = true;
 
     private async Task Add()
     {
@@ -60,8 +66,15 @@
 
     private async Task HandleSelected(InputFileChangeEventArgs e)
     {
+        isAddBtnActive = false;
+        StateHasChanged();
         var files = e.GetMultipleFiles();
         var paths = await Uploader.UploadAsync(files, Env.WebRootPath, "uploads/accreditations");
+        UploadedPaths.Clear();
         UploadedPaths.AddRange(paths);
+        if (UploadedPaths.Count > 0)
+        {
+            isAddBtnActive = true;
+        }
     }
 }

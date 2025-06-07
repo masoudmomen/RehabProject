@@ -21,7 +21,7 @@
                         <thead>
                             <tr>
                                 <th scope="col">#</th>
-                                <th scope="col">Logo</th>
+                                <th scope="col">Icon</th>
                                 <th scope="col">Name</th>
                                 <th scope="col">Description</th>
                                 <th scope="col">Operation</th>
@@ -75,7 +75,7 @@
     <div class="form-group">
         <label>Name</label>
         <InputText class="form-control" @bind-Value="tempHighlight.Name" />
-        <label>Logo</label>
+        <label>Icon</label>
         <div class="row">
             <div class="col-10">
                 <InputFile OnChange="HandleSelected" class="form-control my-2" accept="image/*" />
@@ -107,7 +107,7 @@
             <div class="col-8">@EditHighlight.Name</div>
         </div>
         <div class="row my-3">
-            <div class="col-4">Logo</div>
+            <div class="col-4">Icon</div>
             <div class="col-8"><img src="@EditHighlight.Logo" width="40" height="40" /></div>
         </div>
         <div class="row my-3">
@@ -121,7 +121,7 @@
 <!-- #endregion Delete Modal -->
 <!-- #region Image Modal -->
 <ImageModalComponent @rendermode="InteractiveServer"
-                     Title="Highlight's Logo Image"
+                     Title="Highlight's Icon Image"
                      Image="@Image"
                      Model="EditHighlight"
                      @ref="ImageModal">
@@ -187,10 +187,15 @@
 
     private async Task HandleSelected(InputFileChangeEventArgs e)
     {
+        EditModal.SetIsAddBtnActive(false);
         UploadedPaths.Clear();
         var files = e.GetMultipleFiles();
         var paths = await Uploader.UploadAsync(files, Env.WebRootPath, "uploads/highlights");
         UploadedPaths.AddRange(paths);
+        if (UploadedPaths.Count > 0)
+        {
+            EditModal.SetIsAddBtnActive(true);
+        }
     }
 
 

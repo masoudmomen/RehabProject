@@ -21,16 +21,14 @@
                         <thead>
                             <tr>
                                 <th scope="col">#</th>
-                                <th scope="col">Logo</th>
+                                <th scope="col">Icon</th>
                                 <th scope="col">Name</th>
                                 <th scope="col">Description</th>
                                 <th scope="col">Operation</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @{
-                                var i = 0;
-                            }
+                            @{ var i = 0; }
                             @foreach (var item in AccreditationsList)
                             {
                                 i++;
@@ -75,7 +73,7 @@
     <div class="form-group">
         <label>Name</label>
         <InputText class="form-control" @bind-Value="tempAccreditation.Name" />
-        <label>Logo</label>
+        <label>Icon</label>
         <div class="row">
             <div class="col-10">
                 <InputFile OnChange="HandleSelected" class="form-control my-2" accept="image/*" />
@@ -90,6 +88,8 @@
     </div>
 </ModalComponent>
 <!-- #endregion Edit Modal -->
+
+
 <!-- #region Delete Modal -->
 <ModalComponent @rendermode="InteractiveServer"
                 TModel="AccreditationViewmodel"
@@ -107,7 +107,7 @@
             <div class="col-8">@EditAccreditation.Name</div>
         </div>
         <div class="row my-3">
-            <div class="col-4">Logo</div>
+            <div class="col-4">Icon</div>
             <div class="col-8"><img src="@EditAccreditation.Logo" width="40" height="40" /></div>
         </div>
         <div class="row my-3">
@@ -119,6 +119,7 @@
     </div>
 </ModalComponent>
 <!-- #endregion Delete Modal -->
+
 <!-- #region Image Modal -->
 <ImageModalComponent @rendermode="InteractiveServer"
                      Title="Accreditation's Logo Image"
@@ -127,6 +128,8 @@
                      @ref="ImageModal">
 </ImageModalComponent>
 <!-- #endregion Image Modal -->
+
+
 @code {
     public AccreditationViewmodel EditAccreditation { get; set; } = new();
     private ModalComponent<AccreditationViewmodel> EditModal;
@@ -135,6 +138,7 @@
     public string? Image { get; set; } = string.Empty;
     public ResultViewmodel<AccreditationViewmodel> Result { get; set; } = new();
     private AccreditationViewmodel? tempAccreditation = new();
+    
     void OpenEditModal(AccreditationViewmodel accreditation)
     {
         //depth copy
@@ -187,10 +191,15 @@
 
     private async Task HandleSelected(InputFileChangeEventArgs e)
     {
+        EditModal.SetIsAddBtnActive(false);
         UploadedPaths.Clear();
         var files = e.GetMultipleFiles();
         var paths = await Uploader.UploadAsync(files, Env.WebRootPath, "uploads/accreditations");
         UploadedPaths.AddRange(paths);
+        if (UploadedPaths.Count > 0)
+        {
+            EditModal.SetIsAddBtnActive(true);
+        }
     }
 
 
