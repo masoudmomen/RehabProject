@@ -8,9 +8,12 @@
     <label for="state" class="form-label">State</label>
     <select @onchange="OnStateChanged" id="state" class="form-select">
         <option value="">Choose a State</option>
-        @foreach(var s in States)
+        @if (States1?.Any() == true)
         {
-            <option value="@s">@s</option>
+            @foreach(var s in States1)
+            {
+                <option value="@s">@s.Name</option>
+            }
         }
     </select>
 </div>
@@ -31,7 +34,8 @@
 
 @code {
     //مربوط به api شهر و استان
-    private List<string> States = new();
+    private List<string>? States = new();
+    private List<State>? States1 = new();
     private List<string> Cities = new();
 
     private string? SelectedState;
@@ -39,7 +43,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        States = await LocationService.GetStatesAsync();
+        States1 = await LocationService.GetStatesAsync("United States");
     }
 
     private async Task OnStateChanged(ChangeEventArgs e)
