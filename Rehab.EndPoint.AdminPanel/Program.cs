@@ -61,7 +61,7 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-//app.UsePathBase("/admin"); //for publish
+app.UsePathBase("/admin"); //for publish
 app.UseRouting();
 app.UseStaticFiles();
 //app.MapBlazorHub();
