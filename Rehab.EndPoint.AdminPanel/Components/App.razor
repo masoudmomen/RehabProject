@@ -40,7 +40,9 @@
 <body>
     <Routes />
     <script src="_framework/blazor.web.js"></script>
-
+    <script>
+        window.BlazorRehydrateVersion = "@version"; // مقدار را هر بار بعد از پابلیش تغییر بده
+    </script>
 
     <!-- JavaScript Libraries -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
@@ -54,7 +56,7 @@
     <script src="lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
 
     <!-- Template Javascript -->
-    <script src="js/main.js"></script>
+    <script src="js/main.js?v=@version"></script>
 </body>
 
 </html>
