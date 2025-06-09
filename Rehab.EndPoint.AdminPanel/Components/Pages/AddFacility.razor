@@ -10,7 +10,7 @@
 
 
 <h3>AddFacility</h3>
-@if (IsLoading)
+@* @if (IsLoading)
 {
     <!-- Spinner Start -->
     <div class="d-flex justify-content-center align-items-center" style="height: 200px;">
@@ -20,7 +20,7 @@
 }
 else
 {
-    <form method="post" @onsubmit="Add" @formname="addFacilityForm" data-enhance="true">
+ *@    <form method="post" @onsubmit="Add" @formname="addFacilityForm" data-enhance="true">
         <AntiforgeryToken></AntiforgeryToken>
         <div class="row">
             <div class="col-4">
@@ -78,23 +78,22 @@ else
             </div>
         </div>
     </form>
-}
+@* } *@
 
 
 
 @code {
-    [SupplyParameterFromForm]
     public FacilityViewmodel Facility { get; set; } = new();
-    private bool IsLoading = true;
+    // private bool IsLoading = true;
 
     private BaseDto<FacilityDto> AddResult = new();
 
-    protected override async Task OnInitializedAsync()
-    {
-        IsLoading = true;
-        await Task.Delay(1000);
-        IsLoading = false;
-    }
+    // protected override async Task OnInitializedAsync()
+    // {
+    //     IsLoading = true;
+    //     await Task.Delay(1000);
+    //     IsLoading = false;
+    // }
 
     private void Add()
     {
