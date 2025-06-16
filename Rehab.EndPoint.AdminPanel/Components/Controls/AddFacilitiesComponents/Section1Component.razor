@@ -1,0 +1,77 @@
+﻿@using Rehab.EndPoint.AdminPanel.Viewmodels
+@rendermode InteractiveServer
+
+
+<label class="text-decoration-underline mt-0 mb-2 text-lg-center">Primary Information</label>
+<div class="row g-3">
+    <div class="col-6">
+        <label for="name" class="">Name</label>
+        <InputText @bind-Value="Facility.Name" class="form-control" id="name"></InputText>
+    </div>
+    <div class="col-6">
+        <label for="email" class="">Email</label>
+        <InputText @bind-Value="Facility.Email" class="form-control" id="email"></InputText>
+    </div>
+
+</div>
+
+<div class="row g-3">
+    @* <Rehab.EndPoint.AdminPanel.Components.Controls.UsaStateCitySelectorComponent /> *@
+    <div class="col-6">
+        <label for="State" class="">State</label>
+        <InputText @bind-Value="Facility.State" class="form-control" id="State"></InputText>
+    </div>
+    <div class="col-6">
+        <label for="City" class="">City</label>
+        <InputText @bind-Value="Facility.City" class="form-control" id="City"></InputText>
+    </div>
+</div>
+<div class="row g-3">
+    <div class="col-6">
+        <label for="phoneNumber" class="">PhoneNumber</label>
+        <InputText @bind-Value="Facility.PhoneNumber" class="form-control" id="phoneNumber"></InputText>
+    </div>
+    <div class="col-6">
+        <label for="webSite" class="">WebSite</label>
+        <InputText @bind-Value="Facility.WebSite" class="form-control" id="webSite"></InputText>
+    </div>
+</div>
+<div class="row g-3">
+    <div class="col-6">
+        <label for="providersPolicy" class="">Providers Policy</label>
+        <InputText @bind-Value="Facility.ProvidersPolicy" class="form-control" id="providersPolicy"></InputText>
+    </div>
+    <div class="col-6">
+        <label for="webSite" class="">WebSite</label>
+        <InputText @bind-Value="Facility.WebSite" class="form-control" id="webSite"></InputText>
+    </div>
+</div>
+
+<div class="row g-3">
+    <div class="col-6">
+        <label for="occupancyMin" class="">Minimum Occupancy</label>
+        <InputNumber @bind-Value="Facility.OccupancyMin" class="form-control" id="occupancyMin"></InputNumber>
+    </div>
+    <div class="col-6">
+        <label for="OccupancyMax" class="">Maximum Occupancy</label>
+        <InputNumber @bind-Value="Facility.OccupancyMax" class="form-control" id="OccupancyMax"></InputNumber>
+    </div>
+</div>
+
+<div class="row g-3">
+    <div class="col-6">
+        <label for="address" class="">Address</label>
+        <textarea class="form-control" id="address"></textarea>
+    </div>
+    <div class="col-6">
+        <label for="description" class="">Description</label>
+        <textarea class="form-control" id="description"></textarea>
+    </div>
+</div>
+
+
+
+@code{
+    [Parameter]
+    public FacilityViewmodel Facility { get; set; } = new();
+}

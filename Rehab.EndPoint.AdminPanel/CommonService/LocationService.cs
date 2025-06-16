@@ -55,10 +55,6 @@ namespace Rehab.EndPoint.AdminPanel.CommonService
 
 
 
-
-
-
-
     public class CountryStatesResponse
     {
         public bool Error { get; set; }

@@ -4,6 +4,7 @@ using Rehab.Domain.Accreditations;
 using Rehab.Domain.Amenities;
 using Rehab.Domain.Facilities;
 using Rehab.Domain.Highlights;
+using Rehab.Domain.Images;
 using Rehab.Domain.Insurances;
 using Rehab.Domain.LevelsOfCare;
 using Rehab.Domain.Treatments;
@@ -38,5 +39,6 @@ namespace Rehab.Persistence.Contexts
         public DbSet<Wwt> Wwts { get; set; }
         public DbSet<Loc> Locs { get; set; }
         public DbSet<Treatment> Treatments { get; set; }
+        public DbSet<FacilitysImages> FacilitysImages { get; set; }
     }
 }

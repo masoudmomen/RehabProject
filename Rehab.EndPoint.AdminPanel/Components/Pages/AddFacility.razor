@@ -9,91 +9,107 @@
 
 
 
-<h3>AddFacility</h3>
-@if (IsLoading)
-{
-    <!-- Spinner Start -->
-    <div class="d-flex justify-content-center align-items-center" style="height: 200px;">
-        <div class="spinner-border text-primary" role="status"></div>
-    </div>
-    <!-- Spinner End -->
-}
-else
-{
-    <form method="post" @onsubmit="Add" @formname="addFacilityForm" data-enhance="true">
-        <AntiforgeryToken></AntiforgeryToken>
-        <div class="row">
-            <div class="col-4">
-                <label for="name" class="form-label">Name</label>
-                <InputText @bind-Value="Facility.Name" class="form-control" id="name"></InputText>
-            </div>
-            <div class="col-4">
-                <label for="address" class="form-label">Address</label>
-                <InputText @bind-Value="Facility.Address" class="form-control" id="address"></InputText>
-            </div>
-            <div class="col-4">
-                <label for="phoneNumber" class="form-label">PhoneNumber</label>
-                <InputText @bind-Value="Facility.PhoneNumber" class="form-control" id="phoneNumber"></InputText>
-            </div>
-        </div>
+@* <div class="container w-75 mx-auto my-4">
+    <h3>Add Facility</h3>
+    <EditForm Model="Facility" OnValidSubmit="Add" class="form-control" FormName="AddFacilityForm" style="height:550px;">
+        <section class="card-body">
+            <label class="text-decoration-underline mt-0 mb-2 text-lg-center">Primary Information</label>
+            @switch (comoponentNumber)
+            {
+                case 1:
+                    <Rehab.EndPoint.AdminPanel.Components.Controls.AddFacilitiesComponents.Section1Component Facility="Facility" />
+                    break;
+                case 2:
+                    <Rehab.EndPoint.AdminPanel.Components.Controls.AddFacilitiesComponents.Section2Component  />
+                    break;
+                default:
+                    <Rehab.EndPoint.AdminPanel.Components.Controls.AddFacilitiesComponents.Section1Component Facility="Facility" />
+                    break;
+            }
 
-        <div class="row">
-            <Rehab.EndPoint.AdminPanel.Components.Controls.UsaStateCitySelectorComponent />
-            <div class="col-4">
-                <label for="webSite" class="form-label">WebSite</label>
-                <InputText @bind-Value="Facility.WebSite" class="form-control" id="webSite"></InputText>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-4">
-                <label for="name" class="form-label">Name</label>
-                <InputText @bind-Value="Facility.Email" class="form-control" id="name"></InputText>
-            </div>
-            <div class="col-4">
-                <label for="address" class="form-label">Address</label>
-                <InputText @bind-Value="Facility.Address" class="form-control" id="address"></InputText>
-            </div>
-            <div class="col-4">
-                <label for="phoneNumber" class="form-label">PhoneNumber</label>
-                <InputText @bind-Value="Facility.PhoneNumber" class="form-control" id="phoneNumber"></InputText>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-8">
-                <label for="name" class="form-label">Accreditation</label>
-                <textarea class="form-control" id=""></textarea>
-            </div>
-
-            <div class="col-4">
-                <label for="phoneNumber" class="form-label">PhoneNumber</label>
-                <InputText @bind-Value="Facility.PhoneNumber" class="form-control" id="phoneNumber"></InputText>
-            </div>
-        </div>
-
-        <div class="row mt-1">
+        </section>
+        <hr />
+        <div class="row mt-3   end-0" >
             <div class="col-4">
                 <button type="submit" class="btn btn-primary">Add</button>
             </div>
+            <div class="col-6"><button type="button" class="btn btn-primary  float-end" style="width:105px;" @onclick="ComponentMinus">&lt; Previous</button></div>
+            <div class="col-6"><button type="button" class="btn btn-primary" style="width:105px;" @onclick="ComponentPlus">Next &gt;</button></div>
         </div>
-    </form>
-}
+    </EditForm>
+</div>
+ *@
+
+
+<div class="container w-75 mx-auto my-4" style="height: 550px;">
+    <h3>Add Facility</h3>
+
+    <EditForm Model="Facility" OnValidSubmit="Add" class="form-control d-flex flex-column h-100" FormName="AddFacilityForm">
+
+        <section class="card-body flex-grow-1">
+            @switch (comoponentNumber)
+            {
+                case 1:
+                    <Rehab.EndPoint.AdminPanel.Components.Controls.AddFacilitiesComponents.Section1Component Facility="Facility" />
+                    break;
+                case 2:
+                    <Rehab.EndPoint.AdminPanel.Components.Controls.AddFacilitiesComponents.Section2Component />
+                    break;
+                default:
+                    <Rehab.EndPoint.AdminPanel.Components.Controls.AddFacilitiesComponents.Section1Component Facility="Facility" />
+                    break;
+            }
+        </section>
+
+        <hr />
+
+        <div class="row mt-1">
+            <div class="col-6">
+                <button type="button"  class="btn btn-primary float-end @PreviousBtnStatus" style="width:105px;" @onclick="ComponentMinus">&lt; Previous</button>
+            </div>
+            <div class="col-6">
+                <button type="button" class="btn btn-primary @NextBtnStatus" style="width:105px;" @onclick="ComponentPlus">Next &gt;</button>
+            </div>
+        </div>
+
+    </EditForm>
+</div>
+
 
 
 
 @code {
-    [SupplyParameterFromForm]
     public FacilityViewmodel Facility { get; set; } = new();
-    private bool IsLoading = true;
-
+    private int comoponentNumber = 1;
     private BaseDto<FacilityDto> AddResult = new();
+    private string PreviousBtnStatus = "disabled";
+    private string NextBtnStatus = "";
 
-    protected override async Task OnInitializedAsync()
+    private void ComponentPlus()
     {
-        IsLoading = true;
-        await Task.Delay(1000);
-        IsLoading = false;
+        comoponentNumber = (comoponentNumber < 8) ? comoponentNumber+1 : comoponentNumber;
+        CheckBtnsStatus();
+        StateHasChanged();
+    }
+
+    private void ComponentMinus()
+    {
+        comoponentNumber = (comoponentNumber > 1) ? comoponentNumber-1 : comoponentNumber;
+        CheckBtnsStatus();
+        StateHasChanged();
+    }
+
+    private void CheckBtnsStatus()
+    {
+        if(comoponentNumber <8 && comoponentNumber > 1)
+        {
+            NextBtnStatus = PreviousBtnStatus = "";
+        }
+        else
+        {
+            if (comoponentNumber == 8) NextBtnStatus = "disabled";
+            if (comoponentNumber == 1) PreviousBtnStatus = "disabled";
+        }
     }
 
     private void Add()
