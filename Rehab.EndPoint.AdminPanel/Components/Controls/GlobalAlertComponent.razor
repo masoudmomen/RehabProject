@@ -4,7 +4,7 @@
 {
     <div class="@AlertClass alert-dismissible fade show mt-1 w-75 alertPosition" role="alert">
         <i class="fa fa-exclamation-circle me-2"></i>@Message
-        <button type="button" class="btn-close" data-bs-dismiss="alert" @onclick="CloseMessageBox" aria-label="Close"></button>
+        <button type="button" class="btn-close"  @onclick="CloseMessageBox" aria-label="Close"></button>
     </div>
 }
 
@@ -42,7 +42,7 @@
     private Task CloseMessageBox()
     {
         visible = false;
-        StateHasChanged();
+        //StateHasChanged();
         return Task.CompletedTask;
     }
 }

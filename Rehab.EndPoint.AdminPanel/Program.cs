@@ -42,7 +42,7 @@ builder.Services.AddTransient<IHighlightService, HighlightService>();
 builder.Services.AddTransient<IWwtService, WwtService>();
 builder.Services.AddTransient<ILevelsOfCareService, LevelsOfCareService>();
 builder.Services.AddTransient<ITreatmentService, TreatmentService>();
-builder.Services.AddHttpClient();
+builder.Services.AddHttpClient<LocationService>();
 builder.Services.AddScoped<LocationService>();
 builder.Services.AddScoped<AlertService>();
 builder.Services.AddScoped<IImageUploaderService, ImageUploaderService>();
