@@ -1,11 +1,29 @@
 ﻿@using Rehab.EndPoint.AdminPanel.Viewmodels
 <label class="text-decoration-underline mt-0 mb-2 text-lg-center">Insurances Information</label>
 <div class="row">
-    <div class="col-5 border-1 h-100">
-
+    <div class="col-5">
+        <div class="col rounded-2" style="border:solid 1px gray;background-color:white;z-index:500;">
+            <div class="bg-info rounded-top p-1 text-center text-white">Insurances List</div>
+            <div style="min-height:362px;max-height:362px;overflow-y:scroll;z-index:1000;background-color:white"></div>
+        </div>
     </div>
-    <div class="col-2"></div>
-    <div class="col-5"></div>
+    <div class="col-2">
+        <div class="rounded-2" style="border:solid 1px gray;background-color:white;z-index:1000">
+            <div class="bg-info rounded-top p-1 text-center text-white">Add / Remove</div>
+            <div style="min-height:362px;max-height:362px" class="align-items-center"><br />
+                <button class="btn btn-light btn-lg">Add to List</button><br />
+                <button class="btn btn-light btn-lg">Remove from List</button>
+            </div>
+        </div>
+    </div>
+    <div class="col-5">
+        <div class="col rounded-2" style="border:solid 1px gray;background-color:white;z-index:500">
+            <div class="bg-info rounded-top p-1 text-center text-white">Selected List</div>
+            <div style="min-height:362px;max-height:362px;overflow-y:scroll;z-index:1000;background-color:white;">
+                
+            </div>
+        </div>
+    </div>
 </div>
 
 
