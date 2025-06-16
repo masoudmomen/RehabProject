@@ -9,10 +9,12 @@
     </div>
     <div class="col-2">
         <div class="rounded-2" style="border:solid 1px gray;background-color:white;z-index:1000">
-            <div class="bg-info rounded-top p-1 text-center text-white">Add / Remove</div>
-            <div style="min-height:362px;max-height:362px" class="align-items-center"><br />
-                <button class="btn btn-light btn-lg">Add to List</button><br />
-                <button class="btn btn-light btn-lg">Remove from List</button>
+            <div class="bg-info rounded-top p-1 text-center text-white" style="max-height:33px;overflow:hidden">Add / Remove</div>
+            <div style="min-height:362px;max-height:362px;" class="d-flex align-items-center text-center">
+                <div class="w-100">
+                    <button type="button" class="btn btn-light btn-outline-success my-2" style="width:95%;">Add&gt;</button>
+                    <button type="button" class="btn btn-light btn-outline-danger my-2 overflow-hidden" style="width:95%;">&lt;Remove</button>
+                </div>
             </div>
         </div>
     </div>
