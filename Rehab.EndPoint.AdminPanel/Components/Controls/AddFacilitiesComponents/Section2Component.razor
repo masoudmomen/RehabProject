@@ -1,19 +1,36 @@
-﻿@using Rehab.EndPoint.AdminPanel.Viewmodels
+﻿
+@using AutoMapper
+@using Rehab.Application.Insurances
+@using Rehab.EndPoint.AdminPanel.Viewmodels
+
+@inject AutoMapper.IMapper mapper
+@inject Rehab.Application.Insurances.IInsuranceService InsuranceService
+
 <label class="text-decoration-underline mt-0 mb-2 text-lg-center">Insurances Information</label>
 <div class="row">
     <div class="col-5">
         <div class="col rounded-2" style="border:solid 1px gray;background-color:white;z-index:500;">
             <div class="bg-info rounded-top p-1 text-center text-white">Insurances List</div>
-            <div style="min-height:362px;max-height:362px;overflow-y:scroll;z-index:1000;background-color:white"></div>
+            <div style="min-height:362px;max-height:362px;overflow-y:scroll;z-index:1000;background-color:white" class="">
+                @foreach (var item in Insurances)
+                {
+                    <div class="rounded-1 border-1 bg-light mt-2 mx-auto p-2" style="width:95%;cursor:pointer;">
+                        <input class="form-check-input" type="checkbox">
+                        <img src="@item.Logo" class=" mx-2" width="20" height="20" />
+                        <span class=" ">@item.Name</span>
+                    </div>
+                }
+            </div>
         </div>
     </div>
     <div class="col-2">
         <div class="rounded-2" style="border:solid 1px gray;background-color:white;z-index:1000">
-            <div class="bg-info rounded-top p-1 text-center text-white" style="max-height:33px;overflow:hidden">Add / Remove</div>
+            <div class="bg-info rounded-top p-1 text-center text-white" style="max-height:33px;overflow:hidden">Operation</div>
             <div style="min-height:362px;max-height:362px;" class="d-flex align-items-center text-center">
                 <div class="w-100">
                     <button type="button" class="btn btn-light btn-outline-success my-2" style="width:95%;">Add&gt;</button>
                     <button type="button" class="btn btn-light btn-outline-danger my-2 overflow-hidden" style="width:95%;">&lt;Remove</button>
+                    <button type="button" class="btn btn-light btn-outline-info my-2 overflow-hidden" style="width:95%;">Create</button>
                 </div>
             </div>
         </div>
@@ -22,7 +39,24 @@
         <div class="col rounded-2" style="border:solid 1px gray;background-color:white;z-index:500">
             <div class="bg-info rounded-top p-1 text-center text-white">Selected List</div>
             <div style="min-height:362px;max-height:362px;overflow-y:scroll;z-index:1000;background-color:white;">
-                
+                <div class="rounded-1 border-1 bg-light mt-2 mx-auto p-2 d-flex align-items-center" style="width:95%;cursor:pointer;">
+                    <input class="form-check-input my-auto" type="checkbox">
+                    <img class=" mx-2" width="20" height="20" />
+                    <span class=" ">The Insurance Name</span>
+                    <button class="btn btn-sm ms-auto"><i class="fa fa-times"></i></button>
+                </div>
+                <div class="rounded-1 border-1 bg-light mt-2 mx-auto p-2  d-flex align-items-center" style="width:95%;cursor:pointer;">
+                    <input class="form-check-input my-auto" type="checkbox">
+                    <img class=" mx-2" width="20" height="20" />
+                    <span class=" ">The Insurance Name</span>
+                    <button class="btn btn-sm ms-auto"><i class="fa fa-times"></i></button>
+                </div>
+                <div class=" rounded-1 border-1 bg-light mt-2 mx-auto p-2 d-flex align-items-center" style="width:95%;cursor:pointer;">
+                    <input class="form-check-input my-auto" type="checkbox">
+                    <img class=" mx-2" width="20" height="20" />
+                    <span class=" ">The Insurance Name</span>
+                    <button class="btn btn-sm ms-auto"><i class="fa fa-times"></i></button>
+                </div>
             </div>
         </div>
     </div>
@@ -33,4 +67,10 @@
 @code {
     [Parameter]
     public FacilityViewmodel Facility { get; set; } = new();
+    public List<InsuranceViewmodel> Insurances { get; set; } = new();
+
+    protected override void OnInitialized()
+    {
+        Insurances = mapper.Map<List<InsuranceViewmodel>>(InsuranceService.GetList());
+    }
 }
