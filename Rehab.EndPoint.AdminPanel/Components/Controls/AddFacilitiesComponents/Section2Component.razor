@@ -15,7 +15,7 @@
                 @foreach (var item in InsurancesList)
                 {
                     <div class="rounded-1 border-1 bg-light mt-2 mx-auto p-2" style="width:95%;cursor:pointer;" @ondblclick="() =>AddSingleInsurance(item)">
-                        <input class="form-check-input" type="checkbox">
+                        <input class="form-check-input" type="checkbox" @oninput="()=>AddToSelectedInsurances(item)">
                         <img src="@item.Logo" class=" mx-2" width="20" height="20" />
                         <span class=" ">@item.Name</span>
                     </div>
@@ -28,7 +28,7 @@
             <div class="bg-info rounded-top p-1 text-center text-white" style="max-height:33px;overflow:hidden">Operation</div>
             <div style="min-height:362px;max-height:362px;" class="d-flex align-items-center text-center">
                 <div class="w-100">
-                    <button type="button" class="btn btn-light btn-outline-success my-2" style="width:95%;">Add&gt;</button>
+                    <button type="button" @onclick="AddInsurances" class="btn btn-light btn-outline-success my-2" style="width:95%;">Add&gt;</button>
                     <button type="button" class="btn btn-light btn-outline-danger my-2 overflow-hidden" style="width:95%;">&lt;Remove</button>
                     <button type="button" class="btn btn-light btn-outline-info my-2 overflow-hidden" style="width:95%;">Create</button>
                 </div>
@@ -51,26 +51,6 @@
                         </div>
                     }
                 }
-
-
-                @* <div class="rounded-1 border-1 bg-light mt-2 mx-auto p-2 d-flex align-items-center" style="width:95%;cursor:pointer;">
-                    <input class="form-check-input my-auto" type="checkbox">
-                    <img class=" mx-2" width="20" height="20" />
-                    <span class=" ">The Insurance Name</span>
-                    <button class="btn btn-sm ms-auto"><i class="fa fa-times"></i></button>
-                </div>
-                <div class="rounded-1 border-1 bg-light mt-2 mx-auto p-2  d-flex align-items-center" style="width:95%;cursor:pointer;">
-                    <input class="form-check-input my-auto" type="checkbox">
-                    <img class=" mx-2" width="20" height="20" />
-                    <span class=" ">The Insurance Name</span>
-                    <button class="btn btn-sm ms-auto"><i class="fa fa-times"></i></button>
-                </div>
-                <div class=" rounded-1 border-1 bg-light mt-2 mx-auto p-2 d-flex align-items-center" style="width:95%;cursor:pointer;">
-                    <input class="form-check-input my-auto" type="checkbox">
-                    <img class=" mx-2" width="20" height="20" />
-                    <span class=" ">The Insurance Name</span>
-                    <button class="btn btn-sm ms-auto"><i class="fa fa-times"></i></button>
-                </div> *@
             </div>
         </div>
     </div>
@@ -80,8 +60,9 @@
 
 @code {
     [Parameter]
-    public FacilityViewmodel Facility { get; set; } = new();
+    public FacilityViewmodel Facility { get; set; }
     public List<InsuranceViewmodel> InsurancesList { get; set; } = new();
+    public List<InsuranceViewmodel> InsurancesSelectedList { get; set; } = new();
 
     protected override void OnInitialized()
     {
@@ -90,12 +71,26 @@
 
     private void AddSingleInsurance(InsuranceViewmodel insurance)
     {
-
-        if (insurance is not null)
+        if (insurance is not null && !Facility.Insurances!.Contains(insurance))
         {
             Facility.Insurances?.Add(insurance);
-            Console.WriteLine(insurance.Name + " " + Facility.Insurances?.Count.ToString());
-            StateHasChanged();
+        }
+    }
+    private void AddInsurances()
+    {
+        if (InsurancesSelectedList is not null)
+        {
+            Facility.Insurances?.AddRange(InsurancesSelectedList);
+        }
+        InsurancesSelectedList?.Clear();
+    }
+
+    private void AddToSelectedInsurances(InsuranceViewmodel insurance)
+    {
+        Console.WriteLine(insurance.Name);
+        if (insurance is not null && !Facility.Insurances!.Contains(insurance))
+        {
+            InsurancesSelectedList.Add(insurance);
         }
     }
 }
