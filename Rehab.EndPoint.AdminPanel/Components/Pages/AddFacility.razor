@@ -9,38 +9,6 @@
 
 
 
-@* <div class="container w-75 mx-auto my-4">
-    <h3>Add Facility</h3>
-    <EditForm Model="Facility" OnValidSubmit="Add" class="form-control" FormName="AddFacilityForm" style="height:550px;">
-        <section class="card-body">
-            <label class="text-decoration-underline mt-0 mb-2 text-lg-center">Primary Information</label>
-            @switch (comoponentNumber)
-            {
-                case 1:
-                    <Rehab.EndPoint.AdminPanel.Components.Controls.AddFacilitiesComponents.Section1Component Facility="Facility" />
-                    break;
-                case 2:
-                    <Rehab.EndPoint.AdminPanel.Components.Controls.AddFacilitiesComponents.Section2Component  />
-                    break;
-                default:
-                    <Rehab.EndPoint.AdminPanel.Components.Controls.AddFacilitiesComponents.Section1Component Facility="Facility" />
-                    break;
-            }
-
-        </section>
-        <hr />
-        <div class="row mt-3   end-0" >
-            <div class="col-4">
-                <button type="submit" class="btn btn-primary">Add</button>
-            </div>
-            <div class="col-6"><button type="button" class="btn btn-primary  float-end" style="width:105px;" @onclick="ComponentMinus">&lt; Previous</button></div>
-            <div class="col-6"><button type="button" class="btn btn-primary" style="width:105px;" @onclick="ComponentPlus">Next &gt;</button></div>
-        </div>
-    </EditForm>
-</div>
- *@
-
-
 <div class="container w-75 mx-auto my-5" style="height: 550px;">
     <h3>Add Facility</h3>
 

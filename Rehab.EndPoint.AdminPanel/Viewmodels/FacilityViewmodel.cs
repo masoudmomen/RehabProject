@@ -28,7 +28,7 @@ namespace Rehab.EndPoint.AdminPanel.Viewmodels
         public short Founded { get; set; }
         public short OccupancyMin { get; set; }
         public short OccupancyMax { get; set; }
-        public ICollection<Insurance>? Insurances { get; set; }
+        public List<InsuranceViewmodel>? Insurances { get; set; } = new();
         public ICollection<Accreditation>? Accreditations { get; set; }
         public ICollection<Amenity>? Amenities { get; set; }
         public ICollection<Highlight>? Highlights { get; set; }

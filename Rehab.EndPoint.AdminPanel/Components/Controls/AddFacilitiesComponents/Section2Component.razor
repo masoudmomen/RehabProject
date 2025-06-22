@@ -1,4 +1,4 @@
-﻿
+﻿@rendermode InteractiveServer
 @using AutoMapper
 @using Rehab.Application.Insurances
 @using Rehab.EndPoint.AdminPanel.Viewmodels
@@ -12,9 +12,9 @@
         <div class="col rounded-2" style="border:solid 1px gray;background-color:white;z-index:500;">
             <div class="bg-info rounded-top p-1 text-center text-white">Insurances List</div>
             <div style="min-height:362px;max-height:362px;overflow-y:scroll;z-index:1000;background-color:white" class="">
-                @foreach (var item in Insurances)
+                @foreach (var item in InsurancesList)
                 {
-                    <div class="rounded-1 border-1 bg-light mt-2 mx-auto p-2" style="width:95%;cursor:pointer;">
+                    <div class="rounded-1 border-1 bg-light mt-2 mx-auto p-2" style="width:95%;cursor:pointer;" @ondblclick="() =>AddSingleInsurance(item)">
                         <input class="form-check-input" type="checkbox">
                         <img src="@item.Logo" class=" mx-2" width="20" height="20" />
                         <span class=" ">@item.Name</span>
@@ -39,7 +39,21 @@
         <div class="col rounded-2" style="border:solid 1px gray;background-color:white;z-index:500">
             <div class="bg-info rounded-top p-1 text-center text-white">Selected List</div>
             <div style="min-height:362px;max-height:362px;overflow-y:scroll;z-index:1000;background-color:white;">
-                <div class="rounded-1 border-1 bg-light mt-2 mx-auto p-2 d-flex align-items-center" style="width:95%;cursor:pointer;">
+                @if (Facility.Insurances is not null)
+                {
+                    @foreach (var item in Facility.Insurances)
+                    {
+                        <div class="rounded-1 border-1 bg-light mt-2 mx-auto p-2 d-flex align-items-center" style="width:95%;cursor:pointer;">
+                            <input class="form-check-input my-auto" type="checkbox">
+                            <img src="@item.Logo" class=" mx-2" width="20" height="20" />
+                            <span class=" ">@item.Name</span>
+                            <button class="btn btn-sm ms-auto"><i class="fa fa-times"></i></button>
+                        </div>
+                    }
+                }
+
+
+                @* <div class="rounded-1 border-1 bg-light mt-2 mx-auto p-2 d-flex align-items-center" style="width:95%;cursor:pointer;">
                     <input class="form-check-input my-auto" type="checkbox">
                     <img class=" mx-2" width="20" height="20" />
                     <span class=" ">The Insurance Name</span>
@@ -56,7 +70,7 @@
                     <img class=" mx-2" width="20" height="20" />
                     <span class=" ">The Insurance Name</span>
                     <button class="btn btn-sm ms-auto"><i class="fa fa-times"></i></button>
-                </div>
+                </div> *@
             </div>
         </div>
     </div>
@@ -67,10 +81,21 @@
 @code {
     [Parameter]
     public FacilityViewmodel Facility { get; set; } = new();
-    public List<InsuranceViewmodel> Insurances { get; set; } = new();
+    public List<InsuranceViewmodel> InsurancesList { get; set; } = new();
 
     protected override void OnInitialized()
     {
-        Insurances = mapper.Map<List<InsuranceViewmodel>>(InsuranceService.GetList());
+        InsurancesList = mapper.Map<List<InsuranceViewmodel>>(InsuranceService.GetList());
+    }
+
+    private void AddSingleInsurance(InsuranceViewmodel insurance)
+    {
+
+        if (insurance is not null)
+        {
+            Facility.Insurances?.Add(insurance);
+            Console.WriteLine(insurance.Name + " " + Facility.Insurances?.Count.ToString());
+            StateHasChanged();
+        }
     }
 }
