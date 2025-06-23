@@ -5,6 +5,7 @@
 
 @inject AutoMapper.IMapper mapper
 @inject Rehab.Application.Insurances.IInsuranceService InsuranceService
+@inject IJSRuntime JS
 
 <label class="text-decoration-underline mt-0 mb-2 text-lg-center">Insurances Information</label>
 <div class="row">
@@ -39,7 +40,7 @@
         <div class="col rounded-2" style="border:solid 1px gray;background-color:white;z-index:500">
             <div class="bg-info rounded-top p-1 text-center text-white">Selected List</div>
             <div style="min-height:362px;max-height:362px;overflow-y:scroll;z-index:1000;background-color:white;">
-                @if (Facility.Insurances is not null)
+                @if (Facility!.Insurances is not null)
                 {
                     @foreach (var item in Facility.Insurances)
                     {
@@ -60,37 +61,67 @@
 
 @code {
     [Parameter]
-    public FacilityViewmodel Facility { get; set; }
+    public FacilityViewmodel? Facility { get; set; }
     public List<InsuranceViewmodel> InsurancesList { get; set; } = new();
     public List<InsuranceViewmodel> InsurancesSelectedList { get; set; } = new();
 
     protected override void OnInitialized()
     {
         InsurancesList = mapper.Map<List<InsuranceViewmodel>>(InsuranceService.GetList());
+        // if (Facility!.Insurances!.Count > 0)
+        // {
+        //     foreach (var item in Facility.Insurances)
+        //     {
+        //         Console.WriteLine(item.Name);
+        //     }
+        // }
     }
 
     private void AddSingleInsurance(InsuranceViewmodel insurance)
     {
-        if (insurance is not null && !Facility.Insurances!.Contains(insurance))
+        if (insurance is not null)
         {
-            Facility.Insurances?.Add(insurance);
+            var isInsuranceExist = false;
+            foreach (var item in Facility!.Insurances!)
+            {
+                if (insurance.Id == item.Id){
+                    isInsuranceExist = true;
+                    break;
+                }
+            }
+            if (!isInsuranceExist) Facility.Insurances.Add(insurance);
         }
     }
     private void AddInsurances()
     {
         if (InsurancesSelectedList is not null)
         {
-            Facility.Insurances?.AddRange(InsurancesSelectedList);
+            foreach (var item in InsurancesSelectedList)
+            {
+                var isInsuranceExist = false;
+                foreach (var insc in Facility!.Insurances!)
+                {
+                    if (item.Id == insc.Id)
+                    {
+                        isInsuranceExist = true;
+                        break;
+                    }
+                }
+                if (!isInsuranceExist) Facility.Insurances.Add(item);
+            }
         }
         InsurancesSelectedList?.Clear();
+        JS.InvokeVoidAsync("UnCheckAllCheckBoxes");
     }
 
     private void AddToSelectedInsurances(InsuranceViewmodel insurance)
     {
-        Console.WriteLine(insurance.Name);
-        if (insurance is not null && !Facility.Insurances!.Contains(insurance))
+        if (insurance is not null)
         {
-            InsurancesSelectedList.Add(insurance);
+            if (!InsurancesSelectedList.Contains(insurance))
+                InsurancesSelectedList.Add(insurance);
+            else
+                InsurancesSelectedList.Remove(insurance);
         }
     }
 }

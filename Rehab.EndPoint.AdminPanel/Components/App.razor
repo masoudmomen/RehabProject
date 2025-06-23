@@ -40,6 +40,13 @@
 <body>
     <Routes />
     <script>
+        function UnCheckAllCheckBoxes(){
+            document.querySelectorAll('input[type="checkbox"]:checked')
+                .forEach(cb => cb.checked = false);
+        }
+    </script>
+
+    <script>
         window.BlazorRehydrateVersion = "@version"; // مقدار را هر بار بعد از پابلیش تغییر بده
     </script>
     <script src="_framework/blazor.web.js"></script>
