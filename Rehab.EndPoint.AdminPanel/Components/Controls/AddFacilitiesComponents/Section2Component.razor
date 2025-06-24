@@ -45,10 +45,10 @@
                     @foreach (var item in Facility.Insurances)
                     {
                         <div class="rounded-1 border-1 bg-light mt-2 mx-auto p-2 d-flex align-items-center" style="width:95%;cursor:pointer;">
-                            <input class="form-check-input my-auto" type="checkbox">
+                            <input class="form-check-input my-auto" type="checkbox" @oninput="()=>AddToUnSelectedInsurances(item)">
                             <img src="@item.Logo" class=" mx-2" width="20" height="20" />
                             <span class=" ">@item.Name</span>
-                            <button class="btn btn-sm ms-auto"><i class="fa fa-times"></i></button>
+                            <button class="btn btn-sm ms-auto" @onclick="()=>RemoveSingleInsurance(item)"><i class="fa fa-times"></i></button>
                         </div>
                     }
                 }
@@ -64,6 +64,7 @@
     public FacilityViewmodel? Facility { get; set; }
     public List<InsuranceViewmodel> InsurancesList { get; set; } = new();
     public List<InsuranceViewmodel> InsurancesSelectedList { get; set; } = new();
+    public List<InsuranceViewmodel> InsurancesUnSelectedList { get; set; } = new();
 
     protected override void OnInitialized()
     {
@@ -123,5 +124,45 @@
             else
                 InsurancesSelectedList.Remove(insurance);
         }
+    }
+
+
+    private void RemoveSingleInsurance(InsuranceViewmodel insurance)
+    {
+        if (insurance is not null && Facility!.Insurances!.Contains(insurance))
+        {
+            Facility.Insurances.Remove(insurance);
+        }
+    }
+    private void AddToUnSelectedInsurances(InsuranceViewmodel insurance)
+    {
+        if (insurance is not null)
+        {
+            if (!InsurancesUnSelectedList.Contains(insurance))
+                InsurancesUnSelectedList.Add(insurance);
+            else
+                InsurancesUnSelectedList.Remove(insurance);
+        }
+    }
+    private void RemoveInsurances()
+    {
+        if (InsurancesUnSelectedList is not null)
+        {
+            foreach (var item in InsurancesUnSelectedList)
+            {
+                var isInsuranceExist = false;
+                foreach (var insc in Facility!.Insurances!)
+                {
+                    if (item.Id == insc.Id)
+                    {
+                        isInsuranceExist = true;
+                        break;
+                    }
+                }
+                if (!isInsuranceExist) Facility.Insurances.Add(item);
+            }
+        }
+        InsurancesSelectedList?.Clear();
+        JS.InvokeVoidAsync("UnCheckAllCheckBoxes");
     }
 }
