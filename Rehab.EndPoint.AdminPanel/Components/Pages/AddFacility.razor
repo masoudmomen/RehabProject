@@ -23,6 +23,9 @@
                 case 2:
                     <Rehab.EndPoint.AdminPanel.Components.Controls.AddFacilitiesComponents.Section2Component Facility="Facility" />
                     break;
+                case 3:
+                    <Rehab.EndPoint.AdminPanel.Components.Controls.AddFacilitiesComponents.Section3Component Facility="Facility" TModel="AccreditationViewmodel" TModelMain="Facility.Accreditations" />
+                    break;
                 default:
                     <Rehab.EndPoint.AdminPanel.Components.Controls.AddFacilitiesComponents.Section1Component Facility="Facility" />
                     break;
@@ -57,7 +60,7 @@
     {
         comoponentNumber = (comoponentNumber < 8) ? comoponentNumber+1 : comoponentNumber;
         CheckBtnsStatus();
-        StateHasChanged();
+        StateHasChanged(); 
     }
 
     private void ComponentMinus()

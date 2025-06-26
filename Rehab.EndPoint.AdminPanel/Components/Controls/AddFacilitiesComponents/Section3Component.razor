@@ -1,19 +1,20 @@
-﻿@rendermode InteractiveServer
+﻿rendermode InteractiveServer
 @using AutoMapper
 @using Rehab.Application.Insurances
 @using Rehab.EndPoint.AdminPanel.Viewmodels
-
+@typeparam TModel
+@typeparam TModelMain
 @inject AutoMapper.IMapper mapper
-@inject Rehab.Application.Insurances.IInsuranceService InsuranceService
+@inject Rehab.Application.Accreditations.IAccreditationService AccreditationService
 @inject IJSRuntime JS
 
 <label class="text-decoration-underline mt-0 mb-2 text-lg-center">Insurances Information</label>
-<div class="row">
+@* <div class="row">
     <div class="col-5">
         <div class="col rounded-2" style="border:solid 1px gray;background-color:white;z-index:500;">
             <div class="bg-info rounded-top p-1 text-center text-white">Insurances List</div>
             <div style="min-height:362px;max-height:362px;overflow-y:scroll;z-index:1000;background-color:white" class="">
-                @foreach (var item in InsurancesList)
+                @foreach (var item in ModelList)
                 {
                     <div class="rounded-1 border-1 bg-light mt-2 mx-auto p-2" style="width:95%;cursor:pointer;" @ondblclick="() =>AddSingleInsurance(item)">
                         <input class="form-check-input" type="checkbox" @oninput="()=>AddToSelectedInsurances(item)">
@@ -55,107 +56,38 @@
             </div>
         </div>
     </div>
-</div>
+</div> *@
 
 
 
 @code {
     [Parameter]
     public FacilityViewmodel? Facility { get; set; }
-    public List<InsuranceViewmodel> InsurancesList { get; set; } = new();
-    public List<InsuranceViewmodel> InsurancesSelectedList { get; set; } = new();
-    public List<InsuranceViewmodel> InsurancesUnSelectedList { get; set; } = new();
+    public TModel Model { get; set; }
+    public List<TModel> ModelList { get; set; } = new(); 
+    public List<TModel> ModelSelectedList { get; set; } = new();
+    public List<TModel> ModelUnSelectedList { get; set; } = new();
 
     protected override void OnInitialized()
     {
-        InsurancesList = mapper.Map<List<InsuranceViewmodel>>(InsuranceService.GetList());
+        ModelList = mapper.Map<List<TModel>>(AccreditationService.GetList());
     }
 
-    private void AddSingleInsurance(InsuranceViewmodel insurance)
+    private void AddSingleModel(TModel model)
     {
-        if (insurance is not null)
+        if (model is not null)
         {
-            var isInsuranceExist = false;
-            foreach (var item in Facility!.Insurances!)
+            var isModelExist = false;
+            foreach (var item in Facility!.Accreditations!)
             {
-                if (insurance.Id == item.Id){
-                    isInsuranceExist = true;
+                if (model.Id == item.Id)
+                {
+                    isModelExist = true;
                     break;
                 }
             }
-            if (!isInsuranceExist) Facility.Insurances.Add(insurance);
-        }
-    }
-    private void AddInsurances()
-    {
-        if (InsurancesSelectedList is not null)
-        {
-            foreach (var item in InsurancesSelectedList)
-            {
-                var isInsuranceExist = false;
-                foreach (var insc in Facility!.Insurances!)
-                {
-                    if (item.Id == insc.Id)
-                    {
-                        isInsuranceExist = true;
-                        break;
-                    }
-                }
-                if (!isInsuranceExist) Facility.Insurances.Add(item);
-            }
-        }
-        InsurancesSelectedList?.Clear();
-        InsurancesUnSelectedList?.Clear();
-        JS.InvokeVoidAsync("UnCheckAllCheckBoxes");
-    }
-
-    private void AddToSelectedInsurances(InsuranceViewmodel insurance)
-    {
-        if (insurance is not null)
-        {
-            if (!InsurancesSelectedList.Contains(insurance))
-                InsurancesSelectedList.Add(insurance);
-            else
-                InsurancesSelectedList.Remove(insurance);
+            if (!isModelExist) Facility.Accreditations.Add(model);
         }
     }
 
-
-    private void RemoveSingleInsurance(InsuranceViewmodel insurance)
-    {
-        if (insurance is not null && Facility!.Insurances!.Contains(insurance))
-        {
-            Facility.Insurances.Remove(insurance);
-        }
-    }
-    private void AddToUnSelectedInsurances(InsuranceViewmodel insurance)
-    {
-        if (insurance is not null)
-        {
-            if (!InsurancesUnSelectedList.Contains(insurance))
-                InsurancesUnSelectedList.Add(insurance);
-            else
-                InsurancesUnSelectedList.Remove(insurance);
-        }
-    }
-    private void RemoveInsurances()
-    {
-        if (InsurancesUnSelectedList is not null)
-        {
-            foreach (var item in InsurancesUnSelectedList)
-            {
-                foreach (var insc in Facility!.Insurances!)
-                {
-                    if (item.Id == insc.Id)
-                    {
-                        Facility.Insurances.Remove(item);
-                        break;
-                    }
-                }
-            }
-        }
-        InsurancesSelectedList?.Clear();
-        InsurancesUnSelectedList?.Clear();
-        JS.InvokeVoidAsync("UnCheckAllCheckBoxes");
-    }
 }
