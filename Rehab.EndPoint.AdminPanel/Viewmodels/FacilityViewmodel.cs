@@ -29,12 +29,12 @@ namespace Rehab.EndPoint.AdminPanel.Viewmodels
         public short OccupancyMin { get; set; }
         public short OccupancyMax { get; set; }
         public List<InsuranceViewmodel>? Insurances { get; set; } = new();
-        public ICollection<Accreditation>? Accreditations { get; set; }
-        public ICollection<Amenity>? Amenities { get; set; }
-        public ICollection<Highlight>? Highlights { get; set; }
-        public ICollection<FacilitysImages>? FacilitysImages { get; set; }
-        public ICollection<Loc>? Locs { get; set; }
-        public ICollection<Treatment>? Treatments { get; set; }
-        public ICollection<Wwt>? Wwts { get; set; }
+        public List<AccreditationViewmodel>? Accreditations { get; set; } = new();
+        public List<AmenityViewmodel>? Amenities { get; set; } = new();
+        public List<HighlightViewmodel>? Highlights { get; set; } = new();
+        public List<FacilitysImages>? FacilitysImages { get; set; } = new();
+        public List<LocViewmodel>? Locs { get; set; } = new();
+        public List<TreatmentViewmodel>? Treatments { get; set; } = new();
+        public List<WwtViewmodel>? Wwts { get; set; } = new();
     }
 }
