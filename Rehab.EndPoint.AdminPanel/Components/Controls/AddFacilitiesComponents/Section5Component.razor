@@ -1,0 +1,161 @@
+﻿@rendermode InteractiveServer
+@using AutoMapper
+@using Rehab.Application.Highlights
+@using Rehab.EndPoint.AdminPanel.Viewmodels
+@inject AutoMapper.IMapper mapper
+@inject Rehab.Application.Highlights.IHighlightService HighlightService
+@inject IJSRuntime JS
+
+<label class="text-decoration-underline mt-0 mb-2 text-lg-center">Highlights Information</label>
+<div class="row">
+    <div class="col-5">
+        <div class="col rounded-2" style="border:solid 1px gray;background-color:white;z-index:500;">
+            <div class="bg-info rounded-top p-1 text-center text-white">Highlights List</div>
+            <div style="min-height:362px;max-height:362px;overflow-y:scroll;z-index:1000;background-color:white" class="">
+                @foreach (var item in ModelList)
+                {
+                    <div class="rounded-1 border-1 bg-light mt-2 mx-auto p-2" style="width:95%;cursor:pointer;" @ondblclick="() =>AddSingleModel(item)">
+                        <input class="form-check-input" type="checkbox" @oninput="()=>AddToSelectedModels(item)">
+                        <img src="@item.Logo" class=" mx-2" width="20" height="20" />
+                        <span class=" ">@item.Name</span>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="col-2">
+        <div class="rounded-2" style="border:solid 1px gray;background-color:white;z-index:1000">
+            <div class="bg-info rounded-top p-1 text-center text-white" style="max-height:33px;overflow:hidden">Operation</div>
+            <div style="min-height:362px;max-height:362px;" class="d-flex align-items-center text-center">
+                <div class="w-100">
+                    <button type="button" @onclick="AddModel" class="btn btn-light btn-outline-success my-2" style="width:95%;">Add&gt;</button>
+                    <button type="button" @onclick="RemoveModel" class="btn btn-light btn-outline-danger my-2 overflow-hidden" style="width:95%;">&lt;Remove</button>
+                    <button type="button" class="btn btn-light btn-outline-info my-2 overflow-hidden" style="width:95%;">Create</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-5">
+        <div class="col rounded-2" style="border:solid 1px gray;background-color:white;z-index:500">
+            <div class="bg-info rounded-top p-1 text-center text-white">Selected List</div>
+            <div style="min-height:362px;max-height:362px;overflow-y:scroll;z-index:1000;background-color:white;">
+                @if (Facility!.Highlights is not null)
+                {
+                    @foreach (var item in Facility.Highlights)
+                    {
+                        <div class="rounded-1 border-1 bg-light mt-2 mx-auto p-2 d-flex align-items-center" style="width:95%;cursor:pointer;">
+                            <input class="form-check-input my-auto" type="checkbox" @oninput="()=>AddToUnSelectedModels(item)">
+                            <img src="@item.Logo" class=" mx-2" width="20" height="20" />
+                            <span class=" ">@item.Name</span>
+                            <button class="btn btn-sm ms-auto" @onclick="()=>RemoveSingleModel(item)"><i class="fa fa-times"></i></button>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@code {
+    [Parameter]
+    public FacilityViewmodel? Facility { get; set; }
+    public List<HighlightViewmodel> ModelList { get; set; } = new();
+    public List<HighlightViewmodel> ModelSelectedList { get; set; } = new();
+    public List<HighlightViewmodel> ModelUnSelectedList { get; set; } = new();
+
+    protected override void OnInitialized()
+    {
+        ModelList = mapper.Map<List<HighlightViewmodel>>(HighlightService.GetList());
+    }
+
+    private void AddSingleModel(HighlightViewmodel model)
+    {
+        if (model is not null)
+        {
+            var isModelExist = false;
+            foreach (var item in Facility!.Highlights!)
+            {
+                if (model.Id == item.Id)
+                {
+                    isModelExist = true;
+                    break;
+                }
+            }
+            if (!isModelExist) Facility.Highlights.Add(model);
+        }
+    }
+
+    private void AddModel()
+    {
+        if (ModelSelectedList is not null)
+        {
+            foreach (var item in ModelSelectedList)
+            {
+                var isModelExist = false;
+                foreach (var insc in Facility!.Highlights!)
+                {
+                    if (item.Id == insc.Id)
+                    {
+                        isModelExist = true;
+                        break;
+                    }
+                }
+                if (!isModelExist) Facility.Highlights.Add(item);
+            }
+        }
+        ModelSelectedList?.Clear();
+        ModelUnSelectedList?.Clear();
+        JS.InvokeVoidAsync("UnCheckAllCheckBoxes");
+    }
+
+    private void AddToSelectedModels(HighlightViewmodel model)
+    {
+        if (model is not null)
+        {
+            if (!ModelSelectedList.Contains(model))
+                ModelSelectedList.Add(model);
+            else
+                ModelSelectedList.Remove(model);
+        }
+    }
+
+    private void RemoveSingleModel(HighlightViewmodel model)
+    {
+        if (model is not null && Facility!.Highlights!.Contains(model))
+        {
+            Facility.Highlights.Remove(model);
+        }
+    }
+    private void AddToUnSelectedModels(HighlightViewmodel model)
+    {
+        if (model is not null)
+        {
+            if (!ModelUnSelectedList.Contains(model))
+                ModelUnSelectedList.Add(model);
+            else
+                ModelUnSelectedList.Remove(model);
+        }
+    }
+    private void RemoveModel()
+    {
+        if (ModelUnSelectedList is not null)
+        {
+            foreach (var item in ModelUnSelectedList)
+            {
+                foreach (var insc in Facility!.Highlights!)
+                {
+                    if (item.Id == insc.Id)
+                    {
+                        Facility.Highlights.Remove(item);
+                        break;
+                    }
+                }
+            }
+        }
+        ModelSelectedList?.Clear();
+        ModelUnSelectedList?.Clear();
+        JS.InvokeVoidAsync("UnCheckAllCheckBoxes");
+    }
+}

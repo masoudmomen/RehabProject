@@ -53,7 +53,7 @@ namespace Rehab.Application.Highlights
 
         public List<HighlightDto> GetList()
         {
-            return mapper.Map<List<HighlightDto>>(context.Highlights.ToList());
+            return mapper.Map<List<HighlightDto>>(context.Highlights.OrderBy(c => c.Name).ToList());
         }
 
         public BaseDto<HighlightDto> Update(HighlightDto highlight)

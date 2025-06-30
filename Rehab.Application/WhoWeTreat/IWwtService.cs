@@ -54,7 +54,7 @@ namespace Rehab.Application.WhoWeTreat
 
         public List<WwtDto> GetList()
         {
-            return mapper.Map<List<WwtDto>>(context.Wwts.ToList());
+            return mapper.Map<List<WwtDto>>(context.Wwts.OrderBy(c => c.Name).ToList());
         }
 
         public BaseDto<WwtDto> Update(WwtDto wwt)

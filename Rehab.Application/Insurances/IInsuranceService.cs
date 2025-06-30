@@ -54,7 +54,7 @@ namespace Rehab.Application.Insurances
 
         public List<InsuranceDto> GetList()
         {
-            return mapper.Map<List<InsuranceDto>>(context.Insurances.ToList());
+            return mapper.Map<List<InsuranceDto>>(context.Insurances.OrderBy(c => c.Name).ToList());
         }
 
         public BaseDto<InsuranceDto> Update(InsuranceDto insurance)
