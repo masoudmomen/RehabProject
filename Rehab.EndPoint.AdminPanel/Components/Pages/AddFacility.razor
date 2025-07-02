@@ -5,6 +5,7 @@
 @inject IFacilityService FacilityService
 @inject AutoMapper.IMapper mapper
 @rendermode InteractiveServer
+@inject AlertService AlertService
 
 
 
@@ -13,12 +14,12 @@
     <h3>Add Facility</h3>
 
     <EditForm Model="Facility" OnValidSubmit="Add" class="form-control d-flex flex-column "
-               FormName="AddFacilityForm">
+    FormName="AddFacilityForm">
         <section class="card-body flex-grow-1 pb-0">
             @switch (comoponentNumber)
             {
                 case 1:
-                    <Rehab.EndPoint.AdminPanel.Components.Controls.AddFacilitiesComponents.Section1Component Facility="Facility" />
+                    <Rehab.EndPoint.AdminPanel.Components.Controls.AddFacilitiesComponents.Section1Component Facility="Facility" facilityNameClass="@facilityNameClass"/>
                     break;
                 case 2:
                     <Rehab.EndPoint.AdminPanel.Components.Controls.AddFacilitiesComponents.Section2Component Facility="Facility" />
@@ -26,6 +27,22 @@
                 case 3:
                     <Rehab.EndPoint.AdminPanel.Components.Controls.AddFacilitiesComponents.Section3Component Facility="Facility" />
                     break;
+                case 4:
+                    <Rehab.EndPoint.AdminPanel.Components.Controls.AddFacilitiesComponents.Section4Component Facility="Facility" />
+                    break;
+                case 5:
+                    <Rehab.EndPoint.AdminPanel.Components.Controls.AddFacilitiesComponents.Section5Component Facility="Facility" />
+                    break;
+                case 6:
+                    <Rehab.EndPoint.AdminPanel.Components.Controls.AddFacilitiesComponents.Section6Component Facility="Facility" />
+                    break;
+                case 7:
+                    <Rehab.EndPoint.AdminPanel.Components.Controls.AddFacilitiesComponents.Section7Component Facility="Facility" />
+                    break;
+                case 8:
+                    <Rehab.EndPoint.AdminPanel.Components.Controls.AddFacilitiesComponents.Section8Component Facility="Facility" />
+                    break;
+
                 default:
                     <Rehab.EndPoint.AdminPanel.Components.Controls.AddFacilitiesComponents.Section1Component Facility="Facility" />
                     break;
@@ -39,7 +56,14 @@
                 <button type="button"  class="btn btn-primary float-end @PreviousBtnStatus" style="width:105px;" @onclick="ComponentMinus">&lt; Previous</button>
             </div>
             <div class="col-6">
-                <button type="button" class="btn btn-primary @NextBtnStatus" style="width:105px;" @onclick="ComponentPlus">Next &gt;</button>
+                @if(comoponentNumber != 8)
+                {
+                    <button type="button" class="btn btn-primary @NextBtnStatus" style="width:105px;" @onclick="ComponentPlus">Next &gt;</button>
+                }
+                else
+                {
+                    <button type="submit" class="btn btn-success @NextBtnStatus" style="width:105px;">Finish</button>
+                }
             </div>
         </div>
 
@@ -55,6 +79,8 @@
     private BaseDto<FacilityDto> AddResult = new();
     private string PreviousBtnStatus = "disabled";
     private string NextBtnStatus = "";
+    private string facilityNameClass = "form-control";
+
 
     private void ComponentPlus()
     {
@@ -78,7 +104,7 @@
         }
         else
         {
-            if (comoponentNumber == 8) NextBtnStatus = "disabled";
+            // if (comoponentNumber == 8) NextBtnStatus = "disabled";
             if (comoponentNumber == 1) PreviousBtnStatus = "disabled";
         }
     }
@@ -87,7 +113,14 @@
     {
         if(Facility is not null)
         {
+            if (string.IsNullOrEmpty(Facility.Name))
+            {
+                facilityNameClass = "form-control border-danger";
+                comoponentNumber = 1;
+                AlertService.ShowAsync("Name field is Required", "danger");
+            }
             //AddResult = FacilityService.Add(mapper.Map<FacilityDto>(Facility));
+            Console.WriteLine(Facility.Name);
         }
     }
 }

@@ -6,12 +6,14 @@ using Rehab.Domain.Insurances;
 using Rehab.Domain.LevelsOfCare;
 using Rehab.Domain.Treatments;
 using Rehab.Domain.WhoWeTreat;
+using System.ComponentModel.DataAnnotations;
 
 namespace Rehab.EndPoint.AdminPanel.Viewmodels
 {
     public class FacilityViewmodel
     {
         public int Id { get; set; }
+        [Required(ErrorMessage ="Name field is Required")]
         public string Name { get; set; } = string.Empty;
         public string City { get; set; } = string.Empty;
         public string State { get; set; } = string.Empty;

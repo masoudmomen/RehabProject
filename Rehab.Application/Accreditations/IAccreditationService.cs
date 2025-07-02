@@ -54,7 +54,7 @@ namespace Rehab.Application.Accreditations
 
         public List<AccreditationDto> GetList()
         {
-            return mapper.Map<List<AccreditationDto>>(context.Accreditations.ToList());
+            return mapper.Map<List<AccreditationDto>>(context.Accreditations.OrderBy(c=>c.Name).ToList());
         }
 
         public BaseDto<AccreditationDto> Update(AccreditationDto accreditation)

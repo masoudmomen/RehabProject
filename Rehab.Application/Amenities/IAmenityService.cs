@@ -56,7 +56,7 @@ namespace Rehab.Application.Amenities
 
         public List<AmenityDto> GetList()
         {
-            return mapper.Map<List<AmenityDto>>(context.Amenities.ToList());
+            return mapper.Map<List<AmenityDto>>(context.Amenities.OrderBy(c => c.Name).ToList());
         }
 
         public BaseDto<AmenityDto> Update(AmenityDto amenity)
