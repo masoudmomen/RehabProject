@@ -19,7 +19,7 @@
             @switch (comoponentNumber)
             {
                 case 1:
-                    <Rehab.EndPoint.AdminPanel.Components.Controls.AddFacilitiesComponents.Section1Component Facility="Facility" facilityNameClass="@facilityNameClass" />
+                    <Rehab.EndPoint.AdminPanel.Components.Controls.AddFacilitiesComponents.Section1Component Facility="Facility" facilityNameClass="@facilityNameClass" facilityNameClassChange="@OnFacilityNameClassChange" />
                     break;
                 case 2:
                     <Rehab.EndPoint.AdminPanel.Components.Controls.AddFacilitiesComponents.Section2Component Facility="Facility" />
@@ -76,7 +76,7 @@
 @code {
     public FacilityViewmodel Facility { get; set; } = new();
     private int comoponentNumber = 1;
-    private BaseDto<FacilityDto> AddResult = new();
+    private BaseDto<AddRequestFacilityDto> AddResult = new();
     private string PreviousBtnStatus = "disabled";
     private string NextBtnStatus = "";
     public string facilityNameClass { get; set; } = "form-control";
@@ -104,15 +104,24 @@
         else
         {
             // if (comoponentNumber == 8) NextBtnStatus = "disabled";
-            if (comoponentNumber == 1) PreviousBtnStatus = "disabled";
+            if (comoponentNumber == 1)
+            {
+                PreviousBtnStatus = "disabled";
+            }
         }
+    }
+
+
+    private void OnFacilityNameClassChange(string facilityNameClassFromComponent)
+    {
+        facilityNameClass = facilityNameClassFromComponent;
     }
 
     private void Add()
     {
         if(Facility is not null)
         {
-            if (string.IsNullOrEmpty(Facility.Name))
+            if (string.IsNullOrWhiteSpace(Facility.Name))
             {
                 facilityNameClass = "form-control border-danger";
                 comoponentNumber = 1;
@@ -120,7 +129,13 @@
             }
             else
             {
-                AddResult = FacilityService.Add(mapper.Map<FacilityDto>(Facility));
+                AddResult = FacilityService.Add(mapper.Map<AddRequestFacilityDto>(Facility));
+                AlertService.ShowAsync(AddResult.Message, AddResult.Status);
+                if (AddResult.Success)
+                {
+                    Facility = new();
+                    comoponentNumber = 1;
+                }
             }
         }
     }
