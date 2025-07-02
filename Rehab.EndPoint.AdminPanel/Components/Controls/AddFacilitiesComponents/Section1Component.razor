@@ -6,7 +6,7 @@
 <div class="row g-3">
     <div class="col-6">
         <label for="name" class="">Name</label>
-        <InputText @bind-Value="Facility.Name" class="form-control" id="name"></InputText>
+        <InputText @bind-Value="Facility.Name" class="@facilityNameClass" @oninput="CheckModelNameStatus" id="name"></InputText>
     </div>
     <div class="col-6">
         <label for="email" class="">Email</label>
@@ -74,4 +74,18 @@
 @code{
     [Parameter]
     public FacilityViewmodel Facility { get; set; } = new();
+
+    [Parameter]
+    public string facilityNameClass { get; set; } = "form-control";
+
+    private void CheckModelNameStatus(ChangeEventArgs e)
+    {
+        Facility.Name = e.Value.ToString() ?? "";
+        if (!string.IsNullOrWhiteSpace(Facility.Name))
+        {
+            Console.WriteLine(Facility.Name);
+            facilityNameClass = "form-control";
+            //StateHasChanged();
+        }
+    }
 }

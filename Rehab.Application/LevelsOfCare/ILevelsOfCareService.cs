@@ -54,7 +54,7 @@ namespace Rehab.Application.LevelsOfCare
 
         public List<LevelsOfCareDto> GetList()
         {
-            return mapper.Map<List<LevelsOfCareDto>>(context.Locs.ToList());
+            return mapper.Map<List<LevelsOfCareDto>>(context.Locs.OrderBy(c => c.Name).ToList());
         }
 
         public BaseDto<LevelsOfCareDto> Update(LevelsOfCareDto loc)

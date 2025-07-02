@@ -54,7 +54,7 @@ namespace Rehab.Application.Treatments
 
         public List<TreatmentDto> GetList()
         {
-            return mapper.Map<List<TreatmentDto>>(context.Treatments.ToList());
+            return mapper.Map<List<TreatmentDto>>(context.Treatments.OrderBy(c => c.Name).ToList());
         }
 
         public BaseDto<TreatmentDto> Update(TreatmentDto treatment)
