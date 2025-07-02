@@ -19,7 +19,7 @@
             @switch (comoponentNumber)
             {
                 case 1:
-                    <Rehab.EndPoint.AdminPanel.Components.Controls.AddFacilitiesComponents.Section1Component Facility="Facility" facilityNameClass="@facilityNameClass"/>
+                    <Rehab.EndPoint.AdminPanel.Components.Controls.AddFacilitiesComponents.Section1Component Facility="Facility" facilityNameClass="@facilityNameClass" />
                     break;
                 case 2:
                     <Rehab.EndPoint.AdminPanel.Components.Controls.AddFacilitiesComponents.Section2Component Facility="Facility" />
@@ -79,8 +79,7 @@
     private BaseDto<FacilityDto> AddResult = new();
     private string PreviousBtnStatus = "disabled";
     private string NextBtnStatus = "";
-    private string facilityNameClass = "form-control";
-
+    public string facilityNameClass { get; set; } = "form-control";
 
     private void ComponentPlus()
     {
@@ -119,8 +118,10 @@
                 comoponentNumber = 1;
                 AlertService.ShowAsync("Name field is Required", "danger");
             }
-            //AddResult = FacilityService.Add(mapper.Map<FacilityDto>(Facility));
-            Console.WriteLine(Facility.Name);
+            else
+            {
+                AddResult = FacilityService.Add(mapper.Map<FacilityDto>(Facility));
+            }
         }
     }
 }

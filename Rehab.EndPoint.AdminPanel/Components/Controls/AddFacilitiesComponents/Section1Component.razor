@@ -78,14 +78,14 @@
     [Parameter]
     public string facilityNameClass { get; set; } = "form-control";
 
-    private void CheckModelNameStatus()
+    private void CheckModelNameStatus(ChangeEventArgs e)
     {
-        
-        if (!string.IsNullOrEmpty(Facility.Name))
+        Facility.Name = e.Value.ToString() ?? "";
+        if (!string.IsNullOrWhiteSpace(Facility.Name))
         {
             Console.WriteLine(Facility.Name);
             facilityNameClass = "form-control";
-            StateHasChanged();
+            //StateHasChanged();
         }
     }
 }
