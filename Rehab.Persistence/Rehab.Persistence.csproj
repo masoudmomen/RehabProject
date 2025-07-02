@@ -7,6 +7,24 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20250420160412_init.cs" />
+    <Compile Remove="Migrations\20250420160412_init.Designer.cs" />
+    <Compile Remove="Migrations\20250429082659_facility.cs" />
+    <Compile Remove="Migrations\20250429082659_facility.Designer.cs" />
+    <Compile Remove="Migrations\20250513155111_addInsurance.cs" />
+    <Compile Remove="Migrations\20250513155111_addInsurance.Designer.cs" />
+    <Compile Remove="Migrations\20250602151429_add-other-entities-accreditation-to-loc.cs" />
+    <Compile Remove="Migrations\20250602151429_add-other-entities-accreditation-to-loc.Designer.cs" />
+    <Compile Remove="Migrations\20250611155741_complete-facility.cs" />
+    <Compile Remove="Migrations\20250611155741_complete-facility.Designer.cs" />
+    <Compile Remove="Migrations\20250629031651_initial.cs" />
+    <Compile Remove="Migrations\20250629031651_initial.Designer.cs" />
+    <Compile Remove="Migrations\20250629032304_initial.cs" />
+    <Compile Remove="Migrations\20250629032304_initial.Designer.cs" />
+    <Compile Remove="Migrations\DatabaseContextModelSnapshot.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.15" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.15" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.15" />
@@ -19,6 +37,10 @@
   <ItemGroup>
     <ProjectReference Include="..\Rehab.Application\Rehab.Application.csproj" />
     <ProjectReference Include="..\Rehab.Domain\Rehab.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Migrations\" />
   </ItemGroup>
 
 </Project>

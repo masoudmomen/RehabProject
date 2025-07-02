@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -19,6 +19,12 @@
     <ProjectReference Include="..\Rehab.Application\Rehab.Application.csproj" />
     <ProjectReference Include="..\Rehab.Infrastructure\Rehab.Infrastructure.csproj" />
     <ProjectReference Include="..\Rehab.Persistence\Rehab.Persistence.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Components\Common\" />
+    <Folder Include="wwwroot\lib\bootstrap\" />
+    <Folder Include="wwwroot\images\" />
   </ItemGroup>
 
 </Project>
