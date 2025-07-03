@@ -32,11 +32,19 @@ namespace Rehab.EndPoint.AdminPanel.Viewmodels
         public string Slug { get; set; } = string.Empty;
         public bool IsVerified { get; set; } = false;
 
+        public List<int>? InsurancesId { get; set; } = new();
+        public List<int>? AccreditationsId { get; set; } = new();
+        public List<int>? AmenitiesId { get; set; } = new();
+        public List<int>? HighlightsId { get; set; } = new();
+        public List<int>? LocsId { get; set; } = new();
+        public List<int>? TreatmentsId { get; set; } = new();
+        public List<int>? WwtsId { get; set; } = new();
+
         public List<InsuranceViewmodel>? Insurances { get; set; } = new();
         public List<AccreditationViewmodel>? Accreditations { get; set; } = new();
         public List<AmenityViewmodel>? Amenities { get; set; } = new();
         public List<HighlightViewmodel>? Highlights { get; set; } = new();
-        public List<FacilitysImages>? FacilitysImages { get; set; } = new();
+        public List<FacilityImageViewmodel>? FacilityImages { get; set; } = new();
         public List<LocViewmodel>? Locs { get; set; } = new();
         public List<TreatmentViewmodel>? Treatments { get; set; } = new();
         public List<WwtViewmodel>? Wwts { get; set; } = new();

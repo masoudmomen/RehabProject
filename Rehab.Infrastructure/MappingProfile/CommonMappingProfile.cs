@@ -31,7 +31,7 @@ namespace Rehab.Infrastructure.MappingProfile
         public CommonMappingProfile() 
         {
             CreateMap<User, UserDto>().ReverseMap();
-            CreateMap<Facility, FacilityDto>().ReverseMap();
+            CreateMap<Facility, AddRequestFacilityDto>().ReverseMap();
             CreateMap<Insurance, InsuranceDto>().ReverseMap();
             CreateMap<Accreditation, AccreditationDto>().ReverseMap();
             CreateMap<Amenity, AmenityDto>().ReverseMap();

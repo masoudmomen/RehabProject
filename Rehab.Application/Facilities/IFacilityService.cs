@@ -12,7 +12,7 @@ namespace Rehab.Application.Facilities
 {
     public interface IFacilityService
     {
-        BaseDto<FacilityDto> Add(FacilityDto facility); 
+        BaseDto<AddRequestFacilityDto> Add(AddRequestFacilityDto facility); 
     }
 
     public class FacilityService : IFacilityService
@@ -25,15 +25,27 @@ namespace Rehab.Application.Facilities
             this.context = context;
             this.mapper = mapper;
         }
-        public BaseDto<FacilityDto> Add(FacilityDto facility)
+        public BaseDto<AddRequestFacilityDto> Add(AddRequestFacilityDto facility)
         {
-            if (facility == null) return BaseDto<FacilityDto>.FailureResult("The Facility data is null!");
+            if (facility == null) return BaseDto<AddRequestFacilityDto>.FailureResult("The Facility data is null!");
 
-            context.Facilities.Add(mapper.Map<Facility>(facility));
+            var newFacility = new Facility();
+            newFacility = mapper.Map<Facility>(facility);
+
+            newFacility.Insurances = context.Insurances.Where(c => facility.InsurancesId!.Contains(c.Id)).ToList(); 
+            newFacility.Accreditations = context.Accreditations.Where(c => facility.AccreditationsId!.Contains(c.Id)).ToList(); 
+            newFacility.Amenities = context.Amenities.Where(c => facility.AmenitiesId!.Contains(c.Id)).ToList(); 
+            newFacility.Highlights = context.Highlights.Where(c => facility.HighlightsId!.Contains(c.Id)).ToList(); 
+            newFacility.Locs = context.Locs.Where(c => facility.LocsId!.Contains(c.Id)).ToList(); 
+            newFacility.Wwts = context.Wwts.Where(c => facility.WwtsId!.Contains(c.Id)).ToList(); 
+            newFacility.Treatments = context.Treatments.Where(c => facility.TreatmentsId!.Contains(c.Id)).ToList(); 
+
+            context.Facilities.Add(newFacility);
+
             if (context.SaveChanges() > 0)
-                return BaseDto<FacilityDto>.SuccessResult(facility, "Facility Added Successfully.");
+                return BaseDto<AddRequestFacilityDto>.SuccessResult(facility, "Facility Added Successfully.");
 
-            return BaseDto<FacilityDto>.FailureResult("Operation Failed! Please try another time!");
+            return BaseDto<AddRequestFacilityDto>.FailureResult("Operation Failed! Please try another time!");
         }
     }
 }

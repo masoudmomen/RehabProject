@@ -61,11 +61,11 @@
 <div class="row g-3">
     <div class="col-6">
         <label for="address" class="">Address</label>
-        <textarea class="form-control" id="address"></textarea>
+        <InputTextArea @bind-Value="Facility.Address" class="form-control" id="address"></InputTextArea>
     </div>
     <div class="col-6">
         <label for="description" class="">Description</label>
-        <textarea class="form-control" id="description"></textarea>
+        <InputTextArea @bind-Value="Facility.Description" class="form-control" id="description"></InputTextArea>
     </div>
 </div>
 
@@ -77,14 +77,17 @@
 
     [Parameter]
     public string facilityNameClass { get; set; } = "form-control";
+    [Parameter]
+    public EventCallback<string> facilityNameClassChange { get; set; }
 
-    private void CheckModelNameStatus(ChangeEventArgs e)
+    private async Task CheckModelNameStatus(ChangeEventArgs e)
     {
         Facility.Name = e.Value.ToString() ?? "";
         if (!string.IsNullOrWhiteSpace(Facility.Name))
         {
             Console.WriteLine(Facility.Name);
             facilityNameClass = "form-control";
+            await facilityNameClassChange.InvokeAsync(facilityNameClass);
             //StateHasChanged();
         }
     }

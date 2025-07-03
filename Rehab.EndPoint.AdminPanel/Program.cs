@@ -48,8 +48,6 @@ builder.Services.AddScoped<AlertService>();
 builder.Services.AddScoped<IImageUploaderService, ImageUploaderService>();
 #endregion
 
-
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

@@ -9,7 +9,7 @@ using Rehab.Domain.WhoWeTreat;
 
 namespace Rehab.Application.Facilities
 {
-    public class FacilityDto
+    public class AddRequestFacilityDto
     {
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
@@ -28,13 +28,15 @@ namespace Rehab.Application.Facilities
         public short Founded { get; set; }
         public short OccupancyMin { get; set; }
         public short OccupancyMax { get; set; }
-        public ICollection<Insurance>? Insurances { get; set; }
-        public ICollection<Accreditation>? Accreditations { get; set; }
-        public ICollection<Amenity>? Amenities { get; set; }
-        public ICollection<Highlight>? Highlights { get; set; }
-        public ICollection<FacilitysImages>? FacilitysImages { get; set; }
-        public ICollection<Loc>? Locs { get; set; }
-        public ICollection<Treatment>? Treatments { get; set; }
-        public ICollection<Wwt>? Wwts { get; set; }
+
+        public List<int>? InsurancesId { get; set; } = new();
+        public List<int>? AccreditationsId { get; set; } = new();
+        public List<int>? AmenitiesId { get; set; } = new();
+        public List<int>? HighlightsId { get; set; } = new();
+        public List<int>? LocsId { get; set; } = new();
+        public List<int>? TreatmentsId { get; set; } = new();
+        public List<int>? WwtsId { get; set; } = new();
+
+
     }
 }
