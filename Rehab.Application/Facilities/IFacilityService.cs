@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using Rehab.Application.Common;
 using Rehab.Application.Contexts;
+using Rehab.Application.Dtos;
 using Rehab.Domain.Facilities;
+using Rehab.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +15,7 @@ namespace Rehab.Application.Facilities
     public interface IFacilityService
     {
         BaseDto<AddRequestFacilityDto> Add(AddRequestFacilityDto facility); 
+        Task<PaginatedItemDto<FacilityBriefInfoDto>> GetFacilities(int page, int pageSize);
     }
 
     public class FacilityService : IFacilityService
@@ -46,6 +49,24 @@ namespace Rehab.Application.Facilities
                 return BaseDto<AddRequestFacilityDto>.SuccessResult(facility, "Facility Added Successfully.");
 
             return BaseDto<AddRequestFacilityDto>.FailureResult("Operation Failed! Please try another time!");
+        }
+
+        public async Task<PaginatedItemDto<FacilityBriefInfoDto>> GetFacilities(int page, int pageSize)
+        {
+            int rowCount = 0;
+            var data = context.Facilities
+                .OrderByDescending(c => c.Id)
+                .ToPaged(page, pageSize, out rowCount)
+                .Select(c=> new FacilityBriefInfoDto
+                {
+                    Name = c.Name,
+                    Id = c.Id,
+                    City = c.City,
+                    State = c.State,
+                    Description = c.Description,
+                    Logo = c.Logo,
+                }).ToList();
+            return new PaginatedItemDto<FacilityBriefInfoDto>(page, pageSize, rowCount, data);
         }
     }
 }
