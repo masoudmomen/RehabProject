@@ -94,7 +94,8 @@
     private int TotalPages;
     private int CurrentPage;
     private int PageSize = 3;
-    private int PagingButtonCount, MaxPagingButton = 3;
+    private int PagingButtonCount = 5;
+    private int MaxPagingButton = 5;
     private int MinPagingButton = 1;
 
     protected override async Task OnInitializedAsync()
@@ -102,7 +103,7 @@
         FacilitiesList = await FacilityService.GetFacilities(1, PageSize);
         TotalPages = FacilitiesList.Pager.TotalPages;
         CurrentPage = FacilitiesList.PageIndex;
-        if (MaxPagingButton > TotalPages) MaxPagingButton = TotalPages;
+        CheckPagingButtons();
     } 
 
     private async Task OnPageChanged(int page)
@@ -110,6 +111,19 @@
         FacilitiesList = await FacilityService.GetFacilities(page, PageSize);
         TotalPages = FacilitiesList.Pager.TotalPages;
         CurrentPage = FacilitiesList.PageIndex;
+        CheckPagingButtons();
+    }
 
+    private void CheckPagingButtons()
+    {
+        if (PagingButtonCount > TotalPages) PagingButtonCount = TotalPages;
+
+        MinPagingButton = ((CurrentPage - (PagingButtonCount / 2)) < 1) ? 1 : (CurrentPage - (PagingButtonCount / 2));
+        MaxPagingButton = MinPagingButton + (PagingButtonCount - 1);
+        if (MinPagingButton + (PagingButtonCount - 1) > TotalPages)
+        {
+            MinPagingButton = MinPagingButton - (MaxPagingButton - TotalPages);
+            MaxPagingButton = TotalPages;
+        }
     }
 }
