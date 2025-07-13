@@ -1,4 +1,5 @@
 ﻿@using Rehab.Application.Dtos
+@using Rehab.EndPoint.AdminPanel.Components.Controls
 @using Rehab.EndPoint.AdminPanel.Viewmodels
 @using Rehab.Application.Facilities
 @inject AutoMapper.IMapper mapper
@@ -43,11 +44,11 @@
                                     <td style="width:150px;height:40px;overflow:hidden;">@item.State</td>
                                     <td style="width:150px;height:40px;overflow:hidden;">@item.City</td>
                                     <td>
-                                         <i class="fa fa-edit cursor-pointer" title="Edit Insurance"></i>
+                                        <i class="fa fa-edit cursor-pointer" title="Edit Facility"></i>
                                         &ensp;&ensp;&ensp;
-                                        <i class="fa fa-eye cursor-pointer" title="Show Image"></i>
+                                        <i class="fa fa-eye cursor-pointer" title="Show Facility" @onclick="()=>OpenModal(item.Id)"></i>
                                         &ensp;&ensp;&ensp;
-                                        <i class="fa fa-trash cursor-pointer" title="Delete Insurance"></i>
+                                        <i class="fa fa-trash cursor-pointer" title="Delete Facility"></i>
                                     </td>
                                 </tr>
                             }
@@ -87,6 +88,10 @@
 
 
 
+@* Start Open Modal for Detail: *@
+<FacilityDetailModalComponent Model="Facility" @ref="OpenFacilityDetailModal" />
+@* End Open Modal for Detail: *@
+
 @code {
     public PaginatedItemDto<FacilityBriefInfoDto>? FacilitiesList { get; set; }
     private int TotalPages;
@@ -95,6 +100,9 @@
     private int PagingButtonCount = 5;
     private int MaxPagingButton = 5;
     private int MinPagingButton = 1;
+
+    public FacilityViewmodel? Facility { get; set; }
+    private FacilityDetailModalComponent? OpenFacilityDetailModal;
 
     protected override async Task OnInitializedAsync()
     {
@@ -123,5 +131,11 @@
             MinPagingButton = MinPagingButton - (MaxPagingButton - TotalPages);
             MaxPagingButton = TotalPages;
         }
+    }
+
+    private void OpenModal(int id)
+    {
+        Facility = mapper.Map<FacilityViewmodel>(FacilityService.FindById(id));
+        OpenFacilityDetailModal!.Show();
     }
 }

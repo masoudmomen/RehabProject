@@ -1,0 +1,44 @@
+﻿@using Rehab.EndPoint.AdminPanel.Viewmodels
+@rendermode InteractiveServer 
+   
+@if (IsVisible)
+{
+    <div class="modal-backdrop">
+        <div class="modal-content-facilityDetail">
+            <button type="button" class="btn-close float-end" @onclick="Close" ></button>
+            <h3>Facility Details</h3>
+            <hr />
+            @if (Model is not null)
+            {
+                <span>@Model.Name</span><br />
+                if (Model.Insurances != null && Model.Insurances.Count>0)
+                {
+                    foreach (var item in Model.Insurances)
+                    {
+                        <span>@item.Name</span><br />
+                    }
+                }
+            }
+        </div>
+    </div>
+}
+
+
+
+@code {
+    [Parameter] public FacilityViewmodel? Model { get; set; }
+
+
+    public bool IsVisible { get; set; }
+
+    public void Show()
+    {
+        IsVisible = true;
+        InvokeAsync(StateHasChanged);
+    }
+    public void Close()
+    {
+        IsVisible = false;
+        InvokeAsync(StateHasChanged);
+    }
+}
