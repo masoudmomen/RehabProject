@@ -7,6 +7,7 @@ using Rehab.Domain.Highlights;
 using Rehab.Domain.Images;
 using Rehab.Domain.Insurances;
 using Rehab.Domain.LevelsOfCare;
+using Rehab.Domain.Tags;
 using Rehab.Domain.Treatments;
 using Rehab.Domain.Users;
 using Rehab.Domain.WhoWeTreat;
@@ -40,5 +41,6 @@ namespace Rehab.Persistence.Contexts
         public DbSet<Loc> Locs { get; set; }
         public DbSet<Treatment> Treatments { get; set; }
         public DbSet<FacilitysImages> FacilitysImages { get; set; }
+        public DbSet<Tag> Tags { get; set; }
     }
 }

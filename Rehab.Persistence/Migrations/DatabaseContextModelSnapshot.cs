@@ -52,6 +52,21 @@ namespace Rehab.Persistence.Migrations
                     b.ToTable("AmenityFacility");
                 });
 
+            modelBuilder.Entity("AmenityTag", b =>
+                {
+                    b.Property<int>("AmenitiesId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TagsId")
+                        .HasColumnType("int");
+
+                    b.HasKey("AmenitiesId", "TagsId");
+
+                    b.HasIndex("TagsId");
+
+                    b.ToTable("AmenityTag");
+                });
+
             modelBuilder.Entity("FacilityHighlight", b =>
                 {
                     b.Property<int>("FacilitiesId")
@@ -351,6 +366,23 @@ namespace Rehab.Persistence.Migrations
                     b.ToTable("Locs");
                 });
 
+            modelBuilder.Entity("Rehab.Domain.Tags.Tag", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Tags");
+                });
+
             modelBuilder.Entity("Rehab.Domain.Treatments.Treatment", b =>
                 {
                     b.Property<int>("Id")
@@ -444,6 +476,21 @@ namespace Rehab.Persistence.Migrations
                     b.HasOne("Rehab.Domain.Facilities.Facility", null)
                         .WithMany()
                         .HasForeignKey("FacilitiesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("AmenityTag", b =>
+                {
+                    b.HasOne("Rehab.Domain.Amenities.Amenity", null)
+                        .WithMany()
+                        .HasForeignKey("AmenitiesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Rehab.Domain.Tags.Tag", null)
+                        .WithMany()
+                        .HasForeignKey("TagsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

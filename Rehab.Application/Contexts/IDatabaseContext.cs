@@ -6,6 +6,7 @@ using Rehab.Domain.Highlights;
 using Rehab.Domain.Images;
 using Rehab.Domain.Insurances;
 using Rehab.Domain.LevelsOfCare;
+using Rehab.Domain.Tags;
 using Rehab.Domain.Treatments;
 using Rehab.Domain.Users;
 using Rehab.Domain.WhoWeTreat;
@@ -29,6 +30,7 @@ namespace Rehab.Application.Contexts
         DbSet<Loc> Locs { get; set; }
         DbSet<Treatment> Treatments { get; set; }
         DbSet<FacilitysImages> FacilitysImages { get; set; }
+        DbSet<Tag> Tags { get;set; }
         int SaveChanges();
         int SaveChanges(bool acceptAllChangesOnSuccess);
         Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default);

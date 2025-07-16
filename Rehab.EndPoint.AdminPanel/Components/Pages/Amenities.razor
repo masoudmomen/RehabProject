@@ -87,6 +87,13 @@
 
         <label>Description</label>
         <InputTextArea @bind-Value="tempAmenity.Description" class="form-control my-2"></InputTextArea>
+
+        <label>Tags</label>
+        <TagSelectorComponent 
+            SelectedTags="@tempAmenity.Tags"
+            OnTagsChanged="@((tags) => tempAmenity.Tags = tags)">
+        
+        </TagSelectorComponent>
     </div>
 </ModalComponent>
 <!-- #endregion Edit Modal -->
@@ -141,7 +148,7 @@
         //depth copy
         tempAmenity = JsonSerializer.Deserialize<AmenityViewmodel>(
             JsonSerializer.Serialize(amenity));
-
+        tempAmenity.Tags ??= new List<TagViewModel>();
         UploadedPaths.Clear();
         EditModal.Show();
     }

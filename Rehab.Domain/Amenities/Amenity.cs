@@ -1,4 +1,5 @@
 ﻿using Rehab.Domain.Facilities;
+using Rehab.Domain.Tags;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,5 +15,6 @@ namespace Rehab.Domain.Amenities
         public string Logo { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         public ICollection<Facility>? Facilities { get; set; }
+        public ICollection<Tag>? Tags { get; set; }
     }
 }

@@ -1,6 +1,7 @@
 ﻿@page "/amenity/add"
 @using Rehab.Application.Amenities
 @using Rehab.EndPoint.AdminPanel.Viewmodels
+@using Rehab.EndPoint.AdminPanel.Components.Controls
 @inject Rehab.Application.Amenities.IAmenityService AmenityService
 @inject AutoMapper.IMapper mapper
 @rendermode InteractiveServer
@@ -20,6 +21,8 @@
         <InputFile OnChange="HandleSelected" class="form-control my-2" accept="image/*" />
         <label>Description</label>
         <InputTextArea @bind-Value="Amenity.Description" class="form-control my-2"></InputTextArea>
+         <label>Tags</label> 
+        <TagSelectorComponent OnTagsChanged="@((tags) => Amenity.Tags = tags)"></TagSelectorComponent>
         @if (isAddBtnActive)
         {
             <button class="btn btn-primary my-2">Add</button>
@@ -28,6 +31,7 @@
         {
             <button class="btn btn-outline-danger my-2" disabled>Add</button>
         }
+       
     </EditForm>
 </div>
 

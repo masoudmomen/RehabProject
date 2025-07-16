@@ -34,6 +34,7 @@
 
     <!-- Template Stylesheet -->
     <link href="css/style.css?v=@version" rel="stylesheet">
+    <link href="Rehab.EndPoint.AdminPanel.styles.css" rel="stylesheet" >
     <HeadOutlet />
 </head>
 
@@ -45,7 +46,15 @@
                 .forEach(cb => cb.checked = false);
         }
     </script>
-
+    <script>
+        window.preventFormSubmitOnEnter = function (element) {
+            element.addEventListener('keydown', function (e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                }
+            });
+        }
+    </script>
     <script>
         window.BlazorRehydrateVersion = "@version"; // مقدار را هر بار بعد از پابلیش تغییر بده
     </script>
@@ -64,7 +73,6 @@
     <script src="lib/tempusdominus/js/moment.min.js"></script>
     <script src="lib/tempusdominus/js/moment-timezone.min.js"></script>
     <script src="lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
-
     <!-- Template Javascript -->
     <script src="js/main.js?v=@version"></script>
 </body>
