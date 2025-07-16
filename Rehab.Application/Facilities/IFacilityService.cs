@@ -1,7 +1,10 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using Rehab.Application.Common;
 using Rehab.Application.Contexts;
+using Rehab.Application.Dtos;
 using Rehab.Domain.Facilities;
+using Rehab.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +16,9 @@ namespace Rehab.Application.Facilities
     public interface IFacilityService
     {
         BaseDto<AddRequestFacilityDto> Add(AddRequestFacilityDto facility); 
+        Task<PaginatedItemDto<FacilityBriefInfoDto>> GetFacilities(int page, int pageSize);
+
+        FacilityDetailDto? FindById(int id);
     }
 
     public class FacilityService : IFacilityService
@@ -46,6 +52,67 @@ namespace Rehab.Application.Facilities
                 return BaseDto<AddRequestFacilityDto>.SuccessResult(facility, "Facility Added Successfully.");
 
             return BaseDto<AddRequestFacilityDto>.FailureResult("Operation Failed! Please try another time!");
+        }
+
+        public FacilityDetailDto? FindById(int id)
+        {
+            var facility = context.Facilities.FirstOrDefault(c => c.Id == id);
+            if(facility == null) return null;
+            return context.Facilities.Where(c=>c.Id == id)
+                .Include(c => c.Insurances)
+                .Include(c => c.Accreditations)
+                .Include(c => c.Highlights)
+                .Include(c => c.Amenities)
+                .Include(c => c.Wwts)
+                .Include(c => c.Treatments)
+                .Include(c => c.FacilitysImages)
+                .Include(c => c.Locs)
+                .Select(c => new FacilityDetailDto
+                {
+                    Id = id,
+                    Name = c.Name,
+                    Address = c.Address,
+                    IsVerified = c.IsVerified,
+                    Logo = c.Logo,
+                    Founded = c.Founded,
+                    OccupancyMax = c.OccupancyMax,
+                    OccupancyMin = c.OccupancyMin,
+                    PhoneNumber = c.PhoneNumber,
+                    City = c.City,
+                    Cover = c.Cover,
+                    Description = c.Description,
+                    Email = c.Email,
+                    ProvidersPolicy = c.ProvidersPolicy,
+                    Slug = c.Slug,
+                    State = c.State,
+                    WebSite = c.WebSite,
+                    Accreditations = c.Accreditations!.ToList(),
+                    Highlights = c.Highlights!.ToList(),
+                    Amenities = c.Amenities!.ToList(),
+                    FacilitysImages = c.FacilitysImages!.ToList(),
+                    Treatments = c.Treatments!.ToList(),
+                    Wwts = c.Wwts!.ToList(),
+                    Insurances = c.Insurances!.ToList(),
+                    Locs = c.Locs!.ToList() 
+                }).FirstOrDefault();
+        }
+
+        public async Task<PaginatedItemDto<FacilityBriefInfoDto>> GetFacilities(int page, int pageSize)
+        {
+            int rowCount = 0;
+            var data = context.Facilities
+                .OrderByDescending(c => c.Id)
+                .ToPaged(page, pageSize, out rowCount)
+                .Select(c=> new FacilityBriefInfoDto
+                {
+                    Name = c.Name,
+                    Id = c.Id,
+                    City = c.City,
+                    State = c.State,
+                    Description = c.Description,
+                    Logo = c.Logo,
+                }).ToList();
+            return new PaginatedItemDto<FacilityBriefInfoDto>(page, pageSize, rowCount, data);
         }
     }
 }

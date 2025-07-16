@@ -28,6 +28,7 @@ namespace Rehab.EndPoint.AdminPanel.MappingProfile
         {
             CreateMap<UserDto, UserViewmodel>().ReverseMap();
             CreateMap<FacilityViewmodel, AddRequestFacilityDto>().ReverseMap();
+            CreateMap<FacilityViewmodel, AddRequestFacilityDto>().ReverseMap();
 
             CreateMap<InsuranceDto, InsuranceViewmodel>().ReverseMap();
             CreateMap<AccreditationDto, AccreditationViewmodel>().ReverseMap();
@@ -57,6 +58,8 @@ namespace Rehab.EndPoint.AdminPanel.MappingProfile
             .ForMember("Success", opt => opt.MapFrom("Success"))
             .ForMember("Message", opt => opt.MapFrom("Message"))
             .ForMember("Status", opt => opt.MapFrom("Status")).ReverseMap();
+
+            CreateMap<FacilityViewmodel, FacilityDetailDto>().ReverseMap();
         }
 
     }

@@ -1,11 +1,12 @@
 ﻿@using Rehab.EndPoint.AdminPanel.CommonService
+@using Rehab.EndPoint.AdminPanel.Viewmodels
 @rendermode InteractiveServer
 @inject LocationService LocationService
 
 
 
 <div class="col-6">
-    <label for="state" class="form-label">State</label>
+    <label for="state" class="">State</label>
     <select id="state" @onchange="OnStateChanged" class="form-select">
         <option value="">Choose a State</option>
         @if (States?.Any() == true)
@@ -18,9 +19,9 @@
     </select>
 </div>
 <div class="col-6">
-    <label for="city" class="form-label">City</label>
+    <label for="city" class="">City</label>
 
-    <select @bind="@SelectedCity" id="city" class="form-select">
+    <select @bind="Facility.City" id="city" class="form-select">
         <option value="">Choose a City</option>
         @if(Cities?.Any() == true)
         {
@@ -33,27 +34,30 @@
 </div>
 
 @code {
+    [Parameter]
+    public FacilityViewmodel Facility { get; set; } = new();
+
     //مربوط به api شهر و استان
     private List<State>? States = new();
     private List<string> Cities = new();
 
     private string? SelectedState;
-    private string? SelectedCity;
 
     protected override async Task OnInitializedAsync()
     {
         States = await LocationService.GetStatesAsync("United States");
     }
 
-    
-    
+
+
     private async Task OnStateChanged(ChangeEventArgs e)
     {
         SelectedState = e.Value?.ToString();
         if (!string.IsNullOrEmpty(SelectedState))
         {
+            Facility.State = SelectedState;
             Cities = await LocationService.GetCitiesAsync(SelectedState);
-            SelectedCity = null;
+            Facility.City = "";
             StateHasChanged();
         }
     }

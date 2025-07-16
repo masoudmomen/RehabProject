@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\talakado\Common\Common.csproj" />
     <ProjectReference Include="..\Rehab.Domain\Rehab.Domain.csproj" />
   </ItemGroup>
 

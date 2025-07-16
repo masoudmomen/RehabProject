@@ -1,0 +1,141 @@
+﻿@using Rehab.Application.Dtos
+@using Rehab.EndPoint.AdminPanel.Components.Controls
+@using Rehab.EndPoint.AdminPanel.Viewmodels
+@using Rehab.Application.Facilities
+@inject AutoMapper.IMapper mapper
+@rendermode InteractiveServer
+@inject AlertService AlertService
+@inject IFacilityService FacilityService
+@page "/facilities"
+
+
+
+<div class="w-75 mx-auto p-4">
+    <h3>Facilities</h3>
+    @if (FacilitiesList != null && FacilitiesList.Count>0)
+    {
+        <div class="row g-4">
+            <div class="col-sm-12 col-xl-6 w-100">
+                <div class="bg-light rounded h-100 p-4">
+                    <table class="table table-responsive-lg" >
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Logo</th>
+                                <th scope="col" >Name</th>
+                                <th scope="col">State</th>
+                                <th scope="col">City</th>
+                                <th scope="col">Operation</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                var i = 0;
+                            }
+                            @foreach (var item in FacilitiesList.Data)
+                            {
+                                i++;
+                                <tr>
+                                    <th scope="row" style="width:30px;">@i</th>
+                                    <td style="width:55px;">
+                                        <img src="@item.Logo" width="30" height="30" />
+                                    </td>
+                                    <td style="width:250px;overflow:hidden;">@item.Name</td>
+                                    <td style="width:150px;height:40px;overflow:hidden;">@item.State</td>
+                                    <td style="width:150px;height:40px;overflow:hidden;">@item.City</td>
+                                    <td>
+                                        <i class="fa fa-edit cursor-pointer" title="Edit Facility"></i>
+                                        &ensp;&ensp;&ensp;
+                                        <i class="fa fa-eye cursor-pointer" title="Show Facility" @onclick="()=>OpenModal(item.Id)"></i>
+                                        &ensp;&ensp;&ensp;
+                                        <i class="fa fa-trash cursor-pointer" title="Delete Facility"></i>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <h3 class="text-warning">There is not any Record from Facility</h3>
+    }
+    @if (TotalPages > 1)
+    {
+        <nav>
+            <ul class="pagination justify-content-center">
+                <li class="page-item @(CurrentPage == 1 ? "disabled" : "")">
+                    <button class="page-link" @onclick="() => OnPageChanged(CurrentPage - 1)">Previous</button>
+                </li>
+
+                @for (int i = MinPagingButton; i <= MaxPagingButton; i++)
+                {
+                    int ii = i;
+                    <li class="page-item @(ii == CurrentPage ? "active" : "")">
+                        <button class="page-link" @onclick="() => OnPageChanged(ii)">@i</button>
+                    </li>
+                }
+
+                <li class="page-item @(CurrentPage == TotalPages ? "disabled" : "")">
+                    <button class="page-link" @onclick="() => OnPageChanged(CurrentPage + 1)">Next</button>
+                </li>
+            </ul>
+        </nav>
+    }
+</div>
+
+
+
+@* Start Open Modal for Detail: *@
+<FacilityDetailModalComponent Model="Facility" @ref="OpenFacilityDetailModal" />
+@* End Open Modal for Detail: *@
+
+@code {
+    public PaginatedItemDto<FacilityBriefInfoDto>? FacilitiesList { get; set; }
+    private int TotalPages;
+    private int CurrentPage;
+    private int PageSize = 3;
+    private int PagingButtonCount = 5;
+    private int MaxPagingButton = 5;
+    private int MinPagingButton = 1;
+
+    public FacilityViewmodel? Facility { get; set; }
+    private FacilityDetailModalComponent? OpenFacilityDetailModal;
+
+    protected override async Task OnInitializedAsync()
+    {
+        FacilitiesList = await FacilityService.GetFacilities(1, PageSize);
+        TotalPages = FacilitiesList.Pager.TotalPages;
+        CurrentPage = FacilitiesList.PageIndex;
+        CheckPagingButtons();
+    } 
+
+    private async Task OnPageChanged(int page)
+    {
+        FacilitiesList = await FacilityService.GetFacilities(page, PageSize);
+        TotalPages = FacilitiesList.Pager.TotalPages;
+        CurrentPage = FacilitiesList.PageIndex;
+        CheckPagingButtons();
+    }
+
+    private void CheckPagingButtons()
+    {
+        if (PagingButtonCount > TotalPages) PagingButtonCount = TotalPages;
+
+        MinPagingButton = ((CurrentPage - (PagingButtonCount / 2)) < 1) ? 1 : (CurrentPage - (PagingButtonCount / 2));
+        MaxPagingButton = MinPagingButton + (PagingButtonCount - 1);
+        if (MinPagingButton + (PagingButtonCount - 1) > TotalPages)
+        {
+            MinPagingButton = MinPagingButton - (MaxPagingButton - TotalPages);
+            MaxPagingButton = TotalPages;
+        }
+    }
+
+    private void OpenModal(int id)
+    {
+        Facility = mapper.Map<FacilityViewmodel>(FacilityService.FindById(id));
+        OpenFacilityDetailModal!.Show();
+    }
+}
