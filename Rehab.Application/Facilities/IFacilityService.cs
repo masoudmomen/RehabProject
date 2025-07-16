@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
+using Common;
 using Rehab.Application.Common;
 using Rehab.Application.Contexts;
 using Rehab.Application.Dtos;
 using Rehab.Domain.Facilities;
-using Rehab.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Linq;
