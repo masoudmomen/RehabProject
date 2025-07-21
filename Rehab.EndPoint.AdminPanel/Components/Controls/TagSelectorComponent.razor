@@ -1,0 +1,117 @@
+﻿@inject HttpClient http
+@inject Rehab.Application.Tags.ITagService TagService
+@inject AutoMapper.IMapper mapper
+@inject IJSRuntime js
+@using Rehab.EndPoint.AdminPanel.Viewmodels
+
+<div>
+    <input type="text" class="form-control mt-2"
+           placeholder="Type tag name..."
+           @ref="TagInputElement"
+           @bind="TagInput"
+           @bind:event="oninput"
+           @onkeydown="HandleKeyDown" />
+</div>
+@if (SuggestedTags.Any())
+{
+    <ul class="border bg-white suggseted-list">
+        @foreach (var suggestion in SuggestedTags)
+        {
+            bool isSelected = SelectedTags.Any(t => t.Name.Equals(suggestion.Name, StringComparison.OrdinalIgnoreCase));
+               <li class="p-2 cursor-pointer suggested-item @(isSelected ? "disable":"")"
+                    @onclick="@(() => SelectTag(suggestion))">@suggestion.Name</li>
+         }
+    </ul>
+}
+<div class="mt-1 mb-2">
+    <span style="font-size:14px">Selected Tags:</span>
+    <div class="flex g-3 mt-2 border border-1 border-light py-2">
+        @foreach (var tag in SelectedTags)
+        {
+         <span class="border-1 px-3 py-1 mx-1 rounded-3 selected-item">
+                    @tag.Name
+                    <a class="ml-2 text-danger cursor-pointer" @onclick="@(() => RemoveTag(tag))">x</a>
+         </span>
+       }
+    </div>
+</div>
+@code {
+    [Parameter]
+    public List<TagViewModel> SelectedTags { get; set; } = new();
+    [Parameter]
+    public EventCallback<List<TagViewModel>> OnTagsChanged { get; set; }
+    private string _tagInput = "";
+    private string TagInput
+    {
+
+        get => _tagInput;
+        set
+        {
+            if (_tagInput != value)
+            {
+                _tagInput = value;
+                _ = OnTagInputChanged();
+            }
+        }
+
+    }
+    private List<TagViewModel> SuggestedTags { get; set; } = new();
+    private List<TagViewModel> internalSelectedTags = new();
+    private ElementReference TagInputElement;
+    protected override void OnParametersSet()
+    {
+       if(SelectedTags != null && SelectedTags.Any() )
+        {
+            internalSelectedTags = new List<TagViewModel>(SelectedTags);
+        }
+    }
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await js.InvokeVoidAsync("preventSubmitOnEnter", TagInputElement);
+        }
+    }
+    private async Task OnTagInputChanged()
+    {
+        if (string.IsNullOrWhiteSpace(TagInput))
+        {
+            SuggestedTags.Clear();
+            return;
+        }
+        SuggestedTags = mapper.Map<List<TagViewModel>>(await TagService.GetTagsByNameAsync(TagInput));
+        StateHasChanged();
+    }
+    private async Task SelectTag(TagViewModel tag)
+    {
+        if (!SelectedTags.Any(t => t.Name.Equals(tag.Name, StringComparison.OrdinalIgnoreCase)))
+        {
+            SelectedTags.Add(tag);
+            TagInput = "";
+            SuggestedTags.Clear();
+            await OnTagsChanged.InvokeAsync(SelectedTags);
+        }
+    }
+    private async Task HandleKeyDown(KeyboardEventArgs e)
+
+    {
+        if (e.Key == "Enter" && !string.IsNullOrWhiteSpace(TagInput))
+        {
+            var exist = SuggestedTags.Any(t => t.Name.Equals(TagInput, StringComparison.OrdinalIgnoreCase))
+                        || SelectedTags.Any(t => t.Name.Equals(TagInput, StringComparison.OrdinalIgnoreCase));
+            if (!exist)
+            {
+                var newTag = new TagViewModel { Id = 0, Name = TagInput };
+                await SelectTag(newTag);
+            }
+
+        }
+
+    }
+    private void RemoveTag(TagViewModel tag)
+    {
+        SelectedTags.Remove(tag);
+        OnTagsChanged.InvokeAsync(SelectedTags);
+    }
+
+}

@@ -1,9 +1,12 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using Rehab.Application.Common;
 using Rehab.Application.Contexts;
 using Rehab.Application.Insurances;
+using Rehab.Application.Tags;
 using Rehab.Domain.Amenities;
 using Rehab.Domain.Insurances;
+using Rehab.Domain.Tags;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,9 +36,26 @@ namespace Rehab.Application.Amenities
         }
         public BaseDto<AmenityDto> Add(AmenityDto amenity)
         {
-            if (amenity == null) return BaseDto<AmenityDto>.FailureResult("The Amenity data is null!");
 
-            context.Amenities.Add(mapper.Map<Amenity>(amenity));
+            if (amenity == null) return BaseDto<AmenityDto>.FailureResult("The Amenity data is null!");
+            var finalTags = new List<Tag>();
+            foreach(var tagDto in amenity.Tags.ToList())
+            {
+                var tagName = tagDto.Name;
+                
+                var existingTag = context.Tags.FirstOrDefault(t => t.Name == tagName);
+                if (existingTag == null) {
+                    existingTag = mapper.Map<Tag>(tagDto);
+                    existingTag.Name = tagName;
+                    context.Tags.Add(existingTag);
+                    context.SaveChanges();
+                }
+                finalTags.Add(existingTag);
+               
+            }
+            var amenityEntity = mapper.Map<Amenity>(amenity);
+            amenityEntity.Tags = finalTags;
+            context.Amenities.Add(amenityEntity);
             if (context.SaveChanges() > 0) return BaseDto<AmenityDto>.SuccessResult(amenity, "Amenity Added successfully.");
 
             return BaseDto<AmenityDto>.FailureResult("Operation Failed! Please try another time!");
@@ -56,19 +76,47 @@ namespace Rehab.Application.Amenities
 
         public List<AmenityDto> GetList()
         {
-            return mapper.Map<List<AmenityDto>>(context.Amenities.OrderBy(c => c.Name).ToList());
+            return mapper.Map<List<AmenityDto>>
+                (context.Amenities
+                .Include(a => a.Tags)
+                .OrderBy(c => c.Name).ToList());
         }
 
         public BaseDto<AmenityDto> Update(AmenityDto amenity)
         {
+               
             if (amenity == null) return BaseDto<AmenityDto>.FailureResult("The Amenity data is null!");
 
-            var amenityForUpdate = context.Amenities.Find(amenity.Id);
-            if (amenityForUpdate is null) return BaseDto<AmenityDto>.FailureResult("The Amenity not find!");
+            var amenityForUpdate = context.Amenities
+                .Include(a => a.Tags)
+                .FirstOrDefault(a => a.Id == amenity.Id);
+            if (amenityForUpdate is null) return BaseDto<AmenityDto>.FailureResult("The Amenity not found!");
 
             if (amenity.Logo == "") amenity.Logo = amenityForUpdate.Logo;
-            mapper.Map(amenity, amenityForUpdate);
-            if (context.SaveChanges() > 0) return BaseDto<AmenityDto>.SuccessResult(amenity, "Amenity Updated successfully.");
+
+            amenityForUpdate.Name = amenity.Name;
+            amenityForUpdate.Description = amenity.Description;
+            amenityForUpdate.Logo = amenity.Logo;
+
+            amenityForUpdate.Tags.Clear();
+
+            if (amenity.Tags != null)
+            {
+                foreach(var tagDto in amenity.Tags)
+                {
+                    var existingTag = context.Tags.Find(tagDto.Id);
+                    if(existingTag != null)
+                    {
+                        amenityForUpdate.Tags.Add(existingTag);
+                    }
+                }
+            }
+
+            if (context.SaveChanges() > 0) { 
+                var updatedDto = mapper.Map<AmenityDto>(amenityForUpdate);
+                return BaseDto<AmenityDto>.SuccessResult(amenity, "Amenity Updated successfully."); 
+                
+            }
 
             return BaseDto<AmenityDto>.FailureResult("Operation Failed! Please try another time!");
         }
@@ -80,5 +128,6 @@ namespace Rehab.Application.Amenities
         public string Name { get; set; } = string.Empty;
         public string Logo { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
+        public List<TagDto> Tags { get; set; } = new();
     }
 }

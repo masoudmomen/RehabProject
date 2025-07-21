@@ -6,6 +6,7 @@ using Rehab.Application.Facilities;
 using Rehab.Application.Highlights;
 using Rehab.Application.Insurances;
 using Rehab.Application.LevelsOfCare;
+using Rehab.Application.Tags;
 using Rehab.Application.Treatments;
 using Rehab.Application.Users;
 using Rehab.Application.WhoWeTreat;
@@ -21,11 +22,12 @@ using Rehab.EndPoint.AdminPanel.Viewmodels;
 
 namespace Rehab.EndPoint.AdminPanel.MappingProfile
 {
-    public class CommonMappingProfile: Profile
+    public class CommonMappingProfile : Profile
     {
         public CommonMappingProfile()
         {
             CreateMap<UserDto, UserViewmodel>().ReverseMap();
+            CreateMap<FacilityViewmodel, AddRequestFacilityDto>().ReverseMap();
             CreateMap<FacilityViewmodel, AddRequestFacilityDto>().ReverseMap();
 
             CreateMap<InsuranceDto, InsuranceViewmodel>().ReverseMap();
@@ -44,14 +46,20 @@ namespace Rehab.EndPoint.AdminPanel.MappingProfile
             CreateMap<LocViewmodel, Loc>().ReverseMap();
             CreateMap<TreatmentViewmodel, Treatment>().ReverseMap();
             CreateMap<WwtViewmodel, Wwt>().ReverseMap();
+            CreateMap<TagViewModel, TagDto>().ReverseMap();
+            CreateMap<AmenityViewmodel, AmenityDto>()
+            .ForMember(dest => dest.Tags, opt => opt.MapFrom(src => src.Tags));
 
-          
+            CreateMap<AmenityDto, AmenityViewmodel>()
+            .ForMember(dest => dest.Tags, opt => opt.MapFrom(src => src.Tags));
 
             CreateMap(typeof(BaseDto<>), typeof(ResultViewmodel<>))
             .ForMember("Data", opt => opt.MapFrom("Data"))
             .ForMember("Success", opt => opt.MapFrom("Success"))
             .ForMember("Message", opt => opt.MapFrom("Message"))
             .ForMember("Status", opt => opt.MapFrom("Status")).ReverseMap();
+
+            CreateMap<FacilityViewmodel, FacilityDetailDto>().ReverseMap();
         }
 
     }

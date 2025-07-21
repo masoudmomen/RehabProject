@@ -17,11 +17,10 @@
     <Compile Remove="Migrations\20250602151429_add-other-entities-accreditation-to-loc.Designer.cs" />
     <Compile Remove="Migrations\20250611155741_complete-facility.cs" />
     <Compile Remove="Migrations\20250611155741_complete-facility.Designer.cs" />
-    <Compile Remove="Migrations\20250629031651_initial.cs" />
-    <Compile Remove="Migrations\20250629031651_initial.Designer.cs" />
-    <Compile Remove="Migrations\20250629032304_initial.cs" />
-    <Compile Remove="Migrations\20250629032304_initial.Designer.cs" />
-    <Compile Remove="Migrations\DatabaseContextModelSnapshot.cs" />
+    <Compile Remove="Migrations\20250629061910_add-tables.cs" />
+    <Compile Remove="Migrations\20250629061910_add-tables.Designer.cs" />
+    <Compile Remove="Migrations\20250707125814_Add-Tags.cs" />
+    <Compile Remove="Migrations\20250707125814_Add-Tags.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

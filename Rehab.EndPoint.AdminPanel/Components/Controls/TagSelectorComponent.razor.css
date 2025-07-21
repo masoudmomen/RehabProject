@@ -1,0 +1,18 @@
+﻿ul.suggseted-list {
+    list-style: none;
+    padding: 0;
+    height:200px;
+    overflow-y:scroll;
+}
+.suggested-item.disable {
+    color: #999;
+    cursor: not-allowed;
+    -webkit-text-decoration: inherit;
+    text-decoration: inherit;
+}
+li.suggested-item:hover {
+    background-color: #d0eeef;
+}
+.selected-item {
+    background-color: #d0eeef;
+}

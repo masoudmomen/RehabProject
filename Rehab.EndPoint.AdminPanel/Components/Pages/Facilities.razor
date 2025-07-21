@@ -1,4 +1,5 @@
 ﻿@using Rehab.Application.Dtos
+@using Rehab.EndPoint.AdminPanel.Components.Controls
 @using Rehab.EndPoint.AdminPanel.Viewmodels
 @using Rehab.Application.Facilities
 @inject AutoMapper.IMapper mapper
@@ -16,13 +17,14 @@
         <div class="row g-4">
             <div class="col-sm-12 col-xl-6 w-100">
                 <div class="bg-light rounded h-100 p-4">
-                    <table class="table table-responsive-lg">
+                    <table class="table table-responsive-lg" >
                         <thead>
                             <tr>
                                 <th scope="col">#</th>
                                 <th scope="col">Logo</th>
-                                <th scope="col">Name</th>
-                                <th scope="col">Description</th>
+                                <th scope="col" >Name</th>
+                                <th scope="col">State</th>
+                                <th scope="col">City</th>
                                 <th scope="col">Operation</th>
                             </tr>
                         </thead>
@@ -34,22 +36,19 @@
                             {
                                 i++;
                                 <tr>
-                                    <th scope="row">@i</th>
-                                    <td>
+                                    <th scope="row" style="width:30px;">@i</th>
+                                    <td style="width:55px;">
                                         <img src="@item.Logo" width="30" height="30" />
                                     </td>
-                                    <td style="max-width:200px;max-height:50px;overflow:hidden;">@item.Name</td>
+                                    <td style="width:250px;overflow:hidden;">@item.Name</td>
+                                    <td style="width:150px;height:40px;overflow:hidden;">@item.State</td>
+                                    <td style="width:150px;height:40px;overflow:hidden;">@item.City</td>
                                     <td>
-                                        <p style="max-width:400px;max-height:50px;overflow-y:auto">
-                                            @item.Description
-                                        </p>
-                                    </td>
-                                    <td>
-                                        @*  <i class="fa fa-edit cursor-pointer" title="Edit Insurance" @onclick="()=>OpenEditModal(item)"></i>
+                                        <i class="fa fa-edit cursor-pointer" title="Edit Facility"></i>
                                         &ensp;&ensp;&ensp;
-                                        <i class="fa fa-image cursor-pointer" title="Show Image" @onclick="()=>OpenImageModal(item)"></i>
+                                        <i class="fa fa-eye cursor-pointer" title="Show Facility" @onclick="()=>OpenModal(item.Id)"></i>
                                         &ensp;&ensp;&ensp;
-                                        <i class="fa fa-trash cursor-pointer" title="Delete Insurance" @onclick="()=>OpenDeleteModal(item)"></i> *@
+                                        <i class="fa fa-trash cursor-pointer" title="Delete Facility"></i>
                                     </td>
                                 </tr>
                             }
@@ -61,7 +60,7 @@
     }
     else
     {
-        <h3 class="text-warning">There is no Record from Facility</h3>
+        <h3 class="text-warning">There is not any Record from Facility</h3>
     }
     @if (TotalPages > 1)
     {
@@ -89,6 +88,10 @@
 
 
 
+@* Start Open Modal for Detail: *@
+<FacilityDetailModalComponent Model="Facility" @ref="OpenFacilityDetailModal" />
+@* End Open Modal for Detail: *@
+
 @code {
     public PaginatedItemDto<FacilityBriefInfoDto>? FacilitiesList { get; set; }
     private int TotalPages;
@@ -97,6 +100,9 @@
     private int PagingButtonCount = 5;
     private int MaxPagingButton = 5;
     private int MinPagingButton = 1;
+
+    public FacilityViewmodel? Facility { get; set; }
+    private FacilityDetailModalComponent? OpenFacilityDetailModal;
 
     protected override async Task OnInitializedAsync()
     {
@@ -125,5 +131,11 @@
             MinPagingButton = MinPagingButton - (MaxPagingButton - TotalPages);
             MaxPagingButton = TotalPages;
         }
+    }
+
+    private void OpenModal(int id)
+    {
+        Facility = mapper.Map<FacilityViewmodel>(FacilityService.FindById(id));
+        OpenFacilityDetailModal!.Show();
     }
 }

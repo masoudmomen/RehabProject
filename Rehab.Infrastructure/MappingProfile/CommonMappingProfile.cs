@@ -5,6 +5,7 @@ using Rehab.Application.Facilities;
 using Rehab.Application.Highlights;
 using Rehab.Application.Insurances;
 using Rehab.Application.LevelsOfCare;
+using Rehab.Application.Tags;
 using Rehab.Application.Treatments;
 using Rehab.Application.Users;
 using Rehab.Application.WhoWeTreat;
@@ -14,6 +15,7 @@ using Rehab.Domain.Facilities;
 using Rehab.Domain.Highlights;
 using Rehab.Domain.Insurances;
 using Rehab.Domain.LevelsOfCare;
+using Rehab.Domain.Tags;
 using Rehab.Domain.Treatments;
 using Rehab.Domain.Users;
 using Rehab.Domain.WhoWeTreat;
@@ -39,6 +41,7 @@ namespace Rehab.Infrastructure.MappingProfile
             CreateMap<Wwt, WwtDto>().ReverseMap();
             CreateMap<Loc, LevelsOfCareDto>().ReverseMap();
             CreateMap<Treatment, TreatmentDto>().ReverseMap();
+            CreateMap<Tag,TagDto>().ReverseMap();
         }
     }
 }

@@ -1,4 +1,5 @@
 using AutoMapper;
+using Microsoft.AspNetCore.Components.Web;
 using Microsoft.EntityFrameworkCore;
 using Rehab.Application.Accreditations;
 using Rehab.Application.Amenities;
@@ -8,6 +9,7 @@ using Rehab.Application.Facilities;
 using Rehab.Application.Highlights;
 using Rehab.Application.Insurances;
 using Rehab.Application.LevelsOfCare;
+using Rehab.Application.Tags;
 using Rehab.Application.Treatments;
 using Rehab.Application.Users;
 using Rehab.Application.WhoWeTreat;
@@ -42,12 +44,13 @@ builder.Services.AddTransient<IHighlightService, HighlightService>();
 builder.Services.AddTransient<IWwtService, WwtService>();
 builder.Services.AddTransient<ILevelsOfCareService, LevelsOfCareService>();
 builder.Services.AddTransient<ITreatmentService, TreatmentService>();
+builder.Services.AddTransient<ITagService,TagService>();
 builder.Services.AddHttpClient<LocationService>();
 builder.Services.AddScoped<LocationService>();
 builder.Services.AddScoped<AlertService>();
 builder.Services.AddScoped<IImageUploaderService, ImageUploaderService>();
 #endregion
-
+builder.Services.AddSingleton<HeadOutlet>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
