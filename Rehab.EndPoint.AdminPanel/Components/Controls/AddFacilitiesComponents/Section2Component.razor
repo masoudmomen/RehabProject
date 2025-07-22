@@ -7,13 +7,14 @@
 @inject Rehab.Application.Insurances.IInsuranceService InsuranceService
 @inject IJSRuntime JS
 
-<label class="text-decoration-underline mt-0 mb-2 text-lg-center">Insurances Information</label>
+<h5 class="text-decoration-underline mt-0 mb-2 text-start">Insurances Information</h5>
 <div class="row">
     <div class="col-5">
         <div class="col rounded-2" style="border:solid 1px gray;background-color:white;z-index:500;">
             <div class="bg-info rounded-top p-1 text-center text-white">Insurances List</div>
             <div style="min-height:362px;max-height:362px;overflow-y:scroll;z-index:1000;background-color:white" class="">
-                @foreach (var item in InsurancesList)
+                <InputText class="form-control" @bind-Value="InsuranceNamefilter" />
+                @foreach (var item in InsurancesList.Where(c => c.Name.Contains(InsuranceNamefilter)))
                 {
                     <div class="rounded-1 border-1 bg-light mt-2 mx-auto p-2" style="width:95%;cursor:pointer;" @ondblclick="() =>AddSingleInsurance(item)">
                         <input class="form-check-input" type="checkbox" @oninput="()=>AddToSelectedInsurances(item)">
@@ -66,9 +67,12 @@
     public List<InsuranceViewmodel> InsurancesSelectedList { get; set; } = new();
     public List<InsuranceViewmodel> InsurancesUnSelectedList { get; set; } = new();
 
+    private string InsuranceNamefilter = "";
+
     protected override void OnInitialized()
     {
         InsurancesList = mapper.Map<List<InsuranceViewmodel>>(InsuranceService.GetList());
+        InsuranceNamefilter = "";
     }
 
     private void AddSingleInsurance(InsuranceViewmodel insurance)
