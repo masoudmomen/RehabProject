@@ -1,9 +1,11 @@
 ﻿using Rehab.Domain.Accreditations;
 using Rehab.Domain.Amenities;
+using Rehab.Domain.Conditions;
 using Rehab.Domain.Highlights;
 using Rehab.Domain.Images;
 using Rehab.Domain.Insurances;
 using Rehab.Domain.LevelsOfCare;
+using Rehab.Domain.SubstancesWeTreat;
 using Rehab.Domain.Treatments;
 using Rehab.Domain.WhoWeTreat;
 using System;
@@ -42,5 +44,7 @@ namespace Rehab.Application.Facilities
         public List<Loc>? Locs { get; set; }
         public List<Treatment>? Treatments { get; set; }
         public List<Wwt>? Wwts { get; set; }
+        public List<Condition>? Conditions { get; set; }
+        public List<Swt>? Swts { get; set; }
     }
 }

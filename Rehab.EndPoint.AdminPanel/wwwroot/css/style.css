@@ -352,3 +352,7 @@
     max-height: 80vh;
     object-fit: contain;
 }
+
+.searchBox{
+    border-radius:0;
+}

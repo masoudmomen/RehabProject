@@ -1,11 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Rehab.Domain.Accreditations;
 using Rehab.Domain.Amenities;
+using Rehab.Domain.Conditions;
 using Rehab.Domain.Facilities;
 using Rehab.Domain.Highlights;
 using Rehab.Domain.Images;
 using Rehab.Domain.Insurances;
 using Rehab.Domain.LevelsOfCare;
+using Rehab.Domain.SubstancesWeTreat;
 using Rehab.Domain.Tags;
 using Rehab.Domain.Treatments;
 using Rehab.Domain.Users;
@@ -31,6 +33,9 @@ namespace Rehab.Application.Contexts
         DbSet<Treatment> Treatments { get; set; }
         DbSet<FacilitysImages> FacilitysImages { get; set; }
         DbSet<Tag> Tags { get;set; }
+        DbSet<Condition> Conditions { get; set; }
+        DbSet<Swt> Swts { get; set; }
+
         int SaveChanges();
         int SaveChanges(bool acceptAllChangesOnSuccess);
         Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default);

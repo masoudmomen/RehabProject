@@ -2,11 +2,13 @@
 using Rehab.Application.Contexts;
 using Rehab.Domain.Accreditations;
 using Rehab.Domain.Amenities;
+using Rehab.Domain.Conditions;
 using Rehab.Domain.Facilities;
 using Rehab.Domain.Highlights;
 using Rehab.Domain.Images;
 using Rehab.Domain.Insurances;
 using Rehab.Domain.LevelsOfCare;
+using Rehab.Domain.SubstancesWeTreat;
 using Rehab.Domain.Tags;
 using Rehab.Domain.Treatments;
 using Rehab.Domain.Users;
@@ -42,5 +44,7 @@ namespace Rehab.Persistence.Contexts
         public DbSet<Treatment> Treatments { get; set; }
         public DbSet<FacilitysImages> FacilitysImages { get; set; }
         public DbSet<Tag> Tags { get; set; }
+        public DbSet<Condition> Conditions { get; set; }
+        public DbSet<Swt> Swts { get; set; }
     }
 }

@@ -42,6 +42,12 @@
                 case 8:
                     <Rehab.EndPoint.AdminPanel.Components.Controls.AddFacilitiesComponents.Section8Component Facility="Facility" />
                     break;
+                case 9:
+                    <Rehab.EndPoint.AdminPanel.Components.Controls.AddFacilitiesComponents.Section9Component Facility="Facility" />
+                    break;
+                case 10:
+                    <Rehab.EndPoint.AdminPanel.Components.Controls.AddFacilitiesComponents.Section10Component Facility="Facility" />
+                    break;
 
                 default:
                     <Rehab.EndPoint.AdminPanel.Components.Controls.AddFacilitiesComponents.Section1Component Facility="Facility" />
@@ -56,7 +62,7 @@
                 <button type="button"  class="btn btn-primary float-end @PreviousBtnStatus" style="width:105px;" @onclick="ComponentMinus">&lt; Previous</button>
             </div>
             <div class="col-6">
-                @if(comoponentNumber != 8)
+                @if(comoponentNumber != 10)
                 {
                     <button type="button" class="btn btn-primary @NextBtnStatus" style="width:105px;" @onclick="ComponentPlus">Next &gt;</button>
                 }
@@ -83,7 +89,7 @@
 
     private void ComponentPlus()
     {
-        comoponentNumber = (comoponentNumber < 8) ? comoponentNumber+1 : comoponentNumber;
+        comoponentNumber = (comoponentNumber < 10) ? comoponentNumber+1 : comoponentNumber;
         CheckBtnsStatus();
         StateHasChanged(); 
     }
@@ -97,7 +103,7 @@
 
     private void CheckBtnsStatus()
     {
-        if(comoponentNumber <8 && comoponentNumber > 1)
+        if(comoponentNumber <10 && comoponentNumber > 1)
         {
             NextBtnStatus = PreviousBtnStatus = "";
         }

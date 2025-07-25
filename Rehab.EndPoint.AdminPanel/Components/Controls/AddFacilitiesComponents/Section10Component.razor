@@ -1,16 +1,16 @@
 ﻿@rendermode InteractiveServer
 @using AutoMapper
-@using Rehab.Application.WhoWeTreat
+@using Rehab.Application.SubstancesWeTreat
 @using Rehab.EndPoint.AdminPanel.Viewmodels
 @inject AutoMapper.IMapper mapper
-@inject Rehab.Application.WhoWeTreat.IWwtService WwtService
+@inject Rehab.Application.SubstancesWeTreat.ISubstancesWeTreatService SwtService
 @inject IJSRuntime JS
 
-<h5 class="text-decoration-underline mt-0 mb-2 text-start">Who We Treat Information</h5>
+<h5 class="text-decoration-underline mt-0 mb-2 text-start">Substances We Treats Information</h5>
 <div class="row">
     <div class="col-5">
         <div class="col rounded-2" style="border:solid 1px gray;background-color:white;z-index:500;">
-            <div class="bg-info rounded-top p-1 text-center text-white">Who We Treat List</div>
+            <div class="bg-info rounded-top p-1 text-center text-white">Substances We Treats List</div>
             <div style="min-height:362px;max-height:362px;overflow-y:scroll;z-index:1000;background-color:white" class="">
                 <input class="form-control searchBox" @bind="SearchText" @bind:event="oninput" placeholder="search.." />
                 @foreach (var item in FiltersdModelList)
@@ -40,9 +40,9 @@
         <div class="col rounded-2" style="border:solid 1px gray;background-color:white;z-index:500">
             <div class="bg-info rounded-top p-1 text-center text-white">Selected List</div>
             <div style="min-height:362px;max-height:362px;overflow-y:scroll;z-index:1000;background-color:white;">
-                @if (Facility!.Wwts is not null)
+                @if (Facility!.Swts is not null)
                 {
-                    @foreach (var item in Facility.Wwts)
+                    @foreach (var item in Facility.Swts)
                     {
                         <div class="rounded-1 border-1 bg-light mt-2 mx-auto p-2 d-flex align-items-center" style="width:95%;cursor:pointer;">
                             <input class="form-check-input my-auto" type="checkbox" @oninput="()=>AddToUnSelectedModels(item)">
@@ -62,16 +62,16 @@
 @code {
     [Parameter]
     public FacilityViewmodel? Facility { get; set; }
-    public List<WwtViewmodel> ModelList { get; set; } = new();
-    public List<WwtViewmodel> FiltersdModelList { get; set; } = new();
-    public List<WwtViewmodel> ModelSelectedList { get; set; } = new();
-    public List<WwtViewmodel> ModelUnSelectedList { get; set; } = new();
+    public List<SwtViewmodel> ModelList { get; set; } = new();
+    public List<SwtViewmodel> FiltersdModelList { get; set; } = new();
+    public List<SwtViewmodel> ModelSelectedList { get; set; } = new();
+    public List<SwtViewmodel> ModelUnSelectedList { get; set; } = new();
 
     private string searchText = string.Empty;
 
     protected override void OnInitialized()
     {
-        ModelList = mapper.Map<List<WwtViewmodel>>(WwtService.GetList());
+        ModelList = mapper.Map<List<SwtViewmodel>>(SwtService.GetList());
         FiltersdModelList = ModelList;
     }
 
@@ -98,12 +98,12 @@
     }
 
 
-    private void AddSingleModel(WwtViewmodel model)
+    private void AddSingleModel(SwtViewmodel model)
     {
         if (model is not null)
         {
             var isModelExist = false;
-            foreach (var item in Facility!.Wwts!)
+            foreach (var item in Facility!.Swts!)
             {
                 if (model.Id == item.Id)
                 {
@@ -113,8 +113,8 @@
             }
             if (!isModelExist) 
             {
-                Facility.Wwts.Add(model); 
-                Facility.WwtsId!.Add(model.Id); 
+                Facility.Swts.Add(model); 
+                Facility.SwtsId!.Add(model.Id); 
             }
         }
     }
@@ -126,7 +126,7 @@
             foreach (var item in ModelSelectedList)
             {
                 var isModelExist = false;
-                foreach (var insc in Facility!.Wwts!)
+                foreach (var insc in Facility!.Swts!)
                 {
                     if (item.Id == insc.Id)
                     {
@@ -136,8 +136,8 @@
                 }
                 if (!isModelExist) 
                 {
-                    Facility.Wwts.Add(item); 
-                    Facility.WwtsId!.Add(item.Id); 
+                    Facility.Swts.Add(item); 
+                    Facility.SwtsId!.Add(item.Id); 
                 }
             }
         }
@@ -146,7 +146,7 @@
         JS.InvokeVoidAsync("UnCheckAllCheckBoxes");
     }
 
-    private void AddToSelectedModels(WwtViewmodel model)
+    private void AddToSelectedModels(SwtViewmodel model)
     {
         if (model is not null)
         {
@@ -157,15 +157,15 @@
         }
     }
 
-    private void RemoveSingleModel(WwtViewmodel model)
+    private void RemoveSingleModel(SwtViewmodel model)
     {
-        if (model is not null && Facility!.Wwts!.Contains(model))
+        if (model is not null && Facility!.Swts!.Contains(model))
         {
-            Facility.Wwts.Remove(model);
-            Facility.WwtsId!.Remove(model.Id);
+            Facility.Swts.Remove(model);
+            Facility.SwtsId!.Remove(model.Id);
         }
     }
-    private void AddToUnSelectedModels(WwtViewmodel model)
+    private void AddToUnSelectedModels(SwtViewmodel model)
     {
         if (model is not null)
         {
@@ -181,12 +181,12 @@
         {
             foreach (var item in ModelUnSelectedList)
             {
-                foreach (var insc in Facility!.Wwts!)
+                foreach (var insc in Facility!.Swts!)
                 {
                     if (item.Id == insc.Id)
                     {
-                        Facility.Wwts.Remove(item);
-                        Facility.WwtsId!.Remove(item.Id);
+                        Facility.Swts.Remove(item);
+                        Facility.SwtsId!.Remove(item.Id);
                         break;
                     }
                 }

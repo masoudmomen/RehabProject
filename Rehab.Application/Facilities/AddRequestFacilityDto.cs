@@ -36,6 +36,8 @@ namespace Rehab.Application.Facilities
         public List<int>? LocsId { get; set; } = new();
         public List<int>? TreatmentsId { get; set; } = new();
         public List<int>? WwtsId { get; set; } = new();
+        public List<int>? SwtsId { get; set; } = new();
+        public List<int>? ConditionsId { get; set; } = new();
 
 
     }

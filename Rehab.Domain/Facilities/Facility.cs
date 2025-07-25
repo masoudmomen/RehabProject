@@ -6,10 +6,12 @@ using System.Text;
 using System.Threading.Tasks;
 using Rehab.Domain.Accreditations;
 using Rehab.Domain.Amenities;
+using Rehab.Domain.Conditions;
 using Rehab.Domain.Highlights;
 using Rehab.Domain.Images;
 using Rehab.Domain.Insurances;
 using Rehab.Domain.LevelsOfCare;
+using Rehab.Domain.SubstancesWeTreat;
 using Rehab.Domain.Treatments;
 using Rehab.Domain.WhoWeTreat;
 
@@ -46,5 +48,7 @@ namespace Rehab.Domain.Facilities
         public ICollection<Loc>? Locs { get; set; }
         public ICollection<Treatment>? Treatments { get; set; }
         public ICollection<Wwt>? Wwts { get; set; }
+        public ICollection<Condition>? Conditions { get; set; }
+        public ICollection<Swt>? Swts { get; set; }
     }
 }
