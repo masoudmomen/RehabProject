@@ -13,8 +13,8 @@
         <div class="col rounded-2" style="border:solid 1px gray;background-color:white;z-index:500;">
             <div class="bg-info rounded-top p-1 text-center text-white">Insurances List</div>
             <div style="min-height:362px;max-height:362px;overflow-y:scroll;z-index:1000;background-color:white" class="">
-                <InputText class="form-control" @bind-Value="InsuranceNamefilter" />
-                @foreach (var item in InsurancesList.Where(c => c.Name.Contains(InsuranceNamefilter)))
+                <input class="form-control searchBox" @bind="SearchText" @bind:event="oninput" placeholder="search.." />
+                @foreach (var item in FiltersdModelList)
                 {
                     <div class="rounded-1 border-1 bg-light mt-2 mx-auto p-2" style="width:95%;cursor:pointer;" @ondblclick="() =>AddSingleInsurance(item)">
                         <input class="form-check-input" type="checkbox" @oninput="()=>AddToSelectedInsurances(item)">
@@ -63,16 +63,39 @@
 @code {
     [Parameter]
     public FacilityViewmodel? Facility { get; set; }
-    public List<InsuranceViewmodel> InsurancesList { get; set; } = new();
+    public List<InsuranceViewmodel> ModelList { get; set; } = new();
+    public List<InsuranceViewmodel> FiltersdModelList { get; set; } = new();
     public List<InsuranceViewmodel> InsurancesSelectedList { get; set; } = new();
     public List<InsuranceViewmodel> InsurancesUnSelectedList { get; set; } = new();
 
-    private string InsuranceNamefilter = "";
+    private string searchText = string.Empty;
 
     protected override void OnInitialized()
     {
-        InsurancesList = mapper.Map<List<InsuranceViewmodel>>(InsuranceService.GetList());
-        InsuranceNamefilter = "";
+        ModelList = mapper.Map<List<InsuranceViewmodel>>(InsuranceService.GetList());
+        FiltersdModelList = ModelList;
+    }
+
+    private string SearchText
+    {
+        get => searchText;
+        set
+        {
+            searchText = value;
+            FilterEntity();
+        }
+    }
+
+    private void FilterEntity()
+    {
+        if (string.IsNullOrWhiteSpace(searchText))
+        {
+            FiltersdModelList = ModelList;
+        }
+        else
+        {
+            FiltersdModelList = ModelList.Where(f => f.Name.Contains(searchText, StringComparison.OrdinalIgnoreCase)).ToList();
+        }
     }
 
     private void AddSingleInsurance(InsuranceViewmodel insurance)
@@ -172,4 +195,6 @@
         InsurancesUnSelectedList?.Clear();
         JS.InvokeVoidAsync("UnCheckAllCheckBoxes");
     }
+
+    
 }

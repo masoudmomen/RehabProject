@@ -40,8 +40,19 @@
                             <tr>
                                 <th scope="row">Address</th>
                                 <td>@Model.Address</td>
-                                <th scope="row">Description</th>
-                                <td>@Model.Description</td>
+                                <th scope="row">Conditions </th>
+                                <td>
+                                    @if (Model.Conditions != null && Model.Conditions.Count > 0)
+                                    {
+                                        foreach (var item in Model.Conditions)
+                                        {
+                                            <div>
+                                                <img src="@item.Logo" class=" mx-2" width="20" height="20">
+                                                <span>@item.Name</span>
+                                            </div>
+                                        }
+                                    }
+                                </td>
                             </tr>
                             <tr>
                                 <th scope="row">Insurances </th>
@@ -129,7 +140,7 @@
                             </tr>
                             <tr>
                                 <th scope="row" >Treatments </th>
-                                <td colspan="3">
+                                <td>
                                     @if (Model.Treatments != null && Model.Treatments.Count > 0)
                                     {
                                         foreach (var item in Model.Treatments)
@@ -141,6 +152,24 @@
                                         }
                                     }
                                 </td>
+                                <th scope="row">Substances We Treat </th>
+                                <td>
+                                    @if (Model.Swts != null && Model.Swts.Count > 0)
+                                    {
+                                        foreach (var item in Model.Swts)
+                                        {
+                                            <div>
+                                                <img src="@item.Logo" class=" mx-2" width="20" height="20">
+                                                <span>@item.Name</span>
+                                            </div>
+                                        }
+                                    }
+                                </td>
+                                
+                            </tr>
+                            <tr>
+                                <th scope="row">Description</th>
+                                <td colspan="3">@Model.Description</td>
                             </tr>
                         </tbody>
                     </table>

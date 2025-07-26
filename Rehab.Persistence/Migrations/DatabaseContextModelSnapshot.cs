@@ -67,6 +67,21 @@ namespace Rehab.Persistence.Migrations
                     b.ToTable("AmenityTag");
                 });
 
+            modelBuilder.Entity("ConditionFacility", b =>
+                {
+                    b.Property<int>("ConditionsId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("FacilitiesId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ConditionsId", "FacilitiesId");
+
+                    b.HasIndex("FacilitiesId");
+
+                    b.ToTable("ConditionFacility");
+                });
+
             modelBuilder.Entity("FacilityHighlight", b =>
                 {
                     b.Property<int>("FacilitiesId")
@@ -110,6 +125,21 @@ namespace Rehab.Persistence.Migrations
                     b.HasIndex("LocsId");
 
                     b.ToTable("FacilityLoc");
+                });
+
+            modelBuilder.Entity("FacilitySwt", b =>
+                {
+                    b.Property<int>("FacilitiesId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SwtsId")
+                        .HasColumnType("int");
+
+                    b.HasKey("FacilitiesId", "SwtsId");
+
+                    b.HasIndex("SwtsId");
+
+                    b.ToTable("FacilitySwt");
                 });
 
             modelBuilder.Entity("FacilityTreatment", b =>
@@ -190,6 +220,31 @@ namespace Rehab.Persistence.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Amenities");
+                });
+
+            modelBuilder.Entity("Rehab.Domain.Conditions.Condition", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Logo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Conditions");
                 });
 
             modelBuilder.Entity("Rehab.Domain.Facilities.Facility", b =>
@@ -366,6 +421,31 @@ namespace Rehab.Persistence.Migrations
                     b.ToTable("Locs");
                 });
 
+            modelBuilder.Entity("Rehab.Domain.SubstancesWeTreat.Swt", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Logo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Swts");
+                });
+
             modelBuilder.Entity("Rehab.Domain.Tags.Tag", b =>
                 {
                     b.Property<int>("Id")
@@ -495,6 +575,21 @@ namespace Rehab.Persistence.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("ConditionFacility", b =>
+                {
+                    b.HasOne("Rehab.Domain.Conditions.Condition", null)
+                        .WithMany()
+                        .HasForeignKey("ConditionsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Rehab.Domain.Facilities.Facility", null)
+                        .WithMany()
+                        .HasForeignKey("FacilitiesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("FacilityHighlight", b =>
                 {
                     b.HasOne("Rehab.Domain.Facilities.Facility", null)
@@ -536,6 +631,21 @@ namespace Rehab.Persistence.Migrations
                     b.HasOne("Rehab.Domain.LevelsOfCare.Loc", null)
                         .WithMany()
                         .HasForeignKey("LocsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("FacilitySwt", b =>
+                {
+                    b.HasOne("Rehab.Domain.Facilities.Facility", null)
+                        .WithMany()
+                        .HasForeignKey("FacilitiesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Rehab.Domain.SubstancesWeTreat.Swt", null)
+                        .WithMany()
+                        .HasForeignKey("SwtsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

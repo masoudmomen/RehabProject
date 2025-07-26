@@ -12,7 +12,8 @@
         <div class="col rounded-2" style="border:solid 1px gray;background-color:white;z-index:500;">
             <div class="bg-info rounded-top p-1 text-center text-white">LevelsOfCares List</div>
             <div style="min-height:362px;max-height:362px;overflow-y:scroll;z-index:1000;background-color:white" class="">
-                @foreach (var item in ModelList)
+                <input class="form-control searchBox" @bind="SearchText" @bind:event="oninput" placeholder="search.." />
+                @foreach (var item in FiltersdModelList)
                 {
                     <div class="rounded-1 border-1 bg-light mt-2 mx-auto p-2" style="width:95%;cursor:pointer;" @ondblclick="() =>AddSingleModel(item)">
                         <input class="form-check-input" type="checkbox" @oninput="()=>AddToSelectedModels(item)">
@@ -62,13 +63,40 @@
     [Parameter]
     public FacilityViewmodel? Facility { get; set; }
     public List<LocViewmodel> ModelList { get; set; } = new();
+    public List<LocViewmodel> FiltersdModelList { get; set; } = new();
     public List<LocViewmodel> ModelSelectedList { get; set; } = new();
     public List<LocViewmodel> ModelUnSelectedList { get; set; } = new();
+
+    private string searchText = string.Empty;
 
     protected override void OnInitialized()
     {
         ModelList = mapper.Map<List<LocViewmodel>>(LevelsOfCareService.GetList());
+        FiltersdModelList = ModelList;
     }
+
+    private string SearchText
+    {
+        get => searchText;
+        set
+        {
+            searchText = value;
+            FilterEntity();
+        }
+    }
+
+    private void FilterEntity()
+    {
+        if (string.IsNullOrWhiteSpace(searchText))
+        {
+            FiltersdModelList = ModelList;
+        }
+        else
+        {
+            FiltersdModelList = ModelList.Where(f => f.Name.Contains(searchText, StringComparison.OrdinalIgnoreCase)).ToList();
+        }
+    }
+
 
     private void AddSingleModel(LocViewmodel model)
     {

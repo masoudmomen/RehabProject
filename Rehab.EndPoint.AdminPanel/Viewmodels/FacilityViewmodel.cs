@@ -39,6 +39,8 @@ namespace Rehab.EndPoint.AdminPanel.Viewmodels
         public List<int>? LocsId { get; set; } = new();
         public List<int>? TreatmentsId { get; set; } = new();
         public List<int>? WwtsId { get; set; } = new();
+        public List<int>? ConditionsId { get; set; } = new();
+        public List<int>? SwtsId { get; set; } = new();
 
         public List<InsuranceViewmodel>? Insurances { get; set; } = new();
         public List<AccreditationViewmodel>? Accreditations { get; set; } = new();
@@ -48,5 +50,7 @@ namespace Rehab.EndPoint.AdminPanel.Viewmodels
         public List<LocViewmodel>? Locs { get; set; } = new();
         public List<TreatmentViewmodel>? Treatments { get; set; } = new();
         public List<WwtViewmodel>? Wwts { get; set; } = new();
+        public List<ConditionViewmodel>? Conditions { get; set; } = new();
+        public List<SwtViewmodel>? Swts { get; set; } = new();
     }
 }

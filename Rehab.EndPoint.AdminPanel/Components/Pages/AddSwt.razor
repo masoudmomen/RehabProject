@@ -1,7 +1,7 @@
-﻿@page "/accreditation/add"
-@using Rehab.Application.Accreditations
+﻿@page "/swt/add"
+@using Rehab.Application.SubstancesWeTreat
 @using Rehab.EndPoint.AdminPanel.Viewmodels
-@inject Rehab.Application.Accreditations.IAccreditationService AccreditationService
+@inject Rehab.Application.SubstancesWeTreat.ISubstancesWeTreatService SwtService
 @inject AutoMapper.IMapper mapper
 @rendermode InteractiveServer
 @inject AlertService AlertService
@@ -9,17 +9,17 @@
 @inject IImageUploaderService Uploader
 
 <div class="w-75 mx-auto p-4">
-    <h3>Add Accreditation</h3>
+    <h3>Add Substances We Treat</h3>
 
-    <EditForm Model="Accreditation" OnValidSubmit="Add" class="form-control" FormName="AddAccreditationForm">
+    <EditForm Model="Swt" OnValidSubmit="Add" class="form-control" FormName="AddSwtForm">
         <DataAnnotationsValidator></DataAnnotationsValidator>
         <ValidationSummary class="text-danger" />
         <label>Name</label>
-        <InputText @bind-Value="Accreditation.Name" class="form-control my-2"></InputText>
+        <InputText @bind-Value="Swt.Name" class="form-control my-2"></InputText>
         <label>Icon</label>
         <InputFile OnChange="HandleSelected" class="form-control my-2" accept="image/*" />
         <label>Description</label>
-        <InputTextArea @bind-Value="Accreditation.Description" class="form-control my-2"></InputTextArea>
+        <InputTextArea @bind-Value="Swt.Description" class="form-control my-2"></InputTextArea>
         @if (isAddBtnActive)
         {
             <button class="btn btn-primary my-2">Add</button>
@@ -33,29 +33,29 @@
 
 
 @code {
-    public AccreditationViewmodel Accreditation { get; set; } = new();
-    public ResultViewmodel<AccreditationViewmodel> Result { get; set; } = new();
+    public SwtViewmodel Swt { get; set; } = new();
+    public ResultViewmodel<SwtViewmodel> Result { get; set; } = new();
     private bool isAddBtnActive = true;
 
     private async Task Add()
     {
-        if (Accreditation is not null)
+        if (Swt is not null)
         {
             if (UploadedPaths.Count > 0)
             {
-                Accreditation.Logo = UploadedPaths[0];
+                Swt.Logo = UploadedPaths[0];
             }
             else
             {
-                Accreditation.Logo = "";
+                Swt.Logo = "";
             }
 
-            var accreditationDto = mapper.Map<AccreditationDto>(Accreditation);
-            BaseDto<AccreditationDto> result = AccreditationService.Add(accreditationDto);
-            Result = mapper.Map<ResultViewmodel<AccreditationViewmodel>>(result);
+            var swtDto = mapper.Map<SwtDto>(Swt);
+            BaseDto<SwtDto> result = SwtService.Add(swtDto);
+            Result = mapper.Map<ResultViewmodel<SwtViewmodel>>(result);
             if (Result.Success)
             {
-                Accreditation = new();
+                Swt = new();
                 UploadedPaths.Clear();
             }
             await AlertService.ShowAsync(Result.Message, Result.Status);
@@ -69,7 +69,7 @@
         isAddBtnActive = false;
         StateHasChanged();
         var files = e.GetMultipleFiles();
-        var paths = await Uploader.UploadAsync(files, Env.WebRootPath, "uploads/accreditations");
+        var paths = await Uploader.UploadAsync(files, Env.WebRootPath, "uploads/swts");
         UploadedPaths.Clear();
         UploadedPaths.AddRange(paths);
         if (UploadedPaths.Count > 0)

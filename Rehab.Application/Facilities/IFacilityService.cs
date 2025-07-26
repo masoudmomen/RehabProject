@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
-using Common;
 using Microsoft.EntityFrameworkCore;
 using Rehab.Application.Common;
 using Rehab.Application.Contexts;
 using Rehab.Application.Dtos;
 using Rehab.Domain.Facilities;
+using Rehab.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -45,6 +45,8 @@ namespace Rehab.Application.Facilities
             newFacility.Locs = context.Locs.Where(c => facility.LocsId!.Contains(c.Id)).ToList(); 
             newFacility.Wwts = context.Wwts.Where(c => facility.WwtsId!.Contains(c.Id)).ToList(); 
             newFacility.Treatments = context.Treatments.Where(c => facility.TreatmentsId!.Contains(c.Id)).ToList(); 
+            newFacility.Conditions = context.Conditions.Where(c => facility.ConditionsId!.Contains(c.Id)).ToList(); 
+            newFacility.Swts = context.Swts.Where(c => facility.SwtsId!.Contains(c.Id)).ToList(); 
 
             context.Facilities.Add(newFacility);
 
@@ -67,6 +69,8 @@ namespace Rehab.Application.Facilities
                 .Include(c => c.Treatments)
                 .Include(c => c.FacilitysImages)
                 .Include(c => c.Locs)
+                .Include(c => c.Conditions)
+                .Include(c => c.Swts)
                 .Select(c => new FacilityDetailDto
                 {
                     Id = id,
@@ -93,7 +97,9 @@ namespace Rehab.Application.Facilities
                     Treatments = c.Treatments!.ToList(),
                     Wwts = c.Wwts!.ToList(),
                     Insurances = c.Insurances!.ToList(),
-                    Locs = c.Locs!.ToList() 
+                    Locs = c.Locs!.ToList(), 
+                    Conditions = c.Conditions!.ToList(), 
+                    Swts = c.Swts!.ToList(), 
                 }).FirstOrDefault();
         }
 

@@ -1,20 +1,24 @@
 ﻿using AutoMapper;
 using Rehab.Application.Accreditations;
 using Rehab.Application.Amenities;
+using Rehab.Application.Conditions;
 using Rehab.Application.Facilities;
 using Rehab.Application.Highlights;
 using Rehab.Application.Insurances;
 using Rehab.Application.LevelsOfCare;
+using Rehab.Application.SubstancesWeTreat;
 using Rehab.Application.Tags;
 using Rehab.Application.Treatments;
 using Rehab.Application.Users;
 using Rehab.Application.WhoWeTreat;
 using Rehab.Domain.Accreditations;
 using Rehab.Domain.Amenities;
+using Rehab.Domain.Conditions;
 using Rehab.Domain.Facilities;
 using Rehab.Domain.Highlights;
 using Rehab.Domain.Insurances;
 using Rehab.Domain.LevelsOfCare;
+using Rehab.Domain.SubstancesWeTreat;
 using Rehab.Domain.Tags;
 using Rehab.Domain.Treatments;
 using Rehab.Domain.Users;
@@ -40,6 +44,9 @@ namespace Rehab.Infrastructure.MappingProfile
             CreateMap<Highlight, HighlightDto>().ReverseMap();
             CreateMap<Wwt, WwtDto>().ReverseMap();
             CreateMap<Loc, LevelsOfCareDto>().ReverseMap();
+            CreateMap<Treatment, TreatmentDto>().ReverseMap();
+            CreateMap<Condition, ConditionDto>().ReverseMap();
+            CreateMap<Swt, SwtDto>().ReverseMap();
             CreateMap<Treatment, TreatmentDto>().ReverseMap();
             CreateMap<Tag,TagDto>().ReverseMap();
         }
