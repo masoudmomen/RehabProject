@@ -5,6 +5,9 @@
 @using Rehab.EndPoint.AdminPanel.Viewmodels
 
 <div>
+    <span class="alert-info rounded-2 p-2 mt-2 d-inline-block" style="font-size:13px">
+        <i class="fa fa-lightbulb"></i> To add a <b>new </b> tag, type it and press Enter, or start typing to select an <b> existing </b> tag from the list
+    </span>   
     <input type="text" class="form-control mt-2"
            placeholder="Type tag name..."
            @ref="TagInputElement"
@@ -28,10 +31,10 @@
     <div class="flex g-3 mt-2 border border-1 border-light py-2">
         @foreach (var tag in SelectedTags)
         {
-         <span class="border-1 px-3 py-1 mx-1 rounded-3 selected-item">
+         <div class="border-1 px-3 py-1 mx-1 rounded-3 d-inline-block mt-1 selected-item">
                     @tag.Name
                     <a class="ml-2 text-danger cursor-pointer" @onclick="@(() => RemoveTag(tag))">x</a>
-         </span>
+         </div>
        }
     </div>
 </div>

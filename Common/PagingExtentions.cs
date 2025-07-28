@@ -1,7 +1,7 @@
 ﻿using System.Linq.Expressions;
 
 namespace Common
-namespace Rehab.Infrastructure
+//namespace Rehab.Infrastructure
 {
     public static class PagingExtentions
     {

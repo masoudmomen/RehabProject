@@ -17,6 +17,7 @@ namespace Rehab.Application.Tags
     public interface ITagService
     {
         BaseDto<TagDto> Add(TagDto tag);
+        BaseDto<List<Tag>> GetOrCreateTag(List<TagDto> tag);
         BaseDto<TagDto> Update(TagDto tag);
         BaseDto<TagDto> Delete(TagDto tag);
         List<TagDto> Getlist();
@@ -31,6 +32,28 @@ namespace Rehab.Application.Tags
         {
             _context = context;
             _mapper = mapper;
+        }
+        public BaseDto<List<Tag>> GetOrCreateTag(List<TagDto> tagDtos)
+        {
+            var normalizedNames = tagDtos.Select(t => t.Name.Trim()).Distinct().ToList();
+            
+            var existingTags = _context.Tags
+                .Where(t => normalizedNames.Contains(t.Name.ToLower())).ToList();
+
+            var existingTagNames = existingTags.Select(t => t.Name.ToLower()).ToList();
+
+            var newTagNames = normalizedNames
+                .Where(name => !existingTagNames.Contains(name.ToLower()))
+                .ToList();
+            var newTags = newTagNames.Select(name => new Tag { Name = name }).ToList();
+            if (newTags.Any())
+            {
+                 _context.Tags.AddRange(newTags);
+                 _context.SaveChanges();
+            }
+            var allTags = existingTags.Concat(newTags).ToList();
+            return BaseDto<List<Tag>>.SuccessResult(allTags, "Tags retrieved or created successfully!");
+
         }
         public BaseDto<TagDto> Add(TagDto tag)
         {

@@ -28,33 +28,24 @@ namespace Rehab.Application.Amenities
     {
         private readonly IDatabaseContext context;
         private readonly IMapper mapper;
+        private readonly ITagService tagService;
 
-        public AmenityService(IDatabaseContext context, IMapper mapper)
+        public AmenityService(IDatabaseContext context, IMapper mapper, ITagService tagService)
         {
             this.context = context;
             this.mapper = mapper;
+            this.tagService = tagService;
         }
         public BaseDto<AmenityDto> Add(AmenityDto amenity)
         {
 
             if (amenity == null) return BaseDto<AmenityDto>.FailureResult("The Amenity data is null!");
-            var finalTags = new List<Tag>();
-            foreach(var tagDto in amenity.Tags.ToList())
-            {
-                var tagName = tagDto.Name;
-                
-                var existingTag = context.Tags.FirstOrDefault(t => t.Name == tagName);
-                if (existingTag == null) {
-                    existingTag = mapper.Map<Tag>(tagDto);
-                    existingTag.Name = tagName;
-                    context.Tags.Add(existingTag);
-                    context.SaveChanges();
-                }
-                finalTags.Add(existingTag);
-               
-            }
+            var tagResult =  tagService.GetOrCreateTag(amenity.Tags);
+            if(!tagResult.Success)
+                return BaseDto<AmenityDto>.FailureResult("Tag creation failed :" + tagResult.Message);
+
             var amenityEntity = mapper.Map<Amenity>(amenity);
-            amenityEntity.Tags = finalTags;
+            amenityEntity.Tags = tagResult.Data;
             context.Amenities.Add(amenityEntity);
             if (context.SaveChanges() > 0) return BaseDto<AmenityDto>.SuccessResult(amenity, "Amenity Added successfully.");
 
@@ -98,20 +89,20 @@ namespace Rehab.Application.Amenities
             amenityForUpdate.Description = amenity.Description;
             amenityForUpdate.Logo = amenity.Logo;
 
-            amenityForUpdate.Tags.Clear();
+            var tagResult = tagService.GetOrCreateTag(amenity.Tags);
+            if (!tagResult.Success)
+                return BaseDto<AmenityDto>.FailureResult("Tag update failed: " + tagResult.Message);
 
-            if (amenity.Tags != null)
+            var finalTags = tagResult.Data;
+
+            amenityForUpdate.Tags?.Clear();
+            if (finalTags != null)
             {
-                foreach(var tagDto in amenity.Tags)
+                foreach (var tag in finalTags)
                 {
-                    var existingTag = context.Tags.Find(tagDto.Id);
-                    if(existingTag != null)
-                    {
-                        amenityForUpdate.Tags.Add(existingTag);
-                    }
+                    amenityForUpdate.Tags?.Add(tag);
                 }
             }
-
             if (context.SaveChanges() > 0) { 
                 var updatedDto = mapper.Map<AmenityDto>(amenityForUpdate);
                 return BaseDto<AmenityDto>.SuccessResult(amenity, "Amenity Updated successfully."); 
