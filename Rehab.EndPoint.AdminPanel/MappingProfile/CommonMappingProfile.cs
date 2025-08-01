@@ -68,6 +68,12 @@ namespace Rehab.EndPoint.AdminPanel.MappingProfile
             .ForMember("Status", opt => opt.MapFrom("Status")).ReverseMap();
 
             CreateMap<FacilityViewmodel, FacilityDetailDto>().ReverseMap();
+
+
+            CreateMap<FacilityImagesViewmodel, FacilityImagesDto>().ReverseMap();
+            CreateMap<SetFacilityImagesViewmodel, SetFacilityImagesDto>().ReverseMap();
+
+
         }
 
     }

@@ -1,0 +1,33 @@
+﻿@using Rehab.EndPoint.AdminPanel.Viewmodels
+@rendermode InteractiveServer 
+   
+@if (IsVisible)
+{
+    <div class="modal-backdrop">
+        <div class="modal-content-facilityDetail" >
+            <button type="button" class="btn-close float-end" @onclick="Close" ></button>
+            <img src="@((string.IsNullOrWhiteSpace(Model.Logo))?"":Model.Logo)" width="80" height="80" class="" alt="Logo" />
+            <img src="@((string.IsNullOrWhiteSpace(Model.Cover))?"":Model.Cover)" width="200" height="80" class="" alt="Cover" />
+        </div>
+    </div>
+}
+
+
+
+@code {
+    [Parameter] public SetFacilityImagesViewmodel? Model { get; set; }
+
+
+    public bool IsVisible { get; set; }
+
+    public void Show()
+    {
+        IsVisible = true;
+        InvokeAsync(StateHasChanged);
+    }
+    public void Close()
+    {
+        IsVisible = false;
+        InvokeAsync(StateHasChanged);
+    }
+}
