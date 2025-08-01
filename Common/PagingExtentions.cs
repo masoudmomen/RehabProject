@@ -1,6 +1,7 @@
 ﻿using System.Linq.Expressions;
 
-namespace Rehab.Infrastructure
+namespace Common
+//namespace Rehab.Infrastructure
 {
     public static class PagingExtentions
     {
