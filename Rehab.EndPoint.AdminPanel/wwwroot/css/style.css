@@ -356,3 +356,8 @@
 .searchBox{
     border-radius:0;
 }
+
+.image-facility-modal{
+    border:solid 1px gray;
+    border-radius:3px;
+}
