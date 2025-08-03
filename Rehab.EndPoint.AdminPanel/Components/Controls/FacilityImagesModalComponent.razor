@@ -2,6 +2,7 @@
 @rendermode InteractiveServer 
 @inject IJSRuntime JS
 
+
 @if (IsVisible)
 {
     if(Model != null)
@@ -16,7 +17,7 @@
                     <div class="col-3">
                         <label>Logo</label>
                         <div class="card" style="height:120px">
-                            <img src="@((string.IsNullOrWhiteSpace(Model.Logo))?"../../img/no-image.jpg":Model.Logo)" width="100%" height="100%" class="image-facility-modal" alt="Logo" id="LogoImage"  />
+                            <img src="@((string.IsNullOrWhiteSpace(Model.Logo))?"../../img/no-image.jpg":Model.Logo)" width="100%" height="100%" class="image-facility-modal" alt="Logo" id="LogoImage" @onclick="OpenImageUploaderModal"  />
                         </div>
                     </div>
                     <div class="col-9">
@@ -42,13 +43,17 @@
         </div>
     }
 
+    <ImageUploaderComponent></ImageUploaderComponent>
+
 }
 
 
 
 @code {
     [Parameter] public SetFacilityImagesViewmodel? Model { get; set; }
-    
+
+    ImageUploaderComponent? imageUploader;
+
     public bool IsVisible { get; set; }
 
     public void Show()
@@ -60,5 +65,10 @@
     {
         IsVisible = false;
         InvokeAsync(StateHasChanged);
+    }
+
+    private void OpenImageUploaderModal()
+    {
+        imageUploader!.Show();
     }
 }
