@@ -5,17 +5,23 @@
 
 @if (IsVisible)
 {
+    <div class="modal-backdrop">
+        <div class="modal-content-facilityDetail">
+            <button type="button" class="btn-close float-end" @onclick="Close"></button>
+            <InputFile OnChange="OnInputFileChange" class="form-control my-2" accept="image/*" />
+            <img id="imageToCrop" style="max-width:100%;" />
+            <button @onclick="CropImage">برش تصویر</button>
 
-    <InputFile OnChange="OnInputFileChange" class="form-control my-2" accept="image/*" />
-    <img id="imageToCrop" style="max-width:100%;" />
-    <button @onclick="CropImage">برش تصویر</button>
-
-    @if (!string.IsNullOrEmpty(croppedImage))
-    {
-        <h4>تصویر کراپ‌شده:</h4>
-        <img src="@croppedImage" style="border:1px solid #aaa; max-width:300px;" />
-    }
+            @if (!string.IsNullOrEmpty(croppedImage))
+            {
+                <h4>تصویر کراپ‌شده:</h4>
+                <img src="@croppedImage" style="border:1px solid #aaa; max-width:300px;" />
+            }
+        </div>
+    </div>
 }
+
+
 @code {
     private string? croppedImage;
 
@@ -38,7 +44,6 @@
     {
         croppedImage = await JS.InvokeAsync<string>("imageCropper.getCroppedImageBase64");
     }
-
 
 
 

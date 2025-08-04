@@ -43,7 +43,7 @@
         </div>
     }
 
-    <ImageUploaderComponent></ImageUploaderComponent>
+    <ImageUploaderComponent @ref="imageUploader" />
 
 }
 
@@ -52,7 +52,7 @@
 @code {
     [Parameter] public SetFacilityImagesViewmodel? Model { get; set; }
 
-    ImageUploaderComponent? imageUploader;
+    ImageUploaderComponent imageUploader = new();
 
     public bool IsVisible { get; set; }
 
@@ -69,6 +69,6 @@
 
     private void OpenImageUploaderModal()
     {
-        imageUploader!.Show();
+        imageUploader.Show();
     }
 }
