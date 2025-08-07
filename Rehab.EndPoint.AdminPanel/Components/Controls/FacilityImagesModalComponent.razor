@@ -1,0 +1,74 @@
+﻿@using Rehab.EndPoint.AdminPanel.Viewmodels
+@rendermode InteractiveServer 
+@inject IJSRuntime JS
+
+
+@if (IsVisible)
+{
+    if(Model != null)
+    {
+        <div class="modal-backdrop">
+            <div class="modal-content-facilityDetail">
+                <button type="button" class="btn-close float-end" @onclick="Close"></button>
+                <div class="row">
+                    <h4>Facility Images</h4><hr />
+                </div>
+                <div class="row">
+                    <div class="col-3">
+                        <label>Logo</label>
+                        <div class="card" style="height:120px">
+                            <img src="@((string.IsNullOrWhiteSpace(Model.Logo))?"../../img/no-image.jpg":Model.Logo)" width="100%" height="100%" class="image-facility-modal" alt="Logo" id="LogoImage" @onclick="OpenImageUploaderModal"  />
+                        </div>
+                    </div>
+                    <div class="col-9">
+                        <label>Cover</label>
+                        <div class="card" style="height:120px">
+                            <img src="@((string.IsNullOrWhiteSpace(Model.Cover))?"../../img/no-image.jpg":Model.Cover)" width="100%" height="100%" class="image-facility-modal" alt="Cover" />
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row mt-2">
+                    <div class="col-3">
+                        <label>Add Image</label>
+                        <div class="card" style="height:120px">
+                            <img src="../../img/add-image.png" width="100%" height="100%"
+                                 class="image-facility-modal" alt="Add Image" style="cursor:pointer;" />
+                        </div>
+                    </div>
+                    
+                </div>
+                
+            </div>
+        </div>
+    }
+
+    <ImageUploaderComponent @ref="imageUploader" />
+
+}
+
+
+
+@code {
+    [Parameter] public SetFacilityImagesViewmodel? Model { get; set; }
+
+    ImageUploaderComponent imageUploader = new();
+
+    public bool IsVisible { get; set; }
+
+    public void Show()
+    {
+        IsVisible = true;
+        InvokeAsync(StateHasChanged);
+    }
+    public void Close()
+    {
+        IsVisible = false;
+        InvokeAsync(StateHasChanged);
+    }
+
+    private void OpenImageUploaderModal()
+    {
+        imageUploader.Show();
+    }
+}

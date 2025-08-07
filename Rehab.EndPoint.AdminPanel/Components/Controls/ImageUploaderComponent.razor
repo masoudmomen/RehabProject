@@ -1,0 +1,62 @@
+﻿@using Microsoft.JSInterop;
+@using Microsoft.AspNetCore.Components.Forms
+
+@inject IJSRuntime JS
+
+@if (IsVisible)
+{
+    <div class="modal-backdrop">
+        <div class="modal-content-facilityDetail">
+            <button type="button" class="btn-close float-end" @onclick="Close"></button>
+            <InputFile OnChange="OnInputFileChange" class="form-control my-2" accept="image/*" />
+            <img id="imageToCrop" style="max-width:100%;" />
+            <button @onclick="CropImage">برش تصویر</button>
+
+            @if (!string.IsNullOrEmpty(croppedImage))
+            {
+                <h4>تصویر کراپ‌شده:</h4>
+                <img src="@croppedImage" style="border:1px solid #aaa; max-width:300px;" />
+            }
+        </div>
+    </div>
+}
+
+
+@code {
+    private string? croppedImage;
+
+    private async Task OnInputFileChange(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+        using var stream = file.OpenReadStream();
+        using var ms = new MemoryStream();
+        await stream.CopyToAsync(ms);
+        var bytes = ms.ToArray();
+        var base64 = Convert.ToBase64String(bytes);
+        var imageDataUrl = $"data:{file.ContentType};base64,{base64}";
+
+        await JS.InvokeVoidAsync("imageCropper.initCropper", "imageToCrop");
+        await Task.Delay(100); // کمی تاخیر برای اطمینان از رندر کامل
+        var imageElement = await JS.InvokeAsync<string>("eval", $"document.getElementById('imageToCrop').src = '{imageDataUrl}'");
+    }
+
+    private async Task CropImage()
+    {
+        croppedImage = await JS.InvokeAsync<string>("imageCropper.getCroppedImageBase64");
+    }
+
+
+
+    public bool IsVisible { get; set; }
+
+    public void Show()
+    {
+        IsVisible = true;
+        InvokeAsync(StateHasChanged);
+    }
+    public void Close()
+    {
+        IsVisible = false;
+        InvokeAsync(StateHasChanged);
+    }
+}

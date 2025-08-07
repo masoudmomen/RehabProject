@@ -46,7 +46,9 @@
                                     <td>
                                         <i class="fa fa-edit cursor-pointer" title="Edit Facility"></i>
                                         &ensp;&ensp;&ensp;
-                                        <i class="fa fa-eye cursor-pointer" title="Show Facility" @onclick="()=>OpenModal(item.Id)"></i>
+                                        <i class="fa fa-eye cursor-pointer" title="Show Facility" @onclick="()=>OpenFacilityDetailModal(item.Id)"></i>
+                                        &ensp;&ensp;&ensp;
+                                        <i class="fa fa-image cursor-pointer" title="Facilities Images" @onclick="()=>OpenFacilityImagesModal(item.Id)"></i>
                                         &ensp;&ensp;&ensp;
                                         <i class="fa fa-trash cursor-pointer" title="Delete Facility"></i>
                                     </td>
@@ -89,8 +91,12 @@
 
 
 @* Start Open Modal for Detail: *@
-<FacilityDetailModalComponent Model="Facility" @ref="OpenFacilityDetailModal" />
+<FacilityDetailModalComponent Model="Facility" @ref="FacilityDetailModal" />
 @* End Open Modal for Detail: *@
+
+@* Start Open Modal for Images: *@
+<FacilityImagesModalComponent Model="FacilityImages" @ref="FacilityImagesModal" />
+@* End Open Modal for Images: *@
 
 @code {
     public PaginatedItemDto<FacilityBriefInfoDto>? FacilitiesList { get; set; }
@@ -102,7 +108,9 @@
     private int MinPagingButton = 1;
 
     public FacilityViewmodel? Facility { get; set; }
-    private FacilityDetailModalComponent? OpenFacilityDetailModal;
+    public SetFacilityImagesViewmodel? FacilityImages { get; set; }
+    private FacilityDetailModalComponent? FacilityDetailModal;
+    private FacilityImagesModalComponent? FacilityImagesModal;
 
     protected override async Task OnInitializedAsync()
     {
@@ -133,9 +141,15 @@
         }
     }
 
-    private void OpenModal(int id)
+    private void OpenFacilityDetailModal(int id)
     {
         Facility = mapper.Map<FacilityViewmodel>(FacilityService.FindById(id));
-        OpenFacilityDetailModal!.Show();
+        FacilityDetailModal!.Show();
+    }
+
+    private void OpenFacilityImagesModal(int id)
+    {
+        FacilityImages = mapper.Map<SetFacilityImagesViewmodel>(FacilityService.GetFacilitiesImage(id));
+        FacilityImagesModal!.Show();
     }
 }

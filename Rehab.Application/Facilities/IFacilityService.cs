@@ -5,6 +5,7 @@ using Rehab.Application.Common;
 using Rehab.Application.Contexts;
 using Rehab.Application.Dtos;
 using Rehab.Domain.Facilities;
+using Rehab.Domain.Images;
 using Rehab.Infrastructure;
 using System;
 using System.Collections.Generic;
@@ -18,8 +19,9 @@ namespace Rehab.Application.Facilities
     {
         BaseDto<AddRequestFacilityDto> Add(AddRequestFacilityDto facility); 
         Task<PaginatedItemDto<FacilityBriefInfoDto>> GetFacilities(int page, int pageSize);
-
         FacilityDetailDto? FindById(int id);
+        BaseDto<SetFacilityImagesDto> SetFacilitiesImage(SetFacilityImagesDto facilityImages);
+        SetFacilityImagesDto? GetFacilitiesImage(int FacilityId);
     }
 
     public class FacilityService : IFacilityService
@@ -34,7 +36,7 @@ namespace Rehab.Application.Facilities
         }
         public BaseDto<AddRequestFacilityDto> Add(AddRequestFacilityDto facility)
         {
-            if (facility == null) return BaseDto<AddRequestFacilityDto>.FailureResult("The Facility data is null!");
+            if (facility == null) return BaseDto<AddRequestFacilityDto>.FailureResult("Facility data is null!");
 
             var newFacility = new Facility();
             newFacility = mapper.Map<Facility>(facility);
@@ -120,6 +122,49 @@ namespace Rehab.Application.Facilities
                     Logo = c.Logo,
                 }).ToList();
             return new PaginatedItemDto<FacilityBriefInfoDto>(page, pageSize, rowCount, data);
+        }
+
+        public SetFacilityImagesDto? GetFacilitiesImage(int FacilityId)
+        {
+            var facility = context.Facilities.FirstOrDefault(c => c.Id == FacilityId);
+            if (facility == null) return null;
+
+            return context.Facilities.
+                Include(c=>c.FacilitysImages)
+                .Select(c=> new SetFacilityImagesDto
+                {
+                    Cover = c.Cover,
+                    Logo = c.Logo,
+                    FacilityId = facility.Id,
+                    FacilityImages = c.FacilitysImages!.Select(d=> new FacilityImagesDto
+                    {
+                        Id = d.Id,
+                        ImageAddress = d.ImageAddress,
+                        Title = d.Title,
+                    }).ToList(),
+                }).FirstOrDefault(c=>c.FacilityId == FacilityId);
+        }
+
+        public BaseDto<SetFacilityImagesDto> SetFacilitiesImage(SetFacilityImagesDto facilityImages)
+        {
+            if (facilityImages == null) return BaseDto<SetFacilityImagesDto>.FailureResult("Images data is null!") ;
+            var facilityForUpdate = context.Facilities.FirstOrDefault(c => c.Id == facilityImages.FacilityId);
+            if (facilityForUpdate == null) return BaseDto<SetFacilityImagesDto>.FailureResult("This Facility is not Exist!");
+            facilityImages.Logo = facilityForUpdate.Logo;
+            facilityImages.Cover = facilityForUpdate.Cover;
+            if(facilityImages.FacilityImages != null && facilityImages.FacilityImages.Count>0)
+                foreach (var item in facilityImages.FacilityImages)
+                {
+                    facilityForUpdate.FacilitysImages!.Add(new Domain.Images.FacilitysImages
+                    {
+                        Facility = facilityForUpdate,
+                        ImageAddress = item.ImageAddress,
+                        Title = item.Title,
+                    });
+                }
+            if (context.SaveChanges() > 0)
+                return BaseDto<SetFacilityImagesDto>.SuccessResult(facilityImages, "Images Uploaded Successfully.");
+            return BaseDto<SetFacilityImagesDto>.FailureResult("Images Upload Failed!");
         }
     }
 }

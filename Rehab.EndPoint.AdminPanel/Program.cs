@@ -55,6 +55,8 @@ builder.Services.AddScoped<AlertService>();
 builder.Services.AddScoped<IImageUploaderService, ImageUploaderService>();
 #endregion
 builder.Services.AddSingleton<HeadOutlet>();
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
