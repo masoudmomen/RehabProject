@@ -1,0 +1,205 @@
+﻿@page "/faq"
+@rendermode InteractiveServer
+@inject IJSRuntime jSRuntime
+@using Microsoft.AspNetCore.Components.Web
+@using Rehab.EndPoint.Web.Components.Common
+
+<Seo Title="FAQ - Rehab Navigator"
+     Description="Find answers to frequently asked questions about Rehab's services, policies, and more."
+     CanonicalUrl="https://www.rehabnavigator.com/faq"
+     FaviconUrl="favicon.png" />
+
+<section class="hero mt-5">
+    <div class="container">
+        <h1>FAQ</h1>
+        <p>Your questions answered.</p>
+    </div>
+</section>
+
+<section class="faq-section section">
+    <div class="container">
+        <div class="content-card">
+            <h2>Frequently Asked Questions</h2>
+
+            <Accordion HasSearch=true>
+                <h2 class="faq-category-title">
+                    Getting Started
+                </h2>
+                <AccordionItem Title="What is your typical response time for inquiries?">
+                    <Description>
+                        <div class="faq-answer-content">
+                            <p>Creating an account is simple and free:</p>
+                            <ul>
+                                <li>Click the "Sign Up" button in the top right corner</li>
+                                <li>Enter your email address and create a strong password</li>
+                                <li>Verify your email address by clicking the link we send you</li>
+                                <li>Complete your profile setup</li>
+                            </ul>
+                            <p>Once verified, you'll have full access to all our features!</p>
+                        </div>
+                    </Description>
+                </AccordionItem>
+                <AccordionItem Title="Is there a free trial available?">
+                    <Description>
+                        <div class="faq-answer-content">
+                            <p>Yes! We offer a 14-day free trial for all new users. During the trial period, you'll have access to:</p>
+                            <ul>
+                                <li>All premium features</li>
+                                <li>Customer support</li>
+                                <li>No usage limitations</li>
+                            </ul>
+                            <div class="highlight-box">
+                                <p><strong>No credit card required</strong> for the free trial. You can upgrade or cancel anytime.</p>
+                            </div>
+                        </div>
+                    </Description>
+                </AccordionItem>
+                <AccordionItem Title="What devices and browsers are supported?">
+                    <Description>
+                        <div class="faq-answer-content">
+                            <p>Our platform works on all modern devices and browsers:</p>
+                            <p><strong>Supported Browsers:</strong> Chrome, Firefox, Safari, Edge (latest versions)</p>
+                            <p><strong>Mobile Apps:</strong> Available for iOS and Android devices</p>
+                            <p><strong>Desktop:</strong> Windows, macOS, and Linux compatible</p>
+                        </div>
+                    </Description>
+                </AccordionItem>
+                <h2 class="faq-category-title">
+                    Account & Billing
+                </h2>
+                <AccordionItem Title="How can I change my billing information?">
+                    <Description>
+                        <div class="faq-answer-content">
+                            <p>To update your billing information:</p>
+                            <ul>
+                                <li>Go to Account Settings → Billing</li>
+                                <li>Click "Update Payment Method"</li>
+                                <li>Enter your new card details or PayPal information</li>
+                                <li>Save changes</li>
+                            </ul>
+                            <p>Changes take effect immediately for future billing cycles.</p>
+                        </div>
+                    </Description>
+                </AccordionItem>
+                <AccordionItem Title="Can I cancel my subscription anytime?">
+                    <Description>
+                        <div class="faq-answer-content">
+                            <p>Yes, you can cancel your subscription at any time with no cancellation fees. Here's how:</p>
+                            <ul>
+                                <li>Visit your Account Settings</li>
+                                <li>Go to the Subscription section</li>
+                                <li>Click "Cancel Subscription"</li>
+                                <li>Confirm your cancellation</li>
+                            </ul>
+                            <div class="highlight-box">
+                                <p>You'll continue to have access to premium features until the end of your current billing period.</p>
+                            </div>
+                        </div>
+                    </Description>
+                </AccordionItem>
+                <AccordionItem Title="Do you offer refunds?">
+                    <Description>
+                        <div class="faq-answer-content">
+                            <p>We offer a 30-day money-back guarantee for all subscription plans. Refund conditions:</p>
+                            <ul>
+                                <li>Request must be made within 30 days of purchase</li>
+                                <li>Full refund for first-time customers</li>
+                                <li>Refunds processed within 5-7 business days</li>
+                            </ul>
+                            <p>Contact our support team to initiate a refund request.</p>
+                        </div>
+                    </Description>
+                </AccordionItem>
+                <h2 class="faq-category-title">
+                    Features & Usage
+                </h2>
+                <AccordionItem Title="How do I reset my password?">
+                    <Description>
+                        <div class="faq-answer-content">
+                            <p>To reset your password:</p>
+                            <ul>
+                                <li>Go to the login page and click "Forgot Password"</li>
+                                <li>Enter your email address</li>
+                                <li>Check your email for a reset link</li>
+                                <li>Click the link and create a new password</li>
+                            </ul>
+                            <p>If you don't receive the email within 10 minutes, check your spam folder or contact support.</p>
+                        </div>
+                    </Description>
+                </AccordionItem>
+                <AccordionItem Title="Can I export my data?">
+                    <Description>
+                        <div class="faq-answer-content">
+                            <p>Yes! You can export your data at any time:</p>
+                            <ul>
+                                <li>Go to Account Settings → Data Export</li>
+                                <li>Select the data you want to export</li>
+                                <li>Choose your preferred format (CSV, JSON, PDF)</li>
+                                <li>Click "Generate Export"</li>
+                            </ul>
+                            <p>You'll receive a download link via email once the export is ready.</p>
+                        </div>
+                    </Description>
+                </AccordionItem>
+                <AccordionItem Title="Is my data secure and private?">
+                    <Description>
+                        <div class="faq-answer-content">
+                            <p>Absolutely. We take data security seriously:</p>
+                            <ul>
+                                <li>End-to-end encryption for all data transmission</li>
+                                <li>Regular security audits and compliance checks</li>
+                                <li>GDPR and CCPA compliant</li>
+                                <li>No data sharing with third parties without consent</li>
+                            </ul>
+                            <div class="highlight-box">
+                                <p>Read our <strong>Privacy Policy</strong> for detailed information about data handling and protection measures.</p>
+                            </div>
+                        </div>
+                    </Description>
+                </AccordionItem>
+                <h2 class="faq-category-title">
+                    Technical Support
+                </h2>>
+                <AccordionItem Title="I'm experiencing technical issues. What should I do?">
+                    <Description>
+                        <div class="faq-answer-content">
+                            <p>Try these troubleshooting steps first:</p>
+                            <ul>
+                                <li>Clear your browser cache and cookies</li>
+                                <li>Try using a different browser or incognito mode</li>
+                                <li>Check your internet connection</li>
+                                <li>Disable browser extensions temporarily</li>
+                            </ul>
+                            <p>If the issue persists, contact our support team with details about the problem and your browser/device information.</p>
+                        </div>
+                    </Description>
+                </AccordionItem>
+                <AccordionItem Title="What are your support hours?">
+                    <Description>
+                        <div class="faq-answer-content">
+                            <p>Our support team is available:</p>
+                            <ul>
+                                <li><strong>Email Support:</strong> 24/7 (response within 24 hours)</li>
+                                <li><strong>Live Chat:</strong> Monday-Friday, 9 AM - 6 PM EST</li>
+                                <li><strong>Phone Support:</strong> Premium customers only, business hours</li>
+                            </ul>
+                            <p>For urgent issues, please use live chat or mark your email as "Urgent".</p>
+                        </div>
+                    </Description>
+                </AccordionItem>
+            </Accordion>
+            <div class="contact-section">
+                <h3>Still Have Questions?</h3>
+                <p>Can't find what you're looking for? Our support team is here to help!</p>
+                <p>We typically respond within 2-4 hours during business hours.</p>
+                <a href="mailto:support@yourcompany.com" class="contact-button">Contact Support</a>
+            </div>
+        </div>
+
+    </div>
+
+</section>
+
+@code {
+
+}

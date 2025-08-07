@@ -1,0 +1,172 @@
+﻿@rendermode InteractiveServer
+@page "/contact-us"
+@inject IJSRuntime jSRuntime
+@using Microsoft.AspNetCore.Components.Web
+@using Rehab.EndPoint.Web.Components.Common
+
+<Seo Title="Contact Us - Rehab Navigator"
+     Description="Learn about Rehab's mission, values, and the team behind our innovative solutions."
+     CanonicalUrl="https://Rehab.com/about-us"
+     FaviconUrl="favicon.png" />
+<section class="hero  mt-5">
+    <div class="container">
+        <h1>Contact Us</h1>
+        <p>We'd love to hear from you. Get in touch and let us know how we can help you achieve your goals.</p>
+    </div>
+</section>
+<section class="section">
+    <div class="container">
+        <h2>Get In Touch</h2>
+
+        <div class="contact-grid">
+            <div class="contact-form">
+                <form id="contactForm">
+                    <div class="form-group">
+                        <label for="name" class="form-label">Full Name *</label>
+                        <input type="text" class="form-control" id="name" name="name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email Address *</label>
+                        <input type="email" class="form-control" id="email" name="email" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone">Phone Number</label>
+                        <input type="tel" class="form-control" id="phone" name="phone">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="subject">Subject *</label>
+                        <select id="subject" name="subject" required class="form-select">
+                            <option value="">Select a subject</option>
+                            <option value="general">General Inquiry</option>
+                            <option value="consultation">Request Consultation</option>
+                            <option value="support">Customer Support</option>
+                            <option value="partnership">Partnership Opportunity</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="message">Message *</label>
+                        <textarea id="message" class="form-control" name="message" placeholder="Tell us about your project or inquiry..." required></textarea>
+                    </div>
+
+                    <button type="submit" class="mt-4 submit-btn">Send Message</button>
+                </form>
+            </div>
+
+            <div class="contact-info">
+                <div class="info-card">
+                    <div class="info-icon">📍</div>
+                    <h3>Office Location</h3>
+                    <p>
+                        123 Business Avenue<br>
+                        Suite 456<br>
+                        City, State 12345<br>
+                        United States
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <div class="info-icon">📞</div>
+                    <h3>Phone & Email</h3>
+                    <p><strong>Main:</strong> <a href="tel:+1234567890">(123) 456-7890</a></p>
+                    <p><strong>Support:</strong> <a href="tel:+1234567891">(123) 456-7891</a></p>
+                    <p><strong>Email:</strong> <a href="mailto:info@company.com">info@company.com</a></p>
+                </div>
+
+                <div class="info-card">
+                    <div class="info-icon">🕒</div>
+                    <h3>Response Time</h3>
+                    <p>We typically respond to all inquiries within <strong>24 hours</strong> during business days.</p>
+                    <p>For urgent matters, please call our main number during business hours.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="map-section bg-white px-5">
+    <div class="container">
+        <h2>Visit Our Office</h2>
+        <div class="map-container">
+            <p>
+                🗺️ Interactive Map Coming Soon<br>
+                <small>Meanwhile, you can find us at 123 Business Avenue, Suite 456</small>
+            </p>
+        </div>
+    </div>
+</section>
+<section class="section">
+    <div class="container">
+        <h2>Business Hours</h2>
+
+        <div class="office-hours">
+            <div class="hours-card">
+                <h3>Office Hours</h3>
+                <ul class="hours-list">
+                    <li><span class="day">Monday</span> <span class="time">9:00 AM - 6:00 PM</span></li>
+                    <li><span class="day">Tuesday</span> <span class="time">9:00 AM - 6:00 PM</span></li>
+                    <li><span class="day">Wednesday</span> <span class="time">9:00 AM - 6:00 PM</span></li>
+                    <li><span class="day">Thursday</span> <span class="time">9:00 AM - 6:00 PM</span></li>
+                    <li><span class="day">Friday</span> <span class="time">9:00 AM - 5:00 PM</span></li>
+                    <li><span class="day">Saturday</span> <span class="time">10:00 AM - 2:00 PM</span></li>
+                    <li><span class="day">Sunday</span> <span class="time">Closed</span></li>
+                </ul>
+            </div>
+
+            <div class="hours-card">
+                <h3>Support Hours</h3>
+                <ul class="hours-list">
+                    <li><span class="day">Monday - Friday</span> <span class="time">8:00 AM - 8:00 PM</span></li>
+                    <li><span class="day">Saturday</span> <span class="time">9:00 AM - 5:00 PM</span></li>
+                    <li><span class="day">Sunday</span> <span class="time">Emergency Only</span></li>
+                </ul>
+                <p style="margin-top: 20px; color: #666; font-size: 0.9rem;">
+                    *Emergency support available 24/7 for existing clients
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="faq-section section">
+    <div class="container">
+        <h2>Frequently Asked Questions</h2>
+        <Accordion>
+
+            <AccordionItem Title="What is your typical response time for inquiries?">
+                <Description>
+                    strive to respond to all inquiries within 24 hours during business days.
+                </Description>
+            </AccordionItem>
+
+            <AccordionItem Title="Do you offer free consultations?">
+                <Description>
+                    Yes, we offer complimentary initial consultations to discuss your needs and how we can help. This allows us to understand your requirements and provide you with the best possible solution.
+                </Description>
+            </AccordionItem>
+
+            <AccordionItem Title="What information should I include in my inquiry?">
+                 <Description>Please include as much detail as possible about your project or needs, timeline, budget range (if applicable), and any specific requirements you have. This helps us provide you with the most accurate and helpful response.</Description>
+            </AccordionItem>
+            <AccordionItem Title="Do you work with clients outside your local area?">
+                <Description>
+                Absolutely! We work with clients nationwide and internationally. Many of our services can be delivered remotely, and we're happy to discuss travel arrangements for on-site work when necessary.
+                </Description>
+            </AccordionItem>
+        </Accordion>
+    </div>
+</section>
+<section class="cta-section">
+    <div class="container">
+        <h2>Ready to Work Together?</h2>
+        <p>Discover how our expertise and commitment to excellence can help you achieve your goals.</p>
+        <a href="#" class="btn">Get Started Today</a>
+    </div>
+</section>
+
+@code {
+
+}

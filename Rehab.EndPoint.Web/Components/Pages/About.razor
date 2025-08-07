@@ -1,0 +1,165 @@
+﻿@page "/about-us"
+@rendermode InteractiveServer
+@inject IJSRuntime jSRuntime
+@using Microsoft.AspNetCore.Components.Web
+@using Rehab.EndPoint.Web.Components.Common
+ 
+<Seo Title="About Us - Rehab Navigator"
+     Description="Learn about Rehab's mission, values, and the team behind our innovative solutions." 
+  CanonicalUrl="https://Rehab.com/about-us"
+  FaviconUrl="favicon.png" />
+
+<section class="hero mt-5">
+    <div class="container">
+        <h1>About Us</h1>
+        <p>Dedicated to excellence, driven by innovation, and committed to making a positive impact in everything we do.</p>
+    </div>
+</section>
+<section class="section">
+    <div class="container">
+        <div class="mission-content">
+            <h2> Our Mission</h2>
+            <p>To provide exceptional services and solutions that empower our clients to achieve their goals while maintaining the highest standards of integrity, innovation, and customer satisfaction. We are committed to delivering value through expertise, dedication, and a genuine passion for what we do.</p>
+            <p>Our mission drives every decision we make, every service we provide, and every relationship we build. We believe in creating lasting partnerships based on trust, transparency, and mutual success.</p>
+        </div>
+    </div>
+</section>
+<section class="section">
+    <div class="container">
+        <h2>What We Do</h2>
+        <p>We specialize in delivering comprehensive solutions tailored to meet the unique needs of our clients. Our approach combines industry expertise with innovative thinking to provide services that not only meet current requirements but also anticipate future challenges and opportunities.</p>
+
+        <div class="services-list">
+            <div class="service-item">
+                <h4>Expert Consultation</h4>
+                <p>Providing strategic guidance and expert advice to help clients make informed decisions and achieve their objectives effectively.</p>
+            </div>
+
+            <div class="service-item">
+                <h4>Custom Solutions</h4>
+                <p>Developing tailored approaches that address specific challenges and leverage unique opportunities in each situation.</p>
+            </div>
+
+            <div class="service-item">
+                <h4>Ongoing Support</h4>
+                <p>Offering continuous assistance and monitoring to ensure long-term success and adaptation to changing needs.</p>
+            </div>
+
+            <div class="service-item">
+                <h4>Quality Assurance</h4>
+                <p>Maintaining rigorous standards and regular reviews to guarantee the highest quality in all our deliverables.</p>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="section">
+    <div class="container">
+        <h2>Our Core Values</h2>
+
+        <div class="values-grid">
+            <div class="value-card">
+                <div class="value-icon">🎯</div>
+                <h4>Excellence</h4>
+                <p>We strive for excellence in everything we do, continuously improving our processes and outcomes to exceed expectations and deliver outstanding results.</p>
+            </div>
+
+            <div class="value-card">
+                <div class="value-icon">🤝</div>
+                <h4>Integrity</h4>
+                <p>We operate with complete transparency and honesty, building trust through consistent ethical practices and open communication with all stakeholders.</p>
+            </div>
+
+            <div class="value-card">
+                <div class="value-icon">💡</div>
+                <h4>Innovation</h4>
+                <p>We embrace creative thinking and cutting-edge approaches to solve complex problems and create value for our clients in new and meaningful ways.</p>
+            </div>
+
+            <div class="value-card">
+                <div class="value-icon">🌟</div>
+                <h4>Collaboration</h4>
+                <p>We believe in the power of teamwork and partnership, working closely with clients and colleagues to achieve shared goals and mutual success.</p>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="section">
+    <div class="container">
+        <h2>Our Impact</h2>
+        <div class="stats">
+            <div class="stat-item">
+                <span class="stat-number">500+</span>
+                <span class="stat-label">Projects Completed</span>
+            </div>
+
+            <div class="stat-item">
+                <span class="stat-number">98%</span>
+                <span class="stat-label">Client Satisfaction</span>
+            </div>
+
+            <div class="stat-item">
+                <span class="stat-number">15+</span>
+                <span class="stat-label">Years Experience</span>
+            </div>
+
+            <div class="stat-item">
+                <span class="stat-number">50+</span>
+                <span class="stat-label">Expert Team Members</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <div class="team-intro">
+            <h2>Our Expert Team</h2>
+            <p>Our success is built on the expertise, dedication, and passion of our team members. We bring together professionals from diverse backgrounds, each contributing unique skills and perspectives to deliver exceptional results.</p>
+
+            <p>Our team includes certified professionals, industry veterans, and innovative thinkers who are committed to staying at the forefront of their respective fields. Through continuous learning and professional development, we ensure our team remains equipped with the latest knowledge and best practices.</p>
+
+            <p>Every team member is dedicated to our core values and committed to delivering excellence in every project. We foster a collaborative environment where creativity thrives and where each individual's contributions are valued and recognized.</p>
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <h2>Quality & Standards</h2>
+        <div>
+            <p>We maintain the highest standards of quality in all our work through rigorous processes, regular reviews, and continuous improvement initiatives. Our commitment to quality is reflected in our systematic approach to project management, quality assurance protocols, and client feedback integration.</p>
+
+            <p>All our work is backed by industry best practices, evidence-based methodologies, and a commitment to staying current with the latest developments in our field. We regularly update our processes and standards to ensure we continue to deliver exceptional value to our clients.</p>
+
+            <p>Our quality assurance process includes regular internal reviews, client feedback sessions, and performance metrics tracking to ensure we consistently meet and exceed expectations. We are committed to transparency in our operations and maintain open communication channels with all stakeholders.</p>
+        </div>
+    </div>
+</section>
+<section class="cta-section">
+    <div class="container">
+        <h2>Ready to Work Together?</h2>
+        <p>Discover how our expertise and commitment to excellence can help you achieve your goals.</p>
+        <a href="#" class="btn">Get Started Today</a>
+    </div>
+</section>
+
+@code {
+    int count = 0;
+
+    private IJSObjectReference? jsModule;
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            Console.WriteLine("About Us page rendered for the first time.");
+            jsModule = await jSRuntime.InvokeAsync<IJSObjectReference>("import", "/js/animation.js");
+            await jsModule.InvokeVoidAsync("initPageAnimations");
+        }
+
+    }
+    async Task ShowAlert()
+    {
+        await jSRuntime.InvokeVoidAsync(identifier: "createAlert");
+    }
+
+}
