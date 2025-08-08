@@ -149,7 +149,8 @@
 
     private void OpenFacilityImagesModal(int id)
     {
-        FacilityImages = mapper.Map<SetFacilityImagesViewmodel>(FacilityService.GetFacilitiesImage(id));
+        var facilityImagesResult = FacilityService.GetFacilitiesImage(id);
+        FacilityImages = mapper.Map<SetFacilityImagesViewmodel>(facilityImagesResult);
         FacilityImagesModal!.Show();
     }
 }

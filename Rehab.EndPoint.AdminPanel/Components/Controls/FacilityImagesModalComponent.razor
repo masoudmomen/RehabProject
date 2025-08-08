@@ -1,6 +1,12 @@
-﻿@using Rehab.EndPoint.AdminPanel.Viewmodels
+﻿@using AutoMapper
+@using Cropper.Blazor.Models
+@using Rehab.Application.Facilities
+@using Rehab.EndPoint.AdminPanel.Viewmodels
 @rendermode InteractiveServer 
 @inject IJSRuntime JS
+@inject IFacilityService FacilityService
+@inject AutoMapper.IMapper mapper
+
 
 
 @if (IsVisible)
@@ -17,13 +23,13 @@
                     <div class="col-3">
                         <label>Logo</label>
                         <div class="card" style="height:120px">
-                            <img src="@((string.IsNullOrWhiteSpace(Model.Logo))?"../../img/no-image.jpg":Model.Logo)" width="100%" height="100%" class="image-facility-modal" alt="Logo" id="LogoImage" @onclick="OpenImageUploaderModal"  />
+                            <img src="@((string.IsNullOrWhiteSpace(Model.Logo)) ? "../../img/no-image.jpg" : Model.Logo)" width="100%" height="100%" class="image-facility-modal" style="cursor:pointer;" alt="Logo" id="LogoImage" @onclick="OpenImageUploaderModalForLogo" />
                         </div>
                     </div>
                     <div class="col-9">
                         <label>Cover</label>
                         <div class="card" style="height:120px">
-                            <img src="@((string.IsNullOrWhiteSpace(Model.Cover))?"../../img/no-image.jpg":Model.Cover)" width="100%" height="100%" class="image-facility-modal" alt="Cover" />
+                            <img src="@((string.IsNullOrWhiteSpace(Model.Cover)) ? "../../img/no-image.jpg" : Model.Cover)" width="100%" height="100%" class="image-facility-modal" style="cursor:pointer;" alt="Cover" @onclick="OpenImageUploaderModalForCover" />
                         </div>
                     </div>
                 </div>
@@ -33,28 +39,68 @@
                         <label>Add Image</label>
                         <div class="card" style="height:120px">
                             <img src="../../img/add-image.png" width="100%" height="100%"
-                                 class="image-facility-modal" alt="Add Image" style="cursor:pointer;" />
+                                 class="image-facility-modal" alt="Add Image" style="cursor:pointer;" @onclick="OpenImageUploaderModalForImages" />
                         </div>
                     </div>
-                    
+                    @if(Model.FacilityImages != null)
+                    {
+                        @foreach (var item in Model.FacilityImages!)
+                        {
+                            <div class="col-3">
+                                <label>@item.Title</label>
+                                <div class="card" style="height:120px">
+                                    <img src="@item.ImageAddress" width="100%" height="100%"
+                                         class="image-facility-modal" />
+                                </div>
+                            </div>
+                        }
+                    }
                 </div>
                 
             </div>
         </div>
+    
+
+        <ImageUploaderComponent @ref="imageUploader"
+                                    CropperOption="cropperOption"
+                                    ImageTagName="@ImageTagName"
+                                    selectedImage="OnSelectedImage"
+                                    FacilityId="Model.FacilityId"
+                                    OnCloseImageUploader="ReloadData"
+                                    />
     }
-
-    <ImageUploaderComponent @ref="imageUploader" />
-
 }
 
 
 
 @code {
-    [Parameter] public SetFacilityImagesViewmodel? Model { get; set; }
+    [Parameter] public SetFacilityImagesViewmodel Model { get; set; }
 
     ImageUploaderComponent imageUploader = new();
-
+    public string SelectedImage { get; set; }
     public bool IsVisible { get; set; }
+    private Options? cropperOption;
+    private string ImageTagName;
+
+    private void ReloadData()
+    {
+        var facilityImagesResult = FacilityService.GetFacilitiesImage(Model.FacilityId);
+        Model = mapper.Map<SetFacilityImagesViewmodel>(facilityImagesResult);
+        StateHasChanged();
+    }
+
+    private void OnSelectedImage(string selectedImageSrc)
+    {
+        if (ImageTagName == "logo")
+        {
+            Model.Logo = selectedImageSrc;
+        }
+        if (ImageTagName == "cover")
+        {
+            Model.Cover = selectedImageSrc;
+        }
+        StateHasChanged();
+    }
 
     public void Show()
     {
@@ -67,8 +113,57 @@
         InvokeAsync(StateHasChanged);
     }
 
-    private void OpenImageUploaderModal()
+    private void OpenImageUploaderModalForLogo()
     {
-        imageUploader.Show();
+        ImageTagName = "logo";
+        cropperOption = new Options
+        {
+            SetDataOptions = new SetDataOptions
+            {
+                Width = 200,
+                Height = 100,
+                X = 1,
+                Y = 1
+            },
+            AspectRatio = 1
+        };
+        if(Model != null)
+            imageUploader.Show();
+    }
+
+    private void OpenImageUploaderModalForCover()
+    {
+        ImageTagName = "cover";
+        cropperOption = new Options
+        {
+            SetDataOptions = new SetDataOptions
+            {
+                Width = 200,
+                Height = 100,
+                X = 1,
+                Y = 1
+            },
+            AspectRatio = 4
+        };
+        if (Model != null)
+            imageUploader.Show();
+    }
+
+    private void OpenImageUploaderModalForImages()
+    {
+        ImageTagName = "images";
+        cropperOption = new Options
+        {
+            SetDataOptions = new SetDataOptions
+            {
+                Width = 200,
+                Height = 100,
+                X = 1,
+                Y = 1
+            },
+            AspectRatio = 2
+        };
+        if (Model != null)
+            imageUploader.Show();
     }
 }

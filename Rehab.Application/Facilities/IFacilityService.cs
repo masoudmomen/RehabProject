@@ -22,6 +22,9 @@ namespace Rehab.Application.Facilities
         FacilityDetailDto? FindById(int id);
         BaseDto<SetFacilityImagesDto> SetFacilitiesImage(SetFacilityImagesDto facilityImages);
         SetFacilityImagesDto? GetFacilitiesImage(int FacilityId);
+        bool SetFacilityLogo(int id,string facilityLogo);
+        bool SetFacilityCover(int id,string facilityCover);
+        bool SetFacilityImages(int id,string facilityImage, string imageTitle);
     }
 
     public class FacilityService : IFacilityService
@@ -126,23 +129,22 @@ namespace Rehab.Application.Facilities
 
         public SetFacilityImagesDto? GetFacilitiesImage(int FacilityId)
         {
-            var facility = context.Facilities.FirstOrDefault(c => c.Id == FacilityId);
-            if (facility == null) return null;
-
-            return context.Facilities.
-                Include(c=>c.FacilitysImages)
-                .Select(c=> new SetFacilityImagesDto
+            return context.Facilities
+            .Where(c => c.Id == FacilityId)
+            .Include(c => c.FacilitysImages)
+            .Select(c => new SetFacilityImagesDto
+            {
+                Cover = c.Cover,
+                Logo = c.Logo,
+                FacilityId = c.Id,
+                FacilityImages = c.FacilitysImages!.Select(d => new FacilityImagesDto
                 {
-                    Cover = c.Cover,
-                    Logo = c.Logo,
-                    FacilityId = facility.Id,
-                    FacilityImages = c.FacilitysImages!.Select(d=> new FacilityImagesDto
-                    {
-                        Id = d.Id,
-                        ImageAddress = d.ImageAddress,
-                        Title = d.Title,
-                    }).ToList(),
-                }).FirstOrDefault(c=>c.FacilityId == FacilityId);
+                    Id = d.Id,
+                    ImageAddress = d.ImageAddress,
+                    Title = d.Title,
+                }).ToList(),
+            })
+            .FirstOrDefault();
         }
 
         public BaseDto<SetFacilityImagesDto> SetFacilitiesImage(SetFacilityImagesDto facilityImages)
@@ -165,6 +167,40 @@ namespace Rehab.Application.Facilities
             if (context.SaveChanges() > 0)
                 return BaseDto<SetFacilityImagesDto>.SuccessResult(facilityImages, "Images Uploaded Successfully.");
             return BaseDto<SetFacilityImagesDto>.FailureResult("Images Upload Failed!");
+        }
+
+        public bool SetFacilityCover(int id, string facilityCover)
+        {
+            var facility = context.Facilities.FirstOrDefault(f => f.Id == id);
+            if (facility == null) return false;
+            facility.Cover = facilityCover;
+            context.SaveChanges();
+            if (context.SaveChanges() > 0) return true;
+            return false;
+        }
+
+        public bool SetFacilityImages(int id, string facilityImage, string imageTitle)
+        {
+            var facility = context.Facilities.Where(f => f.Id == id).Include(c=>c.FacilitysImages).FirstOrDefault();
+            if (facility == null) return false;
+            facility.FacilitysImages!.Add(new FacilitysImages
+            {
+                ImageAddress = facilityImage,
+                Facility = facility,
+                Title = imageTitle
+            });
+            if (context.SaveChanges() > 0) return true;
+            return false;
+        }
+
+        public bool SetFacilityLogo(int id, string facilityLogo)
+        {
+            var facility = context.Facilities.FirstOrDefault(f => f.Id == id);
+            if (facility == null) return false;
+            facility.Logo = facilityLogo;
+            context.SaveChanges();
+            if(context.SaveChanges() > 0) return true;
+            return false;
         }
     }
 }

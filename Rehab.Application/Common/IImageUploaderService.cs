@@ -12,6 +12,8 @@ namespace Rehab.Application.Common
     public interface IImageUploaderService
     {
         Task<List<string>> UploadAsync(IEnumerable<IBrowserFile> files, string webRootPath, string relativePath, CancellationToken cancellationToken = default);
+
+        Task<string> UploadAsync(byte[] fileBytes, string fileName, string webRootPath, string relativePath, CancellationToken cancellationToken = default);
     }
 
     public class ImageUploaderService : IImageUploaderService
@@ -39,6 +41,21 @@ namespace Rehab.Application.Common
             return savedFilePaths;
         }
 
+
+        public async Task<string> UploadAsync(byte[] fileBytes, string fileName, string webRootPath, string relativePath, CancellationToken cancellationToken = default)
+        {
+            string folderPath = Path.Combine(webRootPath, relativePath);
+
+            if (!Directory.Exists(folderPath))
+                Directory.CreateDirectory(folderPath);
+
+            var uniqueFileName = $"{Guid.NewGuid()}{Path.GetExtension(fileName)}";
+            var filePath = Path.Combine(folderPath, uniqueFileName);
+
+            await File.WriteAllBytesAsync(filePath, fileBytes, cancellationToken);
+
+            return Path.Combine(relativePath, uniqueFileName).Replace("\\", "/");
+        }
 
     }
 }

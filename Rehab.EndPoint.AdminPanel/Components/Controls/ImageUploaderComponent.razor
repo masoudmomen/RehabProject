@@ -1,21 +1,79 @@
-﻿@using Microsoft.JSInterop;
-@using Microsoft.AspNetCore.Components.Forms
+﻿@using Cropper.Blazor.Extensions
+@using Microsoft.JSInterop;
+@using Microsoft.AspNetCore.Components.Forms;
+@using Cropper.Blazor.Components;
+@using Cropper.Blazor.Models;
+@using Rehab.Application.Facilities
+@inject IWebHostEnvironment Env
+@inject IImageUploaderService Uploader
+@inject IFacilityService FacilityService
 
-@inject IJSRuntime JS
+<style>
+    .big-img {
+        max-height: 400px;
+        /* This rule is very important, please don't ignore this */
+        max-width: 100%;
+    }
+
+    .img-container {
+        max-height: 400px;
+        width: 100%;
+    }
+
+    /* Means that the cropped image will take up 100% of the width of its containing element */
+    .cropped-img-container {
+        /* width: 50%; */
+    }
+
+    /* These styles are just needed for a nice button and don't related with cropper component */
+    .button {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        text-align: center;
+        text-decoration: none;
+        font-size: 16px;
+        cursor: pointer;
+    }
+</style>
 
 @if (IsVisible)
 {
-    <div class="modal-backdrop">
-        <div class="modal-content-facilityDetail">
-            <button type="button" class="btn-close float-end" @onclick="Close"></button>
-            <InputFile OnChange="OnInputFileChange" class="form-control my-2" accept="image/*" />
-            <img id="imageToCrop" style="max-width:100%;" />
-            <button @onclick="CropImage">برش تصویر</button>
-
-            @if (!string.IsNullOrEmpty(croppedImage))
+    <div class="modal-backdrop modal-fullscreen">
+        <button type="button" class="btn-close float-start" @onclick="Close"></button><br />
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <InputFile OnChange="OnInputFileChange" class="form-control my-2 mx-auto w-50" accept="image/*" />
+                </div>
+                @if(ImageTagName == "images")
+                {
+                    <div class="col">
+                        <InputText @bind-Value="ImageTitle" class="form-control my-2 mx-auto w-50"   />
+                    </div>
+                }
+            </div>
+            @if (!string.IsNullOrWhiteSpace(imageSrc))
             {
-                <h4>تصویر کراپ‌شده:</h4>
-                <img src="@croppedImage" style="border:1px solid #aaa; max-width:300px;" />
+                <div class="row">
+                    <div class="col">
+                        <div class="img-container">
+                            <CropperComponent Class="big-img" Options="CropperOption" Src="@imageSrc" @ref="cropperComponent" />
+                        </div>
+                    </div>
+                    <div class="col">
+                        <img class="cropped-img-container" src="@croppedCanvasDataURL" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="modal-footer text-start">
+                        <button class="btn btn-outline-info" @onclick="GetCroppedCanvasDataURLAsync">Get cropped image</button>
+                        <button type="button" class="btn btn-primary" @onclick="ApplyImage">Save Image</button>
+                    </div>
+                </div>
             }
         </div>
     </div>
@@ -23,27 +81,97 @@
 
 
 @code {
-    private string? croppedImage;
+    private CropperComponent? cropperComponent = null!;
+    private string croppedCanvasDataURL;
+    private string? imageSrc;
+    private IBrowserFile InputFile;
+    public string ImageTitle { get; set; }
+    [Parameter] public int FacilityId { get; set; }
+
+    [Parameter] public string ImageTagName { get; set; }
+
+    [Parameter] public EventCallback<string> selectedImage { get; set; }
+    [Parameter] public EventCallback OnCloseImageUploader { get; set; }
+
+    [Parameter] public Options CropperOption { get; set; } = new();
+
+
 
     private async Task OnInputFileChange(InputFileChangeEventArgs e)
     {
-        var file = e.File;
-        using var stream = file.OpenReadStream();
-        using var ms = new MemoryStream();
-        await stream.CopyToAsync(ms);
-        var bytes = ms.ToArray();
-        var base64 = Convert.ToBase64String(bytes);
-        var imageDataUrl = $"data:{file.ContentType};base64,{base64}";
-
-        await JS.InvokeVoidAsync("imageCropper.initCropper", "imageToCrop");
-        await Task.Delay(100); // کمی تاخیر برای اطمینان از رندر کامل
-        var imageElement = await JS.InvokeAsync<string>("eval", $"document.getElementById('imageToCrop').src = '{imageDataUrl}'");
+        imageSrc = "";
+        croppedCanvasDataURL = "";
+        var files = e.GetMultipleFiles();
+        await ConvertFileToImageSrc(files[0]);
+        StateHasChanged();
     }
 
-    private async Task CropImage()
+    private async Task ConvertFileToImageSrc(IBrowserFile file)
     {
-        croppedImage = await JS.InvokeAsync<string>("imageCropper.getCroppedImageBase64");
+        InputFile = file;
+        // بررسی اینکه فقط تصویر انتخاب شده
+        if (!file.ContentType.StartsWith("image/"))
+        {
+            imageSrc = null;
+            return;
+        }
+
+        var buffer = new byte[file.Size];
+        using var stream = file.OpenReadStream(maxAllowedSize: 10 * 1024 * 1024); // حداکثر 10 مگابایت
+        await stream.ReadAsync(buffer);
+
+        // تبدیل به Base64
+        var base64 = Convert.ToBase64String(buffer);
+        imageSrc = $"data:{file.ContentType};base64,{base64}";
     }
+
+    public async Task GetCroppedCanvasDataURLAsync()
+    {
+        GetCroppedCanvasOptions getCroppedCanvasOptions = new GetCroppedCanvasOptions
+        {
+            MaxHeight = 4096,
+            MaxWidth = 4096,
+            ImageSmoothingQuality = ImageSmoothingQuality.High.ToEnumString(),
+        };
+        croppedCanvasDataURL = await cropperComponent!.GetCroppedCanvasDataURLAsync(getCroppedCanvasOptions);
+    }
+
+    private async Task ApplyImage()
+    {
+        if (string.IsNullOrWhiteSpace(croppedCanvasDataURL)) croppedCanvasDataURL = imageSrc;
+
+        // Convert DataURL to byte[]
+        var base64 = croppedCanvasDataURL.Split(',')[1];
+        byte[] imageBytes = Convert.FromBase64String(base64);
+
+        if (ImageTagName == "logo")
+        {
+            var imageToUploadPath = await Uploader.UploadAsync(imageBytes, InputFile.Name, Env.WebRootPath, "uploads/facilities/logo");
+            if (!string.IsNullOrWhiteSpace(imageToUploadPath))
+                FacilityService.SetFacilityLogo(FacilityId, imageToUploadPath);
+        }
+        if (ImageTagName == "cover")
+        {
+            var imageToUploadPath = await Uploader.UploadAsync(imageBytes, InputFile.Name, Env.WebRootPath, "uploads/facilities/cover");
+            if (!string.IsNullOrWhiteSpace(imageToUploadPath))
+                FacilityService.SetFacilityCover(FacilityId, imageToUploadPath);
+        }
+        if (ImageTagName == "images")
+        {
+            var imageToUploadPath = await Uploader.UploadAsync(imageBytes, InputFile.Name, Env.WebRootPath, "uploads/facilities/images");
+            if (!string.IsNullOrWhiteSpace(imageToUploadPath))
+                FacilityService.SetFacilityImages(FacilityId, imageToUploadPath, ImageTitle);
+        }
+
+
+        await selectedImage.InvokeAsync(croppedCanvasDataURL);
+        croppedCanvasDataURL = "";
+        imageSrc = "";
+        IsVisible = false;
+    }
+
+
+
 
 
 
@@ -51,11 +179,13 @@
 
     public void Show()
     {
+        croppedCanvasDataURL = "";
         IsVisible = true;
         InvokeAsync(StateHasChanged);
     }
     public void Close()
     {
+        OnCloseImageUploader.InvokeAsync();
         IsVisible = false;
         InvokeAsync(StateHasChanged);
     }

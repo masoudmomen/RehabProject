@@ -19,6 +19,7 @@ using Rehab.EndPoint.AdminPanel.CommonService;
 using Rehab.EndPoint.AdminPanel.Components;
 using Rehab.EndPoint.AdminPanel.MappingProfile;
 using Rehab.Persistence.Contexts;
+using Cropper.Blazor.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,7 +27,11 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents().AddInteractiveServerComponents();
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor()
-    .AddCircuitOptions(options => { options.DetailedErrors = true; });
+    .AddCircuitOptions(options => { options.DetailedErrors = true; })
+    .AddHubOptions(options =>
+     {
+         options.MaximumReceiveMessageSize = 32 * 1024 * 100;
+     });
 #region Connection String
 builder.Services.AddScoped<IDatabaseContext, DatabaseContext>();
 var connection = builder.Configuration["ConnectionString:sqlServer"];
@@ -56,8 +61,16 @@ builder.Services.AddScoped<IImageUploaderService, ImageUploaderService>();
 #endregion
 builder.Services.AddSingleton<HeadOutlet>();
 
+builder.Services.AddCropper();
+
+
+
+
+
 
 var app = builder.Build();
+
+//app.MapBlazorHub();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
