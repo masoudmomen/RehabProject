@@ -1,0 +1,35 @@
+﻿@if (IsMatch)
+{
+    <div class="accordion-item">
+        <div class="accordion-header" @onclick="Toggle">
+            <h4>@Title</h4>
+            <span class="accordion-toggle">@(IsOpen ? "−" : "+")</span>
+        </div>
+        <div class="accordion-body @(IsOpen ? "active" : "")">
+            @Description
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public string Title { get; set; }
+    [Parameter] public RenderFragment Description { get; set; }
+
+    [CascadingParameter] public Accordion Parent { get; set; }
+
+    private bool IsOpen { get; set; }
+
+    private bool IsMatch => string.IsNullOrWhiteSpace(Parent.SearchTerm) || 
+                            Title.Contains(Parent.SearchTerm, StringComparison.OrdinalIgnoreCase) || 
+                            Description?.ToString()?.Contains(Parent.SearchTerm, StringComparison.OrdinalIgnoreCase) == true;
+                          
+                               
+    private void Toggle() => Parent.ToggleItem(this);
+
+    
+    public void SetOpen(bool isOpen)
+    {
+        IsOpen = isOpen;
+        StateHasChanged();
+    }
+}

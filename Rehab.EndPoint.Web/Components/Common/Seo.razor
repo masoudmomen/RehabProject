@@ -1,0 +1,22 @@
+﻿@using Microsoft.AspNetCore.Components.Web
+@inject NavigationManager NavigationManager;
+
+<HeadContent>
+    <title>@Title</title>
+
+    <meta name="description" content="@Description" />
+    <meta property="og:title" content="@Title" />
+    <meta property="og:description" content="@Description" />
+    <link rel="canonical" href="@NavigationManager.Uri" />     
+    <link rel="icon" type="image/png" href="@FaviconUrl" />
+
+</HeadContent>
+
+@code {
+    [Parameter] public string Title { get; set; } = "Rehab Navigator";
+    [Parameter] public string Description { get; set; } = "Rehab Navigator - Your guide to finding the best rehabilitation centers and resources.";
+    [Parameter] public string CanonicalUrl { get; set; } = "https://Rehab.com";
+    [Parameter] public string FaviconUrl { get; set; } = "favicon.png";
+
+
+}

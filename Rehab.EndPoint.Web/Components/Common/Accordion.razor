@@ -1,0 +1,41 @@
+﻿<CascadingValue Value="this">
+ <div class="accordion">
+        @if(HasSearch == true)
+        {
+            <div class="search-box">
+                <input type="text"
+                       class="search-input"
+                       placeholder="Search for answers..."
+                       @bind="SearchTerm"
+                       @bind:event="oninput" />
+
+            </div>
+        }
+        @ChildContent
+ </div>
+</CascadingValue>
+
+
+@code {
+    [Parameter] public RenderFragment ChildContent { get; set; }
+    private AccordionItem _openItem;
+
+    [Parameter]public bool HasSearch { get; set; }
+
+    public string SearchTerm { get; set; } = string.Empty;
+    public void ToggleItem(AccordionItem item)
+    {
+        if(_openItem == item)
+        {
+            item.SetOpen(false);
+            _openItem = null;
+        }
+        else
+        {
+            _openItem?.SetOpen(false);
+            item.SetOpen(true);
+            _openItem = item;
+        }
+
+    }
+    }
