@@ -4,6 +4,7 @@
 @using Cropper.Blazor.Components;
 @using Cropper.Blazor.Models;
 @using Rehab.Application.Facilities
+@using Rehab.EndPoint.AdminPanel.Viewmodels
 @inject IWebHostEnvironment Env
 @inject IImageUploaderService Uploader
 @inject IFacilityService FacilityService
@@ -42,33 +43,33 @@
 
 @if (IsVisible)
 {
-    <div class="modal-backdrop modal-fullscreen">
-        <button type="button" class="btn-close float-start" @onclick="Close"></button><br />
-        <div class="container">
+    <div class="modal-backdrop modal-fullscreen" >
+        <div class="container p-3" style="border:solid 5px darkgray;border-radius:5px;">
+            <button type="button" class="btn-close float-end bg-white" @onclick="Close"></button><br />
             <div class="row">
                 <div class="col">
-                    <InputFile OnChange="OnInputFileChange" class="form-control my-2 mx-auto w-50" accept="image/*" />
+                    <InputFile OnChange="OnInputFileChange" class="form-control my-2 mx-auto " accept="image/*" />
                 </div>
                 @if(ImageTagName == "images")
                 {
                     <div class="col">
-                        <InputText @bind-Value="ImageTitle" class="form-control my-2 mx-auto w-50"   />
+                        <InputText @bind-Value="ImageTitle" class="form-control my-2 mx-auto"   />
                     </div>
                 }
             </div>
             @if (!string.IsNullOrWhiteSpace(imageSrc))
             {
-                <div class="row">
-                    <div class="col">
+                <div class="row g-2">
+                    <div class="col" style="border:dotted 3px white;border-radius:5px;">
                         <div class="img-container">
                             <CropperComponent Class="big-img" Options="CropperOption" Src="@imageSrc" @ref="cropperComponent" />
                         </div>
                     </div>
-                    <div class="col">
+                    <div class="col" style="border:solid 3px white;border-radius:5px;">
                         <img class="cropped-img-container" src="@croppedCanvasDataURL" />
                     </div>
                 </div>
-                <div class="row">
+                <div class="row mt-2">
                     <div class="modal-footer text-start">
                         <button class="btn btn-outline-info" @onclick="GetCroppedCanvasDataURLAsync">Get cropped image</button>
                         <button type="button" class="btn btn-primary" @onclick="ApplyImage">Save Image</button>
@@ -87,6 +88,7 @@
     private IBrowserFile InputFile;
     public string ImageTitle { get; set; }
     [Parameter] public int FacilityId { get; set; }
+    [Parameter] public SetFacilityImagesViewmodel Model { get; set; }
 
     [Parameter] public string ImageTagName { get; set; }
 
@@ -160,7 +162,17 @@
         {
             var imageToUploadPath = await Uploader.UploadAsync(imageBytes, InputFile.Name, Env.WebRootPath, "uploads/facilities/images");
             if (!string.IsNullOrWhiteSpace(imageToUploadPath))
-                FacilityService.SetFacilityImages(FacilityId, imageToUploadPath, ImageTitle);
+            {
+                if(FacilityService.SetFacilityImages(FacilityId, imageToUploadPath, ImageTitle))
+                {
+                    Model.FacilityImages!.Add(new FacilityImagesViewmodel
+                        {
+                            ImageAddress = croppedCanvasDataURL,
+                            Title = ImageTitle
+                        });
+                }
+            }
+            
         }
 
 

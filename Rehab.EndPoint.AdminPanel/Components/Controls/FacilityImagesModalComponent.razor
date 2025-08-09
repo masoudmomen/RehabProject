@@ -67,6 +67,7 @@
                                     selectedImage="OnSelectedImage"
                                     FacilityId="Model.FacilityId"
                                     OnCloseImageUploader="ReloadData"
+                                    Model="Model"
                                     />
     }
 }
@@ -74,7 +75,8 @@
 
 
 @code {
-    [Parameter] public SetFacilityImagesViewmodel Model { get; set; }
+    [Parameter] public SetFacilityImagesViewmodel? Model { get; set; }
+    [Parameter] public EventCallback OnClose { get; set; }
 
     ImageUploaderComponent imageUploader = new();
     public string SelectedImage { get; set; }
@@ -84,8 +86,6 @@
 
     private void ReloadData()
     {
-        var facilityImagesResult = FacilityService.GetFacilitiesImage(Model.FacilityId);
-        Model = mapper.Map<SetFacilityImagesViewmodel>(facilityImagesResult);
         StateHasChanged();
     }
 
@@ -109,6 +109,7 @@
     }
     public void Close()
     {
+        OnClose.InvokeAsync();
         IsVisible = false;
         InvokeAsync(StateHasChanged);
     }
@@ -161,7 +162,6 @@
                 X = 1,
                 Y = 1
             },
-            AspectRatio = 2
         };
         if (Model != null)
             imageUploader.Show();
