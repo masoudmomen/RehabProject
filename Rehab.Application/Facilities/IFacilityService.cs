@@ -24,7 +24,8 @@ namespace Rehab.Application.Facilities
         SetFacilityImagesDto? GetFacilitiesImage(int FacilityId);
         bool SetFacilityLogo(int id,string facilityLogo);
         bool SetFacilityCover(int id,string facilityCover);
-        bool SetFacilityImages(int id,string facilityImage, string imageTitle);
+        int? SetFacilityImages(int id,string facilityImage, string imageTitle);
+        bool RemoveFacilityImage(int facilityId, int  imageId); 
     }
 
     public class FacilityService : IFacilityService
@@ -147,6 +148,22 @@ namespace Rehab.Application.Facilities
             .FirstOrDefault();
         }
 
+        public bool RemoveFacilityImage(int facilityId, int imageId)
+        {
+            var facility = context.Facilities.FirstOrDefault(f => f.Id == facilityId);
+            if (facility == null) return false;
+            var facilityImage = context.FacilitysImages.FirstOrDefault(f => f.Id == imageId);
+            if (facility.FacilitysImages == null || facilityImage == null) return false;
+            facility.FacilitysImages.Remove(facilityImage);
+            if (context.SaveChanges() > 0)
+            {
+                context.FacilitysImages.Remove(facilityImage);
+                if (context.SaveChanges()>0)
+                    return true;
+            }
+            return false;
+        }
+
         public BaseDto<SetFacilityImagesDto> SetFacilitiesImage(SetFacilityImagesDto facilityImages)
         {
             if (facilityImages == null) return BaseDto<SetFacilityImagesDto>.FailureResult("Images data is null!") ;
@@ -179,18 +196,19 @@ namespace Rehab.Application.Facilities
             return false;
         }
 
-        public bool SetFacilityImages(int id, string facilityImage, string imageTitle)
+        public int? SetFacilityImages(int id, string facilityImage, string imageTitle)
         {
             var facility = context.Facilities.Where(f => f.Id == id).Include(c=>c.FacilitysImages).FirstOrDefault();
-            if (facility == null) return false;
-            facility.FacilitysImages!.Add(new FacilitysImages
+            if (facility == null) return null;
+            FacilitysImages NewFacilityImage = new FacilitysImages()
             {
                 ImageAddress = facilityImage,
                 Facility = facility,
                 Title = imageTitle
-            });
-            if (context.SaveChanges() > 0) return true;
-            return false;
+            };
+            facility.FacilitysImages!.Add(NewFacilityImage);
+            if (context.SaveChanges() > 0) return NewFacilityImage.Id;
+            return null;
         }
 
         public bool SetFacilityLogo(int id, string facilityLogo)

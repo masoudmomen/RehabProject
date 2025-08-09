@@ -45,6 +45,7 @@
 {
     <div class="modal-backdrop modal-fullscreen" >
         <div class="container p-3" style="border:solid 5px darkgray;border-radius:5px;">
+            <h3 class="text-start d-inline text-white">Image Cropper</h3>
             <button type="button" class="btn-close float-end bg-white" @onclick="Close"></button><br />
             <div class="row">
                 <div class="col">
@@ -53,7 +54,7 @@
                 @if(ImageTagName == "images")
                 {
                     <div class="col">
-                        <InputText @bind-Value="ImageTitle" class="form-control my-2 mx-auto"   />
+                        <InputText @bind-Value="ImageTitle" class="form-control my-2 mx-auto" placeholder="Fill Image Title .."  />
                     </div>
                 }
             </div>
@@ -65,7 +66,7 @@
                             <CropperComponent Class="big-img" Options="CropperOption" Src="@imageSrc" @ref="cropperComponent" />
                         </div>
                     </div>
-                    <div class="col" style="border:solid 3px white;border-radius:5px;">
+                    <div class="col bg-dark" style="border:solid 3px white;border-radius:5px;">
                         <img class="cropped-img-container" src="@croppedCanvasDataURL" />
                     </div>
                 </div>
@@ -160,25 +161,29 @@
         }
         if (ImageTagName == "images")
         {
+            if (string.IsNullOrEmpty(ImageTitle)) ImageTitle = "no-title";
             var imageToUploadPath = await Uploader.UploadAsync(imageBytes, InputFile.Name, Env.WebRootPath, "uploads/facilities/images");
             if (!string.IsNullOrWhiteSpace(imageToUploadPath))
             {
-                if(FacilityService.SetFacilityImages(FacilityId, imageToUploadPath, ImageTitle))
-                {
+                var result = FacilityService.SetFacilityImages(FacilityId, imageToUploadPath, ImageTitle);
+                if (result != null)
+            {
                     Model.FacilityImages!.Add(new FacilityImagesViewmodel
                         {
                             ImageAddress = croppedCanvasDataURL,
-                            Title = ImageTitle
+                            Title = ImageTitle,
+                            Id = result.Value
                         });
                 }
             }
-            
+
         }
 
 
         await selectedImage.InvokeAsync(croppedCanvasDataURL);
         croppedCanvasDataURL = "";
         imageSrc = "";
+        ImageTitle = "";
         IsVisible = false;
     }
 

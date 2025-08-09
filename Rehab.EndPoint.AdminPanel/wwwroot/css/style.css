@@ -1,4 +1,4 @@
-/********** Template CSS **********/
+﻿/********** Template CSS **********/
 :root {
     --primary: #009CFF;
     --light: #F3F6F9;
@@ -360,4 +360,13 @@
 .image-facility-modal{
     border:solid 1px gray;
     border-radius:3px;
+}
+
+.truncate-label {
+    display: block; /* برای استفاده از width */
+    max-width: 100%; /* حداکثر عرض همان col-3 */
+    white-space: nowrap; /* نره خط بعدی */
+    overflow: hidden; /* مخفی کردن اضافه */
+    text-overflow: ellipsis; /* سه نقطه بگذاره */
+    font-size:13px;
 }
