@@ -122,7 +122,12 @@
 
     async Task OnCloseFacilityImageComponent()
     {
-        await OnInitializedAsync();
+        //await OnInitializedAsync();
+
+        FacilitiesList = await FacilityService.GetFacilities(CurrentPage, PageSize);
+        TotalPages = FacilitiesList.Pager.TotalPages;
+        CurrentPage = FacilitiesList.PageIndex;
+        CheckPagingButtons();
     }
 
     private async Task OnPageChanged(int page)
