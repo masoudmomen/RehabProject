@@ -66,8 +66,8 @@
                             <CropperComponent Class="big-img" Options="CropperOption" Src="@imageSrc" @ref="cropperComponent" />
                         </div>
                     </div>
-                    <div class="col bg-dark" style="border:solid 3px white;border-radius:5px;">
-                        <img class="cropped-img-container" src="@croppedCanvasDataURL" />
+                    <div class="col bg-dark text-center" style="border:solid 3px white;border-radius:5px;">
+                        <img class="cropped-img-container" src="@croppedCanvasDataURL" style="max-height:400px;max-width:100%" />
                     </div>
                 </div>
                 <div class="row mt-2">
@@ -119,9 +119,15 @@
             return;
         }
 
-        var buffer = new byte[file.Size];
+        //var buffer = new byte[file.Size];
+
         using var stream = file.OpenReadStream(maxAllowedSize: 10 * 1024 * 1024); // حداکثر 10 مگابایت
-        await stream.ReadAsync(buffer);
+        using var ms = new MemoryStream();
+        await stream.CopyToAsync(ms);
+
+        var buffer = ms.ToArray();
+
+        //await stream.ReadAsync(buffer);
 
         // تبدیل به Base64
         var base64 = Convert.ToBase64String(buffer);
@@ -130,10 +136,11 @@
 
     public async Task GetCroppedCanvasDataURLAsync()
     {
+        Console.WriteLine("clicked");
         GetCroppedCanvasOptions getCroppedCanvasOptions = new GetCroppedCanvasOptions
         {
-            MaxHeight = 4096,
-            MaxWidth = 4096,
+            MaxHeight = 1024,
+            MaxWidth = 1024,
             ImageSmoothingQuality = ImageSmoothingQuality.High.ToEnumString(),
         };
         croppedCanvasDataURL = await cropperComponent!.GetCroppedCanvasDataURLAsync(getCroppedCanvasOptions);
