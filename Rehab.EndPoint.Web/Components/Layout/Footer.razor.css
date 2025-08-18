@@ -1,4 +1,27 @@
-﻿::deep .footer-link {
+﻿.footer {
+    height: 40px;
+    width: 100%;
+    padding-top:10px;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: black;
+    color: white;
+    transition: height 0.4s ease-in-out;
+    overflow: hidden;
+
+}
+.footer-collapsed {
+    height: 40px;
+    padding: 10px;
+    font-size: 11px;
+}
+.expanded {
+    height: 150px;
+    padding: 10px;
+}
+::deep .footer-link {
     color: #74ebd5 !important;
     text-decoration: none;
     transition: color 0.3s ease;
