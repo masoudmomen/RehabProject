@@ -20,6 +20,7 @@ namespace Rehab.Application.Facilities
         BaseDto<AddRequestFacilityDto> Add(AddRequestFacilityDto facility); 
         Task<PaginatedItemDto<FacilityBriefInfoDto>> GetFacilities(int page, int pageSize);
         FacilityDetailDto? FindById(int id);
+        BaseDto<AddRequestFacilityDto> Update(AddRequestFacilityDto facility);
         BaseDto<SetFacilityImagesDto> SetFacilitiesImage(SetFacilityImagesDto facilityImages);
         SetFacilityImagesDto? GetFacilitiesImage(int FacilityId);
         bool SetFacilityLogo(int id,string facilityLogo);
@@ -63,6 +64,41 @@ namespace Rehab.Application.Facilities
             return BaseDto<AddRequestFacilityDto>.FailureResult("Operation Failed! Please try another time!");
         }
 
+        public BaseDto<AddRequestFacilityDto> Update(AddRequestFacilityDto facility)
+        {
+            if (facility == null) return BaseDto<AddRequestFacilityDto>.FailureResult("Facility data is null!");
+
+            var facilityForUpdate = context.Facilities
+                .Where(c => c.Id == facility.Id)
+                .Include(c => c.Insurances)
+                .Include(c => c.Accreditations)
+                .Include(c => c.Amenities)
+                .Include(c => c.Highlights)
+                .Include(c => c.Locs)
+                .Include(c => c.Wwts)
+                .Include(c => c.Treatments)
+                .Include(c => c.Conditions)
+                .Include(c => c.Swts)
+                .FirstOrDefault();
+            if (facilityForUpdate == null) return BaseDto<AddRequestFacilityDto>.FailureResult("This Facility is not Exist!");
+
+            facilityForUpdate = mapper.Map(facility, facilityForUpdate);
+          
+            facilityForUpdate.Insurances = context.Insurances.Where(c => facility.InsurancesId!.Contains(c.Id)).ToList();
+            facilityForUpdate.Accreditations = context.Accreditations.Where(c => facility.AccreditationsId!.Contains(c.Id)).ToList();
+            facilityForUpdate.Amenities = context.Amenities.Where(c => facility.AmenitiesId!.Contains(c.Id)).ToList();
+            facilityForUpdate.Highlights = context.Highlights.Where(c => facility.HighlightsId!.Contains(c.Id)).ToList();
+            facilityForUpdate.Locs = context.Locs.Where(c => facility.LocsId!.Contains(c.Id)).ToList();
+            facilityForUpdate.Wwts = context.Wwts.Where(c => facility.WwtsId!.Contains(c.Id)).ToList();
+            facilityForUpdate.Treatments = context.Treatments.Where(c => facility.TreatmentsId!.Contains(c.Id)).ToList();
+            facilityForUpdate.Conditions = context.Conditions.Where(c => facility.ConditionsId!.Contains(c.Id)).ToList();
+            facilityForUpdate.Swts = context.Swts.Where(c => facility.SwtsId!.Contains(c.Id)).ToList();
+         
+           
+            if (context.SaveChanges() > 0)
+                return BaseDto<AddRequestFacilityDto>.SuccessResult(facility, "Facility Updated Successfully.");
+            return BaseDto<AddRequestFacilityDto>.FailureResult("Operation Failed! Please try another time!");
+        }
         public FacilityDetailDto? FindById(int id)
         {
             var facility = context.Facilities.FirstOrDefault(c => c.Id == id);

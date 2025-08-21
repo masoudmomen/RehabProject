@@ -44,7 +44,9 @@
                                     <td style="width:150px;height:40px;overflow:hidden;">@item.State</td>
                                     <td style="width:150px;height:40px;overflow:hidden;">@item.City</td>
                                     <td>
-                                        <i class="fa fa-edit cursor-pointer" title="Edit Facility"></i>
+                                        <a class="btn btn-sm btn-outline-primary" href="/EditFacility/@item.Id">
+                                            <i class="fa fa-edit cursor-pointer" title="Edit Facility"></i>
+                                        </a>
                                         &ensp;&ensp;&ensp;
                                         <i class="fa fa-eye cursor-pointer" title="Show Facility" @onclick="()=>OpenFacilityDetailModal(item.Id)"></i>
                                         &ensp;&ensp;&ensp;

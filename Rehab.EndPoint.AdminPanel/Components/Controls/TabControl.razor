@@ -1,0 +1,70 @@
+﻿<div>
+    <ul class="nav nav-tabs">
+        @foreach (var tab in Tabs)
+        {
+            <li class="nav-item">
+                <button class="nav-link @(tab.IsActive ? "active" : "")"
+                        @onclick="() => ActivateTab(tab)">
+                    @tab.Title
+                </button>
+            </li>
+        }
+    </ul>
+    <div class="tab-content p-3 border border-top-0 rounded-bottom">
+        <CascadingValue Value="this">
+            @ChildContent
+        </CascadingValue>
+
+    </div>
+</div>
+
+@code {
+    private List<Tab> Tabs { get; set; } = new();
+
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    internal void AddTab(Tab tab)
+    {
+        if (!Tabs.Any(t => t.IsActive))
+            tab.IsActive = true;
+
+        Tabs.Add(tab);
+        StateHasChanged();
+    }
+
+    internal void ActivateTab(Tab tabToActivate)
+    {
+        foreach (var tab in Tabs)
+            tab.IsActive = false;
+
+        tabToActivate.IsActive = true;
+        StateHasChanged();
+    }
+    public void ActivateNext()
+    {
+        var currentIndex = Tabs.FindIndex(t => t.IsActive);
+        if (currentIndex >= 0 && currentIndex < Tabs.Count - 1)
+        {
+            ActivateTab(Tabs[currentIndex + 1]);
+        }
+    }
+
+    public void ActivatePrevious()
+    {
+        var currentIndex = Tabs.FindIndex(t => t.IsActive);
+        if (currentIndex > 0)
+        {
+            ActivateTab(Tabs[currentIndex - 1]);
+        }
+    }
+
+    public void ActivateFirst()
+    {
+        if (Tabs.Count > 0)
+        {
+            ActivateTab(Tabs[0]);
+        }
+    }
+
+
+}

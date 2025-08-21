@@ -21,6 +21,14 @@
     <Compile Remove="Migrations\20250629061910_add-tables.Designer.cs" />
     <Compile Remove="Migrations\20250707125814_Add-Tags.cs" />
     <Compile Remove="Migrations\20250707125814_Add-Tags.Designer.cs" />
+    <Compile Remove="Migrations\20250707130429_tags.cs" />
+    <Compile Remove="Migrations\20250707130429_tags.Designer.cs" />
+    <Compile Remove="Migrations\20250707130803_renam-tag-to-tags.cs" />
+    <Compile Remove="Migrations\20250707130803_renam-tag-to-tags.Designer.cs" />
+    <Compile Remove="Migrations\20250809050238_Pull-08-09.cs" />
+    <Compile Remove="Migrations\20250809050238_Pull-08-09.Designer.cs" />
+    <Compile Remove="Migrations\20250809051149_Pull11-08-09.cs" />
+    <Compile Remove="Migrations\20250809051149_Pull11-08-09.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

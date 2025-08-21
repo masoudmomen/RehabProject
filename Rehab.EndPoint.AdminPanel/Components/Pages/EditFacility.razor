@@ -1,0 +1,148 @@
+﻿@page "/EditFacility/{Id:int}"
+@rendermode InteractiveServer
+@using AutoMapper
+@using Rehab.Application.Facilities
+@using Rehab.EndPoint.AdminPanel.Viewmodels
+@using Rehab.EndPoint.AdminPanel.Components.Controls
+@using Rehab.EndPoint.AdminPanel.Components.Controls.AddFacilitiesComponents
+@inject IFacilityService FacilityService
+@inject AutoMapper.IMapper mapper
+@inject AlertService AlertService
+<h2> @Facility.Name</h2>
+<EditForm Model="Facility" class="form-control d-flex flex-column "
+          FormName="AddFacilityForm">
+    <TabControl @ref="tabControl">
+        <Tab Title="Primary">
+            <Section1Component Facility="Facility" facilityNameClass="@facilityNameClass" facilityNameClassChange="@OnFacilityNameClassChange">
+
+            </Section1Component>
+
+            <div class="d-flex justify-content-end mt-3">
+                <button class="btn btn-primary" @onclick="() => tabControl?.ActivateNext()">Next</button>
+            </div>
+
+        </Tab>
+        <Tab Title="Insurances">
+            <Section2Component Facility="Facility">
+
+            </Section2Component>
+            <div class="d-flex justify-content-between mt-3">
+                <button class="btn btn-secondary" @onclick="() => tabControl?.ActivatePrevious()">Previous</button>
+                <button class="btn btn-primary" @onclick="() => tabControl?.ActivateNext()">Next</button>
+            </div>
+
+        </Tab>
+        <Tab Title="Accreditations  ">
+            <Section3Component Facility="Facility">
+
+            </Section3Component>
+            <div class="d-flex justify-content-between mt-3">
+                <button class="btn btn-secondary" @onclick="() => tabControl?.ActivatePrevious()">Previous</button>
+                <button class="btn btn-primary" @onclick="() => tabControl?.ActivateNext()">Next</button>
+            </div>
+
+        </Tab>
+        <Tab Title="Amenities  ">
+            <Section4Component Facility="Facility"></Section4Component>
+            <div class="d-flex justify-content-between mt-3">
+                <button class="btn btn-secondary" @onclick="() => tabControl?.ActivatePrevious()">Previous</button>
+                <button class="btn btn-primary" @onclick="() => tabControl?.ActivateNext()">Next</button>
+            </div>
+
+        </Tab>
+        <Tab Title="Highlights">
+            <Section5Component Facility="Facility">
+
+            </Section5Component>
+            <div class="d-flex justify-content-between mt-3">
+                <button class="btn btn-secondary" @onclick="() => tabControl?.ActivatePrevious()">Previous</button>
+                <button class="btn btn-primary" @onclick="() => tabControl?.ActivateNext()">Next</button>
+            </div>
+
+        </Tab>
+        <Tab Title="Who We Treat  ">
+            <Section6Component Facility="Facility"></Section6Component>
+            <div class="d-flex justify-content-between mt-3">
+                <button class="btn btn-secondary" @onclick="() => tabControl?.ActivatePrevious()">Previous</button>
+                <button class="btn btn-primary" @onclick="() => tabControl?.ActivateNext()">Next</button>
+            </div>
+
+        </Tab>
+        <Tab Title="LevelsOfCares  ">
+            <Section7Component Facility="Facility"></Section7Component>
+            <div class="d-flex justify-content-between mt-3">
+                <button class="btn btn-secondary" @onclick="() => tabControl?.ActivatePrevious()">Previous</button>
+                <button class="btn btn-primary" @onclick="() => tabControl?.ActivateNext()">Next</button>
+            </div>
+
+        </Tab>
+        <Tab Title="Treatments  ">
+            <Section8Component Facility="Facility"></Section8Component>
+            <div class="d-flex justify-content-between mt-3">
+                <button class="btn btn-secondary" @onclick="() => tabControl?.ActivatePrevious()">Previous</button>
+                <button class="btn btn-primary" @onclick="() => tabControl?.ActivateNext()">Next</button>
+            </div>
+
+        </Tab>
+        <Tab Title="Conditions">
+            <Section9Component Facility="Facility"></Section9Component>
+            <div class="d-flex justify-content-between mt-3">
+                <button class="btn btn-secondary" @onclick="() => tabControl?.ActivatePrevious()">Previous</button>
+                <button class="btn btn-primary" @onclick="() => tabControl?.ActivateNext()">Next</button>
+            </div>
+
+
+        </Tab>
+        <Tab Title="Substances We Treats  ">
+            <Section10Component Facility="Facility"></Section10Component>
+            <div class="d-flex justify-content-between mt-3">
+                
+                <div class="d-flex justify-content-start mt-3">
+                    <button class="btn btn-secondary" @onclick="() => tabControl?.ActivatePrevious()">Previous</button>
+                </div>
+
+            </div>
+
+
+        </Tab>
+    </TabControl>
+    <button type="submit" class="btn btn-success align-self-center mt-3 @NextBtnStatus" @onclick="Update" style="width:105px;">Update</button>
+</EditForm>
+@code {
+    private TabControl? tabControl;
+    private BaseDto<AddRequestFacilityDto> UpdateResult = new();
+
+    public FacilityViewmodel Facility { get; set; } = new();
+    [Parameter] public int Id { get; set; }
+    private string PreviousBtnStatus = "disabled";
+    private string NextBtnStatus = "";
+    public string facilityNameClass { get; set; } = "form-control";
+    protected override void OnInitialized()
+    {
+        Facility = mapper.Map<FacilityViewmodel>(FacilityService.FindById(Id));
+    }
+    private void OnFacilityNameClassChange(string facilityNameClassFromComponent)
+    {
+        facilityNameClass = facilityNameClassFromComponent;
+    }
+
+
+    private void Update()
+    {
+        if (Facility is not null)
+        {
+            if (string.IsNullOrEmpty(Facility.Name))
+            {
+                facilityNameClass = "form-control border-danger";
+                AlertService.ShowAsync("Name field is Required", "danger");
+                tabControl?.ActivateFirst();
+            }
+            else
+            {
+                UpdateResult = FacilityService.Update(mapper.Map<AddRequestFacilityDto>(Facility));
+                AlertService.ShowAsync(UpdateResult.Message, UpdateResult.Status);
+            }
+        }
+    }
+
+}
