@@ -192,12 +192,40 @@
     }
     async Task OnCloseFacilityEditComponent()
     {
-  
-        FacilitiesList = await FacilityService.GetFacilities(CurrentPage, PageSize);
+        if (string.IsNullOrWhiteSpace(searchText))
+        {
+            FacilitiesList = await FacilityService.GetFacilities(CurrentPage, PageSize);
+        }
+        else
+        {
+            FacilitiesList = await FacilityService.GetFacilities(CurrentPage, PageSize, searchText);
+        }
         TotalPages = FacilitiesList.Pager.TotalPages;
         CurrentPage = FacilitiesList.PageIndex;
-        CheckPagingButtons();
- 
+        await CheckPagingButtons();
     }
 
+
+    private async Task HandleSearch(string? text)
+    {
+        searchText = text;
+
+        if (string.IsNullOrWhiteSpace(searchText))
+        {
+            FacilitiesList = await FacilityService.GetFacilities(1, PageSize);
+        }
+        else
+        {
+            FacilitiesList = await FacilityService.GetFacilities(1, PageSize, searchText);
+        }
+
+        TotalPages = FacilitiesList.Pager.TotalPages;
+        CurrentPage = FacilitiesList.PageIndex;
+        await CheckPagingButtons();
+        await InvokeAsync(StateHasChanged);
+    }
+    public async Task Dispose()
+    {
+        SearchService.OnSearchRequested -= _searchHandler;
+    }
 }
