@@ -19,6 +19,7 @@ namespace Rehab.Application.Facilities
     {
         BaseDto<AddRequestFacilityDto> Add(AddRequestFacilityDto facility); 
         Task<PaginatedItemDto<FacilityBriefInfoDto>> GetFacilities(int page, int pageSize);
+        Task<PaginatedItemDto<FacilityBriefInfoDto>> GetFacilities(int page, int pageSize, string searchText);
         FacilityDetailDto? FindById(int id);
         BaseDto<AddRequestFacilityDto> Update(AddRequestFacilityDto facility);
         BaseDto<SetFacilityImagesDto> SetFacilitiesImage(SetFacilityImagesDto facilityImages);
@@ -255,6 +256,24 @@ namespace Rehab.Application.Facilities
             context.SaveChanges();
             if(context.SaveChanges() > 0) return true;
             return false;
+        }
+
+        public async Task<PaginatedItemDto<FacilityBriefInfoDto>> GetFacilities(int page, int pageSize, string searchText)
+        {
+            int rowCount = 0;
+            var data = context.Facilities.Where(c=>c.Name.Contains(searchText))
+                .OrderByDescending(c => c.Id)
+                .ToPaged(page, pageSize, out rowCount)
+                .Select(c => new FacilityBriefInfoDto
+                {
+                    Name = c.Name,
+                    Id = c.Id,
+                    City = c.City,
+                    State = c.State,
+                    Description = c.Description,
+                    Logo = c.Logo,
+                }).ToList();
+            return new PaginatedItemDto<FacilityBriefInfoDto>(page, pageSize, rowCount, data);
         }
     }
 }
