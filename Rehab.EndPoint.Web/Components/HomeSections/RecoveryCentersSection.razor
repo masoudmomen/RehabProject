@@ -1,113 +1,22 @@
-﻿
+﻿@using Rehab.EndPoint.Web.Components.Common
+@using Rehab.EndPoint.Web.Components.Facility
 <section id="centers">
     <div class="container mt-5 mb-5">
         <h2 class="section-title text-center p-2">Our Recovery Centers</h2>
         <div class="row g-4">
-
-            <!-- Serene Gardens Recovery -->
-            <div class="col-12 col-md-4 col-lg-4">
-                <div class="card h-100 s border-0">
-                    <div class="center-gallery">
-                        Serene Gardens Recovery
-                        <div class="gallery-nav">
-                            <div class="gallery-dot active"></div>
-                            <div class="gallery-dot"></div>
-                            <div class="gallery-dot"></div>
-                            <div class="gallery-dot"></div>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <h5 class="card-title fw-bold mb-3 ">Serene Gardens Recovery</h5>
-
-                        <div class="mb-3">
-                            <h6 class="text-muted mb-2">Facilities</h6>
-                            <div class="d-flex flex-wrap gap-1">
-                                <span class="facility-tag">Spa & Wellness</span>
-                                <span class="facility-tag">Yoga Studio</span>
-                                <span class="facility-tag">Meditation Garden</span>
-                                <span class="facility-tag">Fitness Center</span>
-                                <span class="facility-tag">Art Therapy</span>
-                            </div>
-                        </div>
-
-                        <div class="d-flex align-items-center">
-                            <div class="stars me-2">★★★★★</div>
-                            <small class="text-muted">4.9 (127 reviews)</small>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Mountain Vista Wellness -->
-            <div class="col-12 col-md-4 col-lg-4">
-                <div class="card h-100 border-0 ">
-                    <div class="center-gallery">
-                        Mountain Vista Wellness
-                        <div class="gallery-nav">
-                            <div class="gallery-dot active"></div>
-                            <div class="gallery-dot"></div>
-                            <div class="gallery-dot"></div>
-                            <div class="gallery-dot"></div>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <h5 class="card-title fw-bold mb-3">Mountain Vista Wellness</h5>
-
-                        <div class="mb-3">
-                            <h6 class="text-muted mb-2">Facilities</h6>
-                            <div class="d-flex flex-wrap gap-1">
-                                <span class="facility-tag">Outdoor Therapy</span>
-                                <span class="facility-tag">Equine Program</span>
-                                <span class="facility-tag">Swimming Pool</span>
-                                <span class="facility-tag">Group Rooms</span>
-                                <span class="facility-tag">Nutrition Center</span>
-                            </div>
-                        </div>
-
-                        <div class="d-flex align-items-center">
-                            <div class="stars me-2">★★★★★</div>
-                            <small class="text-muted">4.8 (93 reviews)</small>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Ocean Breeze Recovery -->
-            <div class="col-12 col-md-4 col-lg-4">
-                <div class="card h-100 border-0 ">
-                    <div class="center-gallery">
-                        Ocean Breeze Recovery
-                        <div class="gallery-nav">
-                            <div class="gallery-dot active"></div>
-                            <div class="gallery-dot"></div>
-                            <div class="gallery-dot"></div>
-                            <div class="gallery-dot"></div>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <h5 class="card-title fw-bold mb-3">Ocean Breeze Recovery</h5>
-
-                        <div class="mb-3">
-                            <h6 class="text-muted mb-2">Facilities</h6>
-                            <div class="d-flex flex-wrap gap-1">
-                                <span class="facility-tag">Beach Access</span>
-                                <span class="facility-tag">Surf Therapy</span>
-                                <span class="facility-tag">Mindfulness Deck</span>
-                                <span class="facility-tag">Music Therapy</span>
-                                <span class="facility-tag">Cafe & Kitchen</span>
-                            </div>
-                        </div>
-
-                        <div class="d-flex align-items-center">
-                            <div class="stars me-2">★★★★☆</div>
-                            <small class="text-muted">4.7 (156 reviews)</small>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            @foreach (var facility in MockFacilityData.GetSampleFacilities())
+            {
+                <FacilityItem Facility="@facility" />
+            }
         </div>
+
+        <a href="/Facilities" class="btn btn-outline-primary rounded-3 w-100 text-primary">Visit All</a>
     </div>
 </section>
-@code {
 
+@code {
+    protected override void OnInitialized()
+    {
+        // Component initialization if needed
+    }
 }

@@ -1,0 +1,101 @@
+@using Rehab.Application.Facilities
+@using Rehab.EndPoint.Web.ViewModels
+<div class="col-12 col-md-4 col-lg-4">
+    <div class="card h-100 border-0 facility-item">
+        <div class="facility-skin">
+            <img src="@(string.IsNullOrEmpty(Facility?.Cover) ? "/images/no-image.jpg" : Facility.Cover)" alt="@Facility?.Name" />
+            <div class="facility-logo">
+                <img src="@(string.IsNullOrEmpty(Facility?.Logo) ? "/images/no-image.jpg" : Facility.Logo)" alt="@Facility?.Name Logo" />
+            </div>
+        </div>
+
+
+        <div class="card-body facility-body mt-4 pt-4">
+            <h5 class="card-title text-center fw-bold mb-3">@Facility?.Name</h5>
+            <div class="d-flex justify-content-center facility-location">
+                <i class="fa-solid fa-location-dot"></i>
+                <span>@GetFullAddress()</span>
+            </div>
+            <div class="d-flex flex-wrap gap-1 mt-3 mb-3">
+                @if (Facility?.Insurances?.Count > 0)
+                {
+                    <a href="#" class="facility-tag">Insurances (@Facility.Insurances.Count)</a>
+                }
+                @if (Facility?.Accreditations?.Count > 0)
+                {
+                    <a href="#" class="facility-tag">Accreditations (@Facility.Accreditations.Count)</a>
+                }
+                @if (Facility?.Amenities?.Count > 0)
+                {
+                    <a href="#" class="facility-tag">Amenities(@Facility.Amenities.Count)</a>
+                }
+                @if (Facility?.Highlights?.Count > 0)
+                {
+                    <a href="#" class="facility-tag">Highlights(@Facility.Highlights.Count)</a>
+                }
+                @if (Facility?.Wwt?.Count > 0)
+                {
+                    <a href="#" class="facility-tag">Who We Treat(@Facility.Wwt.Count)</a>
+                }
+                @if (Facility?.Treatments?.Count > 0)
+                {
+                    <a href="#" class="facility-tag">Treatments(@Facility.Treatments.Count)</a>
+                }
+                @if (Facility?.Condition?.Count > 0)
+                {
+                    <a href="#" class="facility-tag">ConditionViewModels(@Facility.Condition.Count)</a>
+                }
+                @if (Facility?.Swt?.Count > 0)
+                {
+                    <a href="#" class="facility-tag">Substances We Treat(@Facility.Swt.Count)</a>
+                }
+            </div>
+            <NavLink class="btn btn-visit d-block mx-auto mb-3 px-4"
+                     href="@GetVisitUrl()">
+                Visit
+            </NavLink>
+        
+        </div>
+    </div>
+</div>
+
+@code {
+    [Inject] NavigationManager NavigationManager { get; set; } = default!;
+
+    [Parameter] public FacilityViewModel? Facility { get; set; }
+    [Parameter] public string? CustomImageUrl { get; set; }
+    [Parameter] public string? CustomLogoUrl { get; set; }
+    [Parameter] public string? CustomVisitUrl { get; set; }
+
+    private string GetVisitUrl() { 
+     
+        var slugSource = !string.IsNullOrEmpty(Facility?.Slug) ? Facility!.Slug : Facility?.Name;
+        if (string.IsNullOrWhiteSpace(slugSource))
+            return "#";
+
+        var safeSlug = System.Text.RegularExpressions.Regex.Replace(slugSource.Trim(), "\\s+", "-");
+        return $"/facility/{safeSlug}";
+    }
+
+    private string GetFullAddress()
+    {
+        if (Facility == null) return "Address not available";
+
+        var parts = new List<string>();
+        if (!string.IsNullOrEmpty(Facility.Address)) parts.Add(Facility.Address);
+        if (!string.IsNullOrEmpty(Facility.City)) parts.Add(Facility.City);
+        if (!string.IsNullOrEmpty(Facility.State)) parts.Add(Facility.State);
+
+        return parts.Count > 0 ? string.Join(", ", parts) : "Address not available";
+    }
+
+    public void VisitFacility(FacilityViewModel facility)
+    {
+        var slugSource = !string.IsNullOrEmpty(facility?.Slug) ? facility!.Slug : facility?.Name;
+        if (string.IsNullOrWhiteSpace(slugSource))
+            return;
+
+        var safeSlug = System.Text.RegularExpressions.Regex.Replace(slugSource.Trim(), "\\s+", "-");
+        NavigationManager.NavigateTo($"/facility/{safeSlug}");
+    }
+}

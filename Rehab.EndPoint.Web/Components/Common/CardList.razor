@@ -1,0 +1,15 @@
+﻿@using Rehab.EndPoint.Web.Components.Common
+@using Rehab.EndPoint.Web.ViewModels
+
+@foreach (var item in Insurances)
+{
+    <Card 
+        Title="@item.Name" 
+        Image="@item.Logo" 
+        Description="@item.Description"
+        CardLink="#" />
+}
+
+@code {
+    [Parameter] public List<InsuranceViewModel> Insurances { get; set; } = new();
+}

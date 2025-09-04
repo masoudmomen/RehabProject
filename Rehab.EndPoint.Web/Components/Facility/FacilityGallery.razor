@@ -1,0 +1,70 @@
+﻿@using Rehab.EndPoint.Web.ViewModels
+@rendermode InteractiveServer
+@if (Facility?.FacilityImages != null)
+{
+
+    <div class="facility-gallery-grid">
+        @for (int i = 0; i < Facility.FacilityImages.Count && i < 4; i++)
+        {
+            var img = Facility.FacilityImages[i];
+
+            <div class="facility-gallery-item" @onclick="() => OpenLightbox(i)">
+                <img src="@img.ImageAddress" alt="@img.Title" />
+
+                @if (i == 3 && remainingImage > 0)
+                {
+                    <div class="overlay">
+                        <span>+@remainingImage more</span>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+    <!-- Lightbox Modal -->
+    <div class="modal fade" id="lightboxModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content bg-transparent border-0 shadow-none">
+                <div class="modal-body text-center p-0">
+                    <img src="@CurrentImage" class="img-fluid rounded" />
+                </div>
+                <div class="modal-footer justify-content-between border-0">
+                    <button class="gallery-btn" @onclick="PrevImage">‹ Prev</button>
+                    <button class="gallery-btn" @onclick="NextImage">Next ›</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Inject] private IJSRuntime JSRuntime { get; set; } = default!;
+
+    [Parameter] public FacilityViewModel Facility { get; set; } = new FacilityViewModel();
+    private int remainingImage;
+    private int currentIndex;
+    private string CurrentImage => Facility?.FacilityImages?[currentIndex]?.ImageAddress ?? "";
+
+    protected override void OnInitialized()
+    {
+        if (Facility?.FacilityImages != null)
+            remainingImage = Facility.FacilityImages.Count - 4;
+    }
+   
+    private void OpenLightbox(int index)
+    {
+        currentIndex = index;
+        JSRuntime.InvokeVoidAsync("bootstrap.Lightbox.open"); // we'll define JS helper below
+    }
+    private void NextImage()
+    {
+        if (Facility?.FacilityImages == null) return;
+        currentIndex = (currentIndex + 1) % Facility.FacilityImages.Count;
+    }
+    private void PrevImage()
+    {
+        if (Facility?.FacilityImages == null) return;
+        currentIndex = (currentIndex - 1 + Facility.FacilityImages.Count) % Facility.FacilityImages.Count;
+    }
+
+}
+ 

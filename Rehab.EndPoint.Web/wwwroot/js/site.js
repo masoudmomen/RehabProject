@@ -20,3 +20,10 @@
         });
     }
 };
+window.bootstrap = window.bootstrap || {};
+window.bootstrap.Lightbox = {
+    open: function () {
+        var modal = new bootstrap.Modal(document.getElementById('lightboxModal'));
+        modal.show();
+    }
+}
