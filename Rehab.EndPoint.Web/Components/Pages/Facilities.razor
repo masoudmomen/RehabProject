@@ -1,0 +1,18 @@
+﻿@page "/Facilities"
+@using Rehab.EndPoint.Web.Components.Common
+@using Rehab.EndPoint.Web.Components.Facility
+
+<div class="container mt-5 mb-5">
+    <h2 class="section-title text-center p-2">Our Recovery Centers</h2>
+    <div class="row g-4">
+        @foreach (var facility in MockFacilityData.GetSampleFacilities())
+        {
+            <FacilityItem Facility="@facility" />
+        }
+    </div>
+
+    <a href="#" class="btn btn-outline-primary rounded-3 w-100 text-primary">Visit All</a>
+</div>
+@code {
+
+}
