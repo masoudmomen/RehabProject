@@ -1,0 +1,21 @@
+﻿@* @typeparam TContent
+ *@
+<div class="tab-pane fade @(IsActive ? "show active" : "d-none")">
+    @ChildContent
+</div>
+
+@code {
+    [Parameter] public string Title { get; set; } = string.Empty;
+    [Parameter] public bool IsActive { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    [CascadingParameter] private TabControl? Parent { get; set; }
+
+    protected override void OnInitialized()
+    {
+        Parent?.AddTab(this);
+        
+    }
+
+    
+}

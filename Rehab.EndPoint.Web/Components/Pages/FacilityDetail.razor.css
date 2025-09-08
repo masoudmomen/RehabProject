@@ -1,0 +1,102 @@
+﻿::deep .facility-tab .nav.nav-tabs {
+    -webkit-justify-content: center;
+    justify-content: center;
+    border:none !important;
+}
+
+::deep .facility-tab .tab-content {
+    border: none !important;
+}
+::deep .facility-tab .nav-tabs .nav-link {
+    border: none !important;
+    color: #6c757d !important;
+    font-weight: 600;
+    font-size: 24px;
+    padding: 1rem 2rem;
+    position:relative;
+}
+    ::deep .facility-tab .nav-tabs .nav-link.active {
+        color: #0080ff !important;
+        background: none !important;
+    }
+
+    ::deep .facility-tab .nav-tabs .nav-link::after {
+        content: "";
+        position: absolute;
+        bottom: -4px;
+        left: 50%;
+        transform: translateX(-50%) scaleX(0); 
+        width: 150px;
+        height: 6px;
+        background-color: #0080ff;
+        border-radius: 3px;
+        transition: transform 0.3s ease; 
+    }
+
+    ::deep .facility-tab .nav-tabs .nav-link.active::after {
+        transform: translateX(-50%) scaleX(1);
+    }
+.cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1rem;
+}
+.insurance .cards-grid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+}
+.cards-grid.loc {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+}
+.wwt h4.card-title {
+    margin-top: 10px;
+    text-align: center;
+    font-size: 18px !important;
+}
+.card-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+::deep .card-placeholder i {
+    font-size: 64px;
+    color: #758085;
+}
+::deep a.card {
+    
+    text-decoration: none;
+    border: none;
+    border-radius: 10px;
+    margin-right: 10px;
+}
+::deep .card-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 5px;
+}
+::deep h4.card-title{
+    font-size : 1.1rem;
+    font-weight:normal;
+}
+::deep .wwt h4.card-title {
+    margin-top: 10px;
+    text-align: center;
+    font-size: 18px !important;
+}
+::deep .card-logo {
+    width: 100%;  
+    aspect-ratio :1/1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;  
+    overflow: hidden; 
+    background-color: #f9f9f9;  
+}
+
+::deep .card-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;  
+}

@@ -6,9 +6,8 @@
 @rendermode InteractiveServer
 @inject AlertService AlertService
 @inject IFacilityService FacilityService
+@inject SearchService SearchService
 @page "/facilities"
-
-
 
 <div class="w-75 mx-auto p-4">
     <h3>Facilities</h3>
@@ -44,7 +43,7 @@
                                     <td style="width:150px;height:40px;overflow:hidden;">@item.State</td>
                                     <td style="width:150px;height:40px;overflow:hidden;">@item.City</td>
                                     <td>
-                                        <i class="fa fa-edit cursor-pointer" title="Edit Facility"></i>
+                                        <i class="fa fa-edit cursor-pointer" title="Edit Facility" @onclick="()=>OpenFacilityEditModal(item.Id)"></i>
                                         &ensp;&ensp;&ensp;
                                         <i class="fa fa-eye cursor-pointer" title="Show Facility" @onclick="()=>OpenFacilityDetailModal(item.Id)"></i>
                                         &ensp;&ensp;&ensp;
@@ -96,9 +95,10 @@
 
 @* Start Open Modal for Images: *@
 <FacilityImagesModalComponent Model="FacilityImages" @ref="FacilityImagesModal" OnClose="OnCloseFacilityImageComponent" />
-@* End Open Modal for Images: *@
-
+@* End Open Modal for Edit: *@
+<FacilityEditModalComponent Facility="Facility" @ref="FacilityEditModal" OnClose="OnCloseFacilityEditComponent" />
 @code {
+
     public PaginatedItemDto<FacilityBriefInfoDto>? FacilitiesList { get; set; }
     private int TotalPages;
     private int CurrentPage;
@@ -111,35 +111,56 @@
     public SetFacilityImagesViewmodel? FacilityImages { get; set; }
     private FacilityDetailModalComponent? FacilityDetailModal;
     private FacilityImagesModalComponent? FacilityImagesModal;
+    private FacilityEditModalComponent? FacilityEditModal;
+
+    private string? searchText;
+    private Action<string?>? _searchHandler;
 
     protected override async Task OnInitializedAsync()
     {
         FacilitiesList = await FacilityService.GetFacilities(1, PageSize);
         TotalPages = FacilitiesList.Pager.TotalPages;
         CurrentPage = FacilitiesList.PageIndex;
-        CheckPagingButtons();
+        await CheckPagingButtons();
+
+        _searchHandler = async text => await HandleSearch(text);
+        SearchService.OnSearchRequested += _searchHandler;
     } 
 
     async Task OnCloseFacilityImageComponent()
     {
-        //await OnInitializedAsync();
-
-        FacilitiesList = await FacilityService.GetFacilities(CurrentPage, PageSize);
+        if (string.IsNullOrWhiteSpace(searchText))
+        {
+            FacilitiesList = await FacilityService.GetFacilities(CurrentPage, PageSize);
+        }
+        else
+        {
+            FacilitiesList = await FacilityService.GetFacilities(CurrentPage, PageSize, searchText);
+        }
         TotalPages = FacilitiesList.Pager.TotalPages;
         CurrentPage = FacilitiesList.PageIndex;
-        CheckPagingButtons();
+        await CheckPagingButtons();
     }
 
     private async Task OnPageChanged(int page)
     {
-        FacilitiesList = await FacilityService.GetFacilities(page, PageSize);
+        if (string.IsNullOrWhiteSpace(searchText))
+        {
+            FacilitiesList = await FacilityService.GetFacilities(page, PageSize);
+        }
+        else
+        {
+            FacilitiesList = await FacilityService.GetFacilities(page, PageSize,searchText);
+        }
+
         TotalPages = FacilitiesList.Pager.TotalPages;
         CurrentPage = FacilitiesList.PageIndex;
-        CheckPagingButtons();
+        await CheckPagingButtons();
     }
 
-    private void CheckPagingButtons()
+    private async Task CheckPagingButtons()
     {
+        PagingButtonCount = 5;
         if (PagingButtonCount > TotalPages) PagingButtonCount = TotalPages;
 
         MinPagingButton = ((CurrentPage - (PagingButtonCount / 2)) < 1) ? 1 : (CurrentPage - (PagingButtonCount / 2));
@@ -162,5 +183,49 @@
         var facilityImagesResult = FacilityService.GetFacilitiesImage(id);
         FacilityImages = mapper.Map<SetFacilityImagesViewmodel>(facilityImagesResult);
         FacilityImagesModal!.Show();
+    }
+    private void OpenFacilityEditModal(int id)
+    {
+        Facility = mapper.Map<FacilityViewmodel>(FacilityService.FindById(id));
+        FacilityEditModal!.Open();
+        
+    }
+    async Task OnCloseFacilityEditComponent()
+    {
+        if (string.IsNullOrWhiteSpace(searchText))
+        {
+            FacilitiesList = await FacilityService.GetFacilities(CurrentPage, PageSize);
+        }
+        else
+        {
+            FacilitiesList = await FacilityService.GetFacilities(CurrentPage, PageSize, searchText);
+        }
+        TotalPages = FacilitiesList.Pager.TotalPages;
+        CurrentPage = FacilitiesList.PageIndex;
+        await CheckPagingButtons();
+    }
+
+
+    private async Task HandleSearch(string? text)
+    {
+        searchText = text;
+
+        if (string.IsNullOrWhiteSpace(searchText))
+        {
+            FacilitiesList = await FacilityService.GetFacilities(1, PageSize);
+        }
+        else
+        {
+            FacilitiesList = await FacilityService.GetFacilities(1, PageSize, searchText);
+        }
+
+        TotalPages = FacilitiesList.Pager.TotalPages;
+        CurrentPage = FacilitiesList.PageIndex;
+        await CheckPagingButtons();
+        await InvokeAsync(StateHasChanged);
+    }
+    public async Task Dispose()
+    {
+        SearchService.OnSearchRequested -= _searchHandler;
     }
 }

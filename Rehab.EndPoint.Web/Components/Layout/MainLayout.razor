@@ -1,5 +1,14 @@
 ﻿@inherits LayoutComponentBase
- 
-    <NavMenu />
+@inject NavigationManager NavigationManager
+
+<NavMenu />
+<div class="main-body">
     @Body
-    <Footer/>
+</div>
+<Footer />
+
+<style>
+    .main-body {
+        padding-bottom:150px;
+    }
+</style>

@@ -42,6 +42,7 @@ builder.Services.AddDbContext<DatabaseContext>(option => option.UseSqlServer(con
 #region IOC
 builder.Services.AddAutoMapper(typeof(CommonMappingProfile)); //Mapper
 builder.Services.AddAutoMapper(typeof(Rehab.Infrastructure.MappingProfile.CommonMappingProfile)); //Mapper
+builder.Services.AddScoped<SearchService>();
 builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<IFacilityService, FacilityService>();
 builder.Services.AddTransient<IInsuranceService, InsuranceService>();

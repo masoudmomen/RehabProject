@@ -1,0 +1,87 @@
+@page "/facility-item-demo"
+@using Rehab.EndPoint.Web.Components.Common
+
+<PageTitle>FacilityItem Component Demo</PageTitle>
+
+<div class="container-fluid py-4">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="text-center mb-5">FacilityItem Component Demo</h1>
+            <p class="text-center text-muted mb-5">This page demonstrates the reusable FacilityItem component with mock data</p>
+        </div>
+    </div>
+
+    <!-- Single Facility Item Demo -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <h3 class="mb-4">Single Facility Item</h3>
+            <FacilityItem Facility="@MockFacilityData.GetSampleFacility(1)" />
+        </div>
+    </div>
+
+    <!-- Multiple Facility Items Demo -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <h3 class="mb-4">Multiple Facility Items</h3>
+            <div class="row">
+                @foreach (var facility in MockFacilityData.GetSampleFacilities())
+                {
+                    <FacilityItem Facility="@facility" />
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Styling Demo -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <h3 class="mb-4">Custom Styling Example</h3>
+            <div class="row">
+                <div class="col-12 col-md-6 col-lg-4">
+                    <FacilityItem Facility="@MockFacilityData.GetSampleFacility(1)" 
+                                 CustomVisitUrl="https://example.com/custom-link" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Component Information -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4>Component Information</h4>
+                </div>
+                <div class="card-body">
+                    <h5>Parameters:</h5>
+                    <ul>
+                        <li><strong>Facility</strong> - FacilityDetailDto object containing all facility information</li>
+                        <li><strong>CustomImageUrl</strong> - Optional override for facility cover image</li>
+                        <li><strong>CustomLogoUrl</strong> - Optional override for facility logo</li>
+                        <li><strong>CustomVisitUrl</strong> - Optional override for visit button URL</li>
+                    </ul>
+                    
+                    <h5>Features:</h5>
+                    <ul>
+                        <li>Responsive design with Bootstrap grid system</li>
+                        <li>Dynamic tag display based on available data</li>
+                        <li>Hover effects and smooth transitions</li>
+                        <li>Fallback images for missing data</li>
+                        <li>Automatic address formatting</li>
+                        <li>Smart URL generation for visit button</li>
+                    </ul>
+                    
+                    <h5>Usage Example:</h5>
+                   
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    protected override void OnInitialized()
+    {
+        // Component initialization if needed
+    }
+}

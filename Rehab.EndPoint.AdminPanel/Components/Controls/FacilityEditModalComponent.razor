@@ -1,0 +1,179 @@
+﻿@using Rehab.EndPoint.AdminPanel.Viewmodels
+@rendermode InteractiveServer
+@using AutoMapper
+@using Rehab.Application.Facilities
+@using Rehab.EndPoint.AdminPanel.Viewmodels
+@using Rehab.EndPoint.AdminPanel.Components.Controls
+@using Rehab.EndPoint.AdminPanel.Components.Controls.AddFacilitiesComponents
+@inject IFacilityService FacilityService
+@inject AutoMapper.IMapper mapper
+@inject AlertService AlertService
+
+
+@if (IsVisible)
+{
+    <div class="modal-backdrop">
+        <div class="modal-content-facilityEdit">
+            <button type="button" class="btn-close float-end" @onclick="Close"></button>
+            @if (Facility is not null)
+            {
+                <h2> @Facility.Name</h2>
+                <EditForm Model="Facility" class="form-control d-flex flex-column "
+                          FormName="AddFacilityForm">
+                    <TabControl @ref="tabControl">
+                        <Tab Title="Primary">
+                            <Section1Component Facility="Facility" facilityNameClass="@facilityNameClass" facilityNameClassChange="@OnFacilityNameClassChange">
+
+                            </Section1Component>
+
+                            <div class="d-flex justify-content-end mt-3">
+                                <button class="btn btn-primary" @onclick="() => tabControl?.ActivateNext()">Next</button>
+                            </div>
+
+                        </Tab>
+                        <Tab Title="Insurances">
+                            <Section2Component Facility="Facility">
+
+                            </Section2Component>
+                            <div class="d-flex justify-content-between mt-3">
+                                <button class="btn btn-secondary" @onclick="() => tabControl?.ActivatePrevious()">Previous</button>
+                                <button class="btn btn-primary" @onclick="() => tabControl?.ActivateNext()">Next</button>
+                            </div>
+
+                        </Tab>
+                        <Tab Title="Accreditations  ">
+                            <Section3Component Facility="Facility">
+
+                            </Section3Component>
+                            <div class="d-flex justify-content-between mt-3">
+                                <button class="btn btn-secondary" @onclick="() => tabControl?.ActivatePrevious()">Previous</button>
+                                <button class="btn btn-primary" @onclick="() => tabControl?.ActivateNext()">Next</button>
+                            </div>
+
+                        </Tab>
+                        <Tab Title="Amenities  ">
+                            <Section4Component Facility="Facility"></Section4Component>
+                            <div class="d-flex justify-content-between mt-3">
+                                <button class="btn btn-secondary" @onclick="() => tabControl?.ActivatePrevious()">Previous</button>
+                                <button class="btn btn-primary" @onclick="() => tabControl?.ActivateNext()">Next</button>
+                            </div>
+
+                        </Tab>
+                        <Tab Title="Highlights">
+                            <Section5Component Facility="Facility">
+
+                            </Section5Component>
+                            <div class="d-flex justify-content-between mt-3">
+                                <button class="btn btn-secondary" @onclick="() => tabControl?.ActivatePrevious()">Previous</button>
+                                <button class="btn btn-primary" @onclick="() => tabControl?.ActivateNext()">Next</button>
+                            </div>
+
+                        </Tab>
+                        <Tab Title="Who We Treat  ">
+                            <Section6Component Facility="Facility"></Section6Component>
+                            <div class="d-flex justify-content-between mt-3">
+                                <button class="btn btn-secondary" @onclick="() => tabControl?.ActivatePrevious()">Previous</button>
+                                <button class="btn btn-primary" @onclick="() => tabControl?.ActivateNext()">Next</button>
+                            </div>
+
+                        </Tab>
+                        <Tab Title="LevelsOfCares  ">
+                            <Section7Component Facility="Facility"></Section7Component>
+                            <div class="d-flex justify-content-between mt-3">
+                                <button class="btn btn-secondary" @onclick="() => tabControl?.ActivatePrevious()">Previous</button>
+                                <button class="btn btn-primary" @onclick="() => tabControl?.ActivateNext()">Next</button>
+                            </div>
+
+                        </Tab>
+                        <Tab Title="Treatments  ">
+                            <Section8Component Facility="Facility"></Section8Component>
+                            <div class="d-flex justify-content-between mt-3">
+                                <button class="btn btn-secondary" @onclick="() => tabControl?.ActivatePrevious()">Previous</button>
+                                <button class="btn btn-primary" @onclick="() => tabControl?.ActivateNext()">Next</button>
+                            </div>
+
+                        </Tab>
+                        <Tab Title="Conditions">
+                            <Section9Component Facility="Facility"></Section9Component>
+                            <div class="d-flex justify-content-between mt-3">
+                                <button class="btn btn-secondary" @onclick="() => tabControl?.ActivatePrevious()">Previous</button>
+                                <button class="btn btn-primary" @onclick="() => tabControl?.ActivateNext()">Next</button>
+                            </div>
+
+
+                        </Tab>
+                        <Tab Title="Substances We Treats  ">
+                            <Section10Component Facility="Facility"></Section10Component>
+                            <div class="d-flex justify-content-between mt-3">
+
+                                <div class="d-flex justify-content-start mt-3">
+                                    <button class="btn btn-secondary" @onclick="() => tabControl?.ActivatePrevious()">Previous</button>
+                                </div>
+
+                            </div>
+
+
+                        </Tab>
+                    </TabControl>
+                    <button type="button" class="btn btn-success align-self-center mt-3 @NextBtnStatus" @onclick="Update" style="width:105px;">Update</button>
+                </EditForm>
+
+
+            }
+        </div>
+    </div>
+}
+@code {
+    [Parameter] public FacilityViewmodel? Facility { get; set; }
+    [Parameter] public EventCallback OnClose { get; set; }
+
+    private TabControl? tabControl;
+    private BaseDto<AddRequestFacilityDto> UpdateResult = new();
+
+    public bool IsVisible { get; set; }
+
+ 
+    [Parameter] public int Id { get; set; }
+    private string PreviousBtnStatus = "disabled";
+    private string NextBtnStatus = "";
+    public string facilityNameClass { get; set; } = "form-control";
+
+    private void OnFacilityNameClassChange(string facilityNameClassFromComponent)
+    {
+        facilityNameClass = facilityNameClassFromComponent;
+    }
+
+    private async Task Update()
+    {
+        if (Facility is not null)
+        {
+            if (string.IsNullOrEmpty(Facility.Name))
+            {
+                facilityNameClass = "form-control border-danger";
+                AlertService.ShowAsync("Name field is Required", "danger");
+                tabControl?.ActivateFirst();
+            }
+            else
+            {
+                UpdateResult = FacilityService.Update(mapper.Map<AddRequestFacilityDto>(Facility));
+                AlertService.ShowAsync(UpdateResult.Message, UpdateResult.Status);
+                await Close();
+                StateHasChanged();
+            }
+        }
+    }
+    public void Open()
+    {
+
+        IsVisible = true;
+        InvokeAsync(StateHasChanged);
+    }
+    public async Task Close()
+    {
+        IsVisible = false;
+        await OnClose.InvokeAsync();
+        InvokeAsync(StateHasChanged);
+    }
+
+
+}

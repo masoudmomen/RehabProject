@@ -67,7 +67,17 @@ namespace Rehab.EndPoint.AdminPanel.MappingProfile
             .ForMember("Message", opt => opt.MapFrom("Message"))
             .ForMember("Status", opt => opt.MapFrom("Status")).ReverseMap();
 
-            CreateMap<FacilityViewmodel, FacilityDetailDto>().ReverseMap();
+            CreateMap<FacilityDetailDto, FacilityViewmodel>()
+            .ForMember(dest => dest.InsurancesId, opt => opt.MapFrom(src => src.Insurances != null ? src.Insurances.Select(i => i.Id) : new List<int>()))
+            .ForMember(dest => dest.AccreditationsId, opt => opt.MapFrom(src => src.Accreditations != null ? src.Accreditations.Select(i => i.Id) : new List<int>()))
+            .ForMember(dest => dest.AmenitiesId, opt => opt.MapFrom(src => src.Amenities != null ? src.Amenities.Select(i => i.Id) : new List<int>()))
+            .ForMember(dest => dest.HighlightsId, opt => opt.MapFrom(src => src.Highlights != null ? src.Highlights.Select(i => i.Id) : new List<int>()))
+            .ForMember(dest => dest.LocsId, opt => opt.MapFrom(src => src.Locs != null ? src.Locs.Select(i => i.Id) : new List<int>()))
+            .ForMember(dest => dest.TreatmentsId, opt => opt.MapFrom(src => src.Treatments != null ? src.Treatments.Select(i => i.Id) : new List<int>()))
+            .ForMember(dest => dest.WwtsId, opt => opt.MapFrom(src => src.Wwts != null ? src.Wwts.Select(i => i.Id) : new List<int>()))
+            .ForMember(dest => dest.ConditionsId, opt => opt.MapFrom(src => src.Conditions != null ? src.Conditions.Select(i => i.Id) : new List<int>()))
+            .ForMember(dest => dest.SwtsId, opt => opt.MapFrom(src => src.Swts != null ? src.Swts.Select(i => i.Id) : new List<int>()))
+            .ReverseMap();
 
 
             CreateMap<FacilityImagesViewmodel, FacilityImagesDto>().ReverseMap();

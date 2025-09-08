@@ -1,4 +1,7 @@
-﻿<footer class="bg-dark text-white text-center py-5">
+﻿@rendermode InteractiveServer
+@inject IJSRuntime JSRuntime
+
+<footer id="footer" class="bg-dark text-white text-center footer">
     <div class="container">
         <div class="d-flex justify-content-center flex-wrap gap-4 mb-4">
             <NavLink class="footer-link" href="/About-us">About us</NavLink>
@@ -7,12 +10,37 @@
             <NavLink class="footer-link" href="/contact-us">Contact Us</NavLink>
             <NavLink class="footer-link" href="/faq">FAQ</NavLink>
         </div>
-        <p class="mb-2">&copy; 2025 Rehab Navigator Recovery Centers. All rights reserved.</p>
-        <p class="mb-0">Supporting your journey to wellness with compassion and expertise.</p>
+ 
+        @if (IsExpanded)
+        {
+            <p class="mb-2">&copy; 2025 Rehab Navigator Recovery Centers. All rights reserved.</p>
+            <p class="mb-0">Supporting your journey to wellness with compassion and expertise.</p>
+        }  
     </div>
 </footer>
 
-
 @code {
+    private bool IsExpanded;
 
+ 
+    protected override void OnAfterRender(bool firstRender)
+    {
+    
+        if (firstRender)
+        {
+            JSRuntime.InvokeVoidAsync("footerScrollWatcher.init",
+            DotNetObjectReference.Create(this));
+        }
+    }
+
+    [JSInvokable]
+    public void SetFooterExpanded(bool expanded)
+    {
+        if (IsExpanded != expanded)
+        {
+            IsExpanded = expanded;
+            StateHasChanged(); 
+        }
+    }
+   
 }

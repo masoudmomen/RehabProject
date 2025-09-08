@@ -1,0 +1,14 @@
+﻿@rendermode InteractiveServer
+
+@inject SearchService SearchService
+
+<div class="d-none d-md-flex ms-4 w-25">
+    <InputText @bind-Value="SearchText" class="form-control border-0"  placeholder="Search" />
+    <button @onclick="()=> SearchService.RequestSearch(SearchText)" class="btn btn-outline-primary ms-2">
+        <i class="fa fa-search "></i>
+    </button>
+    
+</div>
+@code {
+    private string? SearchText { get; set; }
+}

@@ -7,7 +7,7 @@
 
 <div class="col-6">
     <label for="state" class="">State</label>
-    <select id="state" @onchange="OnStateChanged" class="form-select">
+    <select id="state" value="@SelectedState" @onchange="OnStateChanged" class="form-select">
         <option value="">Choose a State</option>
         @if (States?.Any() == true)
         {
@@ -48,7 +48,17 @@
         States = await LocationService.GetStatesAsync("United States");
     }
 
-
+    protected override async Task OnParametersSetAsync()
+    {
+        if (!string.IsNullOrWhiteSpace(Facility?.State))
+        {
+            if (SelectedState != Facility.State)
+            {
+                SelectedState = Facility.State;
+                Cities = await LocationService.GetCitiesAsync(SelectedState);
+            }
+        }
+    }
 
     private async Task OnStateChanged(ChangeEventArgs e)
     {

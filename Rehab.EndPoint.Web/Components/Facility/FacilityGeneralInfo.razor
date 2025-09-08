@@ -1,0 +1,48 @@
+﻿@using Rehab.EndPoint.Web.ViewModels;
+@if(Facility != null){
+    <h2> About @Facility.Name</h2>
+    <div class="d-flex align-items-center facility-location">
+        <i class="fa-solid fa-location-dot"></i>
+        <span>@GetFullAddress()</span>
+    </div>
+    <div class="row mt-1">
+        <div class="col-auto">
+            <a href="tel:@Facility.PhoneNumber">
+                <i class="fa-solid fa-phone"></i>
+                @Facility.PhoneNumber
+            </a>
+           
+        </div>
+        <div class="col-md-6 border-1 border-start">
+            <a href="@Facility.WebSite" target="_blank" >@Facility.WebSite</a>
+        </div>
+    </div>
+    <div class="facility-description mt-5">
+        <p>@Facility.Description</p>
+        </div>
+}
+    
+@code {
+    [Parameter] public FacilityViewModel? Facility { get; set; }
+
+
+    private string GetFullAddress()
+    {
+        if (Facility == null) return "Address not available";
+
+        var parts = new List<string>();
+        if (!string.IsNullOrEmpty(Facility.Address)) parts.Add(Facility.Address);
+        if (!string.IsNullOrEmpty(Facility.City)) parts.Add(Facility.City);
+        if (!string.IsNullOrEmpty(Facility.State)) parts.Add(Facility.State);
+
+        return parts.Count > 0 ? string.Join(", ", parts) : "Address not available";
+    }
+
+}
+<style>
+
+    .facility-location {
+        color: #6c757d;
+        font-size: 0.9rem;
+    }
+</style>

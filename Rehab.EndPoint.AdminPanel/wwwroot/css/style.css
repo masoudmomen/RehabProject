@@ -308,6 +308,13 @@
     max-width: 800px;
 }
 
+.modal-content-facilityEdit {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    width: 100%;
+    max-width: 1080px;
+}
 
 .modal-actions {
     display: flex;

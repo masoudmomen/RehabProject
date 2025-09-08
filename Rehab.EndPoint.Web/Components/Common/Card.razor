@@ -1,0 +1,56 @@
+﻿@using Rehab.EndPoint.Web.ViewModels
+
+<NavLink href="@CardLink" class="card">
+    <div class="card-content">
+        <div class="card-logo">
+            @if (!string.IsNullOrEmpty(Image))
+            {
+                <img src="@Image" alt="@Title logo" class="card-image" />
+            }
+            else
+            {
+                <div class="card-placeholder">
+                    <i class="@(IconClass ?? "fas fa-shield-alt")"></i>
+                </div>
+            }
+        </div>
+        <div class="card-info">
+            <h4 class="card-title">@(Title ?? "Card Title")</h4>
+            @if (!string.IsNullOrEmpty(Description))
+            {
+                <p class="card-description">@Description</p>
+            }
+        </div>
+    </div>
+    @if (IsLoading)
+    {
+        <div class="card-loading">
+            <i class="fas fa-spinner fa-spin"></i>
+        </div>
+    }
+</NavLink>
+
+@code {
+    [Parameter]
+    public string? Title { get; set; }
+    
+    [Parameter]
+    public string? Image { get; set; }
+    
+    [Parameter]
+    public string? Description { get; set; }
+    
+    [Parameter]
+    public string? IconClass { get; set; }
+    
+    [Parameter]
+    public bool IsLoading { get; set; } = false;
+    
+    // [Parameter]
+    // public string? CustomClass { get; set; }
+    
+    [Parameter]
+    public string CardLink { get; set; } = "/#";
+}
+
+

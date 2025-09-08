@@ -1,0 +1,141 @@
+@page "/{slug}"
+@using Rehab.EndPoint.Web.Components.Common
+@using Rehab.EndPoint.Web.ViewModels
+
+<PageTitle>Facility Details</PageTitle>
+
+@if (facility == null)
+{
+    <div class="container py-5">
+        <h3 class="text-center">Facility not found</h3>
+    </div>
+}
+else
+{
+    <PageCover CustomLogoURL="@facility?.Logo"
+               CustomImageUrl="@facility?.Cover"
+               PageTitle="@facility?.Name" />
+    <div class="container py-4">
+        <div class="row mb-4">
+            <div class="col-12 text-center">
+                <img src="@(string.IsNullOrEmpty(facility.Cover) ? "/images/no-image.jpg" : facility.Cover)" alt="@facility.Name" class="img-fluid rounded" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 col-md-3 text-center mb-3">
+                <img src="@(string.IsNullOrEmpty(facility.Logo) ? "/images/no-image.jpg" : facility.Logo)" alt="@facility.Name Logo" class="img-fluid" style="max-height:120px" />
+            </div>
+            <div class="col-12 col-md-9">
+                <h2 class="fw-bold mb-2">@facility.Name</h2>
+                <div class="text-muted mb-3">@FormatAddress(facility)</div>
+                <p>@facility.Description</p>
+                @if (!string.IsNullOrWhiteSpace(facility.PhoneNumber))
+                {
+                    <div class="mb-1"><strong>Phone:</strong> @facility.PhoneNumber</div>
+                }
+                @if (!string.IsNullOrWhiteSpace(facility.WebSite))
+                {
+                    <div class="mb-3"><strong>Website:</strong> <a href="@facility.WebSite" target="_blank" rel="noopener">@facility.WebSite</a></div>
+                }
+                <a class="btn btn-primary" href="javascript:history.back()">Back</a>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            @if (facility.Amenities?.Count > 0)
+            {
+                <div class="col-12 mb-2">
+                    <h5 class="fw-bold">Amenities (@facility.Amenities.Count)</h5>
+                    <div class="d-flex flex-wrap gap-1">
+                        @foreach (var item in facility.Amenities)
+                        {
+                            <span class="badge bg-light text-dark border">@item.Name</span>
+                        }
+                    </div>
+                </div>
+            }
+            @if (facility.Highlights?.Count > 0)
+            {
+                <div class="col-12 mb-2">
+                    <h5 class="fw-bold">Highlights (@facility.Highlights.Count)</h5>
+                    <div class="d-flex flex-wrap gap-1">
+                        @foreach (var item in facility.Highlights)
+                        {
+                            <span class="badge bg-light text-dark border">@item.Name</span>
+                        }
+                    </div>
+                </div>
+            }
+            @if (facility.Treatments?.Count > 0)
+            {
+                <div class="col-12 mb-2">
+                    <h5 class="fw-bold">Treatments (@facility.Treatments.Count)</h5>
+                    <div class="d-flex flex-wrap gap-1">
+                        @foreach (var item in facility.Treatments)
+                        {
+                            <span class="badge bg-light text-dark border">@item.Name</span>
+                        }
+                    </div>
+                </div>
+            }
+            @if (facility.Wwt?.Count > 0)
+            {
+                <div class="col-12 mb-2">
+                    <h5 class="fw-bold">Who We Treat (@facility.Wwt.Count)</h5>
+                    <div class="d-flex flex-wrap gap-1">
+                        @foreach (var item in facility.Wwt)
+                        {
+                            <span class="badge bg-light text-dark border">@item.Name</span>
+                        }
+                    </div>
+                </div>
+            }
+            @if (facility.Insurances?.Count > 0)
+            {
+                <div class="col-12 mb-2">
+                    <h5 class="fw-bold">Insurances (@facility.Insurances.Count)</h5>
+                    <div class="d-flex flex-wrap gap-1">
+                        @foreach (var item in facility.Insurances)
+                        {
+                            <span class="badge bg-light text-dark border">@item.Name</span>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public string? slug { get; set; }
+
+    private FacilityViewModel? facility;
+
+    protected override void OnParametersSet()
+    {
+        // For now, load from mock data. Replace with service call when available.
+        if (!string.IsNullOrWhiteSpace(slug))
+        {
+            facility = MockFacilityData.GetSampleFacilities()
+                .FirstOrDefault(f => string.Equals(f.Slug, slug, StringComparison.OrdinalIgnoreCase)
+                    || string.Equals(ToSlug(f.Name), slug, StringComparison.OrdinalIgnoreCase));
+        }
+    }
+
+    private static string ToSlug(string? value)
+    {
+        if (string.IsNullOrWhiteSpace(value)) return string.Empty;
+        return System.Text.RegularExpressions.Regex.Replace(value.Trim(), "\\s+", "-");
+    }
+
+    private static string FormatAddress(FacilityViewModel f)
+    {
+        var parts = new List<string>();
+        if (!string.IsNullOrEmpty(f.Address)) parts.Add(f.Address);
+        if (!string.IsNullOrEmpty(f.City)) parts.Add(f.City);
+        if (!string.IsNullOrEmpty(f.State)) parts.Add(f.State);
+        return parts.Count > 0 ? string.Join(", ", parts) : "";
+    }
+}
+
+
