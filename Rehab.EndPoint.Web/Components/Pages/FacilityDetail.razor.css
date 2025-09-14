@@ -1,7 +1,14 @@
-﻿::deep .facility-tab .nav.nav-tabs {
+﻿::deep .row {
+    margin-left: 0px !important;
+    margin-right: 0px !important;
+}
+h2.section-title {
+    text-align: center
+}
+::deep .facility-tab .nav.nav-tabs {
     -webkit-justify-content: center;
     justify-content: center;
-    border:none !important;
+    border: none !important;
 }
 
 ::deep .facility-tab .tab-content {
