@@ -1,5 +1,7 @@
-﻿@using Rehab.EndPoint.Web.Components.Common
+﻿@using Rehab.Application.Facilities
+@using Rehab.EndPoint.Web.Components.Common
 @using Rehab.EndPoint.Web.Components.Facility
+@inject FacilityService FacilityService
 <section id="centers">
     <div class="container mt-5 mb-5">
         <h2 class="section-title text-center p-2">Our Recovery Centers</h2>
@@ -8,6 +10,7 @@
             {
                 <FacilityItem Facility="@facility" />
             }
+
         </div>
 
         <a href="/Facilities" class="btn btn-outline-primary rounded-3 w-100 text-primary">Visit All</a>
@@ -15,8 +18,10 @@
 </section>
 
 @code {
+    private List<FacilityCardDto>? FacilityCards { get; set; }
     protected override void OnInitialized()
     {
+        FacilityCards = FacilityService.GetRandomFacilityCardForHomePage();
         // Component initialization if needed
     }
 }

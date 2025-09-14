@@ -1,6 +1,26 @@
-﻿<Router AppAssembly="typeof(Program).Assembly" ScrollRestorationMode="Disabled">
+﻿@using Microsoft.AspNetCore.Components.Routing
+@inject NavigationManager Navigation
+
+<Router AppAssembly="typeof(Program).Assembly" OnNavigateAsync="HandleNavigation">
     <Found Context="routeData">
         <RouteView RouteData="routeData" DefaultLayout="typeof(Layout.MainLayout)" />
         <FocusOnNavigate RouteData="routeData" Selector="h1" />
     </Found>
 </Router>
+
+@code {
+    [Inject] private IJSRuntime JS { get; set; } = default!;
+
+    private bool _navigationPending = false;
+
+    private void HandleNavigation(NavigationContext args)
+    {
+        _ = ScrollToTopAsync();
+    }
+
+    private async Task ScrollToTopAsync()
+    {
+        Console.WriteLine("scrol");
+        await JS.InvokeVoidAsync("scrollToTop");
+    }
+}

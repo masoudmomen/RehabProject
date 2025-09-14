@@ -27,7 +27,9 @@ namespace Rehab.Application.Facilities
         bool SetFacilityLogo(int id,string facilityLogo);
         bool SetFacilityCover(int id,string facilityCover);
         int? SetFacilityImages(int id,string facilityImage, string imageTitle);
-        bool RemoveFacilityImage(int facilityId, int  imageId); 
+        bool RemoveFacilityImage(int facilityId, int  imageId);
+
+        List<FacilityCardDto>? GetRandomFacilityCardForHomePage();
     }
 
     public class FacilityService : IFacilityService
@@ -274,6 +276,38 @@ namespace Rehab.Application.Facilities
                     Logo = c.Logo,
                 }).ToList();
             return new PaginatedItemDto<FacilityBriefInfoDto>(page, pageSize, rowCount, data);
+        }
+
+        public List<FacilityCardDto>? GetRandomFacilityCardForHomePage()
+        {
+            return context.Facilities.Where(c=>c.FacilitysImages!.Count>0 && c.Logo!="" && c.Cover !="")
+                .Include(c=>c.FacilitysImages)
+                .Include(c=>c.Insurances)
+                .Include(c=>c.Accreditations)
+                .Include(c=>c.Wwts)
+                .Include(c=>c.Swts)
+                .Include(c=>c.Amenities)
+                .Include(c=>c.Conditions)
+                .Include(c=>c.Highlights)
+                .Include(c=>c.Locs)
+                .Include(c=>c.Treatments)
+                .Select(c=> new FacilityCardDto() {
+                    Id = c.Id,
+                    Name = c.Name,
+                    Address = c.Address,
+                    Logo = c.Logo,
+                    Cover = c.Cover,
+                    CardImage = c.FacilitysImages.Select(f=>f.ImageAddress).First(),
+                    AccreditationCount = c.Accreditations.Count(),
+                    AmenityCount = c.Amenities.Count(),
+                    ConditionCount = c.Conditions.Count(),
+                    HighlightCount = c.Highlights.Count(),
+                    InsuranceCount = c.Insurances.Count(),
+                    SwtCount = c.Swts.Count(),
+                    TreatmentCount = c.Treatments.Count(),
+                    WwtCount = c.Wwts.Count(),
+                }).Take(3).ToList();
+            throw new NotImplementedException();
         }
     }
 }
