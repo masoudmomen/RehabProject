@@ -27,3 +27,12 @@ window.bootstrap.Lightbox = {
         modal.show();
     }
 }
+
+document.addEventListener("DOMContentLoaded", function () {
+    // هندل کلیک روی لینک‌ها
+    document.querySelectorAll("a").forEach(function (link) {
+        link.addEventListener("click", function () {
+            window.scrollTo({ top: 0, behavior: 'auto' });
+        });
+    });
+});

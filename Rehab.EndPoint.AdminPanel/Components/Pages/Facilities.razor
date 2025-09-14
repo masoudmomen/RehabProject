@@ -86,6 +86,14 @@
         </nav>
     }
 </div>
+<div class="w-100 mx-auto text-center">
+    <label class="d-inline">Goto Page : </label>
+    <input @bind-value="gotoPageNumber" type="number" class="form-text d-inline" style="width:60px;" />
+    <button style="width:40px;border:solid 1px gray;" class="d-inline" @onclick="()=>{
+                         OnPageChanged(gotoPageNumber);}">Go</button>
+
+    <span class="mx-5">Total Pages : @TotalPages</span>
+</div>
 
 
 
@@ -106,6 +114,7 @@
     private int PagingButtonCount = 5;
     private int MaxPagingButton = 5;
     private int MinPagingButton = 1;
+    private int gotoPageNumber;
 
     public FacilityViewmodel? Facility { get; set; }
     public SetFacilityImagesViewmodel? FacilityImages { get; set; }
@@ -188,7 +197,7 @@
     {
         Facility = mapper.Map<FacilityViewmodel>(FacilityService.FindById(id));
         FacilityEditModal!.Open();
-        
+
     }
     async Task OnCloseFacilityEditComponent()
     {
@@ -228,4 +237,5 @@
     {
         SearchService.OnSearchRequested -= _searchHandler;
     }
+
 }
