@@ -1,7 +1,7 @@
 ﻿@using Rehab.Application.Facilities
 @using Rehab.EndPoint.Web.Components.Common
 @using Rehab.EndPoint.Web.Components.Facility
-@inject FacilityService FacilityService
+@inject IFacilityService FacilityService
 <section id="centers">
     <div class="container mt-5 mb-5">
         <h2 class="section-title text-center p-2">Our Recovery Centers</h2>
@@ -22,6 +22,5 @@
     protected override void OnInitialized()
     {
         FacilityCards = FacilityService.GetRandomFacilityCardForHomePage();
-        // Component initialization if needed
     }
 }
