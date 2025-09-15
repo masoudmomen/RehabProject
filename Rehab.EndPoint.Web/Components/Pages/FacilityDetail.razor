@@ -1,5 +1,4 @@
 ﻿@page "/facility/{slug}"
-@rendermode InteractiveServer
 @using Rehab.EndPoint.Web.ViewModels
 @using Rehab.EndPoint.Web.Components.Common
 @using Rehab.EndPoint.Web.Components.Facility
@@ -25,124 +24,133 @@
             </div>
         </div>
 
-        <div class="bg-white shadow position-relative z-1  py-5">
-            <div class="container facility-tab insurance">
-                <TabControl @ref="tabControl1">
-                    <Tab Title="Insurances">
-                        <div class="cards-grid">
-                            @foreach (var item in facility.Insurances)
-                            {
-                                <Card Title="@item.Name"
-                                      Image="@item.Logo"
-                                      Description="@item.Description"
-                                      CardLink="#" />
-                            }
-                        </div>
+        <div class="bg-white shadow position-relative z  py-5">
+            <div class="container px-3  insurance">
+                <h2 class="section-title">Insurances</h2>
+                <div class="cards-grid">
+                    @foreach (var item in facility.Insurances)
+                    {
+                        <Card Title="@item.Name"
+                              Image="@item.Logo"
+                              Description="@item.Description"
+                              CardLink="#" />
+                    }
+                </div>
 
-                    </Tab>
-                    <Tab Title="Accreditation">
-                        <div class="cards-grid">
-                            @foreach (var item in facility.Accreditations)
-                            {
-                                <Card Title="@item.Name"
+            </div>
+
+        </div>
+
+        <div class="Accreditations py-5">
+            <div class="container px-3  mt-5  ">
+                <h2 class="section-title"> Amenities </h2>
+                @foreach (var item in facility.Amenities)
+                {
+                    <ItemRowComponent Title="@item.Name"
                                       Image="@item.Logo"
                                       Description="@item.Description"
-                                      CardLink="#"
-                                      IconClass="fa-solid fa-certificate" />
-                            }
-                        </div>
-                    </Tab>
-                </TabControl>
+                                      IconClass="fa-solid fa-person-swimming" />
+                }
+            </div>
+
+        </div>
+        <div class="bg-white shadow position-relative py-5">
+            <div class="container px-3  ">
+                <h2 class="section-title"> Accreditations </h2>
+                <div class="cards-grid">
+                    @foreach (var item in facility.Accreditations)
+                    {
+                        <Card Title="@item.Name"
+                              Image="@item.Logo"
+                              Description="@item.Description"
+                              CardLink="#"
+                              IconClass="fa-solid fa-certificate" />
+                    }
+                </div>
             </div>
         </div>
-        <div class="container mt-5 facility-tab">
-            <TabControl @ref="tabControl2">
-                <Tab Title="Amenities">
-                    @foreach (var item in facility.Amenities)
-                    {
-                        <ItemRowComponent Title="@item.Name"
-                                          Image="@item.Logo"
-                                          Description="@item.Description"
-                                          IconClass="fa-solid fa-person-swimming" />
-                    }
-
-                </Tab>
-                <Tab Title="Hilights">
-                    @foreach (var item in facility.Highlights)
-                    {
-                        <ItemRowComponent Title="@item.Name"
-                                          Image="@item.Logo"
-                                          Description="@item.Description"
-                                          IconClass="fa-solid fa-star" />
-                    }
-                </Tab>
-            </TabControl>
-        </div>
-        <div class="bg-white shadow py-5">
-            <div class="container mt-5 facility-tab wwt">
-                <TabControl @ref="tabControl3">
-                    <Tab Title="Who We Treat">
-                        <div class="cards-grid">
-                            @foreach (var item in facility.Wwt)
-                            {
-                                <Card Title="@item.Name"
+        <div class="py-5">
+            <h2 class="section-title"> Highlights </h2>
+            <div class="container px-3  mt-5  ">
+                @foreach (var item in facility.Highlights)
+                {
+                    <ItemRowComponent Title="@item.Name"
                                       Image="@item.Logo"
                                       Description="@item.Description"
-                                      IconClass="fa-solid fa-hands-helping" />
-                            }
-                        </div>
-                    </Tab>
-                    <Tab Title="Treatments">
-                       @foreach (var item in facility.Treatments)
-                        {
-                            <ItemRowComponent Title="@item.Name"
-                                              Image="@item.Logo"
-                                              Description="@item.Description"
-                                              IconClass="fa-solid fa-hand-holding-medical" />
-                        }
-     
-                    </Tab>
-                    <Tab Title="Level Of Cares">
-                        <div class="cards-grid loc">
-                        @foreach(var item in facility.Locs)
-                        {
-                            <Card Title="@item.Name"
-                                              Image="@item.Logo"
-                                              Description="@item.Description"
-                                              IconClass="fa-solid fa-layer-group" />
-                        }
-                        </div>
-                        </Tab>
-                </TabControl>
+                                      IconClass="fa-solid fa-star" />
+                }
             </div>
         </div>
-        <div class="container mt-5 facility-tab">
-            <TabControl @ref="tabControl4">
-                <Tab Title="Conditions">
-                    @foreach(var item in facility.Condition)
+
+
+        <div class="bg-white shadow position-relative py-5">
+            <div class="container px-3 ">
+                <h2 class="section-title"> Who We Treat </h2>
+                <div class="cards-grid">
+                    @foreach (var item in facility.Wwt)
                     {
-                        <ItemRowComponent Title="@item.Name"
-                                          Image="@item.Logo"
-                                          Description="@item.Description"
-                                          IconClass="fa-solid fa-notes-medical" />
+                        <Card Title="@item.Name"
+                              Image="@item.Logo"
+                              Description="@item.Description"
+                              IconClass="fa-solid fa-hands-helping" />
                     }
-     
-                </Tab>
-                <Tab Title="Substances">
-                    @foreach(var item in facility.Swt)
-                    {
-                        <ItemRowComponent Title="@item.Name"
-                                          Image="@item.Logo"
-                                          Description="@item.Description"
-                                          IconClass="fa-solid fa-pills" />
-                    }
-                    </Tab>
-            </TabControl>
+                </div>
+            </div>
         </div>
+        <div class="container px-3  py-5">
+            <h2 class="section-title"> Treatments </h2>
+            @foreach (var item in facility.Treatments)
+            {
+                <ItemRowComponent Title="@item.Name"
+                                  Image="@item.Logo"
+                                  Description="@item.Description"
+                                  IconClass="fa-solid fa-hand-holding-medical" />
+            }
+        </div>
+
+        <div class="bg-white shadow position-relative py-5">
+            <div class="container px-3  ">
+                <h2 class="section-title"> Level Of Cates </h2>
+                <div class="cards-grid loc">
+                    @foreach (var item in facility.Locs)
+                    {
+                        <Card Title="@item.Name"
+                              Image="@item.Logo"
+                              Description="@item.Description"
+                              IconClass="fa-solid fa-layer-group" />
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="container px-3  py-5">
+            <h2 class="section-title"> Condition </h2>
+
+            @foreach (var item in facility.Condition)
+            {
+                <ItemRowComponent Title="@item.Name"
+                                  Image="@item.Logo"
+                                  Description="@item.Description"
+                                  IconClass="fa-solid fa-notes-medical" />
+            }
+
+        </div>
+        <div class="bg-white shadow position-relative py-5">
+            <div class="container px-3">
+                <h2 class="section-title"> Substances We Treat</h2>
+                @foreach (var item in facility.Swt)
+                {
+                    <ItemRowComponent Title="@item.Name"
+                                      Image="@item.Logo"
+                                      Description="@item.Description"
+                                      IconClass="fa-solid fa-pills" />
+                }
+
+            </div>
+        </div>
+
     }
 
 </div>
-
 
 @code {
     [Parameter] public string slug { get; set; } = string.Empty;
@@ -167,6 +175,7 @@
 
         isLoading = false;
     }
+
     private static string ToSlug(string? value)
     {
         if (string.IsNullOrWhiteSpace(value)) return string.Empty;
@@ -174,3 +183,4 @@
     }
 
 }
+
