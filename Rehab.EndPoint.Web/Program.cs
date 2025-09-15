@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Rehab.Application.Contexts;
+using Rehab.Application.Facilities;
 using Rehab.EndPoint.Web.Components;
 using Rehab.Infrastructure.MappingProfile;
 using Rehab.Persistence.Contexts;
@@ -18,6 +19,8 @@ builder.Services.AddDbContext<DatabaseContext>(option=>option.UseSqlServer(conne
 
 #region IOC
 builder.Services.AddAutoMapper(typeof(CommonMappingProfile)); //Mapper
+builder.Services.AddTransient<IFacilityService, FacilityService>();
+
 #endregion
 
 

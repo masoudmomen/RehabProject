@@ -15,7 +15,16 @@ window.initGalleries = function () {
     });
 };
 
+function ensureGalleriesInitialized() {
+    if (Object.keys(galleries).length === 0) {
+        window.initGalleries();
+    }
+}
+
 window.openLightbox = function (galleryId, index) {
+    if (!galleries[galleryId]) {
+        ensureGalleriesInitialized();
+    }
     if (!galleries[galleryId]) return;
 
     currentGalleryId = galleryId;
@@ -65,3 +74,27 @@ window.nextImage = function () {
 
  
 document.addEventListener("DOMContentLoaded", window.initGalleries);
+
+// Observe DOM changes (SSR navigations replace body content without full reload)
+const observer = new MutationObserver((mutations) => {
+    let shouldInit = false;
+    for (const mutation of mutations) {
+        if (mutation.type === "childList") {
+            mutation.addedNodes.forEach(node => {
+                if (node.nodeType === 1) {
+                    if (node.hasAttribute && node.hasAttribute("data-images")) {
+                        shouldInit = true;
+                    }
+                    if (!shouldInit && node.querySelector && node.querySelector("[data-images]")) {
+                        shouldInit = true;
+                    }
+                }
+            });
+        }
+    }
+    if (shouldInit) {
+        window.initGalleries();
+    }
+});
+
+observer.observe(document.documentElement || document.body, { childList: true, subtree: true });
