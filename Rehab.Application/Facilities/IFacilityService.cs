@@ -307,7 +307,6 @@ namespace Rehab.Application.Facilities
                     TreatmentCount = c.Treatments.Count(),
                     WwtCount = c.Wwts.Count(),
                 }).Take(3).ToList();
-            throw new NotImplementedException();
         }
     }
 }

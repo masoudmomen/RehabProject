@@ -20,7 +20,6 @@ builder.Services.AddDbContext<DatabaseContext>(option=>option.UseSqlServer(conne
 #region IOC
 builder.Services.AddAutoMapper(typeof(CommonMappingProfile)); //Mapper
 builder.Services.AddTransient<IFacilityService, FacilityService>();
-
 #endregion
 
 
