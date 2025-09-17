@@ -1,25 +1,4 @@
-﻿window.footerScrollWatcher = {
-    init: function (dotNetHelper) {
-        window.addEventListener('scroll', function () {
-            const footer = document.getElementById('footer');
-
-            const scrollHeight = document.documentElement.scrollHeight;
-            const scrollTop = window.scrollY || document.documentElement.scrollTop;
-            const windowHeight = window.innerHeight || document.documentElement.clientHeight;
-
-            const expanded = (scrollTop + windowHeight >= scrollHeight - 5);
-         
-            if (expanded) {
-                footer.classList.add('expanded');
-            } else {
-                footer.classList.remove('expanded');
-            }
-
-            dotNetHelper.invokeMethodAsync("SetFooterExpanded", expanded);
-
-        });
-    }
-};
+﻿
 window.bootstrap = window.bootstrap || {};
 window.bootstrap.Lightbox = {
     open: function () {
@@ -36,3 +15,18 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 });
+// فوتر را در پایین صفحه ثابت می‌کند
+function checkFooterPosition() {
+    const footer = document.querySelector('.footer-bottom');
+    const scrollY = window.scrollY;
+    const triggerHeight = 200;
+
+    if (scrollY >= triggerHeight) {
+        footer.classList.add('fixed-footer');
+    } else {
+        footer.classList.remove('fixed-footer');
+    }
+}
+
+document.addEventListener("scroll", checkFooterPosition);
+window.addEventListener("load", checkFooterPosition);

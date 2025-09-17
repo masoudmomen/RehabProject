@@ -1,46 +1,86 @@
-﻿@* @rendermode InteractiveServer *@
-@inject IJSRuntime JSRuntime
+﻿
+<footer id="footer" class="bg-light footer">
+    <div class="footer-top bg-dark">
+        <div class="px-5">
+            <div class="row">
+                <a class="col-md-3 text-decoration-none text-white fs-3 d-flex flex-column align-items-center" href="/">
+                    <img src="/images/logo.png" width="128" alt="Rehab Logo" class="footer-logo mb-3" />
+                    Rehab Navigator
+                </a>
+                <div class="col">
+                    <h5 class="mb-3 text-white footer-section-title">
+                        <i class="fa-solid fa-star"></i>
+                        Popular Centers
+                    </h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-white">Best Detox Programs</a></li>
+                        <li><a href="#" class="text-white">Best Outpatient Programs</a></li>
+                        <li><a href="#" class="text-white">Best Virtual Programs</a></li>
+                        <li><a href="#" class="text-white">Best Inpatient Programs</a></li>
+                        <li><a href="#" class="text-white">Best Sober Living Programs</a></li>
+                    </ul>
+                </div>
+                <div class="col">
+                    <h5 class="mb-3 text-white footer-section-title">
+                        <i class="fa-solid fa-crown"></i>
+                        Top States
+                    </h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-white">Facilities In California</a></li>
+                        <li><a href="#" class="text-white">Facilities In Florida</a></li>
+                        <li><a href="#" class="text-white">Facilities In Arizona</a></li>
+                        <li><a href="#" class="text-white">Best Inpatient Programs</a></li>
+                        <li><a href="#" class="text-white">Facilities In New York</a></li>
+                    </ul>
+                </div>
+                <div class="col">
+                    <h5 class="mb-3 text-light footer-section-title">
+                        <i class="fa-solid fa-circle-info"></i>
+                        About Us
+                    </h5>
+                    <ul class="list-unstyled">
+                        <li><a href="/about-us" class="text-white">Our Story</a></li>
+                        <li><a href="/team" class="text-white">Team</a></li>
+                        <li><a href="/careers" class="text-white">Careers</a></li>
+                        <li><a href="/blog" class="text-white">Blog</a></li>
+                        <li><a href="/privacy-policy" class="text-white">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                <div class="col">
+                    <h5 class="mb-3 text-white footer-section-title">
+                        <i class="fa-solid fa-phone"></i>
+                        Contact Us
+                    </h5>
+                    <ul class="list-unstyled">
+                        <li><a href="/contact-us" class="text-white">Contact Form</a></li>
+                        <li><a href="mailto:example@rehabnavigator.com " class="text-white">Email Us</a></li>
+                        <li><a href="tel:+1234567890" class="text-white">Phone: +1 (234) 567-890</a></li>
+                        <li><a href="/faq" class="text-white">FAQ</a></li>
+                    </ul>
 
-<footer id="footer" class="bg-dark text-white text-center footer">
-    <div class="container">
-        <div class="d-flex justify-content-center flex-wrap gap-4 mb-4">
-            <NavLink class="footer-link" href="/About-us">About us</NavLink>
-            <NavLink class="footer-link" href="/Privacy-Policy">Privacy Policy</NavLink>
-            <NavLink class="footer-link" href="/terms-of-service">Terms of Service</NavLink>
-            <NavLink class="footer-link" href="/contact-us">Contact Us</NavLink>
-            <NavLink class="footer-link" href="/faq">FAQ</NavLink>
+                </div>
+            </div>
         </div>
- 
-        @if (IsExpanded)
-        {
-            <p class="mb-2">&copy; 2025 Rehab Navigator Recovery Centers. All rights reserved.</p>
-            <p class="mb-0">Supporting your journey to wellness with compassion and expertise.</p>
-        }  
+        <h5 class="m-0 p-2 text-center fw-normal fs-5" style="color:#565757">
+            © 2025 Rehab Navigator. All rights reserved.
+        </h5>
+    </div>
+    <div class="footer-bottom py-2 text-light d-flex justify-content-center align-items-center">
+        <div class="col-md-4 text-center d-flex justify-content-center">
+            <img src="/images/logo.png" width="49" />
+            <a href="/" class="text-decoration-none text-white fs-4 d-flex flex-column align-items-center">
+                Rehab Navigator 
+                </a>
+        </div>
+
+        <div class="col-md-4 text-center">
+            <button class="btn btn-blue m-0" data-bs-toggle="modal" data-bs-target="#facilitySearchModal">
+                Find Facility Near You
+            </button>
+        </div>
+        <div class="col-md-4 text-center">
+            <h3>+1(234)567-890 </h3>
+        </div>
+
     </div>
 </footer>
-
-@code {
-    private bool IsExpanded;
-
- 
-    protected override void OnAfterRender(bool firstRender)
-    {
-    
-        if (firstRender)
-        {
-            JSRuntime.InvokeVoidAsync("footerScrollWatcher.init",
-            DotNetObjectReference.Create(this));
-        }
-    }
-
-    [JSInvokable]
-    public void SetFooterExpanded(bool expanded)
-    {
-        if (IsExpanded != expanded)
-        {
-            IsExpanded = expanded;
-            StateHasChanged(); 
-        }
-    }
-   
-}

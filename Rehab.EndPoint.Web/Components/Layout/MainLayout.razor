@@ -1,9 +1,35 @@
 ﻿@inherits LayoutComponentBase
+@using Rehab.EndPoint.Web.Components.Common
+@using Rehab.EndPoint.Web.Components.Facility
 @inject NavigationManager NavigationManager
 
 <NavMenu />
 <div class="main-body">
     @Body
+</div>
+ 
+<!--Facility Search Modal -->
+<div class="modal fade" id="facilitySearchModal"  tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalLabel">Facility Search </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <h2 class="section-title text-center p-2">Our Recovery Centers</h2>
+                <div class="row g-4">
+                    @foreach (var facility in MockFacilityData.GetSampleFacilities())
+                    {
+                        <FacilityItem Facility="@facility" />
+                    }
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
 </div>
 <Footer />
 
