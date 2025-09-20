@@ -1,14 +1,16 @@
 ﻿@using Rehab.Application.Facilities
 @using Rehab.EndPoint.Web.Components.Common
 @using Rehab.EndPoint.Web.Components.Facility
+@using Rehab.EndPoint.Web.ViewModels
 @inject IFacilityService FacilityService
+@inject AutoMapper.IMapper mapper
 <section id="centers">
     <div class="container mt-5 mb-5">
         <h2 class="section-title text-center p-2">Our Recovery Centers</h2>
         <div class="row g-4">
             @foreach (var facility in FacilityCards)
             {
-                <FacilityItem Facility="@facility" />
+                <FacilityItem FacilityCard="@facility" />
             }
 
         </div>
@@ -18,9 +20,9 @@
 </section>
 
 @code {
-    private List<FacilityCardDto>? FacilityCards { get; set; }
+    private List<FacilityCardViewmodel>? FacilityCards { get; set; }
     protected override void OnInitialized()
     {
-        FacilityCards = FacilityService.GetRandomFacilityCardForHomePage();
+        FacilityCards = mapper.Map <List<FacilityCardViewmodel>>(FacilityService.GetRandomFacilityCardForHomePage());
     }
 }
