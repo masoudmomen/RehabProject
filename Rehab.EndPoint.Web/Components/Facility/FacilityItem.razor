@@ -1,45 +1,47 @@
 @using Rehab.Application.Facilities
 @using Rehab.EndPoint.Web.ViewModels
 
+
+
 <div class="col-12 col-md-4 col-lg-4">
     <div class="card h-100 border-0 facility-item">
         <div class="facility-skin">
-            <img src="@(string.IsNullOrEmpty(FacilityCard?.Cover) ? "/images/no-image.jpg" : FacilityCard.Cover)" alt="@FacilityCard?.Name" />
+            <img src="@(string.IsNullOrEmpty(FacilityCard?.CardImage) ? "/images/no-image.jpg" : "https://localhost:7141/" + FacilityCard.CardImage)" alt="@FacilityCard?.Name" />
             <div class="facility-logo">
-                <img src="@(string.IsNullOrEmpty(FacilityCard?.Logo) ? "/images/no-image.jpg" : FacilityCard.Logo)" alt="@FacilityCard?.Name Logo" />
+                <img src="@(string.IsNullOrEmpty(FacilityCard?.Logo) ? "/images/no-image.jpg" : "https://localhost:7141/" + FacilityCard.Logo)" alt="@FacilityCard?.Name Logo" />
             </div>
         </div>
 
 
         <div class="card-body facility-body mt-4 pt-4">
-            <h5 class="card-title text-center fw-bold mb-3">@Facility?.Name</h5>
+            <h5 class="card-title text-center fw-bold mb-3">@FacilityCard?.Name</h5>
             <div class="d-flex justify-content-center facility-location">
                 <i class="fa-solid fa-location-dot"></i>
-                <span>@Facility.Address</span>
+                <span class="truncate-text">@FacilityCard!.Address</span>
             </div>
             <div class="d-flex flex-wrap gap-1 mt-3 mb-3">
-                
-                <a href="#" class="facility-tag">Insurances (@FacilityCard.InsuranceCount)</a>
-                <a href="#" class="facility-tag">Accreditations (@FacilityCard.AccreditationCount)</a>
-                <a href="#" class="facility-tag">Amenities(@FacilityCard.AmenityCount)</a>
-                <a href="#" class="facility-tag">Highlights(@FacilityCard.HighlightCount)</a>
-                <a href="#" class="facility-tag">Who We Treat(@FacilityCard.WwtCount)</a>
-                <a href="#" class="facility-tag">Treatments(@FacilityCard.TreatmentCount)</a>
-                <a href="#" class="facility-tag">Conditions (@FacilityCard.ConditionCount)</a>
-                <a href="#" class="facility-tag">Substances We Treat(@FacilityCard.SwtCount)</a>
+
+                <a href="#" class="facility-tag">Insurances (@FacilityCard!.InsuranceCount)</a>
+                <a href="#" class="facility-tag">Accreditations (@FacilityCard!.AccreditationCount)</a>
+                <a href="#" class="facility-tag">Amenities(@FacilityCard!.AmenityCount)</a>
+                <a href="#" class="facility-tag">Highlights(@FacilityCard!.HighlightCount)</a>
+                <a href="#" class="facility-tag">Who We Treat(@FacilityCard!.WwtCount)</a>
+                <a href="#" class="facility-tag">Treatments(@FacilityCard!.TreatmentCount)</a>
+                <a href="#" class="facility-tag">Conditions (@FacilityCard!.ConditionCount)</a>
+                <a href="#" class="facility-tag">Substances We Treat(@FacilityCard!.SwtCount)</a>
             </div>
 
-            <a class="btn btn-visit d-block mx-auto mb-3 px-4" 
-            @* href="@GetVisitUrl()" *@
-            >Visit</a>
+            <a class="btn btn-visit d-block mx-auto mb-3 px-4"
+                @* href="@GetVisitUrl()" *@>Visit</a>
         </div>
     </div>
 </div>
 
+
 @code {
     [Inject] NavigationManager NavigationManager { get; set; } = default!;
     [Parameter] public FacilityViewModel? Facility { get; set; }
-    [Parameter] public FacilityCardViewmodel? FacilityCard { get; set; }
+    [Parameter] public FacilityCardViewmodel? FacilityCard { get; set; } = new();
     [Parameter] public string? CustomImageUrl { get; set; }
     [Parameter] public string? CustomLogoUrl { get; set; }
     [Parameter] public string? CustomVisitUrl { get; set; }

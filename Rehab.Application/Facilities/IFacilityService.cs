@@ -280,33 +280,36 @@ namespace Rehab.Application.Facilities
 
         public List<FacilityCardDto>? GetRandomFacilityCardForHomePage()
         {
-            return context.Facilities.Where(c=>c.FacilitysImages!.Count>0 && c.Logo!="" && c.Cover !="")
-                .Include(c=>c.FacilitysImages)
-                .Include(c=>c.Insurances)
-                .Include(c=>c.Accreditations)
-                .Include(c=>c.Wwts)
-                .Include(c=>c.Swts)
-                .Include(c=>c.Amenities)
-                .Include(c=>c.Conditions)
-                .Include(c=>c.Highlights)
-                .Include(c=>c.Locs)
-                .Include(c=>c.Treatments)
-                .Select(c=> new FacilityCardDto() {
-                    Id = c.Id,
-                    Name = c.Name,
-                    Address = c.Address,
-                    Logo = c.Logo,
-                    Cover = c.Cover,
-                    CardImage = c.FacilitysImages.Select(f=>f.ImageAddress).First(),
-                    AccreditationCount = c.Accreditations.Count(),
-                    AmenityCount = c.Amenities.Count(),
-                    ConditionCount = c.Conditions.Count(),
-                    HighlightCount = c.Highlights.Count(),
-                    InsuranceCount = c.Insurances.Count(),
-                    SwtCount = c.Swts.Count(),
-                    TreatmentCount = c.Treatments.Count(),
-                    WwtCount = c.Wwts.Count(),
-                }).Take(3).ToList();
+            if (!context.Facilities.Any(c => c.FacilitysImages != null && c.Logo != "" && c.Cover != ""))
+                return null;
+            return context.Facilities
+                    .Include(c=>c.FacilitysImages)
+                    .Include(c=>c.Insurances)
+                    .Include(c=>c.Accreditations)
+                    .Include(c=>c.Wwts)
+                    .Include(c=>c.Swts)
+                    .Include(c=>c.Amenities)
+                    .Include(c=>c.Conditions)
+                    .Include(c=>c.Highlights)
+                    .Include(c=>c.Locs)
+                    .Include(c=>c.Treatments)
+                    .Where(c=>c.Logo != "")
+                    .Select(c=> new FacilityCardDto() {
+                        Id = c.Id,
+                        Name = c.Name,
+                        Address = (string.IsNullOrEmpty(c.State)?"No State":c.State),
+                        Logo = c.Logo,
+                        Cover = c.Cover,
+                        CardImage = c.FacilitysImages!.Select(f=>f.ImageAddress).FirstOrDefault(),
+                        AccreditationCount = c.Accreditations!.Count(),
+                        AmenityCount = c.Amenities!.Count(),
+                        ConditionCount = c.Conditions!.Count(),
+                        HighlightCount = c.Highlights!.Count(),
+                        InsuranceCount = c.Insurances!.Count(),
+                        SwtCount = c.Swts!.Count(),
+                        TreatmentCount = c.Treatments!.Count(),
+                        WwtCount = c.Wwts!.Count(),
+                    }).Take(3).ToList();
         }
     }
 }

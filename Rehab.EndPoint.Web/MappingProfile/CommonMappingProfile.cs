@@ -9,6 +9,7 @@ namespace Rehab.EndPoint.Web.MappingProfile
         public CommonMappingProfile()
         {
             CreateMap<FacilityCardDto, FacilityCardViewmodel>().ReverseMap();
+            //CreateMap<List<FacilityCardDto>, List<FacilityCardViewmodel>>().ReverseMap();
         }
 
     }

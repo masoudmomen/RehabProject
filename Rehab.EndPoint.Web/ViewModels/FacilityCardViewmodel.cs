@@ -7,7 +7,7 @@
         public string Address { get; set; } = string.Empty;
         public string Logo { get; set; } = string.Empty;
         public string Cover { get; set; } = string.Empty;
-        public string CardImage { get; set; } = string.Empty;
+        public string? CardImage { get; set; } = string.Empty;
         public int InsuranceCount { get; set; }
         public int AccreditationCount { get; set; }
         public int AmenityCount { get; set; }

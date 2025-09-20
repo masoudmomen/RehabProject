@@ -8,9 +8,12 @@
     <div class="container mt-5 mb-5">
         <h2 class="section-title text-center p-2">Our Recovery Centers</h2>
         <div class="row g-4">
-            @foreach (var facility in FacilityCards)
+            @if(FacilityCards != null && FacilityCards.Count>0)
             {
-                <FacilityItem FacilityCard="@facility" />
+                @foreach (var facility in FacilityCards)
+                {
+                    <FacilityItem FacilityCard="@facility" />
+                }
             }
 
         </div>
@@ -23,6 +26,6 @@
     private List<FacilityCardViewmodel>? FacilityCards { get; set; }
     protected override void OnInitialized()
     {
-        FacilityCards = mapper.Map <List<FacilityCardViewmodel>>(FacilityService.GetRandomFacilityCardForHomePage());
+        FacilityCards = mapper.Map<List<FacilityCardViewmodel>>(FacilityService.GetRandomFacilityCardForHomePage());
     }
 }
