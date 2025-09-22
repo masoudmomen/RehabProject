@@ -15,18 +15,18 @@
             <h5 class="card-title text-center fw-bold mb-3">@Facility?.Name</h5>
             <div class="d-flex justify-content-center facility-location">
                 <i class="fa-solid fa-location-dot"></i>
-                <span>@Facility.Address</span>
+                <span>@Facility?.Address</span>
             </div>
             <div class="d-flex flex-wrap gap-1 mt-3 mb-3">
                 
-                <a href="#" class="facility-tag">Insurances (@FacilityCard.InsuranceCount)</a>
-                <a href="#" class="facility-tag">Accreditations (@FacilityCard.AccreditationCount)</a>
-                <a href="#" class="facility-tag">Amenities(@FacilityCard.AmenityCount)</a>
-                <a href="#" class="facility-tag">Highlights(@FacilityCard.HighlightCount)</a>
-                <a href="#" class="facility-tag">Who We Treat(@FacilityCard.WwtCount)</a>
-                <a href="#" class="facility-tag">Treatments(@FacilityCard.TreatmentCount)</a>
-                <a href="#" class="facility-tag">Conditions (@FacilityCard.ConditionCount)</a>
-                <a href="#" class="facility-tag">Substances We Treat(@FacilityCard.SwtCount)</a>
+                <a href="#" class="facility-tag">Insurances (@FacilityCard?.InsuranceCount)</a>
+                <a href="#" class="facility-tag">Accreditations (@FacilityCard?.AccreditationCount)</a>
+                <a href="#" class="facility-tag">Amenities(@FacilityCard?.AmenityCount)</a>
+                <a href="#" class="facility-tag">Highlights(@FacilityCard?.HighlightCount)</a>
+                <a href="#" class="facility-tag">Who We Treat(@FacilityCard?.WwtCount)</a>
+                <a href="#" class="facility-tag">Treatments(@FacilityCard?.TreatmentCount)</a>
+                <a href="#" class="facility-tag">Conditions (@FacilityCard?.ConditionCount)</a>
+                <a href="#" class="facility-tag">Substances We Treat(@FacilityCard?.SwtCount)</a>
             </div>
 
             <a class="btn btn-visit d-block mx-auto mb-3 px-4" 

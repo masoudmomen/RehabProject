@@ -1,0 +1,95 @@
+﻿<div class="container my-5">
+    <h2 class="section-title text-center mb-3">Find Specialized Care by Condition</h2>
+    <p class="fs-5 text-center text-dark-subtle"> Targeted Care for Your Unique Journey to Wellness</p>
+    <div class="row">
+        @for (int i = 1; i <= 4; i++)
+        {
+            <div class="col-md-3 my-1">
+                <div class="condition-card">
+                    <div class="condition-icon text-center">
+                        <img src="/images/ADHD.png" />
+                    </div>
+                    <h3 class="text-center my-1">ADHD</h3>
+                    <p>Personalized treatment plans that include various therapeutic modalities to enhance focus and manage symptoms effectively.</p>
+                    <div class="text-center">
+                        <a class="btn btn-blue-dark mx-1" href="#">View Facilities</a>
+                    </div>
+                </div>
+            </div>
+        }
+
+
+    </div>
+    <div class="row px-2 my-1">
+        <a class="border-gradient text-blue-dark text-center" href="#">Visit All Conditions</a>
+    </div>
+</div>
+<style>
+    .condition-card {
+        border-radius: 10px;
+        padding: 10px;
+        background: #ffe3ff;
+        background: -webkit-linear-gradient(180deg,rgba(255, 227, 255, 1) 1%, rgba(238, 238, 238, 1) 50%, rgba(212, 249, 255, 1) 100%);
+        background: -moz-linear-gradient(180deg,rgba(255, 227, 255, 1) 1%, rgba(238, 238, 238, 1) 50%, rgba(212, 249, 255, 1) 100%);
+        background: linear-gradient(180deg,rgba(255, 227, 255, 1) 1%, rgba(238, 238, 238, 1) 50%, rgba(212, 249, 255, 1) 100%);
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr="#FFE3FF", endColorstr="#D4F9FF", GradientType=0 );
+        transition: transform 0.2s;
+    }
+
+    .condition-icon {
+        margin: 0px auto;
+        width: 128px;
+    }
+
+        .condition-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            aspect-ratio: 1 / 1;
+            display: block;
+        }
+
+    }
+
+    .condition-card:hover {
+        transform: scale(1.05);
+    }
+
+    .btn.btn-blue-dark {
+        background-color: #0a58ca;
+        color: white;
+        border: none;
+    }
+
+    a.text-blue-dark{
+        color: #0a58ca;
+        font-weight: 600;
+        font-size: 1.2rem;
+    }
+    .border-gradient {
+        position: relative;
+        display: inline-block;
+        padding: 10px 20px;
+      
+        text-decoration: none;
+        background: transparent;
+        border-radius: 12px; 
+        z-index: 1;
+    }
+
+        .border-gradient::before {
+            content: "";
+            position: absolute;
+            inset: 0 ;
+            padding: 2px;  
+            border-radius: inherit;
+            background: -webkit-linear-gradient(180deg, rgb(231 154 231) 1%, rgba(238, 238, 238, 1) 50%, #0dcaf0 100%);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            z-index: -1;
+        }
+</style>
+@code {
+
+}
