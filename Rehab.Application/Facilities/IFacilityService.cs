@@ -139,7 +139,13 @@ namespace Rehab.Application.Facilities
                     Accreditations = c.Accreditations!.ToList(),
                     Highlights = c.Highlights!.ToList(),
                     Amenities = c.Amenities!.ToList(),
-                    FacilitysImages = c.FacilitysImages!.ToList(),
+                    FacilitysImages = c.FacilitysImages!.Select(d=>new FacilitysImages
+                    {
+                        Id = d.Id,
+                        ImageAddress = d.ImageAddress,
+                        Title = d.Title,
+                        Facility = d.Facility,
+                    }).ToList(),
                     Treatments = c.Treatments!.ToList(),
                     Wwts = c.Wwts!.ToList(),
                     Insurances = c.Insurances!.ToList(),

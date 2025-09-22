@@ -35,7 +35,7 @@
                     @foreach (var item in facility.Insurances)
                     {
                         <Card Title="@item.Name"
-                              Image="@item.Logo"
+                              Image="@(serverUrl + item.Logo)"
                               Description="@item.Description"
                               CardLink="#" />
                     }
@@ -51,7 +51,7 @@
                 @foreach (var item in facility.Amenities)
                 {
                     <ItemRowComponent Title="@item.Name"
-                                      Image="@item.Logo"
+                                      Image="@(serverUrl + item.Logo)"
                                       Description="@item.Description"
                                       IconClass="fa-solid fa-person-swimming" />
                 }
@@ -65,7 +65,7 @@
                     @foreach (var item in facility.Accreditations)
                     {
                         <Card Title="@item.Name"
-                              Image="@item.Logo"
+                              Image="@(serverUrl + item.Logo)"
                               Description="@item.Description"
                               CardLink="#"
                               IconClass="fa-solid fa-certificate" />
@@ -79,7 +79,7 @@
                 @foreach (var item in facility.Highlights)
                 {
                     <ItemRowComponent Title="@item.Name"
-                                      Image="@item.Logo"
+                                      Image="@(serverUrl + item.Logo)"
                                       Description="@item.Description"
                                       IconClass="fa-solid fa-star" />
                 }
@@ -94,7 +94,7 @@
                     @foreach (var item in facility.Wwt)
                     {
                         <Card Title="@item.Name"
-                              Image="@item.Logo"
+                              Image="@(serverUrl + item.Logo)"
                               Description="@item.Description"
                               IconClass="fa-solid fa-hands-helping" />
                     }
@@ -106,7 +106,7 @@
             @foreach (var item in facility.Treatments)
             {
                 <ItemRowComponent Title="@item.Name"
-                                  Image="@item.Logo"
+                                  Image="@(serverUrl + item.Logo)"
                                   Description="@item.Description"
                                   IconClass="fa-solid fa-hand-holding-medical" />
             }
@@ -119,7 +119,7 @@
                     @foreach (var item in facility.Locs)
                     {
                         <Card Title="@item.Name"
-                              Image="@item.Logo"
+                              Image="@(serverUrl + item.Logo)"
                               Description="@item.Description"
                               IconClass="fa-solid fa-layer-group" />
                     }
@@ -132,7 +132,7 @@
             @foreach (var item in facility.Condition)
             {
                 <ItemRowComponent Title="@item.Name"
-                                  Image="@item.Logo"
+                                  Image="@(serverUrl + item.Logo)"
                                   Description="@item.Description"
                                   IconClass="fa-solid fa-notes-medical" />
             }
@@ -144,7 +144,7 @@
                 @foreach (var item in facility.Swt)
                 {
                     <ItemRowComponent Title="@item.Name"
-                                      Image="@item.Logo"
+                                      Image="@(serverUrl + item.Logo)"
                                       Description="@item.Description"
                                       IconClass="fa-solid fa-pills" />
                 }
@@ -158,13 +158,18 @@
 
 @code {
     // [Parameter] public string slug { get; set; } = string.Empty;
-    [Parameter] public int id { get; set; } 
+    [Parameter] public string id { get; set; } = string.Empty;
     private FacilityViewModel? facility;
     private bool isLoading = true;
     private TabControl? tabControl1;
     private TabControl? tabControl2;
     private TabControl? tabControl3;
     private TabControl? tabControl4;
+
+    [Inject] IConfiguration Config { get; set; } = default!;
+
+    private string? serverUrl;
+
 
     // protected override void OnInitialized()
     // {
@@ -183,18 +188,20 @@
 
     protected override void OnInitialized()
     {
-        if (id > 0)
+        if (!string.IsNullOrWhiteSpace(id))
         {
-            facility = mapper.Map<FacilityViewModel>(FacilityService.FindById(id));
+            facility = mapper.Map<FacilityViewModel>(FacilityService.FindById(int.Parse(id)));
         }
+        Console.WriteLine(facility.FacilityImages.Count);
         isLoading = false;
+        serverUrl = Config["AppSettings:AdminServerUrl"];
     }
 
-    private static string ToSlug(string? value)
-    {
-        if (string.IsNullOrWhiteSpace(value)) return string.Empty;
-        return System.Text.RegularExpressions.Regex.Replace(value.Trim(), "\\s+", "-");
-    }
+    // private static string ToSlug(string? value)
+    // {
+    //     if (string.IsNullOrWhiteSpace(value)) return string.Empty;
+    //     return System.Text.RegularExpressions.Regex.Replace(value.Trim(), "\\s+", "-");
+    // }
 
 }
 

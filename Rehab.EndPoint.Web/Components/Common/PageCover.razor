@@ -1,14 +1,24 @@
-﻿<div class="cover-container"
-     style="background-image: linear-gradient(rgba(0,0,0,0.5),
-            rgba(0,0,0,0.5)), url('@(string.IsNullOrEmpty(CustomImageUrl) ? "/pagecover-nopic.png" : CustomImageUrl)');">
+﻿
 
-    <img class="cover-logo" src="@(string.IsNullOrEmpty(CustomLogoURL) ? "/logo-nopic.png" : CustomLogoURL)" alt="@PageTitle" />
+
+<div class="cover-container"
+style="background-image: linear-gradient(rgba(0,0,0,0.5),
+            rgba(0,0,0,0.5)), url('@(string.IsNullOrEmpty(CustomImageUrl) ? "/pagecover-nopic.png" : serverUrl + CustomImageUrl)');">
+
+    <img class="cover-logo" src="@(string.IsNullOrEmpty(CustomLogoURL) ? "/logo-nopic.png" : serverUrl + CustomLogoURL)" alt="@PageTitle" />
 
      <h1>@PageTitle</h1>
 </div>
 
 @code {
+    [Inject] IConfiguration Config { get; set; } = default!;
 
+    private string? serverUrl;
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        serverUrl = Config["AppSettings:AdminServerUrl"];
+    }
     [Parameter] public string? CustomImageUrl { get; set; }
     [Parameter] public string? PageTitle { get; set; } = string.Empty;
     [Parameter] public string? CustomLogoURL { get; set; }

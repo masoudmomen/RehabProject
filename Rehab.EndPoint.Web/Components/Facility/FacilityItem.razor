@@ -6,9 +6,9 @@
 <div class="col-12 col-md-4 col-lg-4">
     <div class="card h-100 border-0 facility-item">
         <div class="facility-skin">
-            <img src="@(string.IsNullOrEmpty(FacilityCard?.CardImage) ? "/images/no-image.jpg" : "http://localhost:5126/" + FacilityCard.CardImage)" alt="@FacilityCard?.Name" />
+            <img src="@(string.IsNullOrEmpty(FacilityCard?.CardImage) ? "/images/no-image.jpg" : serverUrl + FacilityCard.CardImage)" alt="@FacilityCard?.Name" />
             <div class="facility-logo">
-                <img src="@(string.IsNullOrEmpty(FacilityCard?.Logo) ? "/images/no-image.jpg" : "http://localhost:5126/" + FacilityCard.Logo)" alt="@FacilityCard?.Name Logo" />
+                <img src="@(string.IsNullOrEmpty(FacilityCard?.Logo) ? "/images/no-image.jpg" : serverUrl + FacilityCard.Logo)" alt="@FacilityCard?.Name Logo" />
             </div>
         </div>
 
@@ -31,7 +31,7 @@
             </div>
 
             <a class="btn btn-visit d-block mx-auto mb-3 px-4"
-                href="facility/@FacilityCard.Id">Visit</a>
+                href="facility/@FacilityCard.Id.ToString()">Visit</a>
         </div>
     </div>
 </div>
@@ -39,11 +39,21 @@
 
 @code {
     [Inject] NavigationManager NavigationManager { get; set; } = default!;
+    [Inject] IConfiguration Config { get; set; } = default!;
+
+    private string? serverUrl;
     [Parameter] public FacilityViewModel? Facility { get; set; }
     [Parameter] public FacilityCardViewmodel? FacilityCard { get; set; } = new();
     [Parameter] public string? CustomImageUrl { get; set; }
     [Parameter] public string? CustomLogoUrl { get; set; }
     [Parameter] public string? CustomVisitUrl { get; set; }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        serverUrl = Config["AppSettings:AdminServerUrl"];
+    }
+
 
     // private string GetVisitUrl() { 
      
