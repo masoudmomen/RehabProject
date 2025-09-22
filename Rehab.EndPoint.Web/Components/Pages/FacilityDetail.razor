@@ -1,7 +1,11 @@
-﻿@page "/facility/{slug}"
+﻿@* @page "/facility/{slug}" *@
+@page "/facility/{id}"
+@using Rehab.Application.Facilities
 @using Rehab.EndPoint.Web.ViewModels
 @using Rehab.EndPoint.Web.Components.Common
 @using Rehab.EndPoint.Web.Components.Facility
+@inject IFacilityService FacilityService
+@inject AutoMapper.IMapper mapper
 
 <div class="mt-5">
     @if (facility != null)
@@ -153,7 +157,8 @@
 </div>
 
 @code {
-    [Parameter] public string slug { get; set; } = string.Empty;
+    // [Parameter] public string slug { get; set; } = string.Empty;
+    [Parameter] public int id { get; set; } 
     private FacilityViewModel? facility;
     private bool isLoading = true;
     private TabControl? tabControl1;
@@ -161,18 +166,27 @@
     private TabControl? tabControl3;
     private TabControl? tabControl4;
 
+    // protected override void OnInitialized()
+    // {
+    //     if (!string.IsNullOrEmpty(slug))
+    //     {
+    //         if (!string.IsNullOrWhiteSpace(slug))
+    //         {
+    //             facility = MockFacilityData.GetSampleFacilities()
+    //                        .FirstOrDefault(f => string.Equals(f.Slug, slug, StringComparison.OrdinalIgnoreCase)
+    //                        || string.Equals(ToSlug(f.Name), slug, StringComparison.OrdinalIgnoreCase));
+    //         }
+    //     }
+
+    //     isLoading = false;
+    // }
+
     protected override void OnInitialized()
     {
-        if (!string.IsNullOrEmpty(slug))
+        if (id > 0)
         {
-            if (!string.IsNullOrWhiteSpace(slug))
-            {
-                facility = MockFacilityData.GetSampleFacilities()
-                           .FirstOrDefault(f => string.Equals(f.Slug, slug, StringComparison.OrdinalIgnoreCase)
-                           || string.Equals(ToSlug(f.Name), slug, StringComparison.OrdinalIgnoreCase));
-            }
+            facility = mapper.Map<FacilityViewModel>(FacilityService.FindById(id));
         }
-
         isLoading = false;
     }
 

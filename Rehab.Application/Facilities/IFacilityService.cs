@@ -280,8 +280,8 @@ namespace Rehab.Application.Facilities
 
         public List<FacilityCardDto>? GetRandomFacilityCardForHomePage()
         {
-            if (!context.Facilities.Any(c => c.FacilitysImages != null && c.Logo != "" && c.Cover != ""))
-                return null;
+            //if (!context.Facilities.Any(c => c.FacilitysImages != null && c.Logo != "" && c.Cover != ""))
+            //    return null;
             return context.Facilities
                     .Include(c=>c.FacilitysImages)
                     .Include(c=>c.Insurances)
@@ -293,7 +293,7 @@ namespace Rehab.Application.Facilities
                     .Include(c=>c.Highlights)
                     .Include(c=>c.Locs)
                     .Include(c=>c.Treatments)
-                    .Where(c=>c.Logo != "")
+                    .Where(c=>c.Logo != "" && c.FacilitysImages.Count>0)
                     .Select(c=> new FacilityCardDto() {
                         Id = c.Id,
                         Name = c.Name,

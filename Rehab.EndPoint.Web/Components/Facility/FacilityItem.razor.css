@@ -37,8 +37,9 @@
 }
 
 .facility-logo img {
-    width: 40px;
-    height: 40px;
+    border-radius: 50%;
+    width: 59px;
+    height: 59px;
     object-fit: contain;
 }
 
