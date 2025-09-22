@@ -11,6 +11,8 @@
                 <img src="@(string.IsNullOrEmpty(FacilityCard?.Logo) ? "/images/no-image.jpg" : "http://localhost:5126/" + FacilityCard.Logo)" alt="@FacilityCard?.Name Logo" />
             </div>
         </div>
+
+
         <div class="card-body facility-body mt-4 pt-4">
             <h5 class="card-title text-center fw-bold mb-3">@FacilityCard?.Name</h5>
             <div class="d-flex justify-content-center facility-location">
@@ -18,7 +20,6 @@
                 <span class="truncate-text">@FacilityCard!.Address</span>
             </div>
             <div class="d-flex flex-wrap gap-1 mt-3 mb-3">
-
                 <a href="#" class="facility-tag">Insurances (@FacilityCard!.InsuranceCount)</a>
                 <a href="#" class="facility-tag">Accreditations (@FacilityCard!.AccreditationCount)</a>
                 <a href="#" class="facility-tag">Amenities(@FacilityCard!.AmenityCount)</a>
@@ -30,7 +31,7 @@
             </div>
 
             <a class="btn btn-visit d-block mx-auto mb-3 px-4"
-                href="facility/@FacilityCard.Id">Visit</a>
+               href="facility/@FacilityCard.Id">Visit</a>
         </div>
     </div>
 </div>
@@ -44,8 +45,8 @@
     [Parameter] public string? CustomLogoUrl { get; set; }
     [Parameter] public string? CustomVisitUrl { get; set; }
 
-    // private string GetVisitUrl() { 
-     
+    // private string GetVisitUrl() {
+
     //     var slugSource = !string.IsNullOrEmpty(Facility?.Slug) ? Facility!.Slug : Facility?.Name;
     //     if (string.IsNullOrWhiteSpace(slugSource))
     //         return "#";
