@@ -132,7 +132,7 @@ namespace Rehab.EndPoint.Web.Components.Common
                         new WwtViewModel { Id = 5, Name = "Veterans" },
                         new WwtViewModel { Id = 6, Name = "First Responders" }
                     },
-                    FacilityImages = new List<FacilityImageViewmodel>
+                    FacilitysImages = new List<FacilityImageViewmodel>
                     {
                         new FacilityImageViewmodel { Id = 1, Title = "Ocean View Therapy Room", ImageAddress = "/images/FacilitiesSample/facility1_1.jpg" },
                         new FacilityImageViewmodel { Id = 2, Title = "Private Beach Access", ImageAddress = "/images/FacilitiesSample/facility1_2.jpg" },
@@ -239,7 +239,7 @@ namespace Rehab.EndPoint.Web.Components.Common
                         new WwtViewModel { Id = 9, Name = "Bipolar Disorder" , Logo ="/images/FacilitiesSample/wwt-3.png"},
                         new WwtViewModel { Id = 10, Name = "Post-Traumatic Stress Disorder (PTSD)" , Logo ="/images/FacilitiesSample/wwt-4.png"}
                     },
-                    FacilityImages = new List<FacilityImageViewmodel>
+                    FacilitysImages = new List<FacilityImageViewmodel>
                     {
                         new FacilityImageViewmodel { Id = 7, Title = "Mountain View from Therapy Room", ImageAddress = "/images/FacilitiesSample/facility2_1.jpg" },
                         new FacilityImageViewmodel { Id = 8, Title = "Hiking Trail Entrance", ImageAddress = "/images/FacilitiesSample/facility2_2.jpg" },
@@ -326,7 +326,7 @@ namespace Rehab.EndPoint.Web.Components.Common
                         new WwtViewModel { Id = 10, Name = "Professionals" },
                         new WwtViewModel { Id = 11, Name = "Urban Residents" }
                     },
-                    FacilityImages = new List<FacilityImageViewmodel>
+                    FacilitysImages = new List<FacilityImageViewmodel>
                     {
                         new FacilityImageViewmodel { Id = 12, Title = "Modern Therapy Office", ImageAddress = "/images/FacilitiesSample/facility3_1.jpg" },
                         new FacilityImageViewmodel { Id = 13, Title = "Technology-Enhanced Treatment Room", ImageAddress = "/images/FacilitiesSample/facility3_2.jpg" },

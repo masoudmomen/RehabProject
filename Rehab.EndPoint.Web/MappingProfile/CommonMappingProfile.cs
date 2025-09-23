@@ -28,11 +28,13 @@ namespace Rehab.EndPoint.Web.MappingProfile
             CreateMap<ViewModels.AmenityViewmodel, Amenity>().ReverseMap();
             CreateMap<ViewModels.HighlightViewmodel, Highlight>().ReverseMap();
             CreateMap<ViewModels.FacilityImageViewmodel, FacilitysImages>().ReverseMap();
+            CreateMap<ViewModels.FacilityImageViewmodel, FacilityImageDto>().ReverseMap();
             CreateMap<ViewModels.LocViewmodel, Loc>().ReverseMap();
             CreateMap<ViewModels.TreatmentViewmodel, Treatment>().ReverseMap();
             CreateMap<WwtViewModel, Wwt>().ReverseMap();
             CreateMap<SwtViewModel, Swt>().ReverseMap();
             CreateMap<ConditionViewModel, Condition>().ReverseMap();
+            CreateMap<ViewModels.FacilityImageViewmodel, FacilityImageDto>().ReverseMap();
         }
 
     }

@@ -29,7 +29,7 @@ namespace Rehab.Application.Facilities
         int? SetFacilityImages(int id,string facilityImage, string imageTitle);
         bool RemoveFacilityImage(int facilityId, int  imageId);
 
-        List<FacilityCardDto>? GetRandomFacilityCardForHomePage();
+        List<FacilityCardDto>? GetRandomFacilityCardForHomePage(int CardCount);
     }
 
     public class FacilityService : IFacilityService
@@ -104,55 +104,48 @@ namespace Rehab.Application.Facilities
         }
         public FacilityDetailDto? FindById(int id)
         {
-            var facility = context.Facilities.FirstOrDefault(c => c.Id == id);
-            if(facility == null) return null;
-            return context.Facilities.Where(c=>c.Id == id)
-                .Include(c => c.Insurances)
-                .Include(c => c.Accreditations)
-                .Include(c => c.Highlights)
-                .Include(c => c.Amenities)
-                .Include(c => c.Wwts)
-                .Include(c => c.Treatments)
-                .Include(c => c.FacilitysImages)
-                .Include(c => c.Locs)
-                .Include(c => c.Conditions)
-                .Include(c => c.Swts)
-                .Select(c => new FacilityDetailDto
+            var facility = context.Facilities
+        .Where(c => c.Id == id)
+        .Include(c => c.Insurances)
+        .Include(c => c.Accreditations)
+        .Include(c => c.Highlights)
+        .Include(c => c.Amenities)
+        .Include(c => c.Wwts)
+        .Include(c => c.Treatments)
+        .Include(c => c.FacilitysImages)
+        .Include(c => c.Locs)
+        .Include(c => c.Conditions)
+        .Include(c => c.Swts)
+        .Select(c => new FacilityDetailDto
+        {
+            Id = c.Id,
+            Name = c.Name,
+            Address = c.Address,
+            Logo = c.Logo,
+            Cover = c.Cover,
+            Description = c.Description,
+
+            FacilitysImages = c.FacilitysImages!
+                .Select(img => new FacilityImageDto
                 {
-                    Id = id,
-                    Name = c.Name,
-                    Address = c.Address,
-                    IsVerified = c.IsVerified,
-                    Logo = c.Logo,
-                    Founded = c.Founded,
-                    OccupancyMax = c.OccupancyMax,
-                    OccupancyMin = c.OccupancyMin,
-                    PhoneNumber = c.PhoneNumber,
-                    City = c.City,
-                    Cover = c.Cover,
-                    Description = c.Description,
-                    Email = c.Email,
-                    ProvidersPolicy = c.ProvidersPolicy,
-                    Slug = c.Slug,
-                    State = c.State,
-                    WebSite = c.WebSite,
-                    Accreditations = c.Accreditations!.ToList(),
-                    Highlights = c.Highlights!.ToList(),
-                    Amenities = c.Amenities!.ToList(),
-                    FacilitysImages = c.FacilitysImages!.Select(d=>new FacilitysImages
-                    {
-                        Id = d.Id,
-                        ImageAddress = d.ImageAddress,
-                        Title = d.Title,
-                        Facility = d.Facility,
-                    }).ToList(),
-                    Treatments = c.Treatments!.ToList(),
-                    Wwts = c.Wwts!.ToList(),
-                    Insurances = c.Insurances!.ToList(),
-                    Locs = c.Locs!.ToList(), 
-                    Conditions = c.Conditions!.ToList(), 
-                    Swts = c.Swts!.ToList(), 
-                }).FirstOrDefault();
+                    Id = img.Id,
+                    ImageAddress = img.ImageAddress,
+                    Title = img.Title
+                }).ToList(),
+
+            Accreditations = c.Accreditations!.ToList(),
+            Highlights = c.Highlights!.ToList(),
+            Amenities = c.Amenities!.ToList(),
+            Treatments = c.Treatments!.ToList(),
+            Wwts = c.Wwts!.ToList(),
+            Insurances = c.Insurances!.ToList(),
+            Locs = c.Locs!.ToList(),
+            Conditions = c.Conditions!.ToList(),
+            Swts = c.Swts!.ToList(),
+        })
+        .FirstOrDefault();
+
+            return facility;
         }
 
         public async Task<PaginatedItemDto<FacilityBriefInfoDto>> GetFacilities(int page, int pageSize)
@@ -284,10 +277,8 @@ namespace Rehab.Application.Facilities
             return new PaginatedItemDto<FacilityBriefInfoDto>(page, pageSize, rowCount, data);
         }
 
-        public List<FacilityCardDto>? GetRandomFacilityCardForHomePage()
+        public List<FacilityCardDto>? GetRandomFacilityCardForHomePage(int CardCount)
         {
-            //if (!context.Facilities.Any(c => c.FacilitysImages != null && c.Logo != "" && c.Cover != ""))
-            //    return null;
             return context.Facilities
                     .Include(c=>c.FacilitysImages)
                     .Include(c=>c.Insurances)
@@ -315,7 +306,7 @@ namespace Rehab.Application.Facilities
                         SwtCount = c.Swts!.Count(),
                         TreatmentCount = c.Treatments!.Count(),
                         WwtCount = c.Wwts!.Count(),
-                    }).Take(3).ToList();
+                    }).Take(CardCount).ToList();
         }
     }
 }

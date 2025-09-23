@@ -40,11 +40,19 @@ namespace Rehab.Application.Facilities
         public List<Accreditation>? Accreditations { get; set; }
         public List<Amenity>? Amenities { get; set; }
         public List<Highlight>? Highlights { get; set; }
-        public List<FacilitysImages>? FacilitysImages { get; set; }
+        public List<FacilityImageDto> FacilitysImages { get; set; } = new();
         public List<Loc>? Locs { get; set; }
         public List<Treatment>? Treatments { get; set; }
         public List<Wwt>? Wwts { get; set; }
         public List<Condition>? Conditions { get; set; }
         public List<Swt>? Swts { get; set; }
+    }
+
+
+    public class FacilityImageDto
+    {
+        public int Id { get; set; }
+        public string ImageAddress { get; set; } = "";
+        public string? Title { get; set; }
     }
 }

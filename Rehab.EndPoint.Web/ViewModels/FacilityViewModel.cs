@@ -24,21 +24,12 @@ namespace Rehab.EndPoint.Web.ViewModels
         public string Slug { get; set; } = string.Empty;
         public bool IsVerified { get; set; } = false;
 
-        public List<int>? InsurancesId { get; set; } = new();
-        public List<int>? AccreditationsId { get; set; } = new();
-        public List<int>? AmenitiesId { get; set; } = new();
-        public List<int>? HighlightsId { get; set; } = new();
-        public List<int>? LocsId { get; set; } = new();
-        public List<int>? TreatmentsId { get; set; } = new();
-        public List<int>? WwtViewModelsId { get; set; } = new();
-        public List<int>? ConditionViewModelsId { get; set; } = new();
-        public List<int>? SwtViewModelsId { get; set; } = new();
-
+        
         public List<InsuranceViewModel>? Insurances { get; set; } = new();
         public List<AccreditationViewmodel>? Accreditations { get; set; } = new();
         public List<AmenityViewmodel>? Amenities { get; set; } = new();
         public List<HighlightViewmodel>? Highlights { get; set; } = new();
-        public List<FacilityImageViewmodel>? FacilityImages { get; set; } = new();
+        public List<FacilityImageViewmodel>? FacilitysImages { get; set; } = new();
         public List<LocViewmodel>? Locs { get; set; } = new();
         public List<TreatmentViewmodel>? Treatments { get; set; } = new();
         public List<WwtViewModel>? Wwt { get; set; } = new();

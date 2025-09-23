@@ -192,7 +192,7 @@
         {
             facility = mapper.Map<FacilityViewModel>(FacilityService.FindById(int.Parse(id)));
         }
-        Console.WriteLine(facility.FacilityImages.Count);
+        if (facility != null && facility.FacilitysImages != null) Console.WriteLine(facility.FacilitysImages.Count);
         isLoading = false;
         serverUrl = Config["AppSettings:AdminServerUrl"];
     }
