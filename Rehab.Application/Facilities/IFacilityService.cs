@@ -104,46 +104,48 @@ namespace Rehab.Application.Facilities
         }
         public FacilityDetailDto? FindById(int id)
         {
+            
             var facility = context.Facilities
-        .Where(c => c.Id == id)
-        .Include(c => c.Insurances)
-        .Include(c => c.Accreditations)
-        .Include(c => c.Highlights)
-        .Include(c => c.Amenities)
-        .Include(c => c.Wwts)
-        .Include(c => c.Treatments)
-        .Include(c => c.FacilitysImages)
-        .Include(c => c.Locs)
-        .Include(c => c.Conditions)
-        .Include(c => c.Swts)
-        .Select(c => new FacilityDetailDto
-        {
-            Id = c.Id,
-            Name = c.Name,
-            Address = c.Address,
-            Logo = c.Logo,
-            Cover = c.Cover,
-            Description = c.Description,
+            .AsSplitQuery()
+            .Where(c => c.Id == id)
+            .Include(c => c.Insurances)
+            .Include(c => c.Accreditations)
+            .Include(c => c.Highlights)
+            .Include(c => c.Amenities)
+            .Include(c => c.Wwts)
+            .Include(c => c.Treatments)
+            .Include(c => c.FacilitysImages)
+            .Include(c => c.Locs)
+            .Include(c => c.Conditions)
+            .Include(c => c.Swts)
+            .Select(c => new FacilityDetailDto
+            {
+                Id = c.Id,
+                Name = c.Name,
+                Address = c.Address,
+                Logo = c.Logo,
+                Cover = c.Cover,
+                Description = c.Description,
 
-            FacilitysImages = c.FacilitysImages!
-                .Select(img => new FacilityImageDto
-                {
-                    Id = img.Id,
-                    ImageAddress = img.ImageAddress,
-                    Title = img.Title
-                }).ToList(),
+                FacilitysImages = c.FacilitysImages!
+                    .Select(img => new FacilityImageDto
+                    {
+                        Id = img.Id,
+                        ImageAddress = img.ImageAddress,
+                        Title = img.Title
+                    }).ToList(),
 
-            Accreditations = c.Accreditations!.ToList(),
-            Highlights = c.Highlights!.ToList(),
-            Amenities = c.Amenities!.ToList(),
-            Treatments = c.Treatments!.ToList(),
-            Wwts = c.Wwts!.ToList(),
-            Insurances = c.Insurances!.ToList(),
-            Locs = c.Locs!.ToList(),
-            Conditions = c.Conditions!.ToList(),
-            Swts = c.Swts!.ToList(),
-        })
-        .FirstOrDefault();
+                Accreditations = c.Accreditations!.ToList(),
+                Highlights = c.Highlights!.ToList(),
+                Amenities = c.Amenities!.ToList(),
+                Treatments = c.Treatments!.ToList(),
+                Wwts = c.Wwts!.ToList(),
+                Insurances = c.Insurances!.ToList(),
+                Locs = c.Locs!.ToList(),
+                Conditions = c.Conditions!.ToList(),
+                Swts = c.Swts!.ToList(),
+            })
+            .FirstOrDefault();
 
             return facility;
         }
