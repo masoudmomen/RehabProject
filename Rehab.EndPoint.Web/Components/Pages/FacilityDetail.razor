@@ -7,9 +7,11 @@
 @inject IFacilityService FacilityService
 @inject AutoMapper.IMapper mapper
 
+
 <div class="mt-5">
     @if (facility != null)
     {
+        
         <PageCover CustomImageUrl="@facility.Cover"
                    CustomLogoURL="@facility.Logo"
                    PageTitle="@facility.Name" />
@@ -183,7 +185,7 @@
     //     isLoading = false;
     // }
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
         if (!string.IsNullOrWhiteSpace(id))
         {
@@ -192,7 +194,7 @@
         isLoading = false;
         serverUrl = Config["AppSettings:AdminServerUrl"];
     }
-
+   
     // private static string ToSlug(string? value)
     // {
     //     if (string.IsNullOrWhiteSpace(value)) return string.Empty;

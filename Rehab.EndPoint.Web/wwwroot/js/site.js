@@ -15,6 +15,8 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 });
+
+
 // فوتر را در پایین صفحه ثابت می‌کند
 function checkFooterPosition() {
     const footer = document.querySelector('.footer-bottom');
