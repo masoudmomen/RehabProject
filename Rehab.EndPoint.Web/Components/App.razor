@@ -7,7 +7,8 @@
     <base href="/" />
     <link rel="stylesheet" href="lib/bootstrap/dist/css/bootstrap.min.css" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.1/font/bootstrap-icons.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="app.css" />
+  
+    <link rel="stylesheet" href="Rehab.EndPoint.Web.styles.css?v=@version" />
     <link rel="icon" type="image/png" href="favicon.png" />
     <link rel="stylesheet" href="css/static-pages.css" />
     <!-- Google Web Fonts -->
@@ -18,7 +19,7 @@
     <!-- Icon Font Stylesheet -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha512-DxV+EoADOkOygM4IR9yXP8Sb2qwgidEmeqAEmDKIOfPRQZOWbXCzLC6vjbZyy0vPisbH2SyW27+ddLVCN+OMzQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
-     <link rel="stylesheet" href="Rehab.EndPoint.Web.styles.css?v=@version" />
+    <link rel="stylesheet" href="app.css" />
     <HeadOutlet />
     <title>Rehab Navigator</title>
 </head>
@@ -29,7 +30,11 @@
     <script>
         window.BlazorRehydrateVersion = "@version"; // مقدار را هر بار بعد از پابلیش تغییر بده
     </script>
-    
+    <script>
+                window.scrollToTop = () => {
+            window.scrollTo({ top: 0, behavior: 'auto' });
+        };
+    </script>
     <script src="_framework/blazor.web.js"></script>
     <script src="lib/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="/js/site.js"></script>

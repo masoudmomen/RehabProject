@@ -2,16 +2,17 @@
 @using Rehab.EndPoint.Web.Components.HomeSections
 @inject IJSRuntime jSRuntime
 @implements IAsyncDisposable
-
+ 
 <HeroSection />
 <RecoveryCentersSection />
-<TreatmentTypeSection />
+<ConditionsSection />
+ 
 
 <InsuranceSection />
 <ResourcesSection />
 @code{
     private IJSObjectReference? jsModule;
-
+   
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
