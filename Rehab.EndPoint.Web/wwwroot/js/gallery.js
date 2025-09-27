@@ -3,6 +3,7 @@ let currentImageIndex = 0;
 let currentGalleryId = null;
 
 window.initGalleries = function () {
+    galleries = {};
     document.querySelectorAll("[data-images]").forEach(el => {
         try {
             const images = JSON.parse(el.dataset.images);
@@ -22,6 +23,7 @@ function ensureGalleriesInitialized() {
 }
 
 window.openLightbox = function (galleryId, index) {
+     window.initGalleries();
     if (!galleries[galleryId]) {
         ensureGalleriesInitialized();
     }
