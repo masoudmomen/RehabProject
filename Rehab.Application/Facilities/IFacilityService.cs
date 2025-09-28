@@ -126,7 +126,17 @@ namespace Rehab.Application.Facilities
                 Logo = c.Logo,
                 Cover = c.Cover,
                 Description = c.Description,
-
+                City = c.City,
+                Email = c.Email,
+                Founded = c.Founded,
+                IsVerified = c.IsVerified,
+                OccupancyMax = c.OccupancyMax,
+                OccupancyMin = c.OccupancyMin,
+                PhoneNumber = c.PhoneNumber,
+                ProvidersPolicy = c.ProvidersPolicy,
+                Slug = c.Slug,
+                State = c.State,
+                WebSite = c.WebSite,
                 FacilitysImages = c.FacilitysImages!
                     .Select(img => new FacilityImageDto
                     {

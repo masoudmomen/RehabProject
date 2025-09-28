@@ -48,13 +48,17 @@
 </div>
 
 <div class="row g-3">
-    <div class="col-6">
+    <div class="col-3">
         <label for="occupancyMin" class="">Minimum Occupancy</label>
         <InputNumber @bind-Value="Facility.OccupancyMin" class="form-control" id="occupancyMin"></InputNumber>
     </div>
-    <div class="col-6">
+    <div class="col-3">
         <label for="OccupancyMax" class="">Maximum Occupancy</label>
         <InputNumber @bind-Value="Facility.OccupancyMax" class="form-control" id="OccupancyMax"></InputNumber>
+    </div>
+    <div class="col-6">
+        <label for="Slug" class="">Slug</label>
+        <InputText @bind-Value="Facility.Slug" class="form-control" id="Slug"></InputText>
     </div>
 </div>
 
