@@ -1,6 +1,7 @@
 ﻿.hero-section {
     min-height: 100vh;
-    background: linear-gradient(135deg, rgba(116, 235, 213, 0.1), rgba(159, 172, 230, 0.1)), url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800"><rect fill="%2374ebd5" width="1200" height="800"/><circle cx="300" cy="200" r="150" fill="%239face6" opacity="0.3"/><circle cx="900" cy="600" r="200" fill="%2374ebd5" opacity="0.4"/><path d="M0,600 Q300,400 600,600 T1200,600 L1200,800 L0,800 Z" fill="%23ffffff" opacity="0.6"/></svg>');
+    /*    background: linear-gradient(135deg, rgba(116, 235, 213, 0.1), rgba(159, 172, 230, 0.1)), url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800"><rect fill="%2374ebd5" width="1200" height="800"/><circle cx="300" cy="200" r="150" fill="%239face6" opacity="0.3"/><circle cx="900" cy="600" r="200" fill="%2374ebd5" opacity="0.4"/><path d="M0,600 Q300,400 600,600 T1200,600 L1200,800 L0,800 Z" fill="%23ffffff" opacity="0.6"/></svg>');*/
+    background-image: url('/images/HeroBackgroundCover.png');
     background-size: cover;
     background-position: center;
     position: relative;
@@ -10,7 +11,7 @@
 .hero-title {
     font-size: 3.5rem;
     font-weight: 700;
-    background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+    background: linear-gradient(270deg, #063d8d, #5e388b, #7b1573);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -23,3 +24,23 @@
     opacity: 0.9;
     animation: fadeInUp 1s ease-out 0.2s both;
 }
+.search-row-wrapper {
+    width: 100%;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.search-row {
+    background-color: rgba(128, 0, 128, 0.6); 
+    backdrop-filter: blur(4px);  
+}
+
+    .search-row .form-control {
+        border-radius: 0.5rem;
+        padding: 0.75rem;
+    }
+
+    .search-row .btn {
+        padding: 0.75rem;
+        font-weight: 600;
+    }
