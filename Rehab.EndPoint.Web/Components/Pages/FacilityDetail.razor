@@ -7,9 +7,11 @@
 @inject IFacilityService FacilityService
 @inject AutoMapper.IMapper mapper
 
+
 <div class="mt-5">
     @if (facility != null)
     {
+        
         <PageCover CustomImageUrl="@facility.Cover"
                    CustomLogoURL="@facility.Logo"
                    PageTitle="@facility.Name" />
@@ -40,9 +42,7 @@
                               CardLink="#" />
                     }
                 </div>
-
             </div>
-
         </div>
 
         <div class="Accreditations py-5">
@@ -153,7 +153,6 @@
         </div>
 
     }
-
 </div>
 
 @code {
@@ -186,17 +185,16 @@
     //     isLoading = false;
     // }
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
         if (!string.IsNullOrWhiteSpace(id))
         {
             facility = mapper.Map<FacilityViewModel>(FacilityService.FindById(int.Parse(id)));
         }
-        if (facility != null && facility.FacilitysImages != null) Console.WriteLine(facility.FacilitysImages.Count);
         isLoading = false;
         serverUrl = Config["AppSettings:AdminServerUrl"];
     }
-
+   
     // private static string ToSlug(string? value)
     // {
     //     if (string.IsNullOrWhiteSpace(value)) return string.Empty;

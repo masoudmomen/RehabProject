@@ -4,6 +4,7 @@ using Rehab.Application.Facilities;
 using Rehab.EndPoint.Web.Components;
 using Rehab.EndPoint.Web.MappingProfile;
 using Rehab.Persistence.Contexts;
+using System;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +17,9 @@ builder.Services.AddScoped<IDatabaseContext, DatabaseContext>();
 var connection = builder.Configuration["ConnectionString:sqlServer"];
 builder.Services.AddDbContext<DatabaseContext>(option=>option.UseSqlServer(connection));
 #endregion
+
+builder.Services.AddDbContext<DatabaseContext>(options =>
+    options.UseSqlServer(connection).EnableSensitiveDataLogging().LogTo(Console.WriteLine));
 
 #region IOC
 builder.Services.AddAutoMapper(typeof(CommonMappingProfile)); //Mapper
