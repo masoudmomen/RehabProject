@@ -7,7 +7,7 @@
 <div class="row g-3">
     <div class="col-6">
         <label for="name" class="">Name</label>
-        <InputText @bind-Value="@Facility.Name" class="@facilityNameClass" id="name"></InputText>
+        <input value="@Facility.Name" class="@facilityNameClass" @onchange="CheckModelNameStatusAndSetSlug" id="name"></input>
     </div>
     <div class="col-6">
         <label for="email" class="">Email</label>
@@ -89,21 +89,16 @@
     {
         Console.WriteLine(e.Value!.ToString());
     }
-    private async Task OnChangeForName()
+
+    private void CheckModelNameStatusAndSetSlug(ChangeEventArgs e)
     {
-        Console.WriteLine("OnChangeForName");
+        Facility.Name = e.Value.ToString() ?? "";
         SetSlugFromName();
-        await CheckModelNameStatus();
-    }
-    private async Task CheckModelNameStatus()
-    {
-        //Facility.Name = e.Value.ToString() ?? "";
         if (!string.IsNullOrWhiteSpace(Facility.Name))
         {
+            Console.WriteLine(Facility.Name);
             facilityNameClass = "form-control";
-            await facilityNameClassChange.InvokeAsync(facilityNameClass);
-            Console.WriteLine("CheckModelNameStatus");
-            //StateHasChanged();
+            facilityNameClassChange.InvokeAsync(facilityNameClass);
         }
     }
     private void SetSlugFromName()
@@ -112,7 +107,7 @@
         text = text.ToLowerInvariant();
         //حذف کاراکترهای غیر از حرف ، عدد و فاصله
         text = Regex.Replace(text, @"[^a-z0-9\s-]", "");
-        text = Regex.Replace(text, @"\s+", "").Trim('-');
+        //text = Regex.Replace(text, @"\s+", "").Trim('-');
         text = Regex.Replace(text, @"-+", "-");
         Facility.Slug = text;
         StateHasChanged();
