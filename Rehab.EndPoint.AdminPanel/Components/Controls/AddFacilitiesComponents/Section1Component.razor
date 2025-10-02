@@ -96,7 +96,6 @@
         SetSlugFromName();
         if (!string.IsNullOrWhiteSpace(Facility.Name))
         {
-            Console.WriteLine(Facility.Name);
             facilityNameClass = "form-control";
             facilityNameClassChange.InvokeAsync(facilityNameClass);
         }
@@ -107,10 +106,10 @@
         text = text.ToLowerInvariant();
         //حذف کاراکترهای غیر از حرف ، عدد و فاصله
         text = Regex.Replace(text, @"[^a-z0-9\s-]", "");
-        //text = Regex.Replace(text, @"\s+", "").Trim('-');
+        text = Regex.Replace(text, @"\s+", "-");
         text = Regex.Replace(text, @"-+", "-");
+        text = text.Trim('-');
         Facility.Slug = text;
         StateHasChanged();
-        Console.WriteLine(Facility.Slug);
     }
 }
