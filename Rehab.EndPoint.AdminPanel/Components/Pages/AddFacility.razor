@@ -19,7 +19,7 @@
             @switch (comoponentNumber)
             {
                 case 1:
-                    <Rehab.EndPoint.AdminPanel.Components.Controls.AddFacilitiesComponents.Section1Component Facility="Facility" facilityNameClass="@facilityNameClass" facilityNameClassChange="@OnFacilityNameClassChange" />
+                    <Rehab.EndPoint.AdminPanel.Components.Controls.AddFacilitiesComponents.Section1Component Facility="Facility" facilityNameClass="@facilityNameClass" facilityNameClassChange="@OnFacilityNameClassChange" facilitySlugClass="@facilitySlugClass" facilitySlugClassChange="@OnFacilitySlugClassChange" />
                     break;
                 case 2:
                     <Rehab.EndPoint.AdminPanel.Components.Controls.AddFacilitiesComponents.Section2Component Facility="Facility" />
@@ -86,6 +86,7 @@
     private string PreviousBtnStatus = "disabled";
     private string NextBtnStatus = "";
     public string facilityNameClass { get; set; } = "form-control";
+    public string facilitySlugClass { get; set; } = "form-control";
 
     private void ComponentPlus()
     {
@@ -122,6 +123,10 @@
     {
         facilityNameClass = facilityNameClassFromComponent;
     }
+    private void OnFacilitySlugClassChange(string facilitySlugClassFromComponent)
+    {
+        facilitySlugClass = facilitySlugClassFromComponent;
+    }
 
     private void Add()
     {
@@ -130,19 +135,33 @@
             if (string.IsNullOrWhiteSpace(Facility.Name))
             {
                 facilityNameClass = "form-control border-danger";
-                comoponentNumber = 1;
                 AlertService.ShowAsync("Name field is Required", "danger");
             }
             else
             {
                 AddResult = FacilityService.Add(mapper.Map<AddRequestFacilityDto>(Facility));
-                AlertService.ShowAsync(AddResult.Message, AddResult.Status);
+
                 if (AddResult.Success)
                 {
+                    AlertService.ShowAsync(AddResult.Message, AddResult.Status);
                     Facility = new();
-                    comoponentNumber = 1;
+                    facilityNameClass = facilitySlugClass = "form-control";
+                }
+                else
+                {
+                    if(AddResult.Status == "slug")
+                    {
+                        AddResult.Status = "danger";
+                        facilitySlugClass = "form-control border-danger";
+                        AlertService.ShowAsync(AddResult.Message, AddResult.Status);
+                    }
+                    else
+                    {
+                        AlertService.ShowAsync(AddResult.Message, AddResult.Status);
+                    }
                 }
             }
+            comoponentNumber = 1;
         }
     }
 }

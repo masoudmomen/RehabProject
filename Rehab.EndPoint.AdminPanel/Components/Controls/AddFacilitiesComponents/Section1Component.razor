@@ -59,7 +59,7 @@
     </div>
     <div class="col-6">
         <label for="Slug" class="">Slug</label>
-        <InputText @bind-Value="Facility.Slug" class="form-control" id="Slug"></InputText>
+        <InputText @bind-Value="Facility.Slug" class="@facilitySlugClass" id="Slug"></InputText>
     </div>
 </div>
 
@@ -83,12 +83,13 @@
     [Parameter]
     public string facilityNameClass { get; set; } = "form-control";
     [Parameter]
+    public string facilitySlugClass { get; set; } = "form-control";
+    [Parameter]
     public EventCallback<string> facilityNameClassChange { get; set; }
+    [Parameter]
+    public EventCallback<string> facilitySlugClassChange { get; set; }
 
-    private void OnChangeForName1(ChangeEventArgs e)
-    {
-        Console.WriteLine(e.Value!.ToString());
-    }
+  
 
     private void CheckModelNameStatusAndSetSlug(ChangeEventArgs e)
     {

@@ -45,7 +45,17 @@ namespace Rehab.Application.Facilities
         public BaseDto<AddRequestFacilityDto> Add(AddRequestFacilityDto facility)
         {
             if (facility == null) return BaseDto<AddRequestFacilityDto>.FailureResult("Facility data is null!");
-
+            if (context.Facilities.FirstOrDefault(c => c.Slug == facility.Slug) != null)
+            {
+                var result = new BaseDto<AddRequestFacilityDto>()
+                {
+                    Data = facility,
+                    Message = "This Slug is exist, Change it!",
+                    Success = false,
+                    Status = "slug"
+                };
+                return result;
+            }
             var newFacility = new Facility();
             newFacility = mapper.Map<Facility>(facility);
 
