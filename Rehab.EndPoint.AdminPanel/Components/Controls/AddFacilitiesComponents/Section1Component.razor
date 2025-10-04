@@ -1,4 +1,5 @@
 ﻿@using Rehab.EndPoint.AdminPanel.Viewmodels
+@using System.Text.RegularExpressions
 @rendermode InteractiveServer
 
 
@@ -6,7 +7,7 @@
 <div class="row g-3">
     <div class="col-6">
         <label for="name" class="">Name</label>
-        <InputText @bind-Value="Facility.Name" class="@facilityNameClass" @oninput="CheckModelNameStatus" id="name"></InputText>
+        <input value="@Facility.Name" class="@facilityNameClass" @onchange="CheckModelNameStatusAndSetSlug" id="name"></input>
     </div>
     <div class="col-6">
         <label for="email" class="">Email</label>
@@ -58,7 +59,7 @@
     </div>
     <div class="col-6">
         <label for="Slug" class="">Slug</label>
-        <InputText @bind-Value="Facility.Slug" class="form-control" id="Slug"></InputText>
+        <InputText @bind-Value="Facility.Slug" class="@facilitySlugClass" id="Slug"></InputText>
     </div>
 </div>
 
@@ -82,17 +83,34 @@
     [Parameter]
     public string facilityNameClass { get; set; } = "form-control";
     [Parameter]
+    public string facilitySlugClass { get; set; } = "form-control";
+    [Parameter]
     public EventCallback<string> facilityNameClassChange { get; set; }
+    [Parameter]
+    public EventCallback<string> facilitySlugClassChange { get; set; }
 
-    private async Task CheckModelNameStatus(ChangeEventArgs e)
+  
+
+    private void CheckModelNameStatusAndSetSlug(ChangeEventArgs e)
     {
         Facility.Name = e.Value.ToString() ?? "";
+        SetSlugFromName();
         if (!string.IsNullOrWhiteSpace(Facility.Name))
         {
-            Console.WriteLine(Facility.Name);
             facilityNameClass = "form-control";
-            await facilityNameClassChange.InvokeAsync(facilityNameClass);
-            //StateHasChanged();
+            facilityNameClassChange.InvokeAsync(facilityNameClass);
         }
+    }
+    private void SetSlugFromName()
+    {
+        var text = Facility.Name;
+        text = text.ToLowerInvariant();
+        //حذف کاراکترهای غیر از حرف ، عدد و فاصله
+        text = Regex.Replace(text, @"[^a-z0-9\s-]", "");
+        text = Regex.Replace(text, @"\s+", "-");
+        text = Regex.Replace(text, @"-+", "-");
+        text = text.Trim('-');
+        Facility.Slug = text;
+        StateHasChanged();
     }
 }
