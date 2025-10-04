@@ -3,7 +3,7 @@
 
 
 
-<div class="col-12 col-md-4 col-lg-4">
+<div class="col-12 col-md-3">
     <div class="card h-100 border-0 facility-item">
         <div class="facility-skin">
             <img src="@(string.IsNullOrEmpty(FacilityCard?.CardImage) ? "/images/no-image.jpg" : serverUrl + FacilityCard.CardImage)" alt="@FacilityCard?.Name" />
@@ -13,7 +13,7 @@
         </div>
 
 
-        <div class="card-body facility-body mt-4 pt-4">
+        <div class="card-body facility-body pt-2">
             <h5 class="card-title text-center fw-bold mb-3">@FacilityCard?.Name</h5>
             <div class="d-flex justify-content-center facility-location">
                 <i class="fa-solid fa-location-dot"></i>
