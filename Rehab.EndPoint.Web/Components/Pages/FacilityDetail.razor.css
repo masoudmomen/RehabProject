@@ -49,10 +49,18 @@ h2.section-title {
     gap: 1rem;
 }
 .insurance .cards-grid {
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(200px, 200px));
+    justify-content: center;
 }
-.cards-grid.loc {
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    .insurance .card-content{
+        padding:5px;
+    }
+    .cards-grid.loc {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    }
+::deep .insurance .card-content .btn-link {
+    color: #4a90e2;
+    font-size: 12px !important;
 }
 .wwt h4.card-title {
     margin-top: 10px;

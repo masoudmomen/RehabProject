@@ -1,6 +1,6 @@
 ﻿@using Rehab.EndPoint.Web.ViewModels
 
-<NavLink href="@CardLink" class="card">
+<div href="@CardLink" class="card">
     <div class="card-content">
         <div class="card-logo">
             @if (!string.IsNullOrEmpty(Image))
@@ -14,43 +14,80 @@
                 </div>
             }
         </div>
+
         <div class="card-info">
             <h4 class="card-title">@(Title ?? "Card Title")</h4>
+
             @if (!string.IsNullOrEmpty(Description))
             {
-                <p class="card-description">@Description</p>
+                <div class="card-description">
+                    @((MarkupString)(Description.Length > CharacterLimit
+                                    ? Description.Substring(0, CharacterLimit) + "..."
+                                    : Description))
+
+                @if (Description.Length > CharacterLimit)
+                    {
+                        <button type="button"
+                                class="btn btn-link p-0 mt-1 show-more-btn"
+                                data-bs-toggle="modal"
+                                data-bs-target="#modal_@Title.Replace(" ", "_")">
+                            Show more
+                        </button>
+                    }
+                </div>
             }
         </div>
     </div>
+
     @if (IsLoading)
     {
         <div class="card-loading">
             <i class="fas fa-spinner fa-spin"></i>
         </div>
     }
-</NavLink>
+</div>
+
+<!-- Fullscreen Modal -->
+@if (!string.IsNullOrEmpty(Description))
+{
+    <div class="modal fade custom-modal-backdrop"
+         id="modal_@Title.Replace(" ", "_")"
+         tabindex="-1"
+         aria-labelledby="modalLabel_@Title.Replace(" ", "_")"
+         aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered custom-modal-width">
+            <div class="modal-content">
+                <div class="modal-header bg-light">
+                    <h1 class="modal-title fs-5" id="modalLabel_@Title.Replace(" ", "_")">@Title</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    @((MarkupString)Description)
+                </div>
+            </div>
+        </div>
+    </div>
+}
 
 @code {
     [Parameter]
     public string? Title { get; set; }
-    
+
     [Parameter]
     public string? Image { get; set; }
-    
+
     [Parameter]
     public string? Description { get; set; }
-    
+
     [Parameter]
     public string? IconClass { get; set; }
-    
+
     [Parameter]
     public bool IsLoading { get; set; } = false;
-    
-    // [Parameter]
-    // public string? CustomClass { get; set; }
-    
+
+    [Parameter]
+    public int CharacterLimit { get; set; } = 150;
+
     [Parameter]
     public string CardLink { get; set; } = "/#";
 }
-
-

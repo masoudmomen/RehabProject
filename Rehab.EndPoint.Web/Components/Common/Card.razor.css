@@ -4,7 +4,7 @@
     color: inherit;
     background: white;
     border-radius: 16px;
-    padding: 1.5rem;
+    padding: 0.5rem;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
     transition: all 0.3s ease;
     border: 1px solid rgba(74, 144, 226, 0.1);
@@ -25,9 +25,11 @@
     }
 
     .card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 12px 40px rgba(74, 144, 226, 0.15);
-        border-color: var(--primary-blue);
+     /*   transform: translateY(-4px);
+        box-shadow: 0 12px 40px rgb(199 194 201 / 15%);
+        border: 2px solid transparent;
+        border-image: linear-gradient(135deg, #74ebd5, #acb6e5) 1;
+        border-radius: 12px;  */
     }
 
         .card:hover::before {
@@ -42,7 +44,9 @@
         .card.active::before {
             transform: scaleX(1);
         }
-
+.card-description{
+    font-size:12px;
+}
 .content {
     display: flex;
     flex-direction: column;
@@ -146,7 +150,25 @@
     .card.loading .logo {
         animation: pulse 1.5s infinite;
     }
+.custom-modal-width {
+    max-width: 50%;
+    width: 50%;
+}
 
+.custom-modal-backdrop .modal-backdrop {
+    background-color: rgba(0, 0, 0, 0.8) !important;
+}
+
+.modal-content {
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.modal-body {
+    padding: 2rem;
+    max-height: 80vh;
+    overflow-y: auto;
+}
 @keyframes pulse {
     0%, 100% {
         opacity: 1;
@@ -156,3 +178,4 @@
         opacity: 0.5;
     }
 }
+
