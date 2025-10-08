@@ -11,7 +11,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Rehab.Application.Facilities
 {
@@ -28,9 +30,11 @@ namespace Rehab.Application.Facilities
         bool SetFacilityCover(int id,string facilityCover);
         int? SetFacilityImages(int id,string facilityImage, string imageTitle);
         bool RemoveFacilityImage(int facilityId, int  imageId);
-
+        List<FacilityNameSlugDto> SetSlug();
         List<FacilityCardDto>? GetRandomFacilityCardForHomePage(int CardCount);
     }
+
+    
 
     public class FacilityService : IFacilityService
     {
@@ -330,5 +334,30 @@ namespace Rehab.Application.Facilities
                         WwtCount = c.Wwts!.Count(),
                     }).Take(CardCount).ToList();
         }
+
+        public List<FacilityNameSlugDto> SetSlug()
+        {
+            var model = new List<FacilityNameSlugDto>();
+            foreach (var item in context.Facilities)
+            {
+                var text = item.Name;
+                text = text.ToLowerInvariant();
+                //حذف کاراکترهای غیر از حرف ، عدد و فاصله
+                text = Regex.Replace(text, @"[^a-z0-9\s-]", "");
+                text = Regex.Replace(text, @"\s+", "-");
+                text = Regex.Replace(text, @"-+", "-");
+                text = text.Trim('-');
+                item.Slug = text;
+                model.Add(new FacilityNameSlugDto { FacilityName = item.Name, FacilitySlug = item.Slug });
+            }
+            if(context.SaveChanges()>0) return model;
+            return new List<FacilityNameSlugDto>();
+        }
+    }
+
+    public class FacilityNameSlugDto
+    {
+        public string FacilityName { get; set; } = string.Empty;
+        public string FacilitySlug { get; set; } = string.Empty;
     }
 }
