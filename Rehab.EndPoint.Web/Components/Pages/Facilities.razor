@@ -1,4 +1,5 @@
 ﻿@page "/Facilities"
+@rendermode InteractiveServer
 @using Rehab.Application.Facilities
 @using Rehab.EndPoint.Web.Components.Common
 @using Rehab.EndPoint.Web.Components.Facility
@@ -9,13 +10,23 @@
 <div class="container mt-5 mb-5">
     <h2 class="section-title text-center p-2">Our Recovery Centers</h2>
     <div class="row g-4">
-        @if (FacilityCards != null && FacilityCards.Count > 0)
+        @* @if (FacilityCards != null && FacilityCards.Count > 0)
         {
             @foreach (var facility in FacilityCards)
             {
                 <FacilityItem FacilityCard="@facility" />
             }
-        }
+        } *@
+
+
+
+
+        <Virtualize ItemsProvider="LoadFacilities" Context="facility" ItemSize="5" TItem="FacilityCardViewmodel">
+            <ItemContent Context="facility">
+                <FacilityItem FacilityCard="facility" />
+            </ItemContent>
+        </Virtualize>
+
     </div>
 
     @* <a href="#" class="btn btn-outline-primary rounded-3 w-100 text-primary">Visit All</a> *@
@@ -25,5 +36,11 @@
     protected override void OnInitialized()
     {
         FacilityCards = mapper.Map<List<FacilityCardViewmodel>>(FacilityService.GetRandomFacilityCardForHomePage(12));
+    }
+
+    private async ValueTask<ItemsProviderResult<FacilityCardViewmodel>> LoadFacilities(ItemsProviderRequest request)
+    {
+        var result = await FacilityService.GetFacilitiesAsync(request.StartIndex / 50 + 1, 50);
+        return new ItemsProviderResult<FacilityCardViewmodel>(mapper.Map<List<FacilityCardViewmodel>>(result.Item1), result.totalCount);
     }
 }

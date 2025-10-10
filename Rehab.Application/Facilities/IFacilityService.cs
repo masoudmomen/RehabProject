@@ -32,6 +32,7 @@ namespace Rehab.Application.Facilities
         bool RemoveFacilityImage(int facilityId, int  imageId);
         List<FacilityNameSlugDto> SetSlug();
         List<FacilityCardDto>? GetRandomFacilityCardForHomePage(int CardCount);
+        Task<(List<FacilityCardDto>, int totalCount)> GetFacilitiesAsync(int pageNumber, int pageSize);
     }
 
     
@@ -338,7 +339,7 @@ namespace Rehab.Application.Facilities
         public List<FacilityNameSlugDto> SetSlug()
         {
             var model = new List<FacilityNameSlugDto>();
-            foreach (var item in context.Facilities)
+            foreach (var item in context.Facilities.Where(c=>string.IsNullOrEmpty(c.Slug)))
             {
                 var text = item.Name;
                 text = text.ToLowerInvariant();
@@ -352,6 +353,44 @@ namespace Rehab.Application.Facilities
             }
             if(context.SaveChanges()>0) return model;
             return new List<FacilityNameSlugDto>();
+        }
+
+        public async Task<(List<FacilityCardDto>, int totalCount)> GetFacilitiesAsync(int pageNumber, int pageSize)
+        {
+            var query = context.Facilities.Where(c => c.Logo != "" && c.FacilitysImages.Count > 0).AsQueryable();
+            var totalCount = await query.CountAsync();
+            var facilities = await query
+                .OrderBy(c=>c.Id)
+                .Skip((pageNumber-1) * pageSize)
+                .Take(pageSize)
+                .Include(c => c.FacilitysImages)
+                .Include(c => c.Insurances)
+                .Include(c => c.Accreditations)
+                .Include(c => c.Wwts)
+                .Include(c => c.Swts)
+                .Include(c => c.Amenities)
+                .Include(c => c.Conditions)
+                .Include(c => c.Highlights)
+                .Include(c => c.Locs)
+                .Include(c => c.Treatments)
+                .Select(c => new FacilityCardDto()
+                    {
+                        Id = c.Id,
+                        Name = c.Name,
+                        Address = (string.IsNullOrEmpty(c.State) ? "No State" : c.State),
+                        Logo = c.Logo,
+                        Cover = c.Cover,
+                        CardImage = c.FacilitysImages!.Select(f => f.ImageAddress).FirstOrDefault(),
+                        AccreditationCount = c.Accreditations!.Count(),
+                        AmenityCount = c.Amenities!.Count(),
+                        ConditionCount = c.Conditions!.Count(),
+                        HighlightCount = c.Highlights!.Count(),
+                        InsuranceCount = c.Insurances!.Count(),
+                        SwtCount = c.Swts!.Count(),
+                        TreatmentCount = c.Treatments!.Count(),
+                        WwtCount = c.Wwts!.Count(),
+                    }).ToListAsync();
+            return (facilities, totalCount);
         }
     }
 
