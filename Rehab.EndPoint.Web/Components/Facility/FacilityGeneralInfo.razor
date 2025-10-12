@@ -1,30 +1,68 @@
 ﻿@using Rehab.EndPoint.Web.ViewModels;
-@if(Facility != null){
+@if (Facility != null)
+{
     <h2> About @Facility.Name</h2>
     <div class="d-flex align-items-center facility-location">
         <i class="fa-solid fa-location-dot"></i>
         <span>@GetFullAddress()</span>
     </div>
     <div class="row mt-1">
-        <div class="col-auto">
-            <a href="tel:@Facility.PhoneNumber">
+        <div class="col-auto px-0">
+            <a href="tel:@Facility.PhoneNumber" class="facility-phone" >
                 <i class="fa-solid fa-phone"></i>
                 @Facility.PhoneNumber
             </a>
-           
+
         </div>
         <div class="col-md-6 border-1 border-start">
-            <a href="@Facility.WebSite" target="_blank" >@Facility.WebSite</a>
+            <a href="@Facility.WebSite" target="_blank">@Facility.WebSite</a>
         </div>
     </div>
-    <div class="facility-description mt-5">
-        <p>@Facility.Description</p>
-        </div>
-}
+    <div class="facility-description mt-1  ">
+        @TruncatedDescription
+      @if(!string.IsNullOrEmpty(RemainedDescription))
+        {
+            <span id="@CollapseId" class="collapse">@RemainedDescription</span>
+            <button class="btn btn-link p-0" data-bs-toggle="collapse" data-bs-target="#@CollapseId"
+                    aria-expanded="false" aria-controls="@CollapseId">
+              Show more
+            </button>
+        }
     
+
+    </div>
+}
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var collapseElement = document.getElementById('@CollapseId');
+        if (collapseElement) {
+            collapseElement.addEventListener('shown.bs.collapse', function () {
+                var button = document.querySelector(`button[data-bs-target="#@CollapseId"]`);
+                if (button) button.textContent = 'Show less';
+            });
+            collapseElement.addEventListener('hidden.bs.collapse', function () {
+                var button = document.querySelector(`button[data-bs-target="#@CollapseId"]`);
+                if (button) button.textContent = 'Show more';
+            });
+        }
+    });
+</script>
+
 @code {
     [Parameter] public FacilityViewModel? Facility { get; set; }
+    [Parameter] public int MaxLength { get; set; } = 250;
 
+    private string TruncatedDescription => Facility?.Description != null && Facility.Description.Length > MaxLength
+        ? Facility.Description.Substring(0, MaxLength) + "..."
+        : Facility?.Description ?? string.Empty;
+    
+    private string RemainedDescription => Facility?.Description != null && Facility.Description.Length > MaxLength
+        ? Facility.Description.Substring(MaxLength)
+        : string.Empty;
+
+    private bool IsTruncated => Facility?.Description != null && Facility.Description.Length > MaxLength;
+    private string CollapseId = $"descCollapse-{Guid.NewGuid():N}";
 
     private string GetFullAddress()
     {
@@ -40,9 +78,18 @@
 
 }
 <style>
-
+    .facility-description{
+        text-align: justify;
+    }
     .facility-location {
         color: #6c757d;
         font-size: 0.9rem;
     }
+    a.facility-phone{
+ 
+        color: #6c757d;
+        text-decoration: none;
+        font-size: 0.9rem;
+    }
+ 
 </style>

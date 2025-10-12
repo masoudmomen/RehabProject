@@ -181,7 +181,7 @@
     display: inline-block;
     padding: 15px 30px;
     background: white;
-    color: rgb(116, 235, 213);
+    color: #4a90e2;
     text-decoration: none;
     border-radius: 50px;
     font-weight: 600;
@@ -191,9 +191,9 @@
 
     .btn:hover {
         transform: translateY(-2px);
-        background-color: rgb(116, 235, 213);
-        color:black;
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+      /*  background-color: rgb(116, 235, 213);*/
+        /*color:black;*/
+   /*     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);*/
     }
 .contact-grid {
     display: grid;

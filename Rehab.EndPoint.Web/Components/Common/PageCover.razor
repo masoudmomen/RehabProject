@@ -1,13 +1,10 @@
 ﻿
-
-
 <div class="cover-container"
 style="background-image: linear-gradient(rgba(0,0,0,0.5),
             rgba(0,0,0,0.5)), url('@(string.IsNullOrEmpty(CustomImageUrl) ? "/pagecover-nopic.png" : serverUrl + CustomImageUrl)');">
 
     <img class="cover-logo" src="@(string.IsNullOrEmpty(CustomLogoURL) ? "/logo-nopic.png" : serverUrl + CustomLogoURL)" alt="@PageTitle" />
-
-     <h1>@PageTitle</h1>
+    <h1 class="w-50">@PageTitle</h1>
 </div>
 
 @code {
