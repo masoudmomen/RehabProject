@@ -2,7 +2,7 @@
 @using Rehab.EndPoint.Web.Components.HomeSections
 @inject IJSRuntime jSRuntime
 @implements IAsyncDisposable
- 
+
 <HeroSection />
 <RecoveryCentersSection />
 <ConditionsSection />
@@ -10,6 +10,20 @@
 
 <InsuranceSection />
 <ResourcesSection />
+
+<!-- LOADER-->
+<!-- Circle spinning-->
+<div id="loading-overlay" class="d-none" >
+    <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+</div>
+<!-- logo spinning-->
+<div id="loading-logo-overlay" class="d-none">
+    <img src="/images/logo.png" width="50" class="spin-logo" alt="Loading..." />
+</div>
+<!-- LOADER-->
+
 @code{
     private IJSObjectReference? jsModule;
    
