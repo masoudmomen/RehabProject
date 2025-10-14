@@ -1,5 +1,5 @@
-﻿@* @page "/facility/{slug}" *@
-@page "/facility/{id}"
+﻿@page "/facility/{slug}"
+@* @page "/facility/{id}" *@
 @using Rehab.Application.Facilities
 @using Rehab.EndPoint.Web.ViewModels
 @using Rehab.EndPoint.Web.Components.Common
@@ -159,8 +159,8 @@
 </div>
  <script src="/js/stickyTitle.js" />
 @code {
-    // [Parameter] public string slug { get; set; } = string.Empty;
-    [Parameter] public string id { get; set; } = string.Empty;
+    [Parameter] public string slug { get; set; } = string.Empty;
+    // [Parameter] public string id { get; set; } = string.Empty;
     private FacilityViewModel? facility;
     private bool isLoading = true;
     private TabControl? tabControl1;
@@ -190,9 +190,9 @@
 
     protected override async Task OnInitializedAsync()
     {
-        if (!string.IsNullOrWhiteSpace(id))
+        if (!string.IsNullOrWhiteSpace(slug))
         {
-            facility = mapper.Map<FacilityViewModel>(FacilityService.FindById(int.Parse(id)));
+            facility = mapper.Map<FacilityViewModel>(FacilityService.FindBySlug(slug));
         }
         isLoading = false;
         serverUrl = Config["AppSettings:AdminServerUrl"];

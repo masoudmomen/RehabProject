@@ -23,6 +23,7 @@ namespace Rehab.Application.Facilities
         Task<PaginatedItemDto<FacilityBriefInfoDto>> GetFacilities(int page, int pageSize);
         Task<PaginatedItemDto<FacilityBriefInfoDto>> GetFacilities(int page, int pageSize, string searchText);
         FacilityDetailDto? FindById(int id);
+        FacilityDetailDto? FindBySlug(string slug);
         BaseDto<AddRequestFacilityDto> Update(AddRequestFacilityDto facility);
         BaseDto<SetFacilityImagesDto> SetFacilitiesImage(SetFacilityImagesDto facilityImages);
         SetFacilityImagesDto? GetFacilitiesImage(int FacilityId);
@@ -321,6 +322,7 @@ namespace Rehab.Application.Facilities
                     .Select(c=> new FacilityCardDto() {
                         Id = c.Id,
                         Name = c.Name,
+                        Slug = c.Slug,
                         Address = (string.IsNullOrEmpty(c.State)?"No State":c.State),
                         Logo = c.Logo,
                         Cover = c.Cover,
@@ -377,6 +379,7 @@ namespace Rehab.Application.Facilities
                     {
                         Id = c.Id,
                         Name = c.Name,
+                        Slug = c.Slug,
                         Address = (string.IsNullOrEmpty(c.State) ? "No State" : c.State),
                         Logo = c.Logo,
                         Cover = c.Cover,
@@ -391,6 +394,63 @@ namespace Rehab.Application.Facilities
                         WwtCount = c.Wwts!.Count(),
                     }).ToListAsync();
             return (facilities, totalCount);
+        }
+
+        public FacilityDetailDto? FindBySlug(string slug)
+        {
+            var facility = context.Facilities
+            .AsSplitQuery()
+            .Where(c => c.Slug == slug)
+            .Include(c => c.Insurances)
+            .Include(c => c.Accreditations)
+            .Include(c => c.Highlights)
+            .Include(c => c.Amenities)
+            .Include(c => c.Wwts)
+            .Include(c => c.Treatments)
+            .Include(c => c.FacilitysImages)
+            .Include(c => c.Locs)
+            .Include(c => c.Conditions)
+            .Include(c => c.Swts)
+            .Select(c => new FacilityDetailDto
+            {
+                Id = c.Id,
+                Name = c.Name,
+                Address = c.Address,
+                Logo = c.Logo,
+                Cover = c.Cover,
+                Description = c.Description,
+                City = c.City,
+                Email = c.Email,
+                Founded = c.Founded,
+                IsVerified = c.IsVerified,
+                OccupancyMax = c.OccupancyMax,
+                OccupancyMin = c.OccupancyMin,
+                PhoneNumber = c.PhoneNumber,
+                ProvidersPolicy = c.ProvidersPolicy,
+                Slug = c.Slug,
+                State = c.State,
+                WebSite = c.WebSite,
+                FacilitysImages = c.FacilitysImages!
+                    .Select(img => new FacilityImageDto
+                    {
+                        Id = img.Id,
+                        ImageAddress = img.ImageAddress,
+                        Title = img.Title
+                    }).ToList(),
+
+                Accreditations = c.Accreditations!.ToList(),
+                Highlights = c.Highlights!.ToList(),
+                Amenities = c.Amenities!.ToList(),
+                Treatments = c.Treatments!.ToList(),
+                Wwts = c.Wwts!.ToList(),
+                Insurances = c.Insurances!.ToList(),
+                Locs = c.Locs!.ToList(),
+                Conditions = c.Conditions!.ToList(),
+                Swts = c.Swts!.ToList(),
+            })
+            .FirstOrDefault();
+
+            return facility;
         }
     }
 
