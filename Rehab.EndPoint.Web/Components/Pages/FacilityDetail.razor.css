@@ -115,3 +115,15 @@ h2.section-title {
     height: 100%;
     object-fit: cover;  
 }
+.section-title {
+    position: sticky;
+    top: 50px;
+    background: white;
+    padding: 10px 0;
+    z-index: 10;
+    transition: all 0.3s ease;
+}
+.section-title.active {
+    color: #007bff;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
