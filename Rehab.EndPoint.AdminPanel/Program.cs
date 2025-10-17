@@ -1,4 +1,6 @@
 using AutoMapper;
+using Cropper.Blazor.Extensions;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.EntityFrameworkCore;
 using Rehab.Application.Accreditations;
@@ -19,10 +21,10 @@ using Rehab.EndPoint.AdminPanel.CommonService;
 using Rehab.EndPoint.AdminPanel.Components;
 using Rehab.EndPoint.AdminPanel.MappingProfile;
 using Rehab.Persistence.Contexts;
-using Cropper.Blazor.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
-
+builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthStateProvider>();
+builder.Services.AddAuthorizationCore();
 // Add services to the container.
 builder.Services.AddRazorComponents().AddInteractiveServerComponents();
 builder.Services.AddRazorPages();
