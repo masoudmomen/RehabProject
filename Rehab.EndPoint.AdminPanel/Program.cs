@@ -20,6 +20,9 @@ using Rehab.EndPoint.AdminPanel.Components;
 using Rehab.EndPoint.AdminPanel.MappingProfile;
 using Rehab.Persistence.Contexts;
 using Cropper.Blazor.Extensions;
+using Rehab.EndPoint.AdminPanel.CommonService.Identity;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Components.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -38,6 +41,18 @@ var connection = builder.Configuration["ConnectionString:sqlServer"];
 builder.Services.AddDbContext<DatabaseContext>(option => option.UseSqlServer(connection));
 #endregion
 
+#region Identity Config
+builder.Services.AddDbContext<ApplicationDbContext>(option =>option.UseSqlServer(connection));
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
+    .AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddSignInManager()
+    .AddDefaultTokenProviders();
+builder.Services.AddCascadingAuthenticationState();
+//builder.Services.AddScoped<IdentityUserAccessor>();
+//builder.Services.AddScoped<IdentityRedirectManager>();
+//builder.Services.AddScoped<AuthenticationStateProvider, PersistingRevalidatingAuthenticationStateProvider>();
+builder.Services.AddRazorPages();
+#endregion
 
 #region IOC
 builder.Services.AddAutoMapper(typeof(CommonMappingProfile)); //Mapper
@@ -85,6 +100,9 @@ app.UseHttpsRedirection();
 //app.UsePathBase("/admin"); //for publish
 app.UseRouting();
 app.UseStaticFiles();
+app.UseAuthentication();
+app.UseAuthorization();
+app.MapRazorPages();
 //app.MapBlazorHub();
 //app.MapFallbackToPage("/App");
 
