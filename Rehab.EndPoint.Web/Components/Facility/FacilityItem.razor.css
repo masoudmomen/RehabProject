@@ -103,3 +103,7 @@
     max-height: calc(1.4em * 2);
     min-height: calc(1.4em * 2);
 }
+.small-card ::deep .btn.btn-visit {
+    padding: 5px;
+    font-weight: 500;
+}

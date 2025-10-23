@@ -1,0 +1,75 @@
+﻿<h4 class="fs-6 mt-2 me-3 py-2" style="
+    border-bottom: solid 2px #93e2f1;">
+    Add more filters
+</h4>
+<div class="facility-filter-container">
+    <div class="autocomplete-container pe-3 border-bottom">
+        <label for="amenities" class="form-label fw-bold">Amenities</label>
+        <input type="text" id="amenities" class="w-100 rounded-3 filter-input" autocomplete="off" placeholder="Enter amenity name...">
+        <div class="autocomplete-list mt-1 ms-2"></div>
+        <div class="selected-items"></div>
+    </div>
+    <div class="autocomplete-container pe-3 border-bottom mt-3">
+        <label for="acceptedinsurance" class="form-label mb-0 fw-bold">Insurance</label>
+        <input type="text" id="acceptedinsurance" class="w-100 rounded-3 filter-input" autocomplete="off" placeholder="Enter insurance name...">
+        <div class="autocomplete-list mt-1 ms-2"></div>
+        <div class="selected-items"></div>
+    </div>
+      <div class="autocomplete-container pe-3 border-bottom mt-3">
+        <label for="accreditations" class="form-label mb-0 fw-bold">Accreditations</label>
+        <input type="text" id="accreditations" class="w-100 rounded-3 filter-input" autocomplete="off" placeholder="Enter accreditation name...">
+        <div class="autocomplete-list mt-1 ms-2"></div>
+        <div class="selected-items"></div>
+    </div>
+      <div class="autocomplete-container pe-3 border-bottom mt-3">
+        <label for="hilights" class="form-label mb-0 fw-bold">Hilights</label>
+        <input type="text" id="hilights" class="w-100 rounded-3 filter-input" autocomplete="off" placeholder="Enter hilight name...">
+        <div class="autocomplete-list mt-1 ms-2"></div>
+        <div class="selected-items"></div>
+    </div>
+      <div class="autocomplete-container pe-3 border-bottom mt-3">
+        <label for="wwt" class="form-label mb-0 fw-bold">Who We Treat</label>
+        <input type="text" id="wwt" class="w-100 rounded-3 filter-input" autocomplete="off" placeholder="Enter who we treat...">
+        <div class="autocomplete-list mt-1 ms-2"></div>
+        <div class="selected-items"></div>
+    </div>
+      <div class="autocomplete-container pe-3 border-bottom mt-3">
+        <label for="Treatments" class="form-label mb-0 fw-bold">Treatments</label>
+        <input type="text" id="Treatments" class="w-100 rounded-3 filter-input" autocomplete="off" placeholder="Enter who we treat...">
+        <div class="autocomplete-list mt-1 ms-2"></div>
+        <div class="selected-items"></div>
+    </div>
+      <div class="autocomplete-container pe-3 border-bottom mt-3">
+        <label for="swt" class="form-label mb-0 fw-bold">Substances We Treat</label>
+        <input type="text" id="swt" class="w-100 rounded-3 filter-input" autocomplete="off" placeholder="Enter who we treat...">
+        <div class="autocomplete-list mt-1 ms-2"></div>
+        <div class="selected-items"></div>
+    </div>
+</div>
+<style>
+    .selected-items{
+        font-size:12px;
+    }
+    .closebtn {
+        margin-left: 8px;
+        color: red;
+    }
+
+    .tag-item {
+        display: inline;
+        margin-right: 10px;
+        border-right: solid 1px #eee;
+    }
+
+    .facility-filter-container{
+        
+    }
+    input.filter-input{
+        font-size:12px;
+        padding:3px;
+        border:solid 1px #eee;
+    }
+</style>
+@code {
+
+}
