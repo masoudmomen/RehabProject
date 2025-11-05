@@ -1,9 +1,11 @@
 ﻿@page "/"
+@using Rehab.EndPoint.Web.Components.Facility
 @using Rehab.EndPoint.Web.Components.HomeSections
 @inject IJSRuntime jSRuntime
 @implements IAsyncDisposable
 
 <HeroSection />
+<FilterByState />
 <RecoveryCentersSection />
 <ConditionsSection />
  
