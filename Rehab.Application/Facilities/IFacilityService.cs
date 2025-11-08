@@ -33,6 +33,7 @@ namespace Rehab.Application.Facilities
         bool RemoveFacilityImage(int facilityId, int  imageId);
         List<FacilityNameSlugDto> SetSlug();
         List<FacilityCardDto>? GetRandomFacilityCardForHomePage(int CardCount);
+        List<FacilityCardDto>? GetRandomFacilityCardForHomePage(int CardCount, string state);
         Task<(List<FacilityCardDto>, int totalCount)> GetFacilitiesAsync(int pageNumber, int pageSize);
     }
 
@@ -327,6 +328,40 @@ namespace Rehab.Application.Facilities
                         Logo = c.Logo,
                         Cover = c.Cover,
                         CardImage = c.FacilitysImages!.Select(f=>f.ImageAddress).FirstOrDefault(),
+                        AccreditationCount = c.Accreditations!.Count(),
+                        AmenityCount = c.Amenities!.Count(),
+                        ConditionCount = c.Conditions!.Count(),
+                        HighlightCount = c.Highlights!.Count(),
+                        InsuranceCount = c.Insurances!.Count(),
+                        SwtCount = c.Swts!.Count(),
+                        TreatmentCount = c.Treatments!.Count(),
+                        WwtCount = c.Wwts!.Count(),
+                    }).Take(CardCount).ToList();
+        }
+
+        public List<FacilityCardDto>? GetRandomFacilityCardForHomePage(int CardCount, string state)
+        {
+            return context.Facilities
+                    .Include(c => c.FacilitysImages)
+                    .Include(c => c.Insurances)
+                    .Include(c => c.Accreditations)
+                    .Include(c => c.Wwts)
+                    .Include(c => c.Swts)
+                    .Include(c => c.Amenities)
+                    .Include(c => c.Conditions)
+                    .Include(c => c.Highlights)
+                    .Include(c => c.Locs)
+                    .Include(c => c.Treatments)
+                    .Where(c => c.Logo != "" && c.FacilitysImages.Count > 0 && c.State.Contains(state))
+                    .Select(c => new FacilityCardDto()
+                    {
+                        Id = c.Id,
+                        Name = c.Name,
+                        Slug = c.Slug,
+                        Address = (string.IsNullOrEmpty(c.State) ? "No State" : c.State),
+                        Logo = c.Logo,
+                        Cover = c.Cover,
+                        CardImage = c.FacilitysImages!.Select(f => f.ImageAddress).FirstOrDefault(),
                         AccreditationCount = c.Accreditations!.Count(),
                         AmenityCount = c.Amenities!.Count(),
                         ConditionCount = c.Conditions!.Count(),
