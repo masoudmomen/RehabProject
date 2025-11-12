@@ -1,4 +1,5 @@
 ﻿@page "/States/{statename}"
+@rendermode InteractiveServer
 @using Rehab.EndPoint.Web.ViewModels
 @using Rehab.EndPoint.Web.Components.Common
 @using Rehab.EndPoint.Web.Components.Facility
@@ -10,14 +11,16 @@
 <div class="container mt-5 mb-5">
     <h2 class="section-title text-center p-2">Our Recovery Centers</h2>
     <div class="row g-4">
-        <div class="col-12 col-md-3">
-            <Virtualize ItemsProvider="LoadFacilities" Context="facility" ItemSize="5" TItem="FacilityCardViewmodel">
+        
+            <Virtualize ItemsProvider="LoadFacilities" Context="facility" ItemSize="320" TItem="FacilityCardViewmodel">
                 <ItemContent Context="facility">
-                    <FacilityItem FacilityCard="facility" />
+                    <div class="col-12 col-md-3">
+                        <FacilityItem FacilityCard="facility" />
+                    </div>
                 </ItemContent>
             </Virtualize>
         </div>
-    </div>
+    
 </div>
 @code {
     [Parameter]
