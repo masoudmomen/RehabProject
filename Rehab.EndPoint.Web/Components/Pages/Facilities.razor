@@ -20,13 +20,15 @@
             }
         } *@
 
-        <div class="col-12 col-md-3">
-        <Virtualize ItemsProvider="LoadFacilities" Context="facility" ItemSize="5" TItem="FacilityCardViewmodel">
+        
+        <Virtualize ItemsProvider="LoadFacilities" Context="facility" ItemSize="320" TItem="FacilityCardViewmodel">
             <ItemContent Context="facility">
-                <FacilityItem FacilityCard="facility" />
+                <div class="col-12 col-md-3">
+                    <FacilityItem FacilityCard="facility" />
+                </div>
             </ItemContent>
         </Virtualize>
-        </div>
+        
     </div>
 
     @* <a href="#" class="btn btn-outline-primary rounded-3 w-100 text-primary">Visit All</a> *@
