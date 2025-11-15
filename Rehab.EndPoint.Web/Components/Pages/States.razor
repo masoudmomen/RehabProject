@@ -34,7 +34,7 @@
 
     private async ValueTask<ItemsProviderResult<FacilityCardViewmodel>> LoadFacilities(ItemsProviderRequest request)
     {
-        var result = await FacilityService.GetFacilitiesAsync(request.StartIndex / 50 + 1, 50);
+        var result = await FacilityService.GetFacilitiesAsync(request.StartIndex / 50 + 1, 50, statename);
         return new ItemsProviderResult<FacilityCardViewmodel>(mapper.Map<List<FacilityCardViewmodel>>(result.Item1), result.totalCount);
     }
 }
