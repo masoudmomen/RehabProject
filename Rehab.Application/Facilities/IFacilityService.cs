@@ -34,7 +34,7 @@ namespace Rehab.Application.Facilities
         List<FacilityNameSlugDto> SetSlug();
         List<FacilityCardDto>? GetRandomFacilityCardForHomePage(int CardCount);
         List<FacilityCardDto>? GetRandomFacilityCardForHomePage(int CardCount, string state);
-        Task<(List<FacilityCardDto>, int totalCount)> GetFacilitiesAsync(int pageNumber, int pageSize);
+        Task<(List<FacilityCardDto>, int totalCount)> GetFacilitiesAsync(int pageNumber, int pageSize, string state);
     }
 
     
@@ -392,9 +392,9 @@ namespace Rehab.Application.Facilities
             return new List<FacilityNameSlugDto>();
         }
 
-        public async Task<(List<FacilityCardDto>, int totalCount)> GetFacilitiesAsync(int pageNumber, int pageSize)
+        public async Task<(List<FacilityCardDto>, int totalCount)> GetFacilitiesAsync(int pageNumber, int pageSize, string state)
         {
-            var query = context.Facilities.Where(c => c.Logo != "" && c.FacilitysImages.Count > 0).AsQueryable();
+            var query = context.Facilities.Where(c => c.Logo != "" && c.FacilitysImages.Count > 0 && c.State.Contains(state)).AsQueryable();
             var totalCount = await query.CountAsync();
             var facilities = await query
                 .OrderBy(c=>c.Id)
