@@ -1,0 +1,40 @@
+﻿@page "/States/{statename}"
+@rendermode InteractiveServer
+@using Rehab.EndPoint.Web.ViewModels
+@using Rehab.EndPoint.Web.Components.Common
+@using Rehab.EndPoint.Web.Components.Facility
+@using Rehab.Application.Facilities
+@inject IFacilityService FacilityService
+@inject AutoMapper.IMapper mapper
+<h1></h1>
+
+<div class="container mt-5 mb-5">
+    <h2 class="section-title text-center p-2">Our Recovery Centers</h2>
+    <div class="row g-4">
+        
+            <Virtualize ItemsProvider="LoadFacilities" Context="facility" ItemSize="320" TItem="FacilityCardViewmodel">
+                <ItemContent Context="facility">
+                    <div class="col-12 col-md-3">
+                        <FacilityItem FacilityCard="facility" />
+                    </div>
+                </ItemContent>
+            </Virtualize>
+        </div>
+    
+</div>
+@code {
+    [Parameter]
+    public string? statename { get; set; }
+    
+    private List<FacilityCardViewmodel>? FacilityCards { get; set; }
+    protected override void OnInitialized()
+    {
+        FacilityCards = mapper.Map<List<FacilityCardViewmodel>>(FacilityService.GetRandomFacilityCardForHomePage(12, statename));
+    }
+
+    private async ValueTask<ItemsProviderResult<FacilityCardViewmodel>> LoadFacilities(ItemsProviderRequest request)
+    {
+        var result = await FacilityService.GetFacilitiesAsync(request.StartIndex / 50 + 1, 50, statename);
+        return new ItemsProviderResult<FacilityCardViewmodel>(mapper.Map<List<FacilityCardViewmodel>>(result.Item1), result.totalCount);
+    }
+}

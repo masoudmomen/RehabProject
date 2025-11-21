@@ -1,0 +1,29 @@
+﻿@using Rehab.EndPoint.Web.Components.Facility
+<section class="d-flex flex-column justify-content-center bg-light-gray">
+    <div class="container ">
+        <h2 class="section-title text-center mt-5 mb-1">Browse Facilities by State</h2>
+        <div class="row">
+            <div class="col-md-7">
+                <StatesMap />
+            </div>
+            <div class="col-md-5 align-self-center ps-5">
+                <StateByAlphabet></StateByAlphabet>
+            </div>
+        </div>
+    </div>
+</section>
+<style>
+    .bg-light-gray{
+        background-color: #eee;
+    }
+    h2.section-title {
+        font-weight: 700;
+        background: linear-gradient(270deg, #063d8d, #5e388b, #7b1573);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        animation: fadeInUp 1s ease-out;
+    }
+
+    
+</style>

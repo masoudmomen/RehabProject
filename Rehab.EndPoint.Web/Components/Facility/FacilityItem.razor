@@ -2,9 +2,7 @@
 @using Rehab.EndPoint.Web.ViewModels
 
 
-
-<div class="col-12 col-md-3">
-    <div class="card h-100 border-0 facility-item">
+    <div class="card h-100 border-0 facility-item @CustomClass">
         <div class="facility-skin">
             <img src="@(string.IsNullOrEmpty(FacilityCard?.CardImage) ? "/images/no-image.jpg" : serverUrl + FacilityCard.CardImage)" alt="@FacilityCard?.Name" />
             <div class="facility-logo">
@@ -13,28 +11,32 @@
         </div>
 
 
-        <div class="card-body facility-body pt-2">
+        <div class="card-body facility-body pt-2 ">
             <h5 class="card-title text-center fw-bold mb-3">@FacilityCard?.Name</h5>
             <div class="d-flex justify-content-center facility-location">
                 <i class="fa-solid fa-location-dot"></i>
                 <span class="truncate-text">@FacilityCard!.Address</span>
             </div>
-            <div class="d-flex flex-wrap gap-1 mt-3 mb-3">
-                <a href="#" class="facility-tag">Insurances (@FacilityCard!.InsuranceCount)</a>
-                <a href="#" class="facility-tag">Accreditations (@FacilityCard!.AccreditationCount)</a>
-                <a href="#" class="facility-tag">Amenities(@FacilityCard!.AmenityCount)</a>
-                <a href="#" class="facility-tag">Highlights(@FacilityCard!.HighlightCount)</a>
-                <a href="#" class="facility-tag">Who We Treat(@FacilityCard!.WwtCount)</a>
-                <a href="#" class="facility-tag">Treatments(@FacilityCard!.TreatmentCount)</a>
-                <a href="#" class="facility-tag">Conditions (@FacilityCard!.ConditionCount)</a>
-                <a href="#" class="facility-tag">Substances We Treat(@FacilityCard!.SwtCount)</a>
-            </div>
+            @if (ShowTags)
+            {
+                <div class="d-flex flex-wrap gap-1 mt-3 mb-3">
+                    <a href="#" class="facility-tag">Insurances (@FacilityCard!.InsuranceCount)</a>
+                    <a href="#" class="facility-tag">Accreditations (@FacilityCard!.AccreditationCount)</a>
+                    <a href="#" class="facility-tag">Amenities(@FacilityCard!.AmenityCount)</a>
+                    <a href="#" class="facility-tag">Highlights(@FacilityCard!.HighlightCount)</a>
+                    <a href="#" class="facility-tag">Who We Treat(@FacilityCard!.WwtCount)</a>
+                    <a href="#" class="facility-tag">Treatments(@FacilityCard!.TreatmentCount)</a>
+                    <a href="#" class="facility-tag">Conditions (@FacilityCard!.ConditionCount)</a>
+                    <a href="#" class="facility-tag">Substances We Treat(@FacilityCard!.SwtCount)</a>
+                </div>
+            }
+      
 
             <a class="btn btn-visit d-block mx-auto mb-3 px-4"
                href="facility/@FacilityCard.Slug" data-enhance-nav="false">Visit</a>
         </div>
     </div>
-</div>
+ 
 
 
 @code {
@@ -47,7 +49,8 @@
     [Parameter] public string? CustomImageUrl { get; set; }
     [Parameter] public string? CustomLogoUrl { get; set; }
     [Parameter] public string? CustomVisitUrl { get; set; }
-
+    [Parameter] public bool ShowTags { get; set; } = true;
+    [Parameter] public string? CustomClass { get; set; } = "";
     protected override void OnInitialized()
     {
         base.OnInitialized();

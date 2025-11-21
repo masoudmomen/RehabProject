@@ -7,34 +7,88 @@
 <div class="main-body">
     @Body
 </div>
- 
+
 <!--Facility Search Modal -->
-<div class="modal fade" id="facilitySearchModal"  tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl">
+<div class="modal  fade" id="facilitySearchModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl custom-modal">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="modalLabel">Facility Search </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <h2 class="section-title text-center p-2">Our Recovery Centers</h2>
-                <div class="row g-4">
-                    @foreach (var facility in MockFacilityData.GetSampleFacilities())
-                    {
-                        <FacilityItem Facility="@facility" />
-                    }
+            <button type="button" class="btn-close position-absolute top-0 end-0 z-2" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="modal-body p-0">
+                <div class="container bg-gradient-rehab rounded-top-2 pb-3">
+                    <div class="row justify-content-center align-items-center py-3">
+                        <div class="col-auto">
+                            <img src="/images/logo.png" width="64" alt="Rehab" />
+                        </div>
+                        <div class="col-auto">
+                            <h2>Discover Rehab Centers</h2>
+                        </div>
+                    </div>
+                    <div class="row bg-white mx-2 py-2 rounded-5 position-relative">
+                        <div class="border-end  px-3 autocomplete-container center-name" s>
+                            <input type="text" id="centerName" class="border-0" placeholder="Enter rehab name...">
+                            <div class="autocomplete-list ms-2"></div>
+                        </div>
+                        <div class="border-end autocomplete-container center-state">
+                            <input type="text" id="stateName" class="border-0" placeholder="State name...">
+                            <div class="autocomplete-list"></div>
+                        </div>
+                        <div class="border-end autocomplete-container center-city">
+                            <input type="text" id="cityName" class="border-0" placeholder="City name" />
+                            <div class="autocomplete-list"></div>
+                        </div>
+                        <div class="border-end autocomplete-container center-condition">
+                            <input type="text" id="condition" class="border-0" placeholder="Condition" />
+                            <div class="autocomplete-list"></div>
+                        </div>
+                        <div class="search-btn">
+                            <a href="#">
+                                <i class="fa-solid fa-magnifying-glass text-white fw-bold"></i>
+                                <span class="search-text d-inline-block d-md-none text-white">Search</span>
+                            </a>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="row pe-3">
+
+                    <div class="col-md-9 facilities-list">
+
+                        <div class="row g-3 ps-4 pe-1 facilities-list-container">
+                            @foreach (var facility in MockFacilityData.GetSampleFacilities())
+                            {
+                                <div class="col-12 col-md-3 facility-card">
+                                    <FacilityItem FacilityCard="@facility"
+                                                  ShowTags="false"
+                                                  CustomClass="small-card" />
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    <div class="col-md-3 facility-filter">
+                        <div class="faciliti-filter-scroll">
+                        <FacilityFilter />
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            </div>
+
         </div>
     </div>
 </div>
 <Footer />
 
 <style>
-    .main-body {
-       /*  padding-bottom:150px; */
+
+    .autocomplete-item {
+        padding: 8px;
+        cursor: pointer;
+       
+        border-bottom: 1px solid #ddd;
+ 
+        cursor: pointer;
+        background-color: #e9f4f7;
     }
+
+
 </style>
+<script src="/js/autoComplete.js"></script>
