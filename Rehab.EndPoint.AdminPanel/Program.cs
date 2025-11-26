@@ -1,7 +1,11 @@
 using AutoMapper;
 using Cropper.Blazor.Extensions;
+using Cropper.Blazor.Extensions;
+using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Rehab.Application.Accreditations;
 using Rehab.Application.Amenities;
@@ -18,13 +22,10 @@ using Rehab.Application.Treatments;
 using Rehab.Application.Users;
 using Rehab.Application.WhoWeTreat;
 using Rehab.EndPoint.AdminPanel.CommonService;
+using Rehab.EndPoint.AdminPanel.CommonService.Identity;
 using Rehab.EndPoint.AdminPanel.Components;
 using Rehab.EndPoint.AdminPanel.MappingProfile;
 using Rehab.Persistence.Contexts;
-using Cropper.Blazor.Extensions;
-using Rehab.EndPoint.AdminPanel.CommonService.Identity;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Components.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthStateProvider>();
@@ -38,6 +39,7 @@ builder.Services.AddServerSideBlazor()
      {
          options.MaximumReceiveMessageSize = 32 * 1024 * 100;
      });
+
 #region Connection String
 builder.Services.AddScoped<IDatabaseContext, DatabaseContext>();
 var connection = builder.Configuration["ConnectionString:sqlServer"];
@@ -73,7 +75,7 @@ builder.Services.AddTransient<ITreatmentService, TreatmentService>();
 builder.Services.AddTransient<IConditionService, ConditionService>();
 builder.Services.AddTransient<ISubstancesWeTreatService, SwtService>();
 builder.Services.AddTransient<ITagService,TagService>();
-builder.Services.AddHttpClient<LocationService>();
+builder.Services.AddHttpClient<InternalLocationService>();
 builder.Services.AddScoped<LocationService>();
 builder.Services.AddScoped<AlertService>();
 builder.Services.AddScoped<IImageUploaderService, ImageUploaderService>();
