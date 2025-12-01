@@ -49,7 +49,7 @@
                                         &ensp;&ensp;&ensp;
                                         <i class="fa fa-image cursor-pointer" title="Facilities Images" @onclick="()=>OpenFacilityImagesModal(item.Id)"></i>
                                         &ensp;&ensp;&ensp;
-                                        <i class="fa fa-trash cursor-pointer" title="Delete Facility"></i>
+                                        <i class="fa fa-trash cursor-pointer" title="Delete Facility" @onclick="()=>OpenDeleteFacilityModal(item.Id)"></i>
                                     </td>
                                 </tr>
                             }
@@ -102,9 +102,11 @@
 @* End Open Modal for Detail: *@
 
 @* Start Open Modal for Images: *@
-<FacilityImagesModalComponent Model="FacilityImages" @ref="FacilityImagesModal" OnClose="OnCloseFacilityImageComponent" />
+<FacilityImagesModalComponent Model="FacilityImages" @ref="FacilityImagesModal" OnClose="OnCloseFacilityModalsComponent" />
 @* End Open Modal for Edit: *@
-<FacilityEditModalComponent Facility="Facility" @ref="FacilityEditModal" OnClose="OnCloseFacilityEditComponent" />
+<FacilityEditModalComponent Facility="Facility" @ref="FacilityEditModal" OnClose="OnCloseFacilityModalsComponent" />
+
+<FacilityDeleteModalComponent Model="Facility" @ref="FacilityDeleteModal" OnClose="OnCloseFacilityModalsComponent"  />
 @code {
 
     public PaginatedItemDto<FacilityBriefInfoDto>? FacilitiesList { get; set; }
@@ -116,11 +118,12 @@
     private int MinPagingButton = 1;
     private int gotoPageNumber;
 
-    public FacilityViewmodel? Facility { get; set; }
+    public FacilityViewmodel Facility { get; set; } = new();
     public SetFacilityImagesViewmodel? FacilityImages { get; set; }
     private FacilityDetailModalComponent? FacilityDetailModal;
     private FacilityImagesModalComponent? FacilityImagesModal;
     private FacilityEditModalComponent? FacilityEditModal;
+    private FacilityDeleteModalComponent? FacilityDeleteModal;
 
     private string? searchText;
     private Action<string?>? _searchHandler;
@@ -136,20 +139,20 @@
         SearchService.OnSearchRequested += _searchHandler;
     } 
 
-    async Task OnCloseFacilityImageComponent()
-    {
-        if (string.IsNullOrWhiteSpace(searchText))
-        {
-            FacilitiesList = await FacilityService.GetFacilities(CurrentPage, PageSize);
-        }
-        else
-        {
-            FacilitiesList = await FacilityService.GetFacilities(CurrentPage, PageSize, searchText);
-        }
-        TotalPages = FacilitiesList.Pager.TotalPages;
-        CurrentPage = FacilitiesList.PageIndex;
-        await CheckPagingButtons();
-    }
+    // async Task OnCloseFacilityImageComponent()
+    // {
+    //     if (string.IsNullOrWhiteSpace(searchText))
+    //     {
+    //         FacilitiesList = await FacilityService.GetFacilities(CurrentPage, PageSize);
+    //     }
+    //     else
+    //     {
+    //         FacilitiesList = await FacilityService.GetFacilities(CurrentPage, PageSize, searchText);
+    //     }
+    //     TotalPages = FacilitiesList.Pager.TotalPages;
+    //     CurrentPage = FacilitiesList.PageIndex;
+    //     await CheckPagingButtons();
+    // }
 
     private async Task OnPageChanged(int page)
     {
@@ -199,7 +202,7 @@
         FacilityEditModal!.Open();
 
     }
-    async Task OnCloseFacilityEditComponent()
+    async Task OnCloseFacilityModalsComponent()
     {
         if (string.IsNullOrWhiteSpace(searchText))
         {
@@ -238,4 +241,10 @@
         SearchService.OnSearchRequested -= _searchHandler;
     }
 
+
+    private void OpenDeleteFacilityModal(int id)
+    {
+        Facility = mapper.Map<FacilityViewmodel>(FacilityService.FindById(id));
+        FacilityDeleteModal!.Show();
+    }
 }

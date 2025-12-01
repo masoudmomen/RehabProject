@@ -35,6 +35,7 @@ namespace Rehab.Application.Facilities
         List<FacilityCardDto>? GetRandomFacilityCardForHomePage(int CardCount);
         List<FacilityCardDto>? GetRandomFacilityCardForHomePage(int CardCount, string state);
         Task<(List<FacilityCardDto>, int totalCount)> GetFacilitiesAsync(int pageNumber, int pageSize, string state);
+        BaseDto<FacilityDetailDto> Delete(FacilityDetailDto facility);
     }
 
     
@@ -486,6 +487,34 @@ namespace Rehab.Application.Facilities
             .FirstOrDefault();
 
             return facility;
+        }
+
+        public BaseDto<FacilityDetailDto> Delete(FacilityDetailDto facility)
+        {
+            if (facility == null) return new BaseDto<FacilityDetailDto>() { Data = null, Message= "Facility is empty!" , Success= false, Status="danger"};
+            var result = context.Facilities.FirstOrDefault(c=>c.Id == facility.Id);
+            if(result == null) return new BaseDto<FacilityDetailDto>() { Success = false, Message = "Facility not found!", Status = "danger" };
+
+            result.Swts!.Clear();
+            result.Wwts!.Clear();
+            result.Accreditations!.Clear();
+            result.Amenities!.Clear();
+            result.Conditions!.Clear();
+            result.FacilitysImages!.Clear();
+            result.Highlights!.Clear();
+            result.Insurances!.Clear();
+            result.Locs!.Clear();
+            result.Treatments!.Clear();
+            if (context.SaveChanges() > 0)
+            {
+                context.Facilities.Remove(result);
+                if (context.SaveChanges()>0)
+                {
+                    return new BaseDto<FacilityDetailDto>() { Data = facility, Message = "Facility deleted Successfully.", Success = true , Status = "success" };
+                }
+                return new BaseDto<FacilityDetailDto>() { Success = false, Message = "Delete Operation was Failed! Try later...", Status = "danger" };
+            }
+            return new BaseDto<FacilityDetailDto>() { Success = false, Message = "Delete Operation was Failed! Try later...", Status = "danger" };
         }
     }
 
