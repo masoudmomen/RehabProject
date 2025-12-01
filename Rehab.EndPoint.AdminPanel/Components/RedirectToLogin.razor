@@ -1,0 +1,10 @@
+﻿@inject NavigationManager NavigationManager
+@code {
+    protected override void OnInitialized()
+    {
+        if (!NavigationManager.Uri.Contains("/login"))
+        {
+            NavigationManager.NavigateTo("/login");
+        }
+    }
+}

@@ -1,7 +1,7 @@
 ﻿@using Rehab.EndPoint.AdminPanel.CommonService
 @using Rehab.EndPoint.AdminPanel.Viewmodels
 @rendermode InteractiveServer
-@inject LocationService LocationService
+@inject InternalLocationService InternalLocationService
 
 
 
@@ -13,7 +13,7 @@
         {
             @foreach(var s in States)
             {
-                <option value="@s.Name">@s.Name</option>
+                <option value="@s">@s</option>
             }
         }
     </select>
@@ -38,14 +38,14 @@
     public FacilityViewmodel Facility { get; set; } = new();
 
     //مربوط به api شهر و استان
-    private List<State>? States = new();
+    private List<string>? States = new();
     private List<string> Cities = new();
 
     private string? SelectedState;
 
     protected override async Task OnInitializedAsync()
     {
-        States = await LocationService.GetStatesAsync("United States");
+        States = await InternalLocationService.GetStatesAsync();
     }
 
     protected override async Task OnParametersSetAsync()
@@ -55,7 +55,7 @@
             if (SelectedState != Facility.State)
             {
                 SelectedState = Facility.State;
-                Cities = await LocationService.GetCitiesAsync(SelectedState);
+                Cities = await InternalLocationService.GetCitiesByStateAsync(SelectedState);
             }
         }
     }
@@ -66,7 +66,7 @@
         if (!string.IsNullOrEmpty(SelectedState))
         {
             Facility.State = SelectedState;
-            Cities = await LocationService.GetCitiesAsync(SelectedState);
+            Cities = await InternalLocationService.GetCitiesByStateAsync(SelectedState);
             Facility.City = "";
             StateHasChanged();
         }

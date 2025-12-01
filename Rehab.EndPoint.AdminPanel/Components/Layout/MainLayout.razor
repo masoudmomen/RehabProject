@@ -102,12 +102,18 @@
         <!-- Navbar End -->
         <!-- Blank Start -->
         <div class="container-fluid pt-4 px-4">
+           @*  <Microsoft.AspNetCore.Components.Authorization.AuthorizeView>
+                <Authorized> *@
             <div class="row  bg-light rounded p-2 mx-0 ">
                 @* vh-100 align-items-center justify-content-center *@
                 <GlobalAlertComponent />
                 @Body
-                
             </div>
+                @* </Authorized>
+                <NotAuthorized>
+                    <RedirectToLogin />
+                </NotAuthorized>
+            </Microsoft.AspNetCore.Components.Authorization.AuthorizeView> *@
         </div>
         <!-- Blank End -->
         <!-- Footer Start -->
