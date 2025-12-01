@@ -1,0 +1,33 @@
+﻿ 
+<ol class="breadcrumb">
+     @if (Items != null && Items.Any())
+     {
+        @for (int i = 0; i < Items.Count; i++)
+        {
+            var item = Items[i];
+            var isLast = i == Items.Count - 1;  
+            <li class="breadcrumb-item @(isLast? "active": "" ) ">
+                @if (!isLast)
+                {
+                    <a href="@item.Href">@item.Text</a>
+                }
+                else
+                {
+                    @item.Text
+                }
+
+            </li>
+        }
+     }
+</ol>
+@code {
+    public class BreadCrumbItem
+    {
+        public string Text { get; set; } = string.Empty;
+        public string Href { get; set; } = "#";
+        public bool IsActive { get; set; } = false;
+    }
+    [Parameter]
+    public List<BreadCrumbItem> Items { get; set; } = new();
+
+}

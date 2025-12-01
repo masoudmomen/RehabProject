@@ -1,4 +1,4 @@
-﻿@page "/States/{statename}"
+@page "/States/{statename}"
 @rendermode InteractiveServer
 @using Rehab.EndPoint.Web.ViewModels
 @using Rehab.EndPoint.Web.Components.Common
@@ -6,14 +6,8 @@
 @using Rehab.Application.Facilities
 @inject IFacilityService FacilityService
 @inject AutoMapper.IMapper mapper
-<div class="container  rounded-2 py-2"> 
-<div>
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a class="text-decoration-none" href="#">Home</a></li>
-        <li class="breadcrumb-item"><a class="text-decoration-none"  href="#">States</a></li>
-        <li class="breadcrumb-item active" aria-current="page">@statename</li>
-    </ol>
-</div>
+<div class="container  rounded-2 py-2">
+    <BreadCrumbComponent Items="@breadCrumbItems"></BreadCrumbComponent>
 </div>
 
 <div class="container image-container">
@@ -22,92 +16,147 @@
     <div class="state-title">
         Recovery Centers in @statename
     </div>
- </div>
-<div class="container mt-5 mb-5">
-    <h2 class="section-title text-center p-2">Our Recovery Centers in @statename</h2>
-    <div class="row g-4">
-
-        <Virtualize ItemsProvider="LoadFacilities" Context="facility" ItemSize="320" TItem="FacilityCardViewmodel">
-            <ItemContent Context="facility">
-                <div class="col-12 col-md-3">
-                    <FacilityItem FacilityCard="facility" />
-                </div>
-            </ItemContent>
-        </Virtualize>
-    </div>
-
 </div>
+<div class="container mt-3">
+    <div class="row">
+    <div class="col-md-9">
+            <SearchComponent></SearchComponent>
+            <div class="container mt-3 mb-5 featured-centers border border-1 rounded-3 pt-2 ">
+                <div class="d-flex align-items-center py-2" style="border-bottom: solid 2px #93e2f1;">
+                    <i class="fa-solid fa-star text-primary"></i>
+                    <h5 class=" mb-0">Top featured recovery centers in @statename</h5>
+                </div>
+               
+                <div class="row g-4">
+
+                    <Virtualize ItemsProvider="LoadFeaturedFacilities" Context="facility" ItemSize="320" TItem="FacilityCardViewmodel">
+                        <ItemContent Context="facility">
+                            <div class="col-12 col-md-3">
+                                <FacilityItem ShowTags="false" FacilityCard="facility" CustomClass="small-card" />
+                            </div>
+                        </ItemContent>
+                    </Virtualize>
+                </div>
+
+            </div>
+            <div class="container mt-3 mb-5 featured-centers ">
+                <div class="d-flex align-items-center py-2" style="border-bottom: solid 2px #93e2f1;">
+                    
+                    <h5 class=" mb-0">Our recovery centers in @statename</h5>
+                </div>
+
+                <div class="row g-4">
+
+                    <Virtualize ItemsProvider="LoadFacilities" Context="facility" ItemSize="320" TItem="FacilityCardViewmodel">
+                        <ItemContent Context="facility">
+                            <div class="col-12 col-md-3">
+                                <FacilityItem ShowTags="false" FacilityCard="facility" CustomClass="small-card" />
+                            </div>
+                        </ItemContent>
+                    </Virtualize>
+                </div>
+
+            </div>
+       
+    </div>
+    <div class="col-md-3">
+            <div class="border border-1 px-3 rounded-3">
+                <FacilityFilter />
+        </div>
+         
+    </div>
+    </div>
+</div>
+ 
+
 @code {
     [Parameter]
     public string? statename { get; set; }
+    private List<BreadCrumbComponent.BreadCrumbItem> breadCrumbItems = new();
+    protected override void OnParametersSet()
+    {
+        breadCrumbItems = new()
+        {
+            new() {Text="Home" , Href="/"},
+            new() {Text="States" , Href="/"},
+            new() {Text= statename?? "Unknown" ,IsActive=true}
 
-    private List<FacilityCardViewmodel>? FacilityCards { get; set; }
+        };
+
+    }
+
+
+    private List<FacilityCardViewmodel>
+    ? FacilityCards
+    { get; set; }
 
     // Mock data structure for state images
-    private static readonly Dictionary<string, string> StateImages = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
-    {
-        { "Alabama", "Alabama.jpeg" },
-        { "Alaska", "Alaska.jpg" },
-        { "Arizona", "arizona.jpg" },
-        { "Arkansas", "Arkansas.jpg" },
-        { "California", "california.jpg" },
-        { "Colorado", "Colorado.jpg" },
-        { "Connecticut", "Connecticut.jpeg" },
-        { "Delaware", "Delaware.JPG" },
-        { "Florida", "Florida.jpg" },
-        { "Georgia", "Georgia.jpeg" },
-        { "Hawaii", "Hawaii.jpeg" },
-        { "Idaho", "idaho.jpg" },
-        { "Illinois", "Illinois.jpg" },
-        { "Indiana", "Indianapolis.jpeg" },
-        { "Iowa", "iowa.jpg" },
-        { "Kansas", "Kansas,_USA.jpg" },
-        { "Kentucky", "Kentucky.jpeg" },
-        { "Louisiana", "Louisiana.jpg" },
-        { "Maine", "Maine.jpeg" },
-        { "Maryland", "Maryland.jpeg" },
-        { "Massachusetts", "Massachusetts.jpeg" },
-        { "Michigan", "michigan.jpg" },
-        { "Minnesota", "minnesota.jpg" },
-        { "Mississippi", "Mississippi.jpg" },
-        { "Missouri", "Missouri.jpg" },
-        { "Montana", "montana.jpg" },
-        { "Nebraska", "nebraska.jpg" },
-        { "Nevada", "Nevada.jpg" },
-        { "New Hampshire", "New Hampshire.jpeg" },
-        { "New-Jersey", "New-Jersey.jpeg" },
-        { "New Jersey", "New-Jersey.jpeg" },
-        { "New-Mexico", "newmexico.jpg" },
-        { "New Mexico", "newmexico.jpg" },
-        { "New-York", "New York (state).jpg" },
-        { "New York", "New York (state).jpg" },
-        { "North-Carolina", "North Carolina.jpeg" },
-        { "North Carolina", "North Carolina.jpeg" },
-        { "North-Dakota", "North_Dakota.JPG" },
-        { "North Dakota", "North_Dakota.JPG" },
-        { "Ohio", "ohio.jpeg" },
-        { "Oklahoma", "oklahoma.jpg" },
-        { "Oregon", "Oregon.jpg" },
-        { "Pennsylvania", "Pennsylvania.jpeg" },
-        { "Rhode-Island", "Rhode Island.jpeg" },
-        { "Rhode Island", "Rhode Island.jpeg" },
-        { "South-Carolina", "South Carolina.jpeg" },
-        { "South Carolina", "South Carolina.jpeg" },
-        { "South-Dakota", "South Dakota.jpg" },
-        { "South Dakota", "South Dakota.jpg" },
-        { "Tennessee", "Tennessee.jpeg" },
-        { "Texas", "no-image.jpg" }, 
-        { "Utah", "utah.jpg" },
-        { "Vermont", "vermont.jpeg" },
-        { "Virginia", "Virginia.jpeg" },
-        { "Washington", "washington.jpg" },
-        { "West-Virginia", "West Virginia.jpg" },
-        { "West Virginia", "West Virginia.jpg" },
-        { "Wisconsin", "Wisconsin.jpg" },
-        { "Wyoming", "wyoming-rehab.jpg" },
-        { "District-of-Columbia", "no-image.jpg" },
-        { "District of Columbia", "no-image.jpg" }
-    };
+    private static readonly Dictionary<string, string>
+        StateImages = new Dictionary<string, string>
+            (StringComparer.OrdinalIgnoreCase)
+            {
+            { "Alabama", "Alabama.jpeg" },
+            { "Alaska", "Alaska.jpg" },
+            { "Arizona", "arizona.jpg" },
+            { "Arkansas", "Arkansas.jpg" },
+            { "California", "california.jpg" },
+            { "Colorado", "Colorado.jpg" },
+            { "Connecticut", "Connecticut.jpeg" },
+            { "Delaware", "Delaware.JPG" },
+            { "Florida", "Florida.jpg" },
+            { "Georgia", "Georgia.jpeg" },
+            { "Hawaii", "Hawaii.jpeg" },
+            { "Idaho", "idaho.jpg" },
+            { "Illinois", "Illinois.jpg" },
+            { "Indiana", "Indianapolis.jpeg" },
+            { "Iowa", "iowa.jpg" },
+            { "Kansas", "Kansas,_USA.jpg" },
+            { "Kentucky", "Kentucky.jpeg" },
+            { "Louisiana", "Louisiana.jpg" },
+            { "Maine", "Maine.jpeg" },
+            { "Maryland", "Maryland.jpeg" },
+            { "Massachusetts", "Massachusetts.jpeg" },
+            { "Michigan", "michigan.jpg" },
+            { "Minnesota", "minnesota.jpg" },
+            { "Mississippi", "Mississippi.jpg" },
+            { "Missouri", "Missouri.jpg" },
+            { "Montana", "montana.jpg" },
+            { "Nebraska", "nebraska.jpg" },
+            { "Nevada", "Nevada.jpg" },
+            { "New Hampshire", "New Hampshire.jpeg" },
+            { "New-Jersey", "New-Jersey.jpeg" },
+            { "New Jersey", "New-Jersey.jpeg" },
+            { "New-Mexico", "newmexico.jpg" },
+            { "New Mexico", "newmexico.jpg" },
+            { "New-York", "New York (state).jpg" },
+            { "New York", "New York (state).jpg" },
+            { "North-Carolina", "North Carolina.jpeg" },
+            { "North Carolina", "North Carolina.jpeg" },
+            { "North-Dakota", "North_Dakota.JPG" },
+            { "North Dakota", "North_Dakota.JPG" },
+            { "Ohio", "ohio.jpeg" },
+            { "Oklahoma", "oklahoma.jpg" },
+            { "Oregon", "Oregon.jpg" },
+            { "Pennsylvania", "Pennsylvania.jpeg" },
+            { "Rhode-Island", "Rhode Island.jpeg" },
+            { "Rhode Island", "Rhode Island.jpeg" },
+            { "South-Carolina", "South Carolina.jpeg" },
+            { "South Carolina", "South Carolina.jpeg" },
+            { "South-Dakota", "South Dakota.jpg" },
+            { "South Dakota", "South Dakota.jpg" },
+            { "Tennessee", "Tennessee.jpeg" },
+            { "Texas", "no-image.jpg" },
+            { "Utah", "utah.jpg" },
+            { "Vermont", "vermont.jpeg" },
+            { "Virginia", "Virginia.jpeg" },
+            { "Washington", "washington.jpg" },
+            { "West-Virginia", "West Virginia.jpg" },
+            { "West Virginia", "West Virginia.jpg" },
+            { "Wisconsin", "Wisconsin.jpg" },
+            { "Wyoming", "wyoming-rehab.jpg" },
+            { "District-of-Columbia", "no-image.jpg" },
+            { "District of Columbia", "no-image.jpg" }
+            };
 
     private string GetStateImagePath()
     {
@@ -128,10 +177,30 @@
     {
         FacilityCards = mapper.Map<List<FacilityCardViewmodel>>(FacilityService.GetRandomFacilityCardForHomePage(12, statename));
     }
+    private async ValueTask<ItemsProviderResult<FacilityCardViewmodel>> LoadFeaturedFacilities(ItemsProviderRequest request)
+    {
+       var result = await FacilityService.GetFacilitiesAsync(request.StartIndex / 50 + 1, 50, statename);
+        return new ItemsProviderResult<FacilityCardViewmodel>(mapper.Map<List<FacilityCardViewmodel>>(result.Item1), 4);
+    @* Use mock data for testing 
+        var allFacilities = MockFacilityData.GetSampleFacilities();
+        await Task.CompletedTask;
+        return new ItemsProviderResult<FacilityCardViewmodel>(mapper.Map<List<FacilityCardViewmodel>>(allFacilities), 4);  
+   *@ }
 
     private async ValueTask<ItemsProviderResult<FacilityCardViewmodel>> LoadFacilities(ItemsProviderRequest request)
-    {
-        var result = await FacilityService.GetFacilitiesAsync(request.StartIndex / 50 + 1, 50, statename);
-        return new ItemsProviderResult<FacilityCardViewmodel>(mapper.Map<List<FacilityCardViewmodel>>(result.Item1), result.totalCount);
-    }
+    { 
+         var result = await FacilityService.GetFacilitiesAsync(request.StartIndex / 50 + 1, 50, statename);
+         return new ItemsProviderResult<FacilityCardViewmodel>(mapper.Map<List<FacilityCardViewmodel>>(result.Item1), result.totalCount);
+   
+       @*
+        // use mock data for testing
+        var allFacilities = MockFacilityData.GetSampleFacilities();
+        await Task.CompletedTask;
+        return new ItemsProviderResult<FacilityCardViewmodel>(mapper.Map<List<FacilityCardViewmodel>>(allFacilities), 10);  
+   
+        // Closing the method definition  *@
+        }  
+
+
+
 }
