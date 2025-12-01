@@ -1,0 +1,43 @@
+﻿<div class="container bg-white py-2 rounded-3 border position-relative">
+  
+    <div class="col-md-11 autocomplete-container @GetContainerClass()">
+        <input type="text" id="@FilterType" class="border-0" placeholder="@GetPlaceholder()">
+        <div class="autocomplete-list"></div>
+    </div>
+ 
+    <div class="col-md-1 search-btn">
+        <a href="#">
+            <i class="fa-solid fs-4 mt-1 fa-magnifying-glass text-white fw-bold"></i>
+            <span class="search-text d-inline-block d-md-none text-white">Search</span>
+        </a>
+    </div>
+</div>
+
+@code{
+    [Parameter]
+    public string FilterType { get; set; } = "stateName";
+
+    private string GetPlaceholder()
+    {
+        return FilterType switch
+        {
+            "centerName" => "Enter rehab name...",
+            "stateName" => "State name...",
+            "cityName" => "City name...",
+            "condition" => "Condition...",
+            _ => "Search..."
+        };
+    }
+
+    private string GetContainerClass()
+    {
+        return FilterType switch
+        {
+            "centerName" => "center-name",
+            "stateName" => "center-state",
+            "cityName" => "center-city",
+            "condition" => "center-condition",
+            _ => "center-state"
+        };
+    }
+}

@@ -3,7 +3,7 @@
     stateName: ["California", "Texas", "Florida", "New York", "Washington"],
     cityName: ["Los Angeles", "Houston", "Miami", "Seattle", "Austin"],
     condition: ["Good", "Fair", "Poor", "Excellent"],
-    //More filters
+    // More filters used in FacilityFilter
     amenities: ["Accommodations", "Housekeeping", "Fitness"],
     acceptedinsurance: ["Medicare", "Medicaid", "Private Insurance"],
     accreditations: ["JCAHO", "CARF", "NCQA"],
@@ -11,13 +11,10 @@
     WhoWeTreat: ["Adults", "Children", "Seniors"],
     Treatments: ["Inpatient", "Outpatient", "Telehealth"],
     SubstanceWeTreat: ["Alcohol", "Opioids", "Tobacco"]
-}
+};
 
-function setupAutocomplete(inputId, data, options = { multi: false }) {
-    const container = document.getElementById(inputId).closest('.autocomplete-container');
-    const input = container.querySelector('input');
-    const list = container.querySelector('.autocomplete-list');
-
+// Core implementation that can be reused for both single and multiple instances
+function setupAutocompleteOnElements(container, input, list, data, options = { multi: false }) {
     let selectedItems = [];
 
     let tagsContainer;
@@ -25,10 +22,11 @@ function setupAutocomplete(inputId, data, options = { multi: false }) {
         tagsContainer = container.querySelector('.selected-items');
         if (!tagsContainer) {
             tagsContainer = document.createElement('div');
-            tagsContainer.classList.add('.selected-items');
+            tagsContainer.classList.add('selected-items');
             container.appendChild(tagsContainer);
         }
     }
+
     input.addEventListener('input', function () {
         const value = this.value.toLowerCase();
         list.innerHTML = '';
@@ -77,14 +75,67 @@ function setupAutocomplete(inputId, data, options = { multi: false }) {
         if (!e.target.closest('.autocomplete-container')) list.innerHTML = '';
     });
 }
-setupAutocomplete('centerName', dataSources.centerName);
-setupAutocomplete('stateName', dataSources.stateName);
-setupAutocomplete('cityName', dataSources.cityName);
-setupAutocomplete('condition', dataSources.condition);
-setupAutocomplete('amenities', dataSources.amenities, { multi: true });
-setupAutocomplete('acceptedinsurance', dataSources.acceptedinsurance, { multi: true });
-setupAutocomplete('accreditations', dataSources.accreditations, { multi: true });
-setupAutocomplete('hilights', dataSources.hilightedPrograms, { multi: true });
-setupAutocomplete('wwt', dataSources.WhoWeTreat, { multi: true });
-setupAutocomplete('Treatments', dataSources.Treatments, { multi: true });
-setupAutocomplete('swt', dataSources.SubstanceWeTreat, { multi: true });
+
+// Backwards-compatible helper used for the main search modal (IDs are unique there)
+function setupAutocomplete(inputId, data, options = { multi: false }) {
+    const rootInput = document.getElementById(inputId);
+    if (!rootInput) return;
+
+    const container = rootInput.closest('.autocomplete-container');
+    if (!container) return;
+
+    const input = container.querySelector('input');
+    const list = container.querySelector('.autocomplete-list');
+    if (!input || !list) return;
+
+    setupAutocompleteOnElements(container, input, list, data, options);
+}
+
+// Initialize autocomplete for each FacilityFilter instance on the page
+function initFacilityFilterAutocompletes() {
+    const mappings = {
+        amenities: 'amenities',
+        acceptedinsurance: 'acceptedinsurance',
+        accreditations: 'accreditations',
+        hilights: 'hilightedPrograms',
+        wwt: 'WhoWeTreat',
+        Treatments: 'Treatments',
+        swt: 'SubstanceWeTreat'
+    };
+
+    document.querySelectorAll('.facility-filter-container').forEach(container => {
+        Object.entries(mappings).forEach(([fieldName, sourceKey]) => {
+            const input = container.querySelector(`input[data-field="${fieldName}"]`);
+            if (!input) return;
+
+            const autocompleteContainer = input.closest('.autocomplete-container');
+            if (!autocompleteContainer) return;
+
+            const list = autocompleteContainer.querySelector('.autocomplete-list');
+            if (!list) return;
+
+            setupAutocompleteOnElements(
+                autocompleteContainer,
+                input,
+                list,
+                dataSources[sourceKey] || [],
+                { multi: true }
+            );
+        });
+    });
+}
+// Initialize all autocompletes after the page has fully loaded
+window.addEventListener('load', function () {
+    // Search modal autocompletes (IDs are unique, so this remains ID-based)
+    setupAutocomplete('centerName', dataSources.centerName);
+    setupAutocomplete('stateName', dataSources.stateName);
+    setupAutocomplete('cityName', dataSources.cityName);
+    setupAutocomplete('condition', dataSources.condition);
+
+    // FacilityFilter autocompletes (support multiple instances per page)
+    try {
+        initFacilityFilterAutocompletes();
+    } catch (e) {
+        console && console.error && console.error('Error initializing FacilityFilter autocompletes', e);
+    }
+});

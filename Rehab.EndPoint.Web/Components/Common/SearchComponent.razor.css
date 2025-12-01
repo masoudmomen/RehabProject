@@ -1,0 +1,20 @@
+﻿.search-btn {
+   
+    background-color: #0061ca !important;
+    border-top-right-radius: 8px !important;
+    border-bottom-right-radius: 8px !important;
+ 
+    position: absolute !important;
+    right: 0 !important;
+    height: 100% !important;
+    top: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding-left: 0 !important;
+    margin: 0 !important;
+}
+
+input[type="text"]:focus-visible {
+    outline: none;
+}

@@ -44,4 +44,8 @@
     color: var(--bs-breadcrumb-divider-color);
     content: var(--bs-breadcrumb-divider, ">");
 }
-
+.featured-centers .btn.btn-visit {
+    padding: 5px;
+    font-size: 14px;
+    font-weight: normal;
+}
