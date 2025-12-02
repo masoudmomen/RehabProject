@@ -6,6 +6,7 @@ using Rehab.Application.Contexts;
 using Rehab.Application.Dtos;
 using Rehab.Domain.Facilities;
 using Rehab.Domain.Images;
+using Rehab.Domain.SubstancesWeTreat;
 using Rehab.Infrastructure;
 using System;
 using System.Collections.Generic;
@@ -492,29 +493,38 @@ namespace Rehab.Application.Facilities
         public BaseDto<FacilityDetailDto> Delete(FacilityDetailDto facility)
         {
             if (facility == null) return new BaseDto<FacilityDetailDto>() { Data = null, Message= "Facility is empty!" , Success= false, Status="danger"};
-            var result = context.Facilities.FirstOrDefault(c=>c.Id == facility.Id);
+            var result = context.Facilities
+                .Include(c=>c.Wwts)
+                .Include(c=>c.Swts)
+                .Include(c=>c.Insurances)
+                .Include(c=>c.Accreditations)
+                .Include(c=>c.Amenities)
+                .Include(c=>c.Conditions)
+                .Include(c=>c.FacilitysImages)
+                .Include(c=>c.Highlights)
+                .Include(c=>c.Locs)
+                .Include(c=>c.Treatments)
+                .FirstOrDefault(c => c.Id == facility.Id);
             if(result == null) return new BaseDto<FacilityDetailDto>() { Success = false, Message = "Facility not found!", Status = "danger" };
 
-            result.Swts!.Clear();
-            result.Wwts!.Clear();
-            result.Accreditations!.Clear();
-            result.Amenities!.Clear();
-            result.Conditions!.Clear();
-            result.FacilitysImages!.Clear();
-            result.Highlights!.Clear();
-            result.Insurances!.Clear();
-            result.Locs!.Clear();
-            result.Treatments!.Clear();
-            if (context.SaveChanges() > 0)
+            if (result.Swts != null && result.Swts.Any()) result.Swts!.Clear();
+            if (result.Wwts != null && result.Wwts.Any()) result.Wwts!.Clear();
+            if (result.Accreditations != null && result.Accreditations.Any()) result.Accreditations!.Clear();
+            if (result.Amenities != null && result.Amenities.Any()) result.Amenities!.Clear();
+            if (result.Conditions != null && result.Conditions.Any()) result.Conditions!.Clear();
+            if (result.FacilitysImages != null && result.FacilitysImages.Any()) result.FacilitysImages!.Clear();
+            if (result.Highlights != null && result.Highlights.Any()) result.Highlights!.Clear();
+            if (result.Insurances != null && result.Insurances.Any()) result.Insurances!.Clear();
+            if (result.Locs != null && result.Locs.Any()) result.Locs!.Clear();
+            if (result.Treatments != null && result.Treatments.Any()) result.Treatments!.Clear();
+            
+            context.Facilities.Remove(result);
+            if (context.SaveChanges()>0)
             {
-                context.Facilities.Remove(result);
-                if (context.SaveChanges()>0)
-                {
-                    return new BaseDto<FacilityDetailDto>() { Data = facility, Message = "Facility deleted Successfully.", Success = true , Status = "success" };
-                }
-                return new BaseDto<FacilityDetailDto>() { Success = false, Message = "Delete Operation was Failed! Try later...", Status = "danger" };
+                return new BaseDto<FacilityDetailDto>() { Data = facility, Message = "Facility deleted Successfully.", Success = true , Status = "success" };
             }
             return new BaseDto<FacilityDetailDto>() { Success = false, Message = "Delete Operation was Failed! Try later...", Status = "danger" };
+            
         }
     }
 

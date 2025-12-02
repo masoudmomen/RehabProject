@@ -24,7 +24,7 @@
 
 
 @code {
-    [Parameter] public FacilityViewmodel Model { get; set; }
+    [Parameter] public FacilityViewmodel Model { get; set; } = new();
     [Parameter] public EventCallback OnClose { get; set; }
 
     public bool IsVisible { get; set; }
@@ -44,7 +44,7 @@
     private async Task DeleteFacility()
     {
         var deleteResult =  FacilityService.Delete(mapper.Map<FacilityDetailDto>(Model));
-        await AlertService.ShowAsync(deleteResult.Message, deleteResult.Status);
         if (deleteResult.Success) await Close();
+        await AlertService.ShowAsync(deleteResult.Message, deleteResult.Status);
     }
 }
