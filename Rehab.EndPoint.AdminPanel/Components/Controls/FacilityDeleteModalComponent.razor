@@ -1,0 +1,50 @@
+﻿@using Rehab.Application.Facilities
+@using Rehab.EndPoint.AdminPanel.Viewmodels
+@inject AutoMapper.IMapper mapper
+@rendermode InteractiveServer
+@inject AlertService AlertService
+@inject IFacilityService FacilityService
+
+
+@if (IsVisible)
+{
+    <div class="modal-backdrop">
+        <div class="modal-content-facilityDetail" >
+            <button type="button" class="btn-close float-end" @onclick="Close" ></button>
+            <h3>Delete <span class="text-danger">@Model.Name</span> Facility, Are You Sure?</h3>
+            <div class="modal-actions">
+                <button type="button" class="btn btn-primary " @onclick="DeleteFacility" >Yes, Delete it</button>
+                <button type="button" class="btn btn-secondary " @onclick="Close">Cancle</button>
+            </div>
+        </div>
+        
+    </div>
+}
+
+
+
+@code {
+    [Parameter] public FacilityViewmodel Model { get; set; } = new();
+    [Parameter] public EventCallback OnClose { get; set; }
+
+    public bool IsVisible { get; set; }
+
+    public void Show()
+    {
+        IsVisible = true;
+        InvokeAsync(StateHasChanged);
+    }
+    public async Task Close()
+    {
+        IsVisible = false;
+        await OnClose.InvokeAsync();
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private async Task DeleteFacility()
+    {
+        var deleteResult =  FacilityService.Delete(mapper.Map<FacilityDetailDto>(Model));
+        if (deleteResult.Success) await Close();
+        await AlertService.ShowAsync(deleteResult.Message, deleteResult.Status);
+    }
+}
