@@ -1,0 +1,10 @@
+﻿@using Web.Data;
+<div class="row">
+    @for (int i = 0; i < USStates.All.Count; i++)
+    {
+        <div class="col-6 col-md-2 mb-2">
+            <a target="_blank" href="/states/@USStates.All[i].UrlSlug">@USStates.All[i].Name</a>
+        </div>
+ 
+    }
+</div>

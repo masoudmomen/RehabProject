@@ -3,6 +3,7 @@
 @using Rehab.EndPoint.Web.ViewModels
 @using Rehab.EndPoint.Web.Components.Common
 @using Rehab.EndPoint.Web.Components.Facility
+@using Rehab.EndPoint.Web.Data
 @using Rehab.Application.Facilities
 @inject IFacilityService FacilityService
 @inject AutoMapper.IMapper mapper
@@ -10,16 +11,26 @@
     <BreadCrumbComponent Items="@breadCrumbItems"></BreadCrumbComponent>
 </div>
 
-<div class="container image-container">
-    <img src="@GetStateImagePath()" class="state-image" />
-    <div class="image-overlay"></div>
-    <div class="state-title">
-        Recovery Centers in @statename
+<div class="container mt-3">
+    <div class="row g-4 rounded-3 p-2 bg-eee">
+        <div class="col-12 col-lg-6">
+            <div class="row">
+                <div class="col-12">
+                    <h2 class="state-title mb-2">Recovery Centers in @statename</h2>
+                </div>
+                <div class="col-12">
+                    <p class="state-description mb-0">@GetStateDescription()</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-lg-6 mt-0 p-2 image-container">
+            <img src="@GetStateImagePath()" class="state-image" />
+        </div>
     </div>
 </div>
 <div class="container mt-3">
     <div class="row">
-    <div class="col-md-9">
+        <div class="col-md-9">
             <SearchComponent></SearchComponent>
             @* <div class="container mt-3 mb-5 featured-centers border border-1 rounded-3 pt-2 ">
                 <div class="d-flex align-items-center py-2" style="border-bottom: solid 2px #93e2f1;">
@@ -41,7 +52,7 @@
             </div> *@
             <div class="container mt-3 mb-5 featured-centers ">
                 <div class="d-flex align-items-center py-2" style="border-bottom: solid 2px #93e2f1;">
-                    
+
                     <h5 class=" mb-0">Our recovery centers in @statename</h5>
                 </div>
 
@@ -117,17 +128,17 @@
                 </div>
 
             </div>
-       
-    </div>
-    <div class="col-md-3">
-            <div class="border border-1 px-3 rounded-3">
-                <FacilityFilter />
+
         </div>
-         
-    </div>
+        <div class="col-md-3">
+            <div class="border border-1 px-3 rounded-3 filter-sticky">
+                <FacilityFilter />
+            </div>
+
+        </div>
     </div>
 </div>
- 
+
 
 @code {
     [Parameter]
@@ -150,74 +161,7 @@
     ? FacilityCards
     { get; set; }
 
-    // Mock data structure for state images
-    private static readonly Dictionary<string, string>
-        StateImages = new Dictionary<string, string>
-            (StringComparer.OrdinalIgnoreCase)
-            {
-            { "Alabama", "Alabama.jpeg" },
-            { "Alaska", "Alaska.jpg" },
-            { "Arizona", "arizona.jpg" },
-            { "Arkansas", "Arkansas.jpg" },
-            { "California", "california.jpg" },
-            { "Colorado", "Colorado.jpg" },
-            { "Connecticut", "Connecticut.jpeg" },
-            { "Delaware", "Delaware.JPG" },
-            { "Florida", "Florida.jpg" },
-            { "Georgia", "Georgia.jpeg" },
-            { "Hawaii", "Hawaii.jpeg" },
-            { "Idaho", "idaho.jpg" },
-            { "Illinois", "Illinois.jpg" },
-            { "Indiana", "Indianapolis.jpeg" },
-            { "Iowa", "iowa.jpg" },
-            { "Kansas", "Kansas,_USA.jpg" },
-            { "Kentucky", "Kentucky.jpeg" },
-            { "Louisiana", "Louisiana.jpg" },
-            { "Maine", "Maine.jpeg" },
-            { "Maryland", "Maryland.jpeg" },
-            { "Massachusetts", "Massachusetts.jpeg" },
-            { "Michigan", "michigan.jpg" },
-            { "Minnesota", "minnesota.jpg" },
-            { "Mississippi", "Mississippi.jpg" },
-            { "Missouri", "Missouri.jpg" },
-            { "Montana", "montana.jpg" },
-            { "Nebraska", "nebraska.jpg" },
-            { "Nevada", "Nevada.jpg" },
-            { "New Hampshire", "New Hampshire.jpeg" },
-            { "New-Jersey", "New-Jersey.jpeg" },
-            { "New Jersey", "New-Jersey.jpeg" },
-            { "New-Mexico", "newmexico.jpg" },
-            { "New Mexico", "newmexico.jpg" },
-            { "New-York", "New York (state).jpg" },
-            { "New York", "New York (state).jpg" },
-            { "North-Carolina", "North Carolina.jpeg" },
-            { "North Carolina", "North Carolina.jpeg" },
-            { "North-Dakota", "North_Dakota.JPG" },
-            { "North Dakota", "North_Dakota.JPG" },
-            { "Ohio", "ohio.jpeg" },
-            { "Oklahoma", "oklahoma.jpg" },
-            { "Oregon", "Oregon.jpg" },
-            { "Pennsylvania", "Pennsylvania.jpeg" },
-            { "Rhode-Island", "Rhode Island.jpeg" },
-            { "Rhode Island", "Rhode Island.jpeg" },
-            { "South-Carolina", "South Carolina.jpeg" },
-            { "South Carolina", "South Carolina.jpeg" },
-            { "South-Dakota", "South Dakota.jpg" },
-            { "South Dakota", "South Dakota.jpg" },
-            { "Tennessee", "Tennessee.jpeg" },
-            { "Texas", "no-image.jpg" },
-            { "Utah", "utah.jpg" },
-            { "Vermont", "vermont.jpeg" },
-            { "Virginia", "Virginia.jpeg" },
-            { "Washington", "washington.jpg" },
-            { "West-Virginia", "West Virginia.jpg" },
-            { "West Virginia", "West Virginia.jpg" },
-            { "Wisconsin", "Wisconsin.jpg" },
-            { "Wyoming", "wyoming-rehab.jpg" },
-            { "District-of-Columbia", "no-image.jpg" },
-            { "District of Columbia", "no-image.jpg" }
-            };
-
+ 
     private string GetStateImagePath()
     {
         if (string.IsNullOrWhiteSpace(statename))
@@ -225,12 +169,24 @@
             return "/images/statesimages/no-image.jpg";
         }
 
-        if (StateImages.TryGetValue(statename, out var imageFileName))
+        var state = USStates.All.FirstOrDefault(s =>
+            s.Name.Equals(statename, StringComparison.OrdinalIgnoreCase) ||
+            s.UrlSlug.Equals(statename, StringComparison.OrdinalIgnoreCase));
+
+        var imageFileName = state?.Image;
+
+        if (string.IsNullOrWhiteSpace(imageFileName))
         {
-            return $"/images/statesimages/{imageFileName}";
+            return "/images/statesimages/no-image.jpg";
         }
 
-        return "/images/statesimages/no-image.jpg";
+        return $"/images/statesimages/{imageFileName}";
+    }
+
+    private string GetStateDescription()
+    {
+        var stateLabel = string.IsNullOrWhiteSpace(statename) ? "this state" : statename;
+        return $"Explore accredited recovery centers, resources, and support options across {stateLabel}.";
     }
 
     protected override void OnInitialized()
@@ -239,27 +195,27 @@
     }
     private async ValueTask<ItemsProviderResult<FacilityCardViewmodel>> LoadFeaturedFacilities(ItemsProviderRequest request)
     {
-       var result = await FacilityService.GetFacilitiesAsync(request.StartIndex / 50 + 1, 50, statename);
+        var result = await FacilityService.GetFacilitiesAsync(request.StartIndex / 50 + 1, 50, statename);
         return new ItemsProviderResult<FacilityCardViewmodel>(mapper.Map<List<FacilityCardViewmodel>>(result.Item1), 4);
-    @* Use mock data for testing 
+@* Use mock data for testing 
         var allFacilities = MockFacilityData.GetSampleFacilities();
         await Task.CompletedTask;
         return new ItemsProviderResult<FacilityCardViewmodel>(mapper.Map<List<FacilityCardViewmodel>>(allFacilities), 4);  
    *@ }
 
     private async ValueTask<ItemsProviderResult<FacilityCardViewmodel>> LoadFacilities(ItemsProviderRequest request)
-    { 
-         var result = await FacilityService.GetFacilitiesAsync(request.StartIndex / 50 + 1, 50, statename);
-         return new ItemsProviderResult<FacilityCardViewmodel>(mapper.Map<List<FacilityCardViewmodel>>(result.Item1), result.totalCount);
-   
-       @*
+    {
+        var result = await FacilityService.GetFacilitiesAsync(request.StartIndex / 50 + 1, 50, statename);
+        return new ItemsProviderResult<FacilityCardViewmodel>(mapper.Map<List<FacilityCardViewmodel>>(result.Item1), result.totalCount);
+
+        @*
         // use mock data for testing
         var allFacilities = MockFacilityData.GetSampleFacilities();
         await Task.CompletedTask;
         return new ItemsProviderResult<FacilityCardViewmodel>(mapper.Map<List<FacilityCardViewmodel>>(allFacilities), 10);  
    
         // Closing the method definition  *@
-        }  
+    }
 
 
 
