@@ -28,8 +28,6 @@ using Rehab.EndPoint.AdminPanel.MappingProfile;
 using Rehab.Persistence.Contexts;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthStateProvider>();
-builder.Services.AddAuthorizationCore();
 // Add services to the container.
 builder.Services.AddRazorComponents().AddInteractiveServerComponents();
 builder.Services.AddRazorPages();
@@ -47,16 +45,40 @@ builder.Services.AddDbContext<DatabaseContext>(option => option.UseSqlServer(con
 #endregion
 
 #region Identity Config
+//add dbcontext
 builder.Services.AddDbContext<ApplicationDbContext>(option =>option.UseSqlServer(connection));
-builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
+
+//add Identity
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>(option =>
+{
+    //settings
+    option.Password.RequireDigit = true;
+    option.Password.RequiredLength = 6;
+    option.Password.RequireNonAlphanumeric = false;
+    option.Password.RequireUppercase = true;
+    option.Password.RequireLowercase = true;
+
+    //User Settings
+    option.User.RequireUniqueEmail = true;
+
+    //SignIn Settings
+    option.SignIn.RequireConfirmedEmail = false;
+})
     .AddEntityFrameworkStores<ApplicationDbContext>()
-    .AddSignInManager()
     .AddDefaultTokenProviders();
-builder.Services.AddCascadingAuthenticationState();
-//builder.Services.AddScoped<IdentityUserAccessor>();
-//builder.Services.AddScoped<IdentityRedirectManager>();
-//builder.Services.AddScoped<AuthenticationStateProvider, PersistingRevalidatingAuthenticationStateProvider>();
-builder.Services.AddRazorPages();
+
+//Cookie Settings
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/login";
+    options.LogoutPath = "/logout";
+    options.AccessDeniedPath = "access-denied";
+    options.ExpireTimeSpan = TimeSpan.FromDays(7);
+    options.SlidingExpiration = true;
+});
+
+//builder.Services.AddRazorComponents()
+//    .AddInteractiveServerComponents();
 #endregion
 
 #region IOC
