@@ -6,8 +6,37 @@
     <div class="autocomplete-container pe-3 border-bottom">
         <label for="amenities" class="form-label fw-bold">Amenities</label>
         <input type="text" data-field="amenities" class="w-100 rounded-3 filter-input" autocomplete="off" placeholder="Enter amenity name...">
-        <div class="autocomplete-list mt-1 ms-2"></div>
-        <div class="selected-items"></div>
+        @* <div class="autocomplete-list mt-1 ms-2"></div>
+        <div class="selected-items"></div> *@
+
+        <div class="multi-select-wrapper">
+            <div class="multi-select-input" id="multiSelectInput">
+                <div class="selected-items" id="selectedItems">
+                    <span class="placeholder">انتخاب کنید...</span>
+                    <span class="arrow-icon">▼</span>
+                </div>
+            </div>
+
+            <div style="position: relative;">
+                <div class="select-box" id="selectBox">
+                    <div class="selected-items" id="selectedItems">
+                        انتخاب کنید...
+                    </div>
+                </div>
+
+                <div class="dropdown" id="dropdown">
+                    <div class="dropdown-item" data-id="1">گزینه اول</div>
+                    <div class="dropdown-item" data-id="2">گزینه دوم</div>
+                    <div class="dropdown-item" data-id="3">گزینه سوم</div>
+                    <div class="dropdown-item" data-id="4">گزینه چهارم</div>
+                    <div class="dropdown-item" data-id="5">گزینه پنجم</div>
+                </div>
+            </div>
+
+
+
+
+
     </div>
     <div class="autocomplete-container pe-3 border-bottom mt-3">
         <label for="acceptedinsurance" class="form-label mb-0 fw-bold">Insurance</label>
@@ -46,6 +75,7 @@
         <div class="selected-items"></div>
     </div>
 </div>
+</div>
 <style>
     .selected-items{
         font-size:12px;
@@ -69,6 +99,81 @@
         padding:3px;
         border:solid 1px #eee;
     }
+
+
+
+
+    .select-box {
+        background: white;
+        border: 2px solid #ddd;
+        border-radius: 8px;
+        padding: 10px;
+        cursor: pointer;
+        position: relative;
+    }
+
+        .select-box:hover {
+            border-color: #4a90e2;
+        }
+
+    .selected-items {
+        min-height: 30px;
+    }
+
+    .tag {
+        display: inline-block;
+        background: #e3f2fd;
+        color: #1976d2;
+        padding: 5px 10px;
+        margin: 3px;
+        border-radius: 15px;
+        font-size: 14px;
+    }
+
+        .tag button {
+            background: none;
+            border: none;
+            color: #1976d2;
+            margin-right: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+    .dropdown {
+        display: none;
+        position: absolute;
+        top: 100%;
+        right: 0;
+        left: 0;
+        background: white;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        margin-top: 5px;
+        max-height: 250px;
+        overflow-y: auto;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        z-index: 100;
+    }
+
+        .dropdown.show {
+            display: block;
+        }
+
+    .dropdown-item {
+        padding: 12px;
+        cursor: pointer;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+        .dropdown-item:hover {
+            background: #f5f5f5;
+        }
+
+        .dropdown-item.selected {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
 </style>
 @code {
 

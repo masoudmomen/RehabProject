@@ -72,7 +72,7 @@ builder.Services.ConfigureApplicationCookie(options =>
 {
     options.LoginPath = "/login";
     options.LogoutPath = "/logout";
-    options.AccessDeniedPath = "access-denied";
+    options.AccessDeniedPath = "/access-denied";
     options.ExpireTimeSpan = TimeSpan.FromDays(7);
     options.SlidingExpiration = true;
 });
