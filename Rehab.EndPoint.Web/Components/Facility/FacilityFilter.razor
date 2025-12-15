@@ -1,4 +1,9 @@
-﻿<h4 class="fs-6 mt-2 me-3 py-2" style="
+﻿@using Microsoft.JSInterop
+@inject IJSRuntime JSRuntime
+
+
+
+<h4 class="fs-6 mt-2 me-3 py-2" style="
     border-bottom: solid 2px #93e2f1;">
     Add more filters
 </h4>
@@ -6,7 +11,7 @@
     <div class="autocomplete-container pe-3 border-bottom">
         <label for="amenities" class="form-label fw-bold">Amenities</label>
         <input type="text" data-field="amenities" class="w-100 rounded-3 filter-input" autocomplete="off" placeholder="Enter amenity name..." @onclick="ToggleListOfCategories" @onclick:preverntDefault>
-        <div class="autocomplete-list mt-1 ms-2 @TagDisplayStatus">
+        <div class="autocomplete-list mt-1 ms-2">
             <div class="item selected" onclick="toggleItem(this)">🍎 سیب</div>
             <div class="item" onclick="toggleItem(this)">🍊 پرتقال</div>
             <div class="item" onclick="toggleItem(this)">🍌 موز</div>
@@ -104,11 +109,16 @@
         }
 </style>
 @code {
-    private string TagDisplayStatus = "d-none";
-    private string SelectedItemColor = "blue";
-    private void ToggleListOfCategories()
+    // protected override async Task OnAfterRenderAsync(bool firstRender)
+    // {
+    //     if (firstRender)
+    //     {
+    //         await JSRuntime.InvokeVoidAsync("test", "salam");
+    //     }
+    // }
+
+    private async Task ToggleListOfCategories()
     {
-        if (string.IsNullOrEmpty(TagDisplayStatus)) TagDisplayStatus = "d-none";
-        else TagDisplayStatus = "";
+        await JSRuntime.InvokeVoidAsync("test", "salammmm");
     }
 }

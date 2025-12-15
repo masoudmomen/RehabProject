@@ -33,4 +33,10 @@ function checkFooterPosition() {
 document.addEventListener("scroll", checkFooterPosition);
 window.addEventListener("load", checkFooterPosition);
 
+
+
+window.test = function(message) {
+    alert(message);
+
+}
  
