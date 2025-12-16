@@ -33,4 +33,22 @@ function checkFooterPosition() {
 document.addEventListener("scroll", checkFooterPosition);
 window.addEventListener("load", checkFooterPosition);
 
- 
+
+
+window.ToggleListOfCategoriesJs = function (id) {
+    //AddDnoneToAllCategoriesList();
+    const tagClasses = document.getElementById(id).classList;
+    if (tagClasses.contains("d-none")) {
+        document.getElementById(id).classList.remove("d-none");
+    }
+    else {
+        document.getElementById(id).classList.add("d-none");
+    }
+
+}
+
+function AddDnoneToAllCategoriesList() {
+    for (var i = 1; i < 8; i++) {
+        if (!document.getElementById(i).classList.contains("d-none")) document.getElementById(i).classList.add("d-none");
+    }
+}

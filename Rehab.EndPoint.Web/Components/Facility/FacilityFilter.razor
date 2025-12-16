@@ -1,48 +1,64 @@
-﻿<h4 class="fs-6 mt-2 me-3 py-2" style="
+﻿@using Microsoft.JSInterop
+@inject IJSRuntime JSRuntime
+
+
+
+<h4 class="fs-6 mt-2 me-3 py-2" style="
     border-bottom: solid 2px #93e2f1;">
     Add more filters
 </h4>
 <div class="facility-filter-container">
     <div class="autocomplete-container pe-3 border-bottom">
         <label for="amenities" class="form-label fw-bold">Amenities</label>
-        <input type="text" data-field="amenities" class="w-100 rounded-3 filter-input" autocomplete="off" placeholder="Enter amenity name...">
-        <div class="autocomplete-list mt-1 ms-2"></div>
+        <input type="text" data-field="amenities" class="w-100 rounded-3 filter-input" id="aminity" autocomplete="off" placeholder="Enter amenity name..." @onclick="()=>ToggleListOfCategories(1)" @onclick:preverntDefault>
+        <div class="autocomplete-list mt-1 ms-2 d-none" id="1">
+            <div class="item" onclick="toggleItem(this)"></div>
+            <div class="item" onclick="toggleItem(this)"></div>
+            <div class="item" onclick="toggleItem(this)"></div>
+        </div>
         <div class="selected-items"></div>
+
+        
+
+
+
+
+
     </div>
     <div class="autocomplete-container pe-3 border-bottom mt-3">
         <label for="acceptedinsurance" class="form-label mb-0 fw-bold">Insurance</label>
         <input type="text" data-field="acceptedinsurance" class="w-100 rounded-3 filter-input" autocomplete="off" placeholder="Enter insurance name...">
-        <div class="autocomplete-list mt-1 ms-2"></div>
+        <div class="autocomplete-list mt-1 ms-2 d-none" id="2"></div>
         <div class="selected-items"></div>
     </div>
       <div class="autocomplete-container pe-3 border-bottom mt-3">
         <label for="accreditations" class="form-label mb-0 fw-bold">Accreditations</label>
         <input type="text" data-field="accreditations" class="w-100 rounded-3 filter-input" autocomplete="off" placeholder="Enter accreditation name...">
-        <div class="autocomplete-list mt-1 ms-2"></div>
+        <div class="autocomplete-list mt-1 ms-2" id="3"></div>
         <div class="selected-items"></div>
     </div>
       <div class="autocomplete-container pe-3 border-bottom mt-3">
         <label for="hilights" class="form-label mb-0 fw-bold">Hilights</label>
         <input type="text" data-field="hilights" class="w-100 rounded-3 filter-input" autocomplete="off" placeholder="Enter hilight name...">
-        <div class="autocomplete-list mt-1 ms-2"></div>
+        <div class="autocomplete-list mt-1 ms-2" id="4"></div>
         <div class="selected-items"></div>
     </div>
       <div class="autocomplete-container pe-3 border-bottom mt-3">
         <label for="wwt" class="form-label mb-0 fw-bold">Who We Treat</label>
         <input type="text" data-field="wwt" class="w-100 rounded-3 filter-input" autocomplete="off" placeholder="Enter who we treat...">
-        <div class="autocomplete-list mt-1 ms-2"></div>
+        <div class="autocomplete-list mt-1 ms-2" id="5"></div>
         <div class="selected-items"></div>
     </div>
       <div class="autocomplete-container pe-3 border-bottom mt-3">
         <label for="Treatments" class="form-label mb-0 fw-bold">Treatments</label>
         <input type="text" data-field="Treatments" class="w-100 rounded-3 filter-input" autocomplete="off" placeholder="Enter who we treat...">
-        <div class="autocomplete-list mt-1 ms-2"></div>
+        <div class="autocomplete-list mt-1 ms-2" id="6"></div>
         <div class="selected-items"></div>
     </div>
       <div class="autocomplete-container pe-3 border-bottom mt-3">
         <label for="swt" class="form-label mb-0 fw-bold">Substances We Treat</label>
         <input type="text" data-field="swt" class="w-100 rounded-3 filter-input" autocomplete="off" placeholder="Enter who we treat...">
-        <div class="autocomplete-list mt-1 ms-2"></div>
+        <div class="autocomplete-list mt-1 ms-2" id="7"></div>
         <div class="selected-items"></div>
     </div>
 </div>
@@ -69,7 +85,33 @@
         padding:3px;
         border:solid 1px #eee;
     }
+
+
+
+
+    .item {
+        padding: 10px;
+        margin: 5px 0;
+        background-color: #f9f9f9;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+        .item:hover {
+            background-color: #e8f5e9;
+        }
+
+        .item.selected {
+            background-color: #4CAF50;
+            color: white;
+            border-color: #4CAF50;
+        }
 </style>
 @code {
 
+    private async Task ToggleListOfCategories(int id)
+    {
+        await JSRuntime.InvokeVoidAsync("ToggleListOfCategoriesJs", id);
+    }
 }
