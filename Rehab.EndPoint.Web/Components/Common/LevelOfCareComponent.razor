@@ -1,0 +1,16 @@
+@using Web.Data
+<div class="locs-container">
+    @for (int i = 0; i < LevelOfCareList.All.Count; i++)
+    {
+        <a class="loc-card" target="_blank" href="/LOC/@LevelOfCareList.All[i].Name">
+            <div class="loc-image-container">
+                <img src="/images/LOC/@LevelOfCareList.All[i].Image" alt="@LevelOfCareList.All[i].Name" class="loc-image" />
+                <div class="loc-title">@LevelOfCareList.All[i].Name</div>
+            </div>
+        </a>
+    }
+</div>
+
+@code {
+
+}

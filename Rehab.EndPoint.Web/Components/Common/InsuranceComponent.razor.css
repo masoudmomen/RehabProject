@@ -1,0 +1,125 @@
+﻿.insurances-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 1.5rem;
+    padding: 1rem 0;
+}
+
+.insurance-card {
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    color: inherit;
+    background: white;
+    border-radius: 16px;
+    padding: 1rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    border: 1px solid rgba(74, 144, 226, 0.1);
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 1;
+}
+
+    .insurance-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, var(--primary-blue), var(--secondary-blue));
+        transform: scaleX(0);
+        transition: transform 0.3s ease;
+    }
+
+    .insurance-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+    }
+
+        .insurance-card:hover .insurance-image {
+           
+            transform: scale(1.05);
+        }
+
+        .insurance-card:hover::before {
+            transform: scaleX(1);
+        }
+
+.insurance-image-container {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem;
+    margin-bottom: 0.75rem;
+    min-height: 0;
+    position: relative;
+}
+
+.insurance-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    max-width: 100px;
+    max-height: 100px;
+ 
+}
+
+.insurance-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    text-align: center;
+    line-height: 1.3;
+    margin-top: auto;
+    padding-top: 0.5rem;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .insurances-container {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: 1rem;
+    }
+
+    .insurance-card {
+        padding: 0.75rem;
+    }
+
+    .insurance-image {
+        max-width: 80px;
+        max-height: 80px;
+    }
+
+    .insurance-title {
+        font-size: 0.85rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .insurances-container {
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        gap: 0.75rem;
+    }
+
+    .insurance-card {
+        padding: 0.5rem;
+    }
+
+    .insurance-image {
+        max-width: 60px;
+        max-height: 60px;
+    }
+
+    .insurance-title {
+        font-size: 0.75rem;
+    }
+}
+
+/* Focus styles for accessibility */
+.insurance-card:focus {
+    outline: 2px solid var(--primary-blue);
+    outline-offset: 2px;
+}

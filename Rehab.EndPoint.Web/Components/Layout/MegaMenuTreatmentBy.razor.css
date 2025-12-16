@@ -1,0 +1,24 @@
+﻿
+.nav-tabs {
+    background-color: #eee;
+    padding: 5px;
+    border-radius: 5px;
+    margin: 17px 0px;
+}
+.nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active
+{
+    border: none;
+}
+li.nav-item{
+    font-size: 0.8rem;
+}
+
+.navbar-nav .nav-link.active, .navbar-nav .nav-link.show {
+    border-radius: 5px;
+    background-color: #5296e0;
+    color: #fff;
+}
+::deep .tab-content a {
+    text-decoration: none !important;
+    font-size: 0.8rem !important;
+}

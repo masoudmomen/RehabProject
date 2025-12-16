@@ -1,0 +1,81 @@
+﻿@using Rehab.EndPoint.Web.Components.Common;
+<div class="mega-menu container bg-white">
+    <ul class="nav nav-tabs d-flex justify-content-center" id="treatmentTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="states-tab" data-bs-toggle="tab" data-bs-target="#by-states" type="button" role="tab" aria-controls="by-states" aria-selected="true">
+                <i class="fa-solid fa-flag-usa"></i> United States
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="treatments-tab" data-bs-toggle="tab" data-bs-target="#by-treatments" type="button" role="tab" aria-controls="by-treatments" aria-selected="true">
+                Treatments
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="service-tab" data-bs-toggle="tab" data-bs-target="#by-conditions" type="button" role="tab" aria-controls="by-conditions" aria-selected="false">
+                Conditions
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="amenities-tab" data-bs-toggle="tab" data-bs-target="#by-amenities" type="button" role="tab" aria-controls="by-amenities" aria-selected="false">
+                Amenities
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="insurances-tab" data-bs-toggle="tab" data-bs-target="#by-insurances" type="button" role="tab" aria-controls="by-insurances" aria-selected="false">
+                Insurances
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="loc-tab" data-bs-toggle="tab" data-bs-target="#by-loc" type="button" role="tab" aria-controls="by-loc" aria-selected="false">
+                Level Of Cares
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="wwt-tab" data-bs-toggle="tab" data-bs-target="#by-wwt" type="button" role="tab" aria-controls="by-wwt" aria-selected="false">
+                Who We Treat
+            </button>
+        </li>
+    </ul>
+
+    <div class="tab-content p-3" id="treatmentTabsContent">
+        <div class="tab-pane fade show active" id="by-states" role="tabpanel" aria-labelledby="condition-tab">
+            <div class="container">
+                <USStatesListComponent />
+            </div>
+        </div>
+        <div class="tab-pane fade" id="by-treatments" role="tabpanel" aria-labelledby="treatments-tab">
+            <TreatmentsListComponent />
+        </div>
+        <div class="tab-pane fade" id="by-conditions" role="tabpanel" aria-labelledby="conditions-tab">
+            <ul class="list-unstyled mb-0">
+                <ConditionComponent></ConditionComponent>
+            </ul>
+        </div>
+        <div class="tab-pane fade" id="by-amenities" role="tabpanel" aria-labelledby="amenities-tab">
+            <ul class="list-unstyled mb-0">
+                <AmenityComponent></AmenityComponent>
+            </ul>
+        </div>
+        <div class="tab-pane fade" id="by-insurances" role="tabpanel" aria-labelledby="insurances-tab">
+            <ul class="list-unstyled mb-0">
+                <InsuranceComponent></InsuranceComponent>
+            </ul>
+        </div>
+        <div class="tab-pane fade" id="by-loc" role="tabpanel" aria-labelledby="loc-tab">
+            <ul class="list-unstyled mb-0">
+                <LevelOfCareComponent></LevelOfCareComponent>
+            </ul>
+        </div>
+        <div class="tab-pane fade" id="by-wwt" role="tabpanel" aria-labelledby="wwt-tab">
+            <ul class="list-unstyled mb-0">
+                <WWTComponent></WWTComponent>
+            </ul>
+        </div>
+    </div>
+</div>
+@code {
+
+
+
+}

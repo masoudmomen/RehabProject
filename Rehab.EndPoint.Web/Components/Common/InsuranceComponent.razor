@@ -1,0 +1,12 @@
+﻿@using Web.Data
+<div class="insurances-container">
+    @for (int i = 0; i < Insurances.All.Count; i++)
+    {
+        <a class="insurance-card" target="_blank" href="/insurances/@Insurances.All[i].Name">
+            <div class="insurance-image-container">
+                <img src="/images/Insurances/@Insurances.All[i].Image" alt="@Insurances.All[i].Name" class="insurance-image" />
+            </div>
+            <div class="insurance-title">@Insurances.All[i].Name</div>
+        </a>
+    }
+</div>

@@ -1,0 +1,118 @@
+.locs-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 1.5rem;
+    padding: 1rem 0;
+}
+
+.loc-card {
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    color: inherit;
+    background: white;
+    border-radius: 16px;
+    padding: 0;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    border: 1px solid rgba(74, 144, 226, 0.1);
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 1;
+}
+
+    .loc-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, var(--primary-blue), var(--secondary-blue));
+        transform: scaleX(0);
+        transition: transform 0.3s ease;
+    }
+
+    .loc-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+    }
+
+        .loc-card:hover .loc-image {
+             transform: scale(1.05);
+        }
+
+        .loc-card:hover::before {
+            transform: scaleX(1);
+        }
+
+.loc-image-container {
+    width: 100%;
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    margin: 0;
+    min-height: 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.loc-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: filter 0.3s ease, transform 0.3s ease;
+}
+
+.loc-title {
+    font-size: 0.7rem;
+    color: var(--text-dark);
+    text-align: center;
+    line-height: 1.3;
+    padding: 0.75rem;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(to top, rgb(169 199 247), rgba(255, 255, 255, 0.5));
+    backdrop-filter: blur(4px);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .locs-container {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: 1rem;
+    }
+
+    .loc-card {
+        padding: 0;
+    }
+
+    .loc-title {
+        font-size: 0.85rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .locs-container {
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        gap: 0.75rem;
+    }
+
+    .loc-card {
+        padding: 0;
+    }
+
+    .loc-title {
+        font-size: 0.75rem;
+    }
+}
+
+/* Focus styles for accessibility */
+.loc-card:focus {
+    outline: 2px solid var(--primary-blue);
+    outline-offset: 2px;
+}

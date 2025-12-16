@@ -1,0 +1,16 @@
+﻿@using Web.Data
+<div class="wwts-container">
+    @for (int i = 0; i < WWTList.All.Count; i++)
+    {
+        <a class="wwt-card" target="_blank" href="/LOC/@WWTList.All[i].Name">
+            <div class="wwt-image-container">
+                <img src="/images/wwt/@WWTList.All[i].Image" alt="@WWTList.All[i].Name" class="wwt-image" />
+                <div class="wwt-title">@WWTList.All[i].Name</div>
+            </div>
+        </a>
+    }
+</div>
+
+@code {
+
+}
