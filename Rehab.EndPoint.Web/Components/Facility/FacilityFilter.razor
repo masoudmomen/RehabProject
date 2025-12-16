@@ -10,11 +10,11 @@
 <div class="facility-filter-container">
     <div class="autocomplete-container pe-3 border-bottom">
         <label for="amenities" class="form-label fw-bold">Amenities</label>
-        <input type="text" data-field="amenities" class="w-100 rounded-3 filter-input" autocomplete="off" placeholder="Enter amenity name..." @onclick="ToggleListOfCategories" @onclick:preverntDefault>
-        <div class="autocomplete-list mt-1 ms-2">
-            <div class="item selected" onclick="toggleItem(this)">🍎 سیب</div>
-            <div class="item" onclick="toggleItem(this)">🍊 پرتقال</div>
-            <div class="item" onclick="toggleItem(this)">🍌 موز</div>
+        <input type="text" data-field="amenities" class="w-100 rounded-3 filter-input" id="aminity" autocomplete="off" placeholder="Enter amenity name..." @onclick="()=>ToggleListOfCategories(1)" @onclick:preverntDefault>
+        <div class="autocomplete-list mt-1 ms-2 d-none" id="1">
+            <div class="item" onclick="toggleItem(this)"></div>
+            <div class="item" onclick="toggleItem(this)"></div>
+            <div class="item" onclick="toggleItem(this)"></div>
         </div>
         <div class="selected-items"></div>
 
@@ -28,37 +28,37 @@
     <div class="autocomplete-container pe-3 border-bottom mt-3">
         <label for="acceptedinsurance" class="form-label mb-0 fw-bold">Insurance</label>
         <input type="text" data-field="acceptedinsurance" class="w-100 rounded-3 filter-input" autocomplete="off" placeholder="Enter insurance name...">
-        <div class="autocomplete-list mt-1 ms-2"></div>
+        <div class="autocomplete-list mt-1 ms-2 d-none" id="2"></div>
         <div class="selected-items"></div>
     </div>
       <div class="autocomplete-container pe-3 border-bottom mt-3">
         <label for="accreditations" class="form-label mb-0 fw-bold">Accreditations</label>
         <input type="text" data-field="accreditations" class="w-100 rounded-3 filter-input" autocomplete="off" placeholder="Enter accreditation name...">
-        <div class="autocomplete-list mt-1 ms-2"></div>
+        <div class="autocomplete-list mt-1 ms-2" id="3"></div>
         <div class="selected-items"></div>
     </div>
       <div class="autocomplete-container pe-3 border-bottom mt-3">
         <label for="hilights" class="form-label mb-0 fw-bold">Hilights</label>
         <input type="text" data-field="hilights" class="w-100 rounded-3 filter-input" autocomplete="off" placeholder="Enter hilight name...">
-        <div class="autocomplete-list mt-1 ms-2"></div>
+        <div class="autocomplete-list mt-1 ms-2" id="4"></div>
         <div class="selected-items"></div>
     </div>
       <div class="autocomplete-container pe-3 border-bottom mt-3">
         <label for="wwt" class="form-label mb-0 fw-bold">Who We Treat</label>
         <input type="text" data-field="wwt" class="w-100 rounded-3 filter-input" autocomplete="off" placeholder="Enter who we treat...">
-        <div class="autocomplete-list mt-1 ms-2"></div>
+        <div class="autocomplete-list mt-1 ms-2" id="5"></div>
         <div class="selected-items"></div>
     </div>
       <div class="autocomplete-container pe-3 border-bottom mt-3">
         <label for="Treatments" class="form-label mb-0 fw-bold">Treatments</label>
         <input type="text" data-field="Treatments" class="w-100 rounded-3 filter-input" autocomplete="off" placeholder="Enter who we treat...">
-        <div class="autocomplete-list mt-1 ms-2"></div>
+        <div class="autocomplete-list mt-1 ms-2" id="6"></div>
         <div class="selected-items"></div>
     </div>
       <div class="autocomplete-container pe-3 border-bottom mt-3">
         <label for="swt" class="form-label mb-0 fw-bold">Substances We Treat</label>
         <input type="text" data-field="swt" class="w-100 rounded-3 filter-input" autocomplete="off" placeholder="Enter who we treat...">
-        <div class="autocomplete-list mt-1 ms-2"></div>
+        <div class="autocomplete-list mt-1 ms-2" id="7"></div>
         <div class="selected-items"></div>
     </div>
 </div>
@@ -109,16 +109,9 @@
         }
 </style>
 @code {
-    // protected override async Task OnAfterRenderAsync(bool firstRender)
-    // {
-    //     if (firstRender)
-    //     {
-    //         await JSRuntime.InvokeVoidAsync("test", "salam");
-    //     }
-    // }
 
-    private async Task ToggleListOfCategories()
+    private async Task ToggleListOfCategories(int id)
     {
-        await JSRuntime.InvokeVoidAsync("test", "salammmm");
+        await JSRuntime.InvokeVoidAsync("ToggleListOfCategoriesJs", id);
     }
 }
