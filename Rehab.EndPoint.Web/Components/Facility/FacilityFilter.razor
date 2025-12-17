@@ -1,5 +1,10 @@
 ﻿@using Microsoft.JSInterop
+@using Rehab.Application.Amenities
+@using Rehab.EndPoint.AdminPanel.Viewmodels
+@using AutoMapper
+@inject IAmenityService AmenitiesService
 @inject IJSRuntime JSRuntime
+@inject AutoMapper.IMapper mapper
 
 
 
@@ -12,20 +17,16 @@
         <label for="amenities" class="form-label fw-bold">Amenities</label>
         <input type="text" data-field="amenities" class="w-100 rounded-3 filter-input" id="aminity" autocomplete="off" placeholder="Enter amenity name..." @onclick="()=>ToggleListOfCategories(1)" @onclick:preverntDefault>
         <div class="autocomplete-list mt-1 ms-2 d-none" id="1">
-            <div class="item" onclick="toggleItem(this)"></div>
-            <div class="item" onclick="toggleItem(this)"></div>
-            <div class="item" onclick="toggleItem(this)"></div>
+            @foreach (var item in Amenities)
+            {
+                <span id="amenity-@item.Id">@item.Name</span>
+            }
         </div>
         <div class="selected-items"></div>
 
-        
-
-
-
-
-
+    
     </div>
-    <div class="autocomplete-container pe-3 border-bottom mt-3">
+      <div class="autocomplete-container pe-3 border-bottom mt-3">
         <label for="acceptedinsurance" class="form-label mb-0 fw-bold">Insurance</label>
         <input type="text" data-field="acceptedinsurance" class="w-100 rounded-3 filter-input" autocomplete="off" placeholder="Enter insurance name...">
         <div class="autocomplete-list mt-1 ms-2 d-none" id="2"></div>
@@ -109,6 +110,11 @@
         }
 </style>
 @code {
+    private List<AmenityViewmodel> Amenities { get; set; } = new();
+    protected override void OnInitialized()
+    {
+        Amenities = mapper.Map<List<AmenityViewmodel>>(AmenitiesService.GetList());
+    }
 
     private async Task ToggleListOfCategories(int id)
     {

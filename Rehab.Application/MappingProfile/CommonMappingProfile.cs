@@ -40,7 +40,8 @@ namespace Rehab.Infrastructure.MappingProfile
             CreateMap<Facility, AddRequestFacilityDto>().ReverseMap();
             CreateMap<Insurance, InsuranceDto>().ReverseMap();
             CreateMap<Accreditation, AccreditationDto>().ReverseMap();
-            CreateMap<Amenity, AmenityDto>().ReverseMap();
+            CreateMap<Amenity, AmenityDto>().ReverseMap()
+                .ForMember(dest => dest.Tags, opt => opt.MapFrom(src => src.Tags)); 
             CreateMap<Highlight, HighlightDto>().ReverseMap();
             CreateMap<Wwt, WwtDto>().ReverseMap();
             CreateMap<Loc, LevelsOfCareDto>().ReverseMap();

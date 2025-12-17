@@ -1,6 +1,16 @@
 using Microsoft.EntityFrameworkCore;
+using Rehab.Application.Accreditations;
+using Rehab.Application.Amenities;
+using Rehab.Application.Conditions;
 using Rehab.Application.Contexts;
 using Rehab.Application.Facilities;
+using Rehab.Application.Highlights;
+using Rehab.Application.Insurances;
+using Rehab.Application.LevelsOfCare;
+using Rehab.Application.SubstancesWeTreat;
+using Rehab.Application.Tags;
+using Rehab.Application.Treatments;
+using Rehab.Application.WhoWeTreat;
 using Rehab.EndPoint.Web.Components;
 using Rehab.EndPoint.Web.MappingProfile;
 using Rehab.Persistence.Contexts;
@@ -25,6 +35,16 @@ builder.Services.AddDbContext<DatabaseContext>(options =>
 builder.Services.AddAutoMapper(typeof(CommonMappingProfile)); //Mapper
 builder.Services.AddAutoMapper(typeof(Rehab.EndPoint.Web.MappingProfile.CommonMappingProfile)); //Mapper
 builder.Services.AddTransient<IFacilityService, FacilityService>();
+builder.Services.AddTransient<IInsuranceService, InsuranceService>();
+builder.Services.AddTransient<IAccreditationService, AccreditationService>();
+builder.Services.AddTransient<IAmenityService, AmenityService>();
+builder.Services.AddTransient<IHighlightService, HighlightService>();
+builder.Services.AddTransient<IWwtService, WwtService>();
+builder.Services.AddTransient<ILevelsOfCareService, LevelsOfCareService>();
+builder.Services.AddTransient<ITreatmentService, TreatmentService>();
+builder.Services.AddTransient<IConditionService, ConditionService>();
+builder.Services.AddTransient<ISubstancesWeTreatService, SwtService>();
+builder.Services.AddTransient<ITagService, TagService>();
 #endregion
 
 

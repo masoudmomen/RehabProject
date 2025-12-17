@@ -36,7 +36,7 @@ window.addEventListener("load", checkFooterPosition);
 
 
 window.ToggleListOfCategoriesJs = function (id) {
-    //AddDnoneToAllCategoriesList();
+    AddDnoneToAllCategoriesList(id);
     const tagClasses = document.getElementById(id).classList;
     if (tagClasses.contains("d-none")) {
         document.getElementById(id).classList.remove("d-none");
@@ -47,8 +47,9 @@ window.ToggleListOfCategoriesJs = function (id) {
 
 }
 
-function AddDnoneToAllCategoriesList() {
+function AddDnoneToAllCategoriesList(id) {
     for (var i = 1; i < 8; i++) {
+        if (i == id) continue; 
         if (!document.getElementById(i).classList.contains("d-none")) document.getElementById(i).classList.add("d-none");
     }
 }
