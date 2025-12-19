@@ -33,7 +33,7 @@ builder.Services.AddDbContext<DatabaseContext>(options =>
 
 #region IOC
 builder.Services.AddAutoMapper(typeof(CommonMappingProfile)); //Mapper
-builder.Services.AddAutoMapper(typeof(Rehab.EndPoint.Web.MappingProfile.CommonMappingProfile)); //Mapper
+builder.Services.AddAutoMapper(typeof(Rehab.Infrastructure.MappingProfile.CommonMappingProfile)); //Mapper
 builder.Services.AddTransient<IFacilityService, FacilityService>();
 builder.Services.AddTransient<IInsuranceService, InsuranceService>();
 builder.Services.AddTransient<IAccreditationService, AccreditationService>();

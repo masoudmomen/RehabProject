@@ -63,66 +63,7 @@
                             <div class="col-12 col-md-3">
                                 <FacilityItem ShowTags="false" FacilityCard="facility" CustomClass="small-card" />
                             </div>
-                            <div class="col-12 col-md-3">
-                                <FacilityItem ShowTags="false" FacilityCard="facility" CustomClass="small-card" />
-                            </div>
-                            <div class="col-12 col-md-3">
-                                <FacilityItem ShowTags="false" FacilityCard="facility" CustomClass="small-card" />
-                            </div>
-                            <div class="col-12 col-md-3">
-                                <FacilityItem ShowTags="false" FacilityCard="facility" CustomClass="small-card" />
-                            </div>
-                            <div class="col-12 col-md-3">
-                                <FacilityItem ShowTags="false" FacilityCard="facility" CustomClass="small-card" />
-                            </div>
-                            <div class="col-12 col-md-3">
-                                <FacilityItem ShowTags="false" FacilityCard="facility" CustomClass="small-card" />
-                            </div>
-                            <div class="col-12 col-md-3">
-                                <FacilityItem ShowTags="false" FacilityCard="facility" CustomClass="small-card" />
-                            </div>
-                            <div class="col-12 col-md-3">
-                                <FacilityItem ShowTags="false" FacilityCard="facility" CustomClass="small-card" />
-                            </div>
-                            <div class="col-12 col-md-3">
-                                <FacilityItem ShowTags="false" FacilityCard="facility" CustomClass="small-card" />
-                            </div>
-                            <div class="col-12 col-md-3">
-                                <FacilityItem ShowTags="false" FacilityCard="facility" CustomClass="small-card" />
-                            </div>
-                            <div class="col-12 col-md-3">
-                                <FacilityItem ShowTags="false" FacilityCard="facility" CustomClass="small-card" />
-                            </div>
-                            <div class="col-12 col-md-3">
-                                <FacilityItem ShowTags="false" FacilityCard="facility" CustomClass="small-card" />
-                            </div>
-                            <div class="col-12 col-md-3">
-                                <FacilityItem ShowTags="false" FacilityCard="facility" CustomClass="small-card" />
-                            </div>
-                            <div class="col-12 col-md-3">
-                                <FacilityItem ShowTags="false" FacilityCard="facility" CustomClass="small-card" />
-                            </div>
-                            <div class="col-12 col-md-3">
-                                <FacilityItem ShowTags="false" FacilityCard="facility" CustomClass="small-card" />
-                            </div>
-                            <div class="col-12 col-md-3">
-                                <FacilityItem ShowTags="false" FacilityCard="facility" CustomClass="small-card" />
-                            </div>
-                            <div class="col-12 col-md-3">
-                                <FacilityItem ShowTags="false" FacilityCard="facility" CustomClass="small-card" />
-                            </div>
-                            <div class="col-12 col-md-3">
-                                <FacilityItem ShowTags="false" FacilityCard="facility" CustomClass="small-card" />
-                            </div>
-                            <div class="col-12 col-md-3">
-                                <FacilityItem ShowTags="false" FacilityCard="facility" CustomClass="small-card" />
-                            </div>
-                            <div class="col-12 col-md-3">
-                                <FacilityItem ShowTags="false" FacilityCard="facility" CustomClass="small-card" />
-                            </div>
-                            <div class="col-12 col-md-3">
-                                <FacilityItem ShowTags="false" FacilityCard="facility" CustomClass="small-card" />
-                            </div>
+                            
                         </ItemContent>
                     </Virtualize>
                 </div>
@@ -132,7 +73,7 @@
         </div>
         <div class="col-md-3">
             <div class="border border-1 px-3 rounded-3 filter-sticky">
-                <FacilityFilter />
+                <FacilityFilter FilteredItems="FilteredItems" ApplyFilterCallback="ApplyFilter" />
             </div>
 
         </div>
@@ -144,6 +85,7 @@
     [Parameter]
     public string? statename { get; set; }
     private List<BreadCrumbComponent.BreadCrumbItem> breadCrumbItems = new();
+    public FacilityFilterItems FilteredItems { get; set; } = new();
     protected override void OnParametersSet()
     {
         breadCrumbItems = new()
@@ -191,7 +133,7 @@
 
     protected override void OnInitialized()
     {
-        FacilityCards = mapper.Map<List<FacilityCardViewmodel>>(FacilityService.GetRandomFacilityCardForHomePage(12, statename));
+        FacilityCards = mapper.Map<List<FacilityCardViewmodel>>(FacilityService.GetFacilityCard(12, statename));
     }
     private async ValueTask<ItemsProviderResult<FacilityCardViewmodel>> LoadFeaturedFacilities(ItemsProviderRequest request)
     {
@@ -217,6 +159,9 @@
         // Closing the method definition  *@
     }
 
-
-
+    async Task ApplyFilter(FacilityFilterItems facilityFilterItems)
+    {
+        FacilityCards = mapper.Map<List<FacilityCardViewmodel>>(FacilityService.GetFacilityCard(12, statename, facilityFilterItems));
+        StateHasChanged();
+    }
 }

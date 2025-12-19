@@ -37,7 +37,7 @@
     private List<FacilityCardViewmodel>? FacilityCards { get; set; }
     protected override void OnInitialized()
     {
-        FacilityCards = mapper.Map<List<FacilityCardViewmodel>>(FacilityService.GetRandomFacilityCardForHomePage(12));
+        FacilityCards = mapper.Map<List<FacilityCardViewmodel>>(FacilityService.GetFacilityCard(12));
     }
 
     private async ValueTask<ItemsProviderResult<FacilityCardViewmodel>> LoadFacilities(ItemsProviderRequest request)

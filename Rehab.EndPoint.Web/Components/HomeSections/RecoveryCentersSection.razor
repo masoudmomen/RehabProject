@@ -28,6 +28,6 @@
     private List<FacilityCardViewmodel>? FacilityCards { get; set; }
     protected override void OnInitialized()
     {
-        FacilityCards = mapper.Map<List<FacilityCardViewmodel>>(FacilityService.GetRandomFacilityCardForHomePage(4));
+        FacilityCards = mapper.Map<List<FacilityCardViewmodel>>(FacilityService.GetFacilityCard(4));
     }
 }

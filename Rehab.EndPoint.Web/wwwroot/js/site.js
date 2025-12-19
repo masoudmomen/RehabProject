@@ -53,3 +53,12 @@ function AddDnoneToAllCategoriesList(id) {
         if (!document.getElementById(i).classList.contains("d-none")) document.getElementById(i).classList.add("d-none");
     }
 }
+
+window.ToggleSelectItemsJs = function (id) {
+    const elementClasses = document.getElementById(id).classList;
+    if (elementClasses.contains("selected")) {
+        elementClasses.remove("selected")
+    } else {
+        elementClasses.add("selected");
+    }
+}
