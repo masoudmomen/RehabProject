@@ -1,5 +1,13 @@
 ﻿@using Microsoft.JSInterop
+@using Rehab.Application.Amenities
+@using Rehab.Application.Facilities
+@using Rehab.EndPoint.Web.ViewModels
+@using AutoMapper
+@using System.Threading.Tasks
+@using static Rehab.EndPoint.Web.Components.Pages.States
+@inject IAmenityService AmenitiesService
 @inject IJSRuntime JSRuntime
+@inject AutoMapper.IMapper mapper
 
 
 
@@ -12,54 +20,60 @@
         <label for="amenities" class="form-label fw-bold">Amenities</label>
         <input type="text" data-field="amenities" class="w-100 rounded-3 filter-input" id="aminity" autocomplete="off" placeholder="Enter amenity name..." @onclick="()=>ToggleListOfCategories(1)" @onclick:preverntDefault>
         <div class="autocomplete-list mt-1 ms-2 d-none" id="1">
-            <div class="item" onclick="toggleItem(this)"></div>
-            <div class="item" onclick="toggleItem(this)"></div>
-            <div class="item" onclick="toggleItem(this)"></div>
+            @foreach (var item in Amenities)
+            {
+                var arg = "amenity-" + item.Id.ToString();
+                <span class="item" 
+                      @onclick="() => ToggleSelectItems(arg, item.Id, FilteredItems.Amenities)"
+                    @onclick:preverntDefault
+                    id="amenity-@item.Id">@item.Name</span>
+            }
         </div>
         <div class="selected-items"></div>
 
-        
-
-
-
-
-
+    
     </div>
-    <div class="autocomplete-container pe-3 border-bottom mt-3">
+      <div class="autocomplete-container pe-3 border-bottom mt-3">
         <label for="acceptedinsurance" class="form-label mb-0 fw-bold">Insurance</label>
-        <input type="text" data-field="acceptedinsurance" class="w-100 rounded-3 filter-input" autocomplete="off" placeholder="Enter insurance name...">
+        <input type="text" data-field="acceptedinsurance" class="w-100 rounded-3 filter-input" autocomplete="off" placeholder="Enter insurance name..." @onclick="() => ToggleListOfCategories(2)" @onclick:preverntDefault>
         <div class="autocomplete-list mt-1 ms-2 d-none" id="2"></div>
         <div class="selected-items"></div>
     </div>
       <div class="autocomplete-container pe-3 border-bottom mt-3">
         <label for="accreditations" class="form-label mb-0 fw-bold">Accreditations</label>
-        <input type="text" data-field="accreditations" class="w-100 rounded-3 filter-input" autocomplete="off" placeholder="Enter accreditation name...">
+        <input type="text" data-field="accreditations" class="w-100 rounded-3 filter-input" autocomplete="off" placeholder="Enter accreditation name..." @onclick="() => ToggleListOfCategories(3)" @onclick:preverntDefault>
         <div class="autocomplete-list mt-1 ms-2" id="3"></div>
         <div class="selected-items"></div>
     </div>
       <div class="autocomplete-container pe-3 border-bottom mt-3">
         <label for="hilights" class="form-label mb-0 fw-bold">Hilights</label>
-        <input type="text" data-field="hilights" class="w-100 rounded-3 filter-input" autocomplete="off" placeholder="Enter hilight name...">
+        <input type="text" data-field="hilights" class="w-100 rounded-3 filter-input" autocomplete="off" placeholder="Enter hilight name..." @onclick="() => ToggleListOfCategories(4)" @onclick:preverntDefault>
         <div class="autocomplete-list mt-1 ms-2" id="4"></div>
         <div class="selected-items"></div>
     </div>
       <div class="autocomplete-container pe-3 border-bottom mt-3">
         <label for="wwt" class="form-label mb-0 fw-bold">Who We Treat</label>
-        <input type="text" data-field="wwt" class="w-100 rounded-3 filter-input" autocomplete="off" placeholder="Enter who we treat...">
+        <input type="text" data-field="wwt" class="w-100 rounded-3 filter-input" autocomplete="off" placeholder="Enter who we treat..." @onclick="() => ToggleListOfCategories(5)" @onclick:preverntDefault>
         <div class="autocomplete-list mt-1 ms-2" id="5"></div>
         <div class="selected-items"></div>
     </div>
       <div class="autocomplete-container pe-3 border-bottom mt-3">
         <label for="Treatments" class="form-label mb-0 fw-bold">Treatments</label>
-        <input type="text" data-field="Treatments" class="w-100 rounded-3 filter-input" autocomplete="off" placeholder="Enter who we treat...">
+        <input type="text" data-field="Treatments" class="w-100 rounded-3 filter-input" autocomplete="off" placeholder="Enter who we treat..." @onclick="() => ToggleListOfCategories(6)" @onclick:preverntDefault>
         <div class="autocomplete-list mt-1 ms-2" id="6"></div>
         <div class="selected-items"></div>
     </div>
       <div class="autocomplete-container pe-3 border-bottom mt-3">
         <label for="swt" class="form-label mb-0 fw-bold">Substances We Treat</label>
-        <input type="text" data-field="swt" class="w-100 rounded-3 filter-input" autocomplete="off" placeholder="Enter who we treat...">
+        <input type="text" data-field="swt" class="w-100 rounded-3 filter-input" autocomplete="off" placeholder="Enter who we treat..." @onclick="() => ToggleListOfCategories(7)" @onclick:preverntDefault>
         <div class="autocomplete-list mt-1 ms-2" id="7"></div>
         <div class="selected-items"></div>
+    </div>
+    <div class="w-100 text-center align-content-center pb-2">
+        <button class="btn btn-primary btn-sm " @onclick="ApplyFilter" @onclick:preverntDefault
+                style="text-align:center;">
+            Apply Filter
+        </button>
     </div>
 </div>
 <style>
@@ -109,9 +123,49 @@
         }
 </style>
 @code {
+    public List<AmenityViewmodel> Amenities { get; set; } = new();
+    private List<int> AmenitiesSelectedList = new();
+    public List<InsuranceViewModel> Insurances { get; set; } = new();
+    private List<int> InsurancesSelectedList = new();
+    public List<AccreditationViewmodel> Accreditations { get; set; } = new();
+    private List<int> AccreditationsSelectedList = new();
+    public List<HighlightViewmodel> Highlights { get; set; } = new();
+    private List<int> HighlightsSelectedList = new();
+    public List<WwtViewModel> Wwts { get; set; } = new();
+    private List<int> WwtsSelectedList = new();
+    public List<TreatmentViewmodel> Treatments { get; set; } = new();
+    private List<int> TreatmentsSelectedList = new();
+    public List<SwtViewModel> Swts { get; set; } = new();
+    private List<int> SwtsSelectedList = new();
+
+    [Parameter] public FacilityFilterItems FilteredItems { get; set; } = new();
+    [Parameter] public EventCallback<FacilityFilterItems> ApplyFilterCallback { get; set; }
+
+    protected override void OnInitialized()
+    {
+        Amenities = mapper.Map<List<AmenityViewmodel>>(AmenitiesService.GetList());
+    }
 
     private async Task ToggleListOfCategories(int id)
     {
         await JSRuntime.InvokeVoidAsync("ToggleListOfCategoriesJs", id);
     }
+    private async Task ToggleSelectItems(string id, int selectedEntityId, List<int> selectedList)
+    {
+        if (selectedList.Contains(selectedEntityId)) selectedList.Remove(selectedEntityId);
+        else selectedList.Add(selectedEntityId);
+        foreach (var item in selectedList)
+        {
+            Console.WriteLine(item);
+        }
+        await JSRuntime.InvokeVoidAsync("ToggleSelectItemsJs", id);
+    }
+
+
+    public async Task ApplyFilter()
+    {
+        await ApplyFilterCallback.InvokeAsync(FilteredItems);
+    }
+
+    
 }
