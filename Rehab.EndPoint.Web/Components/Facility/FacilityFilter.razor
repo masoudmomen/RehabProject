@@ -17,7 +17,7 @@
 </h4>
 <div class="facility-filter-container">
     <div class="autocomplete-container pe-3 border-bottom">
-        <label for="amenities" class="form-label fw-bold">Amenities</label>
+        <label for="aminity" class="form-label fw-bold">Amenities</label>
         <input type="text" data-field="amenities" class="w-100 rounded-3 filter-input" id="aminity" autocomplete="off" placeholder="Enter amenity name..." @onclick="()=>ToggleListOfCategories(1)" @onclick:preverntDefault>
         <div class="autocomplete-list mt-1 ms-2 d-none" id="1">
             @foreach (var item in Amenities)
@@ -148,16 +148,13 @@
 
     private async Task ToggleListOfCategories(int id)
     {
+        Console.WriteLine(id);
         await JSRuntime.InvokeVoidAsync("ToggleListOfCategoriesJs", id);
     }
     private async Task ToggleSelectItems(string id, int selectedEntityId, List<int> selectedList)
     {
         if (selectedList.Contains(selectedEntityId)) selectedList.Remove(selectedEntityId);
         else selectedList.Add(selectedEntityId);
-        foreach (var item in selectedList)
-        {
-            Console.WriteLine(item);
-        }
         await JSRuntime.InvokeVoidAsync("ToggleSelectItemsJs", id);
     }
 

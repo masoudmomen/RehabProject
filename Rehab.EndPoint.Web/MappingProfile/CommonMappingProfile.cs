@@ -7,6 +7,7 @@ using Rehab.Application.Highlights;
 using Rehab.Application.Insurances;
 using Rehab.Application.LevelsOfCare;
 using Rehab.Application.SubstancesWeTreat;
+using Rehab.Application.Tags;
 using Rehab.Application.Treatments;
 using Rehab.Application.WhoWeTreat;
 using Rehab.Domain.Accreditations;
@@ -25,6 +26,7 @@ using AccreditationViewmodel = Rehab.EndPoint.Web.ViewModels.AccreditationViewmo
 using AmenityViewmodel = Rehab.EndPoint.Web.ViewModels.AmenityViewmodel;
 using HighlightViewmodel = Rehab.EndPoint.Web.ViewModels.HighlightViewmodel;
 using LocViewmodel = Rehab.EndPoint.Web.ViewModels.LocViewmodel;
+using TagViewModel = Rehab.EndPoint.Web.ViewModels.TagViewModel;
 using TreatmentViewmodel = Rehab.EndPoint.Web.ViewModels.TreatmentViewmodel;
 
 namespace Rehab.EndPoint.Web.MappingProfile
@@ -58,6 +60,7 @@ namespace Rehab.EndPoint.Web.MappingProfile
             CreateMap<TreatmentDto, TreatmentViewmodel>().ReverseMap();
             CreateMap<ConditionDto, ConditionViewmodel>().ReverseMap();
             CreateMap<SwtDto, SwtViewmodel>().ReverseMap();
+            CreateMap<TagDto, TagViewModel>().ReverseMap();
 
             CreateMap<AmenityViewmodel, Amenity>().ReverseMap();
             CreateMap<AmenityViewmodel, AmenityDto>()

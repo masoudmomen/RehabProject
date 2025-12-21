@@ -378,7 +378,7 @@ namespace Rehab.Application.Facilities
 
         public List<FacilityCardDto>? GetFacilityCard(int CardCount, string state, FacilityFilterItems facilityFilterItems)
         {
-            return context.Facilities
+            var query =  context.Facilities
                     .Include(c => c.FacilitysImages)
                     .Include(c => c.Insurances)
                     .Include(c => c.Accreditations)
@@ -389,8 +389,8 @@ namespace Rehab.Application.Facilities
                     .Include(c => c.Highlights)
                     .Include(c => c.Locs)
                     .Include(c => c.Treatments)
-                    .Where(c => c.Logo != "" && c.FacilitysImages.Count > 0 && c.State.Contains(state))
-                    .Where(c => c.Amenities!.Select(d=>facilityFilterItems.Amenities.Contains(d.Id)).FirstOrDefault())
+                    .Where(c => c.Logo != "" && c.FacilitysImages!.Count > 0 && c.State.Contains(state))
+                    .Where(c => c.Amenities!.Any(d=> facilityFilterItems.Amenities.Contains(d.Id)))
                     .Select(c => new FacilityCardDto()
                     {
                         Id = c.Id,
@@ -409,6 +409,7 @@ namespace Rehab.Application.Facilities
                         TreatmentCount = c.Treatments!.Count(),
                         WwtCount = c.Wwts!.Count(),
                     }).Take(CardCount).ToList();
+            return query;
         }
 
         public List<FacilityNameSlugDto> SetSlug()

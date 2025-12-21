@@ -36,13 +36,15 @@ window.addEventListener("load", checkFooterPosition);
 
 
 window.ToggleListOfCategoriesJs = function (id) {
+    alert(id);
+
     AddDnoneToAllCategoriesList(id);
     const tagClasses = document.getElementById(id).classList;
     if (tagClasses.contains("d-none")) {
-        document.getElementById(id).classList.remove("d-none");
+        tagClasses.remove("d-none");
     }
     else {
-        document.getElementById(id).classList.add("d-none");
+        tagClasses.add("d-none");
     }
 
 }

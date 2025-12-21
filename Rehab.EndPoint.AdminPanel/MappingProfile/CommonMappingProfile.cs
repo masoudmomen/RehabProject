@@ -43,6 +43,7 @@ namespace Rehab.EndPoint.AdminPanel.MappingProfile
             CreateMap<TreatmentDto, TreatmentViewmodel>().ReverseMap();
             CreateMap<ConditionDto, ConditionViewmodel>().ReverseMap();
             CreateMap<SwtDto, SwtViewmodel>().ReverseMap();
+            
 
             CreateMap<InsuranceViewmodel, Insurance>().ReverseMap();
             CreateMap<AccreditationViewmodel, Accreditation>().ReverseMap();
