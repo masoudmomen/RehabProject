@@ -32,24 +32,7 @@
     <div class="row">
         <div class="col-md-9">
             <SearchComponent></SearchComponent>
-            @* <div class="container mt-3 mb-5 featured-centers border border-1 rounded-3 pt-2 ">
-                <div class="d-flex align-items-center py-2" style="border-bottom: solid 2px #93e2f1;">
-                    <i class="fa-solid fa-star text-primary"></i>
-                    <h5 class=" mb-0">Top featured recovery centers in @statename</h5>
-                </div>
-               
-                <div class="row g-4">
-
-                    <Virtualize ItemsProvider="LoadFeaturedFacilities" Context="facility" ItemSize="320" TItem="FacilityCardViewmodel">
-                        <ItemContent Context="facility">
-                            <div class="col-12 col-md-3">
-                                <FacilityItem ShowTags="false" FacilityCard="facility" CustomClass="small-card" />
-                            </div>
-                        </ItemContent>
-                    </Virtualize>
-                </div>
-
-            </div> *@
+            
             <div class="container mt-3 mb-5 featured-centers ">
                 <div class="d-md-none mb-3">
                     <div class="border border-1 px-3 rounded-3">
@@ -104,9 +87,7 @@
     }
 
 
-    private List<FacilityCardViewmodel>
-    ? FacilityCards
-    { get; set; }
+    private List<FacilityCardViewmodel>? FacilityCards { get; set; }
 
  
     private string GetStateImagePath()
@@ -140,28 +121,11 @@
     {
         FacilityCards = mapper.Map<List<FacilityCardViewmodel>>(FacilityService.GetFacilityCard(12, statename));
     }
-    private async ValueTask<ItemsProviderResult<FacilityCardViewmodel>> LoadFeaturedFacilities(ItemsProviderRequest request)
-    {
-        var result = await FacilityService.GetFacilitiesAsync(request.StartIndex / 50 + 1, 50, statename);
-        return new ItemsProviderResult<FacilityCardViewmodel>(mapper.Map<List<FacilityCardViewmodel>>(result.Item1), 4);
-@* Use mock data for testing 
-        var allFacilities = MockFacilityData.GetSampleFacilities();
-        await Task.CompletedTask;
-        return new ItemsProviderResult<FacilityCardViewmodel>(mapper.Map<List<FacilityCardViewmodel>>(allFacilities), 4);  
-   *@ }
-
+   
     private async ValueTask<ItemsProviderResult<FacilityCardViewmodel>> LoadFacilities(ItemsProviderRequest request)
     {
         var result = await FacilityService.GetFacilitiesAsync(request.StartIndex / 50 + 1, 50, statename);
         return new ItemsProviderResult<FacilityCardViewmodel>(mapper.Map<List<FacilityCardViewmodel>>(result.Item1), result.totalCount);
-
-        @*
-        // use mock data for testing
-        var allFacilities = MockFacilityData.GetSampleFacilities();
-        await Task.CompletedTask;
-        return new ItemsProviderResult<FacilityCardViewmodel>(mapper.Map<List<FacilityCardViewmodel>>(allFacilities), 10);  
-   
-        // Closing the method definition  *@
     }
 
     async Task ApplyFilter(FacilityFilterItems facilityFilterItems)

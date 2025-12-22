@@ -51,15 +51,15 @@ namespace Rehab.EndPoint.Web.MappingProfile
             CreateMap<ConditionViewModel, Condition>().ReverseMap();
             CreateMap<ViewModels.FacilityImageViewmodel, FacilityImageDto>().ReverseMap();
 
-            CreateMap<InsuranceDto, InsuranceViewmodel>().ReverseMap();
+            CreateMap<InsuranceDto, InsuranceViewModel>().ReverseMap();
             CreateMap<AccreditationDto, AccreditationViewmodel>().ReverseMap();
             CreateMap<AmenityDto, AmenityViewmodel>().ReverseMap();
             CreateMap<HighlightDto, HighlightViewmodel>().ReverseMap();
-            CreateMap<WwtDto, WwtViewmodel>().ReverseMap();
+            CreateMap<WwtDto, WwtViewModel>().ReverseMap();
             CreateMap<LevelsOfCareDto, LocViewmodel>().ReverseMap();
             CreateMap<TreatmentDto, TreatmentViewmodel>().ReverseMap();
-            CreateMap<ConditionDto, ConditionViewmodel>().ReverseMap();
-            CreateMap<SwtDto, SwtViewmodel>().ReverseMap();
+            CreateMap<ConditionDto, ConditionViewModel>().ReverseMap();
+            CreateMap<SwtDto, SwtViewModel>().ReverseMap();
             CreateMap<TagDto, TagViewModel>().ReverseMap();
 
             CreateMap<AmenityViewmodel, Amenity>().ReverseMap();
