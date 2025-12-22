@@ -9,8 +9,6 @@
 @inject IJSRuntime JSRuntime
 @inject AutoMapper.IMapper mapper
 
-
-
 <h4 class="fs-6 mt-2 me-3 py-2" style="
     border-bottom: solid 2px #93e2f1;">
     Add more filters
@@ -18,8 +16,9 @@
 <div class="facility-filter-container">
     <div class="autocomplete-container pe-3 border-bottom">
         <label for="aminity" class="form-label fw-bold">Amenities</label>
-        <input type="text" data-field="amenities" class="w-100 rounded-3 filter-input" id="aminity" autocomplete="off" placeholder="Enter amenity name..." @onclick="()=>ToggleListOfCategories(1)" @onclick:preverntDefault>
-        <div class="autocomplete-list mt-1 ms-2 d-none" id="1">
+        <input type="text" data-field="amenities" class="w-100 rounded-3 filter-input" id="aminity" autocomplete="off" placeholder="Enter amenity name..."
+               @onclick="() => ToggleListOfCategories(1)" @onclick:preverntDefault>
+        <div class="autocomplete-list mt-1 ms-2 @(categoryToggleArray[1] ? "" : "d-none")" id="1">
             @foreach (var item in Amenities)
             {
                 var arg = "amenity-" + item.Id.ToString();
@@ -36,7 +35,7 @@
       <div class="autocomplete-container pe-3 border-bottom mt-3">
         <label for="acceptedinsurance" class="form-label mb-0 fw-bold">Insurance</label>
         <input type="text" data-field="acceptedinsurance" class="w-100 rounded-3 filter-input" autocomplete="off" placeholder="Enter insurance name..." @onclick="() => ToggleListOfCategories(2)" @onclick:preverntDefault>
-        <div class="autocomplete-list mt-1 ms-2 d-none" id="2"></div>
+        <div class="autocomplete-list mt-1 ms-2 @(categoryToggleArray[2] ? "" : "d-none")" id="2"></div>
         <div class="selected-items"></div>
     </div>
       <div class="autocomplete-container pe-3 border-bottom mt-3">
@@ -141,21 +140,37 @@
     [Parameter] public FacilityFilterItems FilteredItems { get; set; } = new();
     [Parameter] public EventCallback<FacilityFilterItems> ApplyFilterCallback { get; set; }
 
+    private bool amenityTagToggle = true;
+    private bool insuranceTagToggle = true;
+    private bool[] categoryToggleArray = new bool[8];
     protected override void OnInitialized()
     {
+       
         Amenities = mapper.Map<List<AmenityViewmodel>>(AmenitiesService.GetList());
     }
 
-    private async Task ToggleListOfCategories(int id)
+    private void ToggleListOfCategories(int id)
     {
-        Console.WriteLine(id);
-        await JSRuntime.InvokeVoidAsync("ToggleListOfCategoriesJs", id);
+        for (var i = 0; i < 8; i++)
+        {
+            if(i != id)
+            {
+                categoryToggleArray[i] = false; 
+            }
+            else
+            {
+                categoryToggleArray[i] = !categoryToggleArray[i];
+            }
+        }
+
+        // await JSRuntime.InvokeVoidAsync("ToggleListOfCategoriesJs", id);
+        // StateHasChanged();
     }
     private async Task ToggleSelectItems(string id, int selectedEntityId, List<int> selectedList)
     {
-        if (selectedList.Contains(selectedEntityId)) selectedList.Remove(selectedEntityId);
-        else selectedList.Add(selectedEntityId);
-        await JSRuntime.InvokeVoidAsync("ToggleSelectItemsJs", id);
+        // if (selectedList.Contains(selectedEntityId)) selectedList.Remove(selectedEntityId);
+        // else selectedList.Add(selectedEntityId);
+        // await JSRuntime.InvokeVoidAsync("ToggleSelectItemsJs", id);
     }
 
 
