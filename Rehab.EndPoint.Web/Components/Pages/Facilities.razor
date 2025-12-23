@@ -24,25 +24,24 @@
         <Virtualize ItemsProvider="LoadFacilities" Context="facility" ItemSize="320" TItem="FacilityCardViewmodel">
             <ItemContent Context="facility">
                 <div class="col-12 col-md-3">
-                    <FacilityItem FacilityCard="facility" />
+                    <FacilityItem ShowTags="false" FacilityCard="facility" CustomClass="small-card" />
                 </div>
             </ItemContent>
         </Virtualize>
         
     </div>
 
-    @* <a href="#" class="btn btn-outline-primary rounded-3 w-100 text-primary">Visit All</a> *@
 </div>
 @code {
     private List<FacilityCardViewmodel>? FacilityCards { get; set; }
-    protected override void OnInitialized()
-    {
-        FacilityCards = mapper.Map<List<FacilityCardViewmodel>>(FacilityService.GetFacilityCard(12));
-    }
+    // protected override void OnInitialized()
+    // {
+    //     FacilityCards = mapper.Map<List<FacilityCardViewmodel>>(FacilityService.GetFacilityCard(12));
+    // }
 
     private async ValueTask<ItemsProviderResult<FacilityCardViewmodel>> LoadFacilities(ItemsProviderRequest request)
     {
-        var result = await FacilityService.GetFacilitiesAsync(request.StartIndex / 50 + 1, 50, null);
+        var result = await FacilityService.GetFacilityCardsAsync(request.StartIndex / 50 + 1, 50, "");
         return new ItemsProviderResult<FacilityCardViewmodel>(mapper.Map<List<FacilityCardViewmodel>>(result.Item1), result.totalCount);
     }
 }

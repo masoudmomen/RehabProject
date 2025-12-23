@@ -35,33 +35,3 @@ window.addEventListener("load", checkFooterPosition);
 
 
 
-window.ToggleListOfCategoriesJs = function (id) {
-    alert(id);
-
-    AddDnoneToAllCategoriesList(id);
-    const tagClasses = document.getElementById(id).classList; console.log(tagClasses)
-    if (tagClasses.contains("d-none")) {
-        tagClasses.remove("d-none");
-    }
-    else {
-        tagClasses.add("d-none");
-    }
-}
-
-function AddDnoneToAllCategoriesList(id) {
-    for (var i = 1; i < 8; i++) {
-        if (i == id) continue; 
-        if (!document.getElementById(i).classList.contains("d-none")) {
-            document.getElementById(i).classList.add("d-none");
-        }
-    }
-}
-
-window.ToggleSelectItemsJs = function (id) {
-    const elementClasses = document.getElementById(id).classList;
-    if (elementClasses.contains("selected")) {
-        elementClasses.remove("selected")
-    } else {
-        elementClasses.add("selected");
-    }
-}

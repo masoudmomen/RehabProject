@@ -220,7 +220,7 @@
             }
         }
     }
-    private async Task ToggleSelectItems(int selectedEntityId, List<int> selectedList)
+    private void ToggleSelectItems(int selectedEntityId, List<int> selectedList)
     {
         if (selectedList.Contains(selectedEntityId)) selectedList.Remove(selectedEntityId);
         else selectedList.Add(selectedEntityId);

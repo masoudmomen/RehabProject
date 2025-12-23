@@ -36,7 +36,8 @@ namespace Rehab.Application.Facilities
         List<FacilityCardDto>? GetFacilityCard(int CardCount);
         List<FacilityCardDto>? GetFacilityCard(int CardCount, string state);
         List<FacilityCardDto>? GetFacilityCard(int CardCount, string state, FacilityFilterItems facilityFilterItems);
-        Task<(List<FacilityCardDto>, int totalCount)> GetFacilitiesAsync(int pageNumber, int pageSize, string state);
+        Task<(List<FacilityCardDto>, int totalCount)> GetFacilityCardsAsync(int pageNumber, int pageSize, string state);
+        Task<(List<FacilityCardDto>, int totalCount)> GetFacilityCardsAsync(int pageNumber, int pageSize, string state, FacilityFilterItems facilityFilter);
         BaseDto<FacilityDetailDto> Delete(FacilityDetailDto facility);
     }
 
@@ -431,7 +432,7 @@ namespace Rehab.Application.Facilities
             return new List<FacilityNameSlugDto>();
         }
 
-        public async Task<(List<FacilityCardDto>, int totalCount)> GetFacilitiesAsync(int pageNumber, int pageSize, string state)
+        public async Task<(List<FacilityCardDto>, int totalCount)> GetFacilityCardsAsync(int pageNumber, int pageSize, string state)
         {
             var query = context.Facilities.Where(c => c.Logo != "" && c.FacilitysImages.Count > 0 && c.State.Contains(state)).AsQueryable();
             var totalCount = await query.CountAsync();
@@ -467,6 +468,46 @@ namespace Rehab.Application.Facilities
                         TreatmentCount = c.Treatments!.Count(),
                         WwtCount = c.Wwts!.Count(),
                     }).ToListAsync();
+            return (facilities, totalCount);
+        }
+
+        public async Task<(List<FacilityCardDto>, int totalCount)> GetFacilityCardsAsync(int pageNumber, int pageSize, string state, FacilityFilterItems facilityFilter)
+        {
+            var query = context.Facilities.Where(c => c.Logo != "" && c.FacilitysImages.Count > 0 && c.State.Contains(state)).AsQueryable();
+            query = query.Where(c => c.Amenities!.Any(d => facilityFilter.Amenities.Contains(d.Id)));
+            var totalCount = await query.CountAsync();
+            var facilities = await query
+                .OrderBy(c => c.Id)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .Include(c => c.FacilitysImages)
+                .Include(c => c.Insurances)
+                .Include(c => c.Accreditations)
+                .Include(c => c.Wwts)
+                .Include(c => c.Swts)
+                .Include(c => c.Amenities)
+                .Include(c => c.Conditions)
+                .Include(c => c.Highlights)
+                .Include(c => c.Locs)
+                .Include(c => c.Treatments)
+                .Select(c => new FacilityCardDto()
+                {
+                    Id = c.Id,
+                    Name = c.Name,
+                    Slug = c.Slug,
+                    Address = (string.IsNullOrEmpty(c.State) ? "No State" : c.State),
+                    Logo = c.Logo,
+                    Cover = c.Cover,
+                    CardImage = c.FacilitysImages!.Select(f => f.ImageAddress).FirstOrDefault(),
+                    AccreditationCount = c.Accreditations!.Count(),
+                    AmenityCount = c.Amenities!.Count(),
+                    ConditionCount = c.Conditions!.Count(),
+                    HighlightCount = c.Highlights!.Count(),
+                    InsuranceCount = c.Insurances!.Count(),
+                    SwtCount = c.Swts!.Count(),
+                    TreatmentCount = c.Treatments!.Count(),
+                    WwtCount = c.Wwts!.Count(),
+                }).ToListAsync();
             return (facilities, totalCount);
         }
 

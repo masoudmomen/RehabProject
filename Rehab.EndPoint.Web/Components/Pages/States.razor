@@ -40,24 +40,19 @@
                     </div>
                 </div>
                 <div class="d-flex align-items-center py-2" style="border-bottom: solid 2px #93e2f1;">
-
                     <h5 class=" mb-0">Our recovery centers in @statename</h5>
                 </div>
 
                 <div class="row g-4">
-
                     <Virtualize ItemsProvider="LoadFacilities" Context="facility" ItemSize="320" TItem="FacilityCardViewmodel">
                         <ItemContent Context="facility">
                             <div class="col-12 col-md-3">
                                 <FacilityItem ShowTags="false" FacilityCard="facility" CustomClass="small-card" />
                             </div>
-                            
                         </ItemContent>
                     </Virtualize>
                 </div>
-
             </div>
-
         </div>
         <div class="col-md-3 d-md-block">
             <div class="border border-1 px-3 rounded-3 filter-sticky">
@@ -86,10 +81,8 @@
 
     }
 
-
     private List<FacilityCardViewmodel>? FacilityCards { get; set; }
-
- 
+     
     private string GetStateImagePath()
     {
         if (string.IsNullOrWhiteSpace(statename))
@@ -117,20 +110,19 @@
         return $"Explore accredited recovery centers, resources, and support options across {stateLabel}.";
     }
 
-    protected override void OnInitialized()
-    {
-        FacilityCards = mapper.Map<List<FacilityCardViewmodel>>(FacilityService.GetFacilityCard(12, statename));
-    }
+    // protected override void OnInitialized()
+    // {
+    //     FacilityCards = mapper.Map<List<FacilityCardViewmodel>>(FacilityService.GetFacilityCard(12, statename));
+    // }
    
     private async ValueTask<ItemsProviderResult<FacilityCardViewmodel>> LoadFacilities(ItemsProviderRequest request)
     {
-        var result = await FacilityService.GetFacilitiesAsync(request.StartIndex / 50 + 1, 50, statename);
+        var result = await FacilityService.GetFacilityCardsAsync(request.StartIndex / 50 + 1, 50, statename);
         return new ItemsProviderResult<FacilityCardViewmodel>(mapper.Map<List<FacilityCardViewmodel>>(result.Item1), result.totalCount);
     }
 
-    async Task ApplyFilter(FacilityFilterItems facilityFilterItems)
+    async Task ApplyFilter(ItemsProviderRequest request, FacilityFilterItems facilityFilterItems)
     {
-        FacilityCards = mapper.Map<List<FacilityCardViewmodel>>(FacilityService.GetFacilityCard(12, statename, facilityFilterItems));
-        StateHasChanged();
+        
     }
 }
