@@ -37,7 +37,7 @@ namespace Rehab.Application.Facilities
         List<FacilityCardDto>? GetFacilityCard(int CardCount, string state);
         List<FacilityCardDto>? GetFacilityCard(int CardCount, string state, FacilityFilterItems facilityFilterItems);
         Task<(List<FacilityCardDto>, int totalCount)> GetFacilityCardsAsync(int pageNumber, int pageSize, string state);
-        Task<(List<FacilityCardDto>, int totalCount)> GetFacilityCardsAsync(int pageNumber, int pageSize, string state, FacilityFilterItems facilityFilter);
+        Task<(List<FacilityCardDto>, int totalCount)> GetFacilityCardsAsync(int pageNumber, int pageSize, string state, string searchText, FacilityFilterItems facilityFilter);
         BaseDto<FacilityDetailDto> Delete(FacilityDetailDto facility);
     }
 
@@ -471,10 +471,10 @@ namespace Rehab.Application.Facilities
             return (facilities, totalCount);
         }
 
-        public async Task<(List<FacilityCardDto>, int totalCount)> GetFacilityCardsAsync(int pageNumber, int pageSize, string state, FacilityFilterItems facilityFilter)
+        public async Task<(List<FacilityCardDto>, int totalCount)> GetFacilityCardsAsync(int pageNumber, int pageSize, string state, string searchText, FacilityFilterItems facilityFilter)
         {
             var query = context.Facilities.Where(c => c.Logo != "" && c.FacilitysImages.Count > 0 && c.State.Contains(state)).AsQueryable();
-            query = query.Where(c => c.Amenities!.Any(d => facilityFilter.Amenities.Contains(d.Id)));
+            if(facilityFilter.Amenities.Count>0) query = query.Where(c => c.Amenities!.Any(d => facilityFilter.Amenities.Contains(d.Id)));
             var totalCount = await query.CountAsync();
             var facilities = await query
                 .OrderBy(c => c.Id)

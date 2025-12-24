@@ -44,7 +44,7 @@
                 </div>
 
                 <div class="row g-4">
-                    <Virtualize ItemsProvider="LoadFacilities" Context="facility" ItemSize="320" TItem="FacilityCardViewmodel">
+                    <Virtualize @ref="virtualizeRef" ItemsProvider="LoadFacilities" Context="facility" ItemSize="320" TItem="FacilityCardViewmodel">
                         <ItemContent Context="facility">
                             <div class="col-12 col-md-3">
                                 <FacilityItem ShowTags="false" FacilityCard="facility" CustomClass="small-card" />
@@ -67,6 +67,7 @@
 @code {
     [Parameter]
     public string? statename { get; set; }
+    public string? searchText { get; set; }
     private List<BreadCrumbComponent.BreadCrumbItem> breadCrumbItems = new();
     public FacilityFilterItems FilteredItems { get; set; } = new();
     protected override void OnParametersSet()
@@ -81,8 +82,9 @@
 
     }
 
+    private Virtualize<FacilityCardViewmodel> virtualizeRef;
     private List<FacilityCardViewmodel>? FacilityCards { get; set; }
-     
+
     private string GetStateImagePath()
     {
         if (string.IsNullOrWhiteSpace(statename))
@@ -114,15 +116,17 @@
     // {
     //     FacilityCards = mapper.Map<List<FacilityCardViewmodel>>(FacilityService.GetFacilityCard(12, statename));
     // }
-   
+
     private async ValueTask<ItemsProviderResult<FacilityCardViewmodel>> LoadFacilities(ItemsProviderRequest request)
     {
-        var result = await FacilityService.GetFacilityCardsAsync(request.StartIndex / 50 + 1, 50, statename);
+        var result = await FacilityService.GetFacilityCardsAsync(request.StartIndex / 50 + 1, 50, statename, searchText, FilteredItems);
         return new ItemsProviderResult<FacilityCardViewmodel>(mapper.Map<List<FacilityCardViewmodel>>(result.Item1), result.totalCount);
     }
 
-    async Task ApplyFilter(ItemsProviderRequest request, FacilityFilterItems facilityFilterItems)
+    async Task ApplyFilter(FacilityFilterItems facilityFilterItems)
     {
-        
+        FilteredItems = facilityFilterItems;
+        await virtualizeRef.RefreshDataAsync();
+        Console.WriteLine(facilityFilterItems.Amenities.Count);
     }
 }
