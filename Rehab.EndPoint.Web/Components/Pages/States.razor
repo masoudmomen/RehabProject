@@ -4,9 +4,25 @@
 @using Rehab.EndPoint.Web.Components.Common
 @using Rehab.EndPoint.Web.Components.Facility
 @using Rehab.EndPoint.Web.Data
+@using Rehab.Application.Accreditations
+@using Rehab.Application.Amenities
 @using Rehab.Application.Facilities
+@using Rehab.Application.Highlights
+@using Rehab.Application.Insurances
+@using Rehab.Application.SubstancesWeTreat
+@using Rehab.Application.Treatments
+@using Rehab.Application.WhoWeTreat
+
+@inject IAmenityService AmenitiesService
+@inject IInsuranceService InsuranceService
+@inject IAccreditationService AccreditationService
+@inject IHighlightService HighlightService
+@inject IWwtService WwtService
+@inject ITreatmentService TreatmentService
+@inject ISubstancesWeTreatService SwtService
 @inject IFacilityService FacilityService
 @inject AutoMapper.IMapper mapper
+
 <div class="container  rounded-2 py-2">
     <BreadCrumbComponent Items="@breadCrumbItems"></BreadCrumbComponent>
 </div>
@@ -31,12 +47,12 @@
 <div class="container mt-3">
     <div class="row">
         <div class="col-md-9">
-            <SearchComponent></SearchComponent>
+            <SearchComponent searchTextFromComponent="@searchText" ApplySearchTextCallback="ApplySearch"></SearchComponent>
             
             <div class="container mt-3 mb-5 featured-centers ">
                 <div class="d-md-none mb-3">
                     <div class="border border-1 px-3 rounded-3">
-                        <FacilityFilter />
+                        @* <FacilityFilter /> *@
                     </div>
                 </div>
                 <div class="d-flex align-items-center py-2" style="border-bottom: solid 2px #93e2f1;">
@@ -56,7 +72,10 @@
         </div>
         <div class="col-md-3 d-md-block">
             <div class="border border-1 px-3 rounded-3 filter-sticky">
-                <FacilityFilter FilteredItems="FilteredItems" ApplyFilterCallback="ApplyFilter" />
+                <FacilityFilter
+                    
+                    FilteredItems="FilteredItems"
+                    ApplyFilterCallback="ApplyFilter" />
             </div>
 
         </div>
@@ -67,7 +86,37 @@
 @code {
     [Parameter]
     public string? statename { get; set; }
+    [Parameter]
     public string? searchText { get; set; }
+
+    public List<AmenityViewmodel>? Amenities { get; set; }
+    public List<InsuranceViewModel>? Insurances { get; set; }
+    public List<AccreditationViewmodel>? Accreditations { get; set; }
+    public List<HighlightViewmodel>? Highlights { get; set; }
+    public List<WwtViewModel>? Wwts { get; set; }
+    public List<TreatmentViewmodel>? Treatments { get; set; }
+    public List<SwtViewModel>? Swts { get; set; }
+
+    
+
+    // private bool _dataLoaded = false;
+    // protected override async Task OnAfterRenderAsync(bool firstRender)
+    // {
+    //     // if (!_dataLoaded)
+    //     // {
+    //         Amenities = mapper.Map<List<AmenityViewmodel>>(AmenitiesService.GetList());
+    //         Insurances = mapper.Map<List<InsuranceViewModel>>(InsuranceService.GetList());
+    //         Accreditations = mapper.Map<List<AccreditationViewmodel>>(AccreditationService.GetList());
+    //         Highlights = mapper.Map<List<HighlightViewmodel>>(HighlightService.GetList());
+    //         Wwts = mapper.Map<List<WwtViewModel>>(WwtService.GetList());
+    //         Treatments = mapper.Map<List<TreatmentViewmodel>>(TreatmentService.GetList());
+    //         Swts = mapper.Map<List<SwtViewModel>>(SwtService.GetList());
+
+    //     //     _dataLoaded = true;
+    //     // }
+
+    // }
+
     private List<BreadCrumbComponent.BreadCrumbItem> breadCrumbItems = new();
     public FacilityFilterItems FilteredItems { get; set; } = new();
     protected override void OnParametersSet()
@@ -112,10 +161,6 @@
         return $"Explore accredited recovery centers, resources, and support options across {stateLabel}.";
     }
 
-    // protected override void OnInitialized()
-    // {
-    //     FacilityCards = mapper.Map<List<FacilityCardViewmodel>>(FacilityService.GetFacilityCard(12, statename));
-    // }
 
     private async ValueTask<ItemsProviderResult<FacilityCardViewmodel>> LoadFacilities(ItemsProviderRequest request)
     {
@@ -127,6 +172,10 @@
     {
         FilteredItems = facilityFilterItems;
         await virtualizeRef.RefreshDataAsync();
-        Console.WriteLine(facilityFilterItems.Amenities.Count);
+    }
+    async Task ApplySearch(string searchTextFromComponent)
+    {
+        searchText = searchTextFromComponent;
+        await virtualizeRef.RefreshDataAsync();
     }
 }

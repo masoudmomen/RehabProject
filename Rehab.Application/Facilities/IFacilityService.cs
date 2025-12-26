@@ -474,6 +474,7 @@ namespace Rehab.Application.Facilities
         public async Task<(List<FacilityCardDto>, int totalCount)> GetFacilityCardsAsync(int pageNumber, int pageSize, string state, string searchText, FacilityFilterItems facilityFilter)
         {
             var query = context.Facilities.Where(c => c.Logo != "" && c.FacilitysImages.Count > 0 && c.State.Contains(state)).AsQueryable();
+            if(!string.IsNullOrWhiteSpace(searchText)) query = query.Where(c => c.Name.Contains(searchText));
             if(facilityFilter.Amenities.Count>0) query = query.Where(c => c.Amenities!.Any(d => facilityFilter.Amenities.Contains(d.Id)));
             var totalCount = await query.CountAsync();
             var facilities = await query
