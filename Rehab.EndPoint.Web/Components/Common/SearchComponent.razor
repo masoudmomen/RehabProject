@@ -1,8 +1,8 @@
 ﻿<div class="container bg-white py-2 rounded-3 border position-relative">
   
-    <div class="col-md-11 autocomplete-container @GetContainerClass()">
-        <input type="text" id="@FilterType" @bind-value="searchTextFromComponent" class="border-0" placeholder="@GetPlaceholder()">
-        <div class="autocomplete-list"></div>
+    <div class="col-md-11 autocomplete-container">
+        <input type="text"  @bind-value="searchTextFromComponent" class="border-0" placeholder="Facility Name..">
+        @* <div class="autocomplete-list"></div> *@
     </div>
  
     <div class="col-md-1 search-btn" @onclick="ApplySearchText" @onclick:preventDefault>
@@ -24,30 +24,4 @@
     }
 
 
-    [Parameter]
-    public string FilterType { get; set; } = "stateName";
-
-    private string GetPlaceholder()
-    {
-        return FilterType switch
-        {
-            "centerName" => "Enter rehab name...",
-            "stateName" => "Facility name...",
-            "cityName" => "City name...",
-            "condition" => "Condition...",
-            _ => "Search..."
-        };
-    }
-
-    private string GetContainerClass()
-    {
-        return FilterType switch
-        {
-            "centerName" => "center-name",
-            "stateName" => "center-state",
-            "cityName" => "center-city",
-            "condition" => "center-condition",
-            _ => "center-state"
-        };
-    }
 }
