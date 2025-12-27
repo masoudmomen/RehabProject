@@ -32,8 +32,8 @@ namespace Rehab.EndPoint.Web.ViewModels
         public List<FacilityImageViewmodel>? FacilitysImages { get; set; } = new();
         public List<LocViewmodel>? Locs { get; set; } = new();
         public List<TreatmentViewmodel>? Treatments { get; set; } = new();
-        public List<WwtViewModel>? Wwt { get; set; } = new();
-        public List<ConditionViewModel>? Condition { get; set; } = new();
-        public List<SwtViewModel>? Swt { get; set; } = new();
+        public List<WwtViewModel>? Wwts { get; set; } = new();
+        public List<ConditionViewModel>? Conditions { get; set; } = new();
+        public List<SwtViewModel>? Swts { get; set; } = new();
     }
 }

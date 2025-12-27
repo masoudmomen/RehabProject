@@ -1,0 +1,78 @@
+﻿<div class="col-md-3 my-1">
+    <div class="condition-card">
+        <div class="condition-icon text-center">
+            <img src="@Image" />
+        </div>
+        <h3 class="text-center my-1">@Title</h3>
+        @if (!string.IsNullOrEmpty(Description))
+        {
+            <p>
+                @((MarkupString)(Description.Length > CharacterLimit
+                            ? Description.Substring(0, CharacterLimit) + "..."
+                            : Description))
+
+                @if (Description.Length > CharacterLimit)
+                {
+                    <button type="button" style="background:none;"
+                            class="btn btn-link p-0 mt-1 show-more-btn"
+                            data-bs-toggle="modal"
+                            data-bs-target="#modal_@Title.Replace(" ", "_")">
+                        Show more
+                    </button>
+                }
+            </p>
+        }
+        
+        <div class="text-center">
+            <a class="btn btn-blue-dark mx-1" href="@CardLink">View Facilities</a>
+        </div>
+    </div>
+
+    @if (IsLoading)
+    {
+        <div class="card-loading">
+            <i class="fas fa-spinner fa-spin"></i>
+        </div>
+    }
+</div>
+
+@if (!string.IsNullOrEmpty(Description))
+{
+    <div class="modal fade custom-modal-backdrop"
+         id="modal_@Title.Replace(" ", "_")"
+         tabindex="-1"
+         aria-labelledby="modalLabel_@Title.Replace(" ", "_")"
+         aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered custom-modal-width">
+            <div class="modal-content">
+                <div class="modal-header bg-light">
+                    <h1 class="modal-title fs-5" id="modalLabel_@Title.Replace(" ", "_")">@Title</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    @((MarkupString)Description)
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public bool IsLoading { get; set; } = false;
+
+    [Parameter]
+    public string? Image { get; set; }
+
+    [Parameter]
+    public string Description { get; set; }
+
+    [Parameter]
+    public string Title { get; set; }
+
+    [Parameter]
+    public int CharacterLimit { get; set; } = 150;
+
+    [Parameter]
+    public string CardLink { get; set; } = "/#";
+}

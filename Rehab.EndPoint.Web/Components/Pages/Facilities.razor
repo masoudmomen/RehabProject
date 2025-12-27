@@ -1,4 +1,4 @@
-﻿@page "/Facilities"
+﻿@page "/Facilities/{condition?}"
 @rendermode InteractiveServer
 @using Rehab.Application.Facilities
 @using Rehab.EndPoint.Web.Components.Common
@@ -34,6 +34,7 @@
 </div>
 @code {
     private List<FacilityCardViewmodel>? FacilityCards { get; set; }
+    [Parameter] public string? condition { get; set; } = string.Empty;
     // protected override void OnInitialized()
     // {
     //     FacilityCards = mapper.Map<List<FacilityCardViewmodel>>(FacilityService.GetFacilityCard(12));
@@ -41,7 +42,7 @@
 
     private async ValueTask<ItemsProviderResult<FacilityCardViewmodel>> LoadFacilities(ItemsProviderRequest request)
     {
-        var result = await FacilityService.GetFacilityCardsAsync(request.StartIndex / 50 + 1, 50, "");
+        var result = await FacilityService.GetFacilityCardsAsync(request.StartIndex / 50 + 1, 50, condition);
         return new ItemsProviderResult<FacilityCardViewmodel>(mapper.Map<List<FacilityCardViewmodel>>(result.Item1), result.totalCount);
     }
 }

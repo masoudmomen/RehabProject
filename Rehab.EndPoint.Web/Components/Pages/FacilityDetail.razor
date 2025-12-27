@@ -94,7 +94,7 @@
             <div class="container px-3 ">
                 <h2 class="section-title"> Who We Treat </h2>
                 <div class="cards-grid">
-                    @foreach (var item in facility.Wwt)
+                    @foreach (var item in facility.Wwts)
                     {
                         <Card Title="@item.Name"
                               Image="@(serverUrl + item.Logo)"
@@ -132,7 +132,7 @@
         <div class="container px-3  py-5">
             <h2 class="section-title"> Conditions </h2>
 
-            @foreach (var item in facility.Condition)
+            @foreach (var item in facility.Conditions)
             {
                 <ItemRowComponent Title="@item.Name"
                                   Image="@(serverUrl + item.Logo)"
@@ -144,7 +144,7 @@
         <div class="bg-white shadow position-relative py-5">
             <div class="container px-3">
                 <h2 class="section-title"> Substances We Treat</h2>
-                @foreach (var item in facility.Swt)
+                @foreach (var item in facility.Swts)
                 {
                     <ItemRowComponent Title="@item.Name"
                                       Image="@(serverUrl + item.Logo)"

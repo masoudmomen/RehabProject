@@ -1,22 +1,44 @@
-﻿<div class="container my-5">
+﻿@using Rehab.EndPoint.Web.Components.Common
+<div class="container my-5">
     <h2 class="section-title text-center mb-3">Find Specialized Care by Condition</h2>
     <p class="fs-5 text-center text-dark-subtle"> Targeted Care for Your Unique Journey to Wellness</p>
     <div class="row">
-        @for (int i = 1; i <= 4; i++)
-        {
-            <div class="col-md-3 my-1">
-                <div class="condition-card">
-                    <div class="condition-icon text-center">
-                        <img src="/images/ADHD.png" />
-                    </div>
-                    <h3 class="text-center my-1">ADHD</h3>
-                    <p>Personalized treatment plans that include various therapeutic modalities to enhance focus and manage symptoms effectively.</p>
-                    <div class="text-center">
-                        <a class="btn btn-blue-dark mx-1" href="#">View Facilities</a>
-                    </div>
-                </div>
-            </div>
-        }
+       
+            <ConditionCardForHomepageComponent 
+                Title="Anxiety Disorders"
+                CardLink="/Facilities/Anxiety"
+                Image="/images/Conditions/Anxiety.jpg"
+                Description="
+Anxiety disorders are a group of mental health conditions characterized by persistent and excessive fear, worry, or nervous system arousal that goes beyond normal stress responses. They are the most common mental health conditions worldwide and may involve emotional symptoms such as ongoing worry or fear, as well as physical sensations like tension, restlessness, or increased heart rate. Anxiety disorders include several subtypes and often overlap with stress-related conditions, depression, and trauma-related experiences.
+"
+                />
+
+                <ConditionCardForHomepageComponent 
+                    Title="Depression"
+                    CardLink="/Facilities/Depression"
+                    Image="/images/Conditions/Depression.jpg"
+                    Description="
+Depression is a mood disorder marked by a persistent low mood and reduced interest or pleasure in daily activities. It is one of the leading causes of disability globally and affects people across all age groups. Common experiences include low energy, changes in sleep or appetite, difficulty concentrating, and emotional numbness, with symptoms often interacting with anxiety, trauma, and chronic stress.
+"
+                />
+            
+                <ConditionCardForHomepageComponent 
+                    Title="Stress"
+                    CardLink="/Facilities/Stress"
+                    Image="/images/Conditions/Stress.jpg"
+                    Description="
+Stress refers to the body’s natural response to perceived demands or pressures and is a nearly universal human experience. While stress itself is not always a clinical diagnosis, prolonged or chronic stress is associated with emotional strain, physical tension, sleep disruption, and cognitive fatigue. Stress plays a central role in the development and worsening of many mental health conditions, including anxiety and depression.
+"
+                />
+
+                <ConditionCardForHomepageComponent 
+                    Title="ADHD"
+                    CardLink="/Facilities/ADHD"
+                    Image="/images/Conditions/ADHD.jpg"
+                    Description="
+ADHD is a neurodevelopmental condition that affects attention, impulse control, and executive functioning. Although commonly identified in childhood, it frequently continues into adulthood and can influence organization, focus, and emotional regulation. ADHD exists in different presentations and often overlaps with anxiety, mood conditions, and learning differences.
+"
+                />
 
 
     </div>
@@ -91,5 +113,4 @@
     }
 </style>
 @code {
-
 }
