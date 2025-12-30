@@ -24,7 +24,7 @@
         }
         
         <div class="text-center">
-            <a class="btn btn-blue-dark mx-1" href="@CardLink">View Facilities</a>
+            <a class="btn btn-blue-dark mx-1 condition-card-btn" href="@CardLink">View Facilities</a>
         </div>
     </div>
 
@@ -76,3 +76,10 @@
     [Parameter]
     public string CardLink { get; set; } = "/#";
 }
+<style>
+    .condition-card-btn{
+        font-size: 0.9rem;
+        font-weight: normal;
+        padding: 10px 50px;
+    }
+</style>

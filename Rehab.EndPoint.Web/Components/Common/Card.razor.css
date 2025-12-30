@@ -1,28 +1,74 @@
 ﻿.card {
-    display: block;
+    display: flex;
+    flex-direction: column;
     text-decoration: none;
     color: inherit;
     background: white;
     border-radius: 16px;
-    padding: 0.5rem;
+    padding: 1rem;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
     transition: all 0.3s ease;
     border: 1px solid rgba(74, 144, 226, 0.1);
     position: relative;
     overflow: hidden;
+    aspect-ratio: 1/1;
+}
+.card-image-container {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem;
+    position: relative;
+/*    aspect-ratio: 1 / 1;  */
+}
+ 
+.card-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    max-width: 100px;
+    max-height: 100px;
 }
 
-    .card::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 3px;
-        background: linear-gradient(90deg, var(--primary-blue), var(--secondary-blue));
-        transform: scaleX(0);
-        transition: transform 0.3s ease;
-    }
+.card-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    text-align: center;
+    line-height: 1.3;
+    margin-top: auto;
+    padding-top: 0.5rem;
+}
+  
+.card-gs-2 .card {
+    background-color: #f9f9f9;
+
+}
+.card-gs-3 .card-title {
+    font-size: 0.8rem;
+    font-weight: normal;
+    color: var(--text-dark);
+    text-align: center;
+    line-height: 1.3;
+    margin-top: auto;
+    padding-top: 0.5rem;
+}
+
+.card-gs-3 .card-image {
+    width: 50%;
+}
+.card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--primary-blue), var(--secondary-blue));
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+}
 
     .card:hover {
      /*   transform: translateY(-4px);

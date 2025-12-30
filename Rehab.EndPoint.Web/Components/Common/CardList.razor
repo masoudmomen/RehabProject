@@ -1,15 +1,29 @@
 ﻿@using Rehab.EndPoint.Web.Components.Common
 @using Rehab.EndPoint.Web.ViewModels
+<div class="container cards-grid @CustomClass">
 
-@foreach (var item in Insurances)
-{
-    <Card 
-        Title="@item.Name" 
-        Image="@item.Logo" 
-        Description="@item.Description"
-        CardLink="#" />
-}
+    @foreach (var item in List)
+    {
+        <Card Title="@item.Name"
+              Image="@(prefixImageURL + ImageURL +"/" + item.Image)"
+              CardLink="#"
+              IconClass="fa-solid fa-certificate" />
+    } 
 
+</div>
 @code {
-    [Parameter] public List<InsuranceViewModel> Insurances { get; set; } = new();
+    [Parameter] public List<CardViewModel> List { get; set; } = new();
+    [Parameter] public string CustomClass { get; set; } = "card-gs-4";
+    [Parameter] public string ImageURL { get; set; } = "";
+    [Parameter] public int ItemsToShow { get; set; } 
+    public string prefixImageURL { get; set; } = "/images/" ;
+
+    protected  override void OnInitialized()
+    {
+        if (ItemsToShow > 0 && List.Count > ItemsToShow)
+        {
+            List = List.Take(ItemsToShow).ToList();
+        }
+    }
 }
+ 

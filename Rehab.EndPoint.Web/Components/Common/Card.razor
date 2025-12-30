@@ -1,8 +1,8 @@
 ﻿@using Rehab.EndPoint.Web.ViewModels
 
-<div href="@CardLink" class="card">
-    <div class="card-content">
-        <div class="card-logo">
+<a href="@CardLink" class="card">
+ 
+        <div class="card-image-container">
             @if (!string.IsNullOrEmpty(Image))
             {
                 <img src="@Image" alt="@Title logo" class="card-image" />
@@ -16,7 +16,7 @@
         </div>
 
         <div class="card-info">
-            <h4 class="card-title">@(Title ?? "Card Title")</h4>
+            <h4 class="card-title text-center">@(Title ?? "Card Title")</h4>
 
             @if (!string.IsNullOrEmpty(Description))
             {
@@ -37,15 +37,14 @@
                 </div>
             }
         </div>
-    </div>
-
+ 
     @if (IsLoading)
     {
         <div class="card-loading">
             <i class="fas fa-spinner fa-spin"></i>
         </div>
     }
-</div>
+</a>
 
 
 @if (!string.IsNullOrEmpty(Description))

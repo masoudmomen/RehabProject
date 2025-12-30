@@ -1,12 +1,21 @@
 ﻿@using Web.Data
+@using Rehab.EndPoint.Web.ViewModels
 <div class="conditions-container">
-    @for (int i = 0; i < Conditions.All.Count; i++)
-    {
-        <a class="condition-card" target="_blank" href="/Conditions/@Conditions.All[i].Name">
-            <div class="condition-image-container">
-                <img src="/images/Conditions/@Conditions.All[i].Image" alt="@Conditions.All[i].Name" class="condition-image" />
-            </div>
-            <div class="condition-title">@Conditions.All[i].Name</div>
-        </a>
-    }
+    <CardList List="ConditionsCards" 
+        CustomClass="card-gs-3" 
+        ImageURL="Conditions">
+    </CardList>
 </div>
+ 
+@code {
+    private List<CardViewModel> ConditionsCards = new();
+    protected override void OnInitialized()
+    {
+        ConditionsCards = Conditions.All.Select(i => new CardViewModel
+            {
+                Name = i.Name,
+                Image = i.Icon,
+                
+            }).ToList();
+    }
+}

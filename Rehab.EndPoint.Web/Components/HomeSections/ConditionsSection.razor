@@ -1,51 +1,57 @@
 ﻿@using Rehab.EndPoint.Web.Components.Common
-<div class="container my-5">
-    <h2 class="section-title text-center mb-3">Find Specialized Care by Condition</h2>
-    <p class="fs-5 text-center text-dark-subtle"> Targeted Care for Your Unique Journey to Wellness</p>
-    <div class="row">
-       
-            <ConditionCardForHomepageComponent 
-                Title="Anxiety Disorders"
-                CardLink="/Facilities/Anxiety"
-                Image="/images/Conditions/Anxiety.jpg"
-                Description="
+@using Rehab.EndPoint.Web.ViewModels
+@using Rehab.EndPoint.Web.Data
+<div class="container-fluid  bg-light-gray py-4">
+    <div class="container my-5">
+        <h2 class="section-title text-center mb-3">Find Specialized Care by Condition</h2>
+        <p class="fs-5 text-center text-dark-subtle"> Targeted Care for Your Unique Journey to Wellness</p>
+        <div class="row">
+
+            <ConditionCardForHomepageComponent Title="Anxiety Disorders"
+                                               CardLink="/Facilities/Anxiety"
+                                               Image="/images/Conditions/Anxiety.jpg"
+                                               Description="
 Anxiety disorders are a group of mental health conditions characterized by persistent and excessive fear, worry, or nervous system arousal that goes beyond normal stress responses. They are the most common mental health conditions worldwide and may involve emotional symptoms such as ongoing worry or fear, as well as physical sensations like tension, restlessness, or increased heart rate. Anxiety disorders include several subtypes and often overlap with stress-related conditions, depression, and trauma-related experiences.
-"
-                />
+" />
 
-                <ConditionCardForHomepageComponent 
-                    Title="Depression"
-                    CardLink="/Facilities/Depression"
-                    Image="/images/Conditions/Depression.jpg"
-                    Description="
+            <ConditionCardForHomepageComponent Title="Depression"
+                                               CardLink="/Facilities/Depression"
+                                               Image="/images/Conditions/Depression.jpg"
+                                               Description="
 Depression is a mood disorder marked by a persistent low mood and reduced interest or pleasure in daily activities. It is one of the leading causes of disability globally and affects people across all age groups. Common experiences include low energy, changes in sleep or appetite, difficulty concentrating, and emotional numbness, with symptoms often interacting with anxiety, trauma, and chronic stress.
-"
-                />
-            
-                <ConditionCardForHomepageComponent 
-                    Title="Stress"
-                    CardLink="/Facilities/Stress"
-                    Image="/images/Conditions/Stress.jpg"
-                    Description="
+" />
+
+            <ConditionCardForHomepageComponent Title="Stress"
+                                               CardLink="/Facilities/Stress"
+                                               Image="/images/Conditions/Stress.jpg"
+                                               Description="
 Stress refers to the body’s natural response to perceived demands or pressures and is a nearly universal human experience. While stress itself is not always a clinical diagnosis, prolonged or chronic stress is associated with emotional strain, physical tension, sleep disruption, and cognitive fatigue. Stress plays a central role in the development and worsening of many mental health conditions, including anxiety and depression.
-"
-                />
+" />
 
-                <ConditionCardForHomepageComponent 
-                    Title="ADHD"
-                    CardLink="/Facilities/ADHD"
-                    Image="/images/Conditions/ADHD.jpg"
-                    Description="
+            <ConditionCardForHomepageComponent Title="ADHD"
+                                               CardLink="/Facilities/ADHD"
+                                               Image="/images/Conditions/ADHD.jpg"
+                                               Description="
 ADHD is a neurodevelopmental condition that affects attention, impulse control, and executive functioning. Although commonly identified in childhood, it frequently continues into adulthood and can influence organization, focus, and emotional regulation. ADHD exists in different presentations and often overlaps with anxiety, mood conditions, and learning differences.
-"
-                />
+" />
 
-
-    </div>
-    <div class="row px-2 my-1">
-        <a class="border-gradient text-blue-dark text-center" href="#">Visit All Conditions</a>
+        </div>
+        <div class="row px-2 my-1">
+            <a class="border-gradient text-blue-dark text-center" href="#">Visit All Conditions</a>
+        </div>
     </div>
 </div>
+@code {
+    public List<CardViewModel> ConditionsCard = new();
+    protected override void OnInitialized()
+    {
+        ConditionsCard = Conditions.All.Select(c => new CardViewModel
+        {
+            Name = c.Name,
+            Icon = c.Icon,
+        }).ToList();
+    }
+}
 <style>
     .condition-card {
         border-radius: 10px;
@@ -63,15 +69,15 @@ ADHD is a neurodevelopmental condition that affects attention, impulse control, 
         width: 128px;
     }
 
-    .condition-icon img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        aspect-ratio: 1 / 1;
-        display: block;
-    }
+        .condition-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            aspect-ratio: 1 / 1;
+            display: block;
+        }
 
-    
+
 
     .condition-card:hover {
         transform: scale(1.05);
@@ -83,34 +89,32 @@ ADHD is a neurodevelopmental condition that affects attention, impulse control, 
         border: none;
     }
 
-    a.text-blue-dark{
+    a.text-blue-dark {
         color: #0a58ca;
         font-weight: 600;
         font-size: 1.2rem;
     }
+
     .border-gradient {
         position: relative;
         display: inline-block;
         padding: 10px 20px;
-      
         text-decoration: none;
         background: transparent;
-        border-radius: 12px; 
+        border-radius: 12px;
         z-index: 1;
     }
 
-    .border-gradient::before {
-        content: "";
-        position: absolute;
-        inset: 0 ;
-        padding: 2px;  
-        border-radius: inherit;
-        background: -webkit-linear-gradient(180deg, rgb(231 154 231) 1%, rgba(238, 238, 238, 1) 50%, #0dcaf0 100%);
-        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-        -webkit-mask-composite: xor;
-        mask-composite: exclude;
-        z-index: -1;
-    }
+        .border-gradient::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            padding: 2px;
+            border-radius: inherit;
+            background: -webkit-linear-gradient(180deg, rgb(231 154 231) 1%, rgba(238, 238, 238, 1) 50%, #0dcaf0 100%);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            z-index: -1;
+        }
 </style>
-@code {
-}

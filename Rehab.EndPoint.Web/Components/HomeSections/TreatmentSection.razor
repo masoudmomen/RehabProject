@@ -1,0 +1,95 @@
+﻿@using Rehab.EndPoint.Web.Components.Common
+@using Rehab.EndPoint.Web.ViewModels
+@using Web.Data
+<div class="container-fluid bg-light-gray py-4">
+    <div class="container">
+        <h2 class="section-title text-center">Treatments</h2>
+
+        <div class="row mb-3 px-3 justify-content-center align-items-stretch">
+            @foreach (var card in TreatmentCards)
+            {
+                <div class="col-12 col-md-3 mb-2">
+                    <div class="card  h-100 px-0 rounded-2 border-0 ">
+                        <img src="/images/treatment/@card.Image" class="card-img-top card-img-fixed" alt="@card.Name">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title fs-6">@card.Name</h5>
+                            <p class="card-text">
+                                @card.Description
+                            </p>
+                            <a href="#" class="btn-link-arrow align-self-end mt-auto">View facilities<span class="arrow">→</span></a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div class="row px-4 mb-4">
+            <a class="border-gradient text-blue-dark text-center" href="#">Visit All Treatments</a>
+        </div>
+
+    </div>
+</div>
+@code {
+    public List<CardViewModel> TreatmentCards = new();
+    protected override void OnInitialized()
+    {
+        TreatmentCards = Treatments.All.Take(4).Select(t => new CardViewModel
+        {
+            Name = t.Name,
+            Image = t.Image,
+            Description = t.Description
+        }).ToList();
+    }
+}
+<style>
+    .card-img-fixed {
+        height: 180px;
+        object-fit: cover;
+        width: 100%;
+    }
+
+    p.card-text {
+        font-size: 0.8rem;
+    }
+
+    .btn-link-arrow {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: transparent;
+        border: none;
+        padding: 0;
+        color: #0d6efd;
+        font-weight: 500;
+        font-size: 0.8rem;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+        .btn-link-arrow .arrow {
+            display: inline-block;
+            transition: transform 0.3s ease;
+        }
+
+
+        .btn-link-arrow:hover .arrow {
+            transform: translateX(8px);
+            /
+        }
+
+        .btn-link-arrow::after {
+            content: "";
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background-color: currentColor;
+            transition: width 0.3s ease;
+        }
+
+        .btn-link-arrow:hover::after {
+            width: 100%;
+        }
+</style>

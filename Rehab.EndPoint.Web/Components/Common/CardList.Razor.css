@@ -1,0 +1,18 @@
+﻿.cards-grid {
+    display: grid;
+    gap: 1.5rem;
+}
+
+    .cards-grid.card-gs-2 {
+        grid-template-columns: repeat(auto-fill, minmax(14%, 1fr));
+    }
+
+    .cards-grid.card-gs-3 {
+        grid-template-columns: repeat(auto-fill, minmax(8%, 1fr));
+    }
+
+@media (max-width: 768px) {
+    .cards-grid.card-gs-2, .cards-grid.card-gs-3 {
+        grid-template-columns: 1fr; 
+    }
+}

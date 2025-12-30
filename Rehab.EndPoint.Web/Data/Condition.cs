@@ -3,36 +3,37 @@
     public class Condition
     {
         public string Name { get; set; }
-        public string Image { get; set; }
+        public string? Icon { get; set; }
+        public string? Image { get; set; }
     }
     public class Conditions
     {
 
        public static readonly List<Condition> All = new List<Condition>()
         {
-            new Condition { Name = "ADHD, ADD", Image = "adhd.png" },
-            new Condition { Name = "Anger", Image = "angry.png" },
-            new Condition { Name = "Anxiety", Image = "Anxiety.png" },
-            new Condition { Name = "Bipolar", Image = "bipolar.png" },
-            new Condition { Name = "Burnout", Image = "burnout.png" },
-            new Condition { Name = "Depression", Image = "depression.png" },
-            new Condition { Name = "Eating Disorders", Image = "EatingDisorder.png" },
-            new Condition { Name = "Grief and Loss", Image = "MentalDisorder.png" },
-            new Condition { Name = "Internet Addiction", Image = "internet-addiction.png" },
-            new Condition { Name = "Narcissism", Image = "MentalDisorder.png" },
-            new Condition { Name = "Neurodiversity", Image = "MentalDisorder.png" },
-            new Condition { Name = "Obsessive Compulsive Disorder (OCD)", Image = "MentalDisorder.png" },
-            new Condition { Name = "Perinatal Mental Health", Image = "MentalDisorder.png" },
-            new Condition { Name = "Personality Disorders", Image = "MentalDisorder.png" },
-            new Condition { Name = "Pornography Addiction", Image = "MentalDisorder.png" },
-            new Condition { Name = "Post Traumatic Stress Disorder", Image = "MentalDisorder.png" },
-            new Condition { Name = "Schizophrenia", Image = "MentalDisorder.png" },
-            new Condition { Name = "Self-Harm", Image = "MentalDisorder.png" },
-            new Condition { Name = "Sex Addiction", Image = "MentalDisorder.png" },
-            new Condition { Name = "Shopping Addiction", Image = "MentalDisorder.png" },
-            new Condition { Name = "Stress", Image = "stress.png" },
-            new Condition { Name = "Suicidality", Image = "MentalDisorder.png" },
-            new Condition { Name = "Trauma", Image = "trauma.png" }
+            new Condition { Name = "ADHD, ADD", Icon = "adhd.png" },
+            new Condition { Name = "Anger", Icon = "angry.png" },
+            new Condition { Name = "Anxiety", Icon = "Anxiety.png" },
+            new Condition { Name = "Bipolar", Icon = "bipolar.png" },
+            new Condition { Name = "Burnout", Icon = "burnout.png" },
+            new Condition { Name = "Depression", Icon = "depression.png" },
+            new Condition { Name = "Eating Disorders", Icon = "EatingDisorder.png" },
+            new Condition { Name = "Grief and Loss", Icon = "MentalDisorder.png" },
+            new Condition { Name = "Internet Addiction", Icon = "internet-addiction.png" },
+            new Condition { Name = "Narcissism", Icon = "MentalDisorder.png" },
+            new Condition { Name = "Neurodiversity", Icon = "MentalDisorder.png" },
+            new Condition { Name = "Obsessive Compulsive Disorder (OCD)", Icon = "MentalDisorder.png" },
+            new Condition { Name = "Perinatal Mental Health", Icon = "MentalDisorder.png" },
+            new Condition { Name = "Personality Disorders", Icon = "MentalDisorder.png" },
+            new Condition { Name = "Pornography Addiction", Icon = "MentalDisorder.png" },
+            new Condition { Name = "Post Traumatic Stress Disorder", Icon = "MentalDisorder.png" },
+            new Condition { Name = "Schizophrenia", Icon = "MentalDisorder.png" },
+            new Condition { Name = "Self-Harm", Icon = "MentalDisorder.png" },
+            new Condition { Name = "Sex Addiction", Icon = "MentalDisorder.png" },
+            new Condition { Name = "Shopping Addiction", Icon = "MentalDisorder.png" },
+            new Condition { Name = "Stress", Icon = "stress.png" },
+            new Condition { Name = "Suicidality", Icon = "MentalDisorder.png" },
+            new Condition { Name = "Trauma", Icon = "trauma.png" }
         };
     }
 

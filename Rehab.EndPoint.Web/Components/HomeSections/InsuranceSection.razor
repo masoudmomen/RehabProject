@@ -1,41 +1,29 @@
-﻿<section class="container-fluid my-5 pt-5" id="insurance">
-    <div class="container">
-        <h2 class="section-title text-center">Accepted Insurance</h2>
-        <div class="row g-4">
-            <div class="col-12 col-sm-6 col-lg-4">
-                <div class="insurance-card fade-in">
-                    <div class="insurance-logo">Aetna</div>
-                </div>
-            </div>
-            <div class="col-12 col-sm-6 col-lg-4">
-                <div class="insurance-card fade-in">
-                    <div class="insurance-logo">Cigna</div>
-                </div>
-            </div>
-            <div class="col-12 col-sm-6 col-lg-4">
-                <div class="insurance-card fade-in">
-                    <div class="insurance-logo">UnitedHealth</div>
-                </div>
-            </div>
-            <div class="col-12 col-sm-6 col-lg-4">
-                <div class="insurance-card fade-in">
-                    <div class="insurance-logo">Blue Cross</div>
-                </div>
-            </div>
-            <div class="col-12 col-sm-6 col-lg-4">
-                <div class="insurance-card fade-in">
-                    <div class="insurance-logo">Humana</div>
-                </div>
-            </div>
-            <div class="col-12 col-sm-6 col-lg-4">
-                <div class="insurance-card fade-in">
-                    <div class="insurance-logo">Kaiser</div>
-                </div>
-            </div>
+﻿@using Web.Data
+@using Rehab.EndPoint.Web.ViewModels
+@using Rehab.EndPoint.Web.Components.Common
+<section class="my-5 pt-5 container" id="insurance">
+    <h2 class="section-title text-center">Accepted Insurances</h2>
+    <CardList List="Insurancescards" 
+        ItemsToShow="6"
+        CustomClass="card-gs-2" 
+    ImageURL="insurances"/>
+
+        <div class="row px-4 mt-4">
+            <a class="border-gradient text-blue-dark text-center" href="#">Visit All Accepted Insurances</a>
         </div>
-    </div>
+  
+   
 </section>
 
 @code {
+    private List<CardViewModel> Insurancescards = new();
 
+    protected override void OnInitialized()
+    {
+        Insurancescards = Insurances.All.Select(i => new CardViewModel
+        {
+            Name = i.Name,
+            Image = i.Icon,
+        }).ToList();
+    }
 }
