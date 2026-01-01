@@ -18,6 +18,8 @@
             new wwt { Name = "Girls", Image = "Girls.png" },
             new wwt { Name = "LGBTQ+", Image = "LGBTQ.png" },
             new wwt { Name = "Men", Image = "Men.png" },
+            new wwt { Name = "Midlife Adults", Image = "Midline-Adults.jpg" },
+            new wwt { Name = "Neurodivergent", Image = "Neurodivergent.jpg" },
             new wwt { Name = "Pregnant Women", Image = "Pregnant-women.png" },
             new wwt { Name = "Women", Image = "Women.png" },
             new wwt { Name = "Veterans", Image = "Veterans.png  " },
