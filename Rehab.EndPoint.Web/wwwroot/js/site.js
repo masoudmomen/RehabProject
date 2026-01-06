@@ -8,16 +8,47 @@ window.bootstrap.Lightbox = {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
-    // هندل کلیک روی لینک‌ها
+
     document.querySelectorAll("a").forEach(function (link) {
         link.addEventListener("click", function () {
             window.scrollTo({ top: 0, behavior: 'auto' });
         });
     });
+
+
+    // Handle mobile mega menu toggle for Recovery Centers
+    const recoveryCentersLink = document.querySelector('.recovery-centers-link');
+    const recoveryCentersNavItem = document.querySelector('#recovery-centers-nav-item');
+    
+    if (recoveryCentersLink && recoveryCentersNavItem) {
+        recoveryCentersLink.addEventListener('click', function(e) {
+            // Only prevent default and toggle on mobile (screen width <= 991.98px)
+            if (window.innerWidth <= 991.98) {
+                e.preventDefault();
+                e.stopPropagation();
+                recoveryCentersNavItem.classList.toggle('mobile-mega-open');
+            }
+        });
+    }
+
+    // Handle mobile mega menu toggle for Treatment By
+    const treatmentByLink = document.querySelector('.treatment-by-link');
+    const treatmentByNavItem = document.querySelector('#treatment-by-nav-item');
+    
+    if (treatmentByLink && treatmentByNavItem) {
+        treatmentByLink.addEventListener('click', function(e) {
+            // Only prevent default and toggle on mobile (screen width <= 991.98px)
+            if (window.innerWidth <= 991.98) {
+                e.preventDefault();
+                e.stopPropagation();
+                treatmentByNavItem.classList.toggle('mobile-mega-open');
+            }
+        });
+    }
 });
 
 
-// فوتر را در پایین صفحه ثابت می‌کند
+
 function checkFooterPosition() {
     const footer = document.querySelector('.footer-bottom');
     const scrollY = window.scrollY;

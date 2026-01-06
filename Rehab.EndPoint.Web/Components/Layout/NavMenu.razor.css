@@ -114,7 +114,8 @@ a.nav-link{
         border: 0;
         padding-left: 1rem;
     }
-    .nav-item-mega:hover ::deep .mega-menu {
+    .nav-item-mega:hover ::deep .mega-menu,
+    .nav-item-mega.mobile-mega-open ::deep .mega-menu {
         display: block !important;
     }
 }
