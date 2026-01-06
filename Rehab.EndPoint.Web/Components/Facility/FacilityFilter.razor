@@ -140,7 +140,7 @@
                 @foreach (var item in Swts)
                 {
                     <div class="item @((FilteredItems.Swts.Contains(item.Id)) ? "selected" : "")"
-                          @onclick="() => ToggleSelectItems(item.Id, FilteredItems.Swts)"
+                          @onclick="() => ToggleSelectItems(item.Id,  FilteredItems.Swts)"
                           @onclick:preventDefault
                           id="amenity-@item.Id">@item.Name</div>
                 }

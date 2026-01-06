@@ -1,4 +1,4 @@
-﻿@page "/Facilities/{condition?}/{state?}/{city?}"
+﻿@page "/Treatments/{condition?}"
 @rendermode InteractiveServer
 @using Rehab.Application.Facilities
 @using Rehab.EndPoint.Web.Components.Common
@@ -10,8 +10,17 @@
 <div class="container mt-5 mb-5">
     <h2 class="section-title text-center p-2">Our Recovery Centers</h2>
     <div class="row g-4">
-       
-        
+        @* @if (FacilityCards != null && FacilityCards.Count > 0)
+        {
+            @foreach (var facility in FacilityCards)
+            {
+                <div class="col-12 col-md-3">
+                    <FacilityItem FacilityCard="@facility" />
+                </div>
+            }
+        } *@
+
+
         <Virtualize ItemsProvider="LoadFacilities" Context="facility" ItemSize="320" TItem="FacilityCardViewmodel">
             <ItemContent Context="facility">
                 <div class="col-12 col-md-3">
@@ -20,17 +29,20 @@
             </ItemContent>
         </Virtualize>
 
-        
     </div>
 
 </div>
 @code {
+    private List<FacilityCardViewmodel>? FacilityCards { get; set; }
     [Parameter] public string? condition { get; set; } = string.Empty;
-    [Parameter] public string? state { get; set; } = string.Empty;
-    [Parameter] public string? city { get; set; } = string.Empty;
+    // protected override void OnInitialized()
+    // {
+    //     FacilityCards = mapper.Map<List<FacilityCardViewmodel>>(FacilityService.GetFacilityCard(12));
+    // }
+
     private async ValueTask<ItemsProviderResult<FacilityCardViewmodel>> LoadFacilities(ItemsProviderRequest request)
     {
-        var result = await FacilityService.GetFacilityCardsAsync(request.StartIndex / 50 + 1, 50, condition,state,city);
+        var result = await FacilityService.GetFacilityCardsAsync(request.StartIndex / 50 + 1, 50, condition, string.Empty, string.Empty);
         return new ItemsProviderResult<FacilityCardViewmodel>(mapper.Map<List<FacilityCardViewmodel>>(result.Item1), result.totalCount);
     }
 }

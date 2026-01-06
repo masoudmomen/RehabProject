@@ -14,18 +14,18 @@
                 <div class="p-3 rounded-3">
                     <div class="row mt-0 bg-white g-2 justify-content-center rounded-5">
                     <div class="col-md-4 rounded-5">
-                        <input type="text" class="form-control border-0 rounded-5 text-center" placeholder="State" />
+                        <input type="text" class="form-control border-0 rounded-5 text-center" @bind-value="state" placeholder="State" />
                     </div>
                     <div class="col-md-4 rounded-5">
-                        <input type="text" class="form-control border-0 rounded-5 text-center" placeholder="City" />
+                        <input type="text" class="form-control border-0 rounded-5 text-center" @bind-value="city" placeholder="City" />
                         </div>
                     <div class="col-md-4 rounded-5">
-                        <input type="text" class="form-control border-0 rounded-5 text-center" placeholder="Condition" />
+                        <input type="text" class="form-control border-0 rounded-5 text-center" @bind-value="condition" placeholder="Condition" />
                         </div>
                     </div>
                     <div class="row justify-content-center">
                         <div class="col-md-4">
-                        <a href="#centers" class="btn btn-primary-custom btn-lg w-100" data-bs-toggle="modal" data-bs-target="#facilitySearchModal">
+                        <a href="/Facilities/@condition/@state/@city" class="btn btn-primary-custom btn-lg w-100" >
                             <i class="fa-solid fa-magnifying-glass"></i>
                             Find Your Center
                         </a>
@@ -37,5 +37,7 @@
 </section>
 
 @code {
-
+    private string? state { get; set; }= string.Empty;
+    private string? city { get; set; } = string.Empty;
+    private string? condition { get; set; } = string.Empty;
 }
