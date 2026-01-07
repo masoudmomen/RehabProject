@@ -45,6 +45,25 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
     }
+
+    // Close open mega menus when clicking outside (mobile only)
+    document.addEventListener('click', function (e) {
+        if (window.innerWidth > 991.98) {
+            return; // desktop: use hover, don't interfere
+        }
+
+        // If click is inside any mega nav item, do nothing
+        const closestMegaItem = e.target.closest('.nav-item-mega');
+        if (closestMegaItem) {
+            return;
+        }
+
+        // Otherwise, remove mobile-mega-open from all mega nav items
+        document.querySelectorAll('.nav-item-mega.mobile-mega-open')
+            .forEach(function (item) {
+                item.classList.remove('mobile-mega-open');
+            });
+    });
 });
 
 
