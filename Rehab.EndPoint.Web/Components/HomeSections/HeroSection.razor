@@ -1,4 +1,6 @@
-﻿<section id="home" class="hero-section d-flex flex-column justify-content-center">
+﻿@rendermode InteractiveServer
+@inject NavigationManager NavigationManager
+<section id="home" class="hero-section d-flex flex-column justify-content-center">
     <div class="container">
         <div class="row justify-content-center text-center">
             <div class="col-lg-8 hero-content">
@@ -14,7 +16,7 @@
                 <div class="p-3 rounded-3">
                     <div class="row mt-0 bg-white g-2 justify-content-center rounded-5">
                     <div class="col-md-4 rounded-5">
-                        <input type="text" class="form-control border-0 rounded-5 text-center" @bind-value="state" placeholder="State" />
+                        <input type="text" class="form-control border-0 rounded-5 text-center" @bind-value="@state" placeholder="State" />
                     </div>
                     <div class="col-md-4 rounded-5">
                         <input type="text" class="form-control border-0 rounded-5 text-center" @bind-value="city" placeholder="City" />
@@ -24,8 +26,8 @@
                         </div>
                     </div>
                     <div class="row justify-content-center">
-                        <div class="col-md-4">
-                        <a href="/Facilities/@condition/@state/@city" class="btn btn-primary-custom btn-lg w-100" >
+                    <div class="col-md-4">
+                        <a class="btn btn-primary-custom btn-lg w-100" @onclick="GoToFacilitiesPage">
                             <i class="fa-solid fa-magnifying-glass"></i>
                             Find Your Center
                         </a>
@@ -35,9 +37,16 @@
             </div>
         </div>
 </section>
-
 @code {
-    private string? state { get; set; }= string.Empty;
+    private string? state { get; set; } = string.Empty;
     private string? city { get; set; } = string.Empty;
     private string? condition { get; set; } = string.Empty;
+
+    private void GoToFacilitiesPage()
+    {
+        if (string.IsNullOrEmpty(condition)) condition = "condition";
+        if (string.IsNullOrEmpty(state)) state = "state";
+        if (string.IsNullOrEmpty(city)) city = "city";
+        NavigationManager.NavigateTo("/Facilities/"+condition+"/"+state+"/"+city);
+    }
 }
