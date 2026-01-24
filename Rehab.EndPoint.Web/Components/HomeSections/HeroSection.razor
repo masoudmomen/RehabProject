@@ -41,12 +41,15 @@
     private string? state { get; set; } = string.Empty;
     private string? city { get; set; } = string.Empty;
     private string? condition { get; set; } = string.Empty;
+    private string url = "/facilities";
+    private List<string> query = new List<string>();
 
     private void GoToFacilitiesPage()
     {
-        if (string.IsNullOrEmpty(condition)) condition = "condition";
-        if (string.IsNullOrEmpty(state)) state = "state";
-        if (string.IsNullOrEmpty(city)) city = "city";
-        NavigationManager.NavigateTo("/Facilities/"+condition+"/"+state+"/"+city);
+        if (!string.IsNullOrEmpty(state)) query.Add($"state={Uri.EscapeDataString(state)}");
+        if (!string.IsNullOrEmpty(city)) query.Add($"city={Uri.EscapeDataString(city)}");
+        if (!string.IsNullOrEmpty(condition)) query.Add($"condition={Uri.EscapeDataString(condition)}");
+        if (query.Any()) url += "?" + string.Join("&", query);
+        NavigationManager.NavigateTo(url);
     }
 }

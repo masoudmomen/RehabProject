@@ -2,7 +2,7 @@
 <div class="treatments-container">
     @for (int i = 0; i < Treatments.All.Count; i++)
     {
-        <a class="treatment-card" target="_blank" href="/treatments/@Treatments.All[i].Name">
+        <a class="treatment-card" target="_blank" href="/facilities?treatment=@Uri.EscapeDataString(Treatments.All[i].Name)">
             <div class="treatment-image-container">
                 <img src="/images/TreatmentIcons/@Treatments.All[i].Icon" alt="@Treatments.All[i].Name" class="treatment-image" />
             </div>
