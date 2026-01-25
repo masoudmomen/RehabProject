@@ -1,4 +1,4 @@
-﻿@page "/Facilities/{condition?}/{state?}/{city?}"
+﻿@page "/Facilities"
 @rendermode InteractiveServer
 @using Rehab.Application.Facilities
 @using Rehab.EndPoint.Web.Components.Common
@@ -25,12 +25,30 @@
 
 </div>
 @code {
-    [Parameter] public string? condition { get; set; } = string.Empty;
-    [Parameter] public string? state { get; set; } = string.Empty;
-    [Parameter] public string? city { get; set; } = string.Empty;
+    private FacilityFieldsItem FilterItems { get; set; } = new();
+    [Parameter, SupplyParameterFromQuery] public string? condition { get; set; }
+    [Parameter, SupplyParameterFromQuery] public string? amenity { get; set; }
+    [Parameter, SupplyParameterFromQuery] public string? treatment { get; set; }
+    [Parameter, SupplyParameterFromQuery] public string? insurance { get; set; }
+    [Parameter, SupplyParameterFromQuery] public string? loc { get; set; }
+    [Parameter, SupplyParameterFromQuery] public string? wwt { get; set; }
+    [Parameter, SupplyParameterFromQuery] public string? swt { get; set; }
+    [Parameter, SupplyParameterFromQuery] public string? state { get; set; }
+    [Parameter, SupplyParameterFromQuery] public string? city { get; set; }
+
+    protected override void OnInitialized()
+    {
+        if (!string.IsNullOrWhiteSpace(condition)) FilterItems.Condition = condition;
+        if (!string.IsNullOrWhiteSpace(amenity)) FilterItems.Amenity = amenity;
+        if (!string.IsNullOrWhiteSpace(treatment)) FilterItems.Treatment = treatment.ToLowerInvariant();
+        if (!string.IsNullOrWhiteSpace(insurance)) FilterItems.Insurance = insurance;
+        if (!string.IsNullOrWhiteSpace(loc)) FilterItems.Loc = loc;
+        if (!string.IsNullOrWhiteSpace(wwt)) FilterItems.Wwt = wwt;
+        if (!string.IsNullOrWhiteSpace(swt)) FilterItems.Swt = swt;
+    }
     private async ValueTask<ItemsProviderResult<FacilityCardViewmodel>> LoadFacilities(ItemsProviderRequest request)
     {
-        var result = await FacilityService.GetFacilityCardsAsync(request.StartIndex / 50 + 1, 50, condition,state,city);
+        var result = await FacilityService.GetFacilityCardsAsync(request.StartIndex / 50 + 1, 50, state, city, FilterItems);
         return new ItemsProviderResult<FacilityCardViewmodel>(mapper.Map<List<FacilityCardViewmodel>>(result.Item1), result.totalCount);
     }
 }
