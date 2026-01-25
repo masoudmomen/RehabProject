@@ -3,11 +3,15 @@
 <div class="conditions-container">
     <CardList List="ConditionsCards" 
         CustomClass="card-gs-3" 
-        ImageURL="Conditions">
+        ImageURL="Conditions"
+       
+    >
     </CardList>
 </div>
  
 @code {
+    // [Parameter]
+    // public int number { get; set; }
     private List<CardViewModel> ConditionsCards = new();
     protected override void OnInitialized()
     {

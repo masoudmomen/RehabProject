@@ -1,6 +1,7 @@
 ﻿.footer a {
     -webkit-text-decoration: inherit;
     text-decoration: inherit;
+    font-size: 0.8rem;
 }
 .btn-blue {
     border: none;
@@ -23,7 +24,7 @@
     z-index: 1000;
 }
 h5.footer-section-title {
-    color: rgb(116, 235, 213) !important;
+    color: rgb(42 247 254) !important;
 }
 .footer ul {
     margin-top: 30px;

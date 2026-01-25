@@ -66,7 +66,7 @@
                     </div>
                     <div class="col-md-3 facility-filter">
                         <div class="faciliti-filter-scroll">
-                        <FacilityFilter />
+                            <FacilityFilter />
                         </div>
                     </div>
                 </div>
@@ -76,7 +76,19 @@
     </div>
 </div>
 <Footer />
+<div class="modal  fade" id="conditionsModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl custom-modal">
+        <div class="modal-content">
+            <button type="button" class="btn-close position-absolute top-0 end-0 z-2" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="modal-body p-0">
+                <div class="conditions-container">
+                   <ConditionComponent></ConditionComponent>
+                </div>
 
+            </div>
+        </div>
+    </div>
+</div>
 <style>
 
     .autocomplete-item {
@@ -91,10 +103,9 @@
         font-style: italic;
     }
 
-    .autocomplete-item:hover {
+        .autocomplete-item:hover {
             background-color: #91c8ff;
-    }
-
+        }
 
 </style>
 <script src="/js/autoComplete.js"></script>

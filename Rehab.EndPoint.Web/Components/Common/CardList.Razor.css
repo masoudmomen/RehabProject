@@ -10,7 +10,10 @@
     .cards-grid.card-gs-3 {
         grid-template-columns: repeat(auto-fill, minmax(8%, 1fr));
     }
-
+    .cards-grid.card-gs-larg-3 {
+        grid-template-columns: repeat(auto-fill, minmax(20%, 1fr));
+    }
+ 
 @media (max-width: 768px) {
     .cards-grid.card-gs-2, .cards-grid.card-gs-3 {
         grid-template-columns: 1fr; 

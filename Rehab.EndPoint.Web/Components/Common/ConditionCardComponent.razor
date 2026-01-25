@@ -1,0 +1,58 @@
+﻿@using Rehab.EndPoint.Web.ViewModels
+<div class="col-12 col-md-3 mb-2  ">
+    <div class="card @CustomClass  h-100 rounded-2 p-2">
+        <div class="card-image-container">
+            <img src="/images/conditions/@Card.Image" class="card-image" alt="@Card.Name">
+        </div>
+
+        <h5 class="card-title">@Card.Name</h5>
+        <p class="card-text">
+            @((MarkupString)(Card.Description.Length > CharacterLimit
+                        ? Card.Description.Substring(0, CharacterLimit) + "..."
+                        : Card.Description))
+
+            @if (Card.Description.Length > CharacterLimit)
+            {
+                <a style="background:none;cursor:pointer"
+                        class="p-0 mt-1 show-more-btn text-decoration-none"
+                        data-bs-toggle="modal"
+                        data-bs-target="#modal_@Card.Name.Replace(" ", "_")">
+                    Show more
+                </a>
+            }
+        </p>
+        
+        <a href="#"  class="btn show-facilities-btn rounded-2 w-100">Show Facilities</a>
+    </div>
+</div>
+@if (!string.IsNullOrEmpty(Card.Description))
+{
+    <div class="modal fade custom-modal-backdrop"
+         id="modal_@Card.Name.Replace(" ", "_")"
+         tabindex="-1"
+         aria-labelledby="modalLabel_@Card.Name.Replace(" ", "_")"
+         aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered custom-modal-width">
+            <div class="modal-content">
+                <div class="modal-header bg-light">
+                    <h1 class="modal-title fs-5" id="modalLabel_@Card.Name.Replace(" ", "_")">@Card.Name</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    @((MarkupString)Card.Description)
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<style>
+    
+</style>
+@code {
+    [Parameter]
+    public int CharacterLimit { get; set; } = 150;
+    [Parameter]
+    public string CustomClass { get; set;}
+    [Parameter]
+    public CardViewModel Card{ get; set; }
+}
