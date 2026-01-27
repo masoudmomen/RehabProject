@@ -1,29 +1,67 @@
 ﻿@using Web.Data
 @using Rehab.EndPoint.Web.ViewModels
 @using Rehab.EndPoint.Web.Components.Common
+@using Rehab.Application.Insurances
+@using AutoMapper
+@inject IInsuranceService InsuranceService
+@inject AutoMapper.IMapper mapper
+
 <section class="my-5 pt-5 container" id="insurance">
     <h2 class="section-title text-center">Accepted Insurances</h2>
     <CardList List="Insurancescards" 
         ItemsToShow="6"
         CustomClass="card-gs-2" 
-    ImageURL="insurances"/>
+        prefixImageURL="@serverUrl"
+  />
 
         <div class="row px-4 mt-4">
-            <a class="border-gradient text-blue-dark text-center" href="#">Visit All Accepted Insurances</a>
+            <a class="border-gradient text-blue-dark text-center"
+           data-bs-toggle="modal"
+           data-bs-target="#modal_all_insurances">
+                
+                Visit All Accepted Insurances</a>
         </div>
   
    
 </section>
 
-@code {
-    private List<CardViewModel> Insurancescards = new();
+    <div class="modal fade custom-modal-backdrop"
+         id="modal_all_insurances"
+         tabindex="-1"
+     aria-labelledby="modalLabel_all_insurances"
+         aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content p-3">
+            <h2 class="section-title text-center">All Accepted Insurances</h2>
+            <CardList List="InsurancescardsAll"
+                      ItemsToShow="6"
+                      CustomClass="card-gs-2"
+                      prefixImageURL="@serverUrl" />
+            </div>
+        </div>
+    </div>
 
+@code {
+    [Inject] IConfiguration Config { get; set; } = default!;
+
+    private string? serverUrl;
+    private List<CardViewModel> Insurancescards = new();
+    private List<CardViewModel> InsurancescardsAll = new();
+    [Parameter] public FacilityViewModel Facility { get; set; } = new FacilityViewModel();
     protected override void OnInitialized()
     {
-        Insurancescards = Insurances.All.Select(i => new CardViewModel
+        serverUrl = Config["AppSettings:AdminServerUrl"];
+        var insuranceList = mapper.Map<List<InsuranceViewModel>>(InsuranceService.GetList());
+    
+        Insurancescards = insuranceList.Take(6).Select(i => new CardViewModel
         {
             Name = i.Name,
-            Image = i.Icon,
+            Image = i.Logo,
+        }).ToList();
+        InsurancescardsAll = insuranceList.Take(6).Select(i => new CardViewModel
+        {
+            Name = i.Name,
+            Image = i.Logo,
         }).ToList();
     }
 }

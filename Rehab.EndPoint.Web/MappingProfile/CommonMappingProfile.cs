@@ -68,6 +68,9 @@ namespace Rehab.EndPoint.Web.MappingProfile
 
             CreateMap<AmenityDto, AmenityViewmodel>()
             .ForMember(dest => dest.Tags, opt => opt.MapFrom(src => src.Tags));
+
+            CreateMap<InsuranceViewmodel, CardViewModel>()
+                .ForMember(dest => dest.Image, opt => opt.MapFrom(src => src.Logo));
         }
 
     }

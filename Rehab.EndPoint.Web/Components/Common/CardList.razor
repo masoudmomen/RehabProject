@@ -17,7 +17,7 @@
     [Parameter] public string CustomClass { get; set; } = "card-gs-4";
     [Parameter] public string ImageURL { get; set; } = "";
     [Parameter] public int ItemsToShow { get; set; } 
-    public string prefixImageURL { get; set; } = "/images/" ;
+    [Parameter] public string prefixImageURL { get; set; } = "/images/" ;
 
     protected  override void OnInitialized()
     {
