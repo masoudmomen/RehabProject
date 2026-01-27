@@ -2,7 +2,7 @@
 <div class="amenities-container">
     @for (int i = 0; i < Amenities.All.Count; i++)
     {
-        <a class="amenity-card" target="_blank" href="/amenities/@Amenities.All[i].Name">
+        <a class="amenity-card" target="_blank" href="/facilities?amenity=@Uri.EscapeDataString(Amenities.All[i].Name)">
             <div class="amenity-image-container">
                 <img src="/images/Amenities/@Amenities.All[i].Icon" alt="@Amenities.All[i].Name" class="amenity-image" />
             </div>

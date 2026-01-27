@@ -16,7 +16,7 @@
                             <p class="card-text">
                                 @card.Description
                             </p>
-                            <a href="#" class="btn-link-arrow align-self-end mt-auto">View facilities<span class="arrow">→</span></a>
+                            <a href="/facilities?treatment=@Uri.EscapeDataString(card.Name!)" class="btn-link-arrow align-self-end mt-auto">View facilities<span class="arrow">→</span></a>
                         </div>
                     </div>
                 </div>
