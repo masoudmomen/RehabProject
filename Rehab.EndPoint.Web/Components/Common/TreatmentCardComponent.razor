@@ -1,11 +1,9 @@
 ﻿@using Rehab.EndPoint.Web.ViewModels
-<div class="col-12 col-md-3 mb-2  ">
-    <div class="card @CustomClass  h-100 rounded-2 p-2">
-        <div class="card-image-container">
-            <img src="/images/conditions/@Card.Image" class="card-image" alt="@Card.Name">
-        </div>
-     <h5 class="card-title">@Card.Name</h5>
-        <p class="card-text">
+        <div class="card  h-100 px-0 rounded-2 border-0 @CustomClass ">
+            <img src="@prefixImageURL/@Card.Image" class="card-img-top card-img-fixed" alt="@Card.Name">
+            <div class="card-body d-flex flex-column">
+                <h5 class="card-title fs-6" title="@Card.Name">@Card.Name</h5>
+                <p class="card-text">
             @((MarkupString)(Card.Description.Length > CharacterLimit
                         ? Card.Description.Substring(0, CharacterLimit) + "..."
                         : Card.Description))
@@ -13,17 +11,17 @@
             @if (Card.Description.Length > CharacterLimit)
             {
                 <a style="background:none;cursor:pointer"
-                        class="p-0 mt-1 show-more-btn text-decoration-none"
-                        data-bs-toggle="modal"
-                        data-bs-target="#modal_@Card.Name.Replace(" ", "_")">
+                   class="p-0 mt-1 show-more-btn text-decoration-none"
+                   data-bs-toggle="modal"
+                   data-bs-target="#modal_@Card.Name.Replace(" ", "_")">
                     Show more
                 </a>
             }
-        </p>
-        
-        <a href="#"  class="btn show-facilities-btn rounded-2 w-100">Show Facilities</a>
-    </div>
-</div>
+                </p>
+                <a href="#" class="btn-link-arrow align-self-end mt-auto">View facilities<span class="arrow">→</span></a>
+            </div>
+        </div> 
+ 
 @if (!string.IsNullOrEmpty(Card.Description))
 {
     <div class="modal fade custom-modal-backdrop"
@@ -44,14 +42,14 @@
         </div>
     </div>
 }
-<style>
-    
-</style>
 @code {
     [Parameter]
     public int CharacterLimit { get; set; } = 150;
     [Parameter]
-    public string CustomClass { get; set;}
+    public string CustomClass { get; set; }
     [Parameter]
     public CardViewModel Card{ get; set; }
+    [Parameter]
+    public string prefixImageURL { get; set; } = "/images/";
 }
+ 

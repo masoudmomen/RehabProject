@@ -1,0 +1,158 @@
+﻿@page "/TreatmentsList"
+@using Rehab.EndPoint.Web.ViewModels
+@using Rehab.EndPoint.Web.Components.Common
+@using AutoMapper
+@using Rehab.Application.Treatments
+@inject ITreatmentService TreatmentService;
+@inject IMapper mapper;
+<div class="container">
+    <div class="row my-4">
+        <div class="col-md-9">
+            <h2 class="page-title">Treatments</h2>
+            <div class="">
+                <input class="search-input rounded-3 p-2 bg-white w-100 fs-7" placeholder="Treatment name" />
+            </div>
+            <div class="top-treatments mt-4">
+                <h3 class="section-title">
+                    Most Popular Treatments
+                </h3>
+                <div class="row mb-3 px-0 align-items-stretch">
+                    @foreach (var card in SpecialTreatment)
+                    {
+                        <div class="col-12 col-md-3 mb-2">
+                            <TreatmentCardComponent Card="card"
+                                                    CharacterLimit="120"
+                                                    CustomClass="special"
+                                                    prefixImageURL="@serverUrl" />
+                        </div>
+                    }
+                </div>
+
+            </div>
+            <div class="all-treatments mt-4">
+                <h3 class="section-title">
+                    All Treatments
+                </h3>
+                <div class="row mb-3 px-0 align-items-stretch">
+                    @foreach (var card in SpecialTreatment)
+                    {
+                        <div class="col-12 col-md-3 mb-2">
+                            <TreatmentCardComponent Card="card"
+                                                    CharacterLimit="120"
+                                                    prefixImageURL="@serverUrl"
+                                                    CustomClass="" />
+                        </div>
+                    }
+                </div>
+
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="popular-centers sidebar">
+                <h3 class="sidebar-header">
+                    Popular Facilities
+                </h3>
+                <ul>
+                    <li>
+                        <a href="#">1-on-1 Counseling</a>
+                    </li>
+                    <li>
+                        <a href="#">Acceptance and Commitment Therapy (ACT)</a>
+                    </li>
+                    <li>
+                        <a href="#">Acupuncture</a>
+                    </li>
+                    <li>
+                        <a href="#">Yoga</a>
+                    </li>
+                    <li>
+                        <a href="#">Weight Loss</a>
+                    </li>
+                    <li>
+                        <a href="#">Life Skills</a>
+                    </li>
+
+                </ul>
+            </div>
+            <div class="popular-centers sidebar mt-5">
+                <h3 class="sidebar-header">
+                    Top States
+                </h3>
+                <ul>
+                    <li>
+                        <a href="#">Facilities In California</a>
+                    </li>
+                    <li>
+                        <a href="#">Facilities In Florida</a>
+                    </li>
+                    <li>
+                        <a href="#">Facilities In Arizona</a>
+                    </li>
+                    <li>
+                        <a href="#">Facilities In New York</a>
+                    </li>
+
+
+                </ul>
+            </div>
+        </div>
+
+    </div>
+</div>
+@code {
+    private List<CardViewModel> SpecialTreatment = new();
+    private List<CardViewModel> AllTreatment = new();
+    private string? serverUrl;
+    [Inject] IConfiguration Config { get; set; } = default!;
+    protected override void OnInitialized()
+    {
+        serverUrl = Config["AppSettings:AdminServerUrl"];
+        SpecialTreatment = mapper.Map<List<CardViewModel>>(TreatmentService.GetList().Take(4));
+        AllTreatment = mapper.Map<List<CardViewModel>>(TreatmentService.GetList());
+    }
+}
+<style>
+
+    h2.page-title {
+        font-size: 1.5rem;
+    }
+
+    h3.section-title {
+        font-size: 1rem;
+        border-bottom: solid 2px;
+        width: 30%;
+        padding-bottom: 10px;
+        border-color: #dee2e6;
+    }
+
+    h3.section-title::after{
+        display:none;
+    }
+        
+
+    .search-input {
+        width: 100% !important;
+        font-size: 12px;
+        max-width: 100% !important;
+    }
+
+    h3.sidebar-header {
+        font-size: 0.9rem;
+        font-weight: bold;
+        border-bottom: solid 2px #eeee;
+    }
+
+    .sidebar ul {
+        padding: 0px;
+        margin: 0px;
+    }
+
+        .sidebar ul li {
+            list-style: none;
+        }
+
+            .sidebar ul li a {
+                text-decoration: none;
+                font-size: 0.8rem;
+            }
+</style>

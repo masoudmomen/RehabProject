@@ -90,8 +90,7 @@
 @code {
     private List<CardViewModel> SpecialConditionsCards = new();
     private List<CardViewModel> AllConditionsCards = new();
-
-    protected override void OnInitialized()
+   protected override void OnInitialized()
     {
         SpecialConditionsCards = Rehab.EndPoint.Web.Data.Conditions
         .All

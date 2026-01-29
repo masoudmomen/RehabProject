@@ -48,20 +48,11 @@
     private List<CardViewModel> Insurancescards = new();
     private List<CardViewModel> InsurancescardsAll = new();
     [Parameter] public FacilityViewModel Facility { get; set; } = new FacilityViewModel();
+
     protected override void OnInitialized()
     {
         serverUrl = Config["AppSettings:AdminServerUrl"];
-        var insuranceList = mapper.Map<List<InsuranceViewModel>>(InsuranceService.GetList());
-    
-        Insurancescards = insuranceList.Take(6).Select(i => new CardViewModel
-        {
-            Name = i.Name,
-            Image = i.Logo,
-        }).ToList();
-        InsurancescardsAll = insuranceList.Take(6).Select(i => new CardViewModel
-        {
-            Name = i.Name,
-            Image = i.Logo,
-        }).ToList();
-    }
+        Insurancescards = mapper.Map<List<CardViewModel>>(InsuranceService.GetList());
+        InsurancescardsAll = mapper.Map<List<CardViewModel>>(InsuranceService.GetList());
+       }
 }
