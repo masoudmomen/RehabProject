@@ -73,6 +73,8 @@ namespace Rehab.EndPoint.Web.MappingProfile
                 .ForMember(dest => dest.Image, opt => opt.MapFrom(src => src.Logo));
             CreateMap<TreatmentDto, CardViewModel>()
                 .ForMember(dest => dest.Image, opt => opt.MapFrom(src => src.Logo));
+            CreateMap<WwtDto, CardViewModel>()
+                .ForMember(dest => dest.Image, opt => opt.MapFrom(src => src.Logo));
         }
 
     }

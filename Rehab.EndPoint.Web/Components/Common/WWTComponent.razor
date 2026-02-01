@@ -1,16 +1,18 @@
 ﻿@using Web.Data
-<div class="wwts-container">
-    @for (int i = 0; i < WWTList.All.Count; i++)
-    {
-        <a class="wwt-card" target="_blank" href="/facilities?wwt=@Uri.EscapeDataString(WWTList.All[i].Name)">
+@using Rehab.EndPoint.Web.ViewModels
+
+
+    <a class="wwt-card" target="_blank" href="/facilities?wwt=@Uri.EscapeDataString(@Card.Name)">
             <div class="wwt-image-container">
-                <img src="/images/wwt/@WWTList.All[i].Image" alt="@WWTList.All[i].Name" class="wwt-image" />
-                <div class="wwt-title">@WWTList.All[i].Name</div>
+            <img src="@PrefixImageURL/@Card.Image" alt="@Card.Name" class="wwt-image" />
+            <div class="wwt-title">@Card.Name</div>
             </div>
         </a>
-    }
-</div>
+    
+
 
 @code {
-
+    [Parameter] public string CustomClass { get; set; }
+    [Parameter] public CardViewModel Card{ get; set; }
+    [Parameter] public string PrefixImageURL { get; set; }
 }

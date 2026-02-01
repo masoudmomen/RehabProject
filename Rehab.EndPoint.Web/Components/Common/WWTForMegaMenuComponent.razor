@@ -1,0 +1,33 @@
+﻿ @using Rehab.Application.WhoWeTreat
+ @using AutoMapper
+ @using Rehab.EndPoint.Web.ViewModels
+ @inject IMapper mapper
+ @inject IWwtService WwtService
+ 
+<div class="wwts-container">
+    @foreach (var card in WwtCards)
+    {
+      <WWTComponent Card="card" prefixImageURL="@serverURL" />
+    }
+</div>
+@code {
+    [Inject] IConfiguration Config { get; set; }
+
+    private string? serverURL;
+
+    public List<CardViewModel> WwtCards = new();
+
+    protected override void OnInitialized()
+    {
+        serverURL = Config["AppSettings:AdminServerUrl"];
+        WwtCards = mapper.Map<List<CardViewModel>>(WwtService.GetList().Take(12));
+    }
+}
+<style>
+    .wwts-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 1.5rem;
+        padding: 1rem 0;
+    }
+</style>

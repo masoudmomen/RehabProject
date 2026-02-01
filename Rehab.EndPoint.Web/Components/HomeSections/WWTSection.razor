@@ -1,20 +1,78 @@
-﻿@using Web.Data
-<section class="section my-5 pt-5" id="treatment">
+﻿@using Rehab.Application.WhoWeTreat
+@using AutoMapper
+@using Rehab.EndPoint.Web.ViewModels
+@using Rehab.EndPoint.Web.Components.Common
+@inject IMapper mapper
+@inject IWwtService WwtService
+<section class="section my-5 pt-5" id="WWtSection">
     <div class="container">
         <h2 class="section-title text-center mb-3">Who We Treat</h2>
         <div class="wwts-container">
-            @for (int i = 0; i < WWTList.All.Count; i++)
+            @foreach (var card in WwtCards)
             {
-                <a class="wwt-card" target="_blank" href="/facilities?wwt=@Uri.EscapeDataString(WWTList.All[i].Name)">
-                    <div class="wwt-image-container">
-                        <img src="/images/wwt/@WWTList.All[i].Image" alt="@WWTList.All[i].Name" class="wwt-image" />
-                        <div class="wwt-title">@WWTList.All[i].Name</div>
-                    </div>
-                </a>
+                <WWTComponent Card="card" prefixImageURL="@serverURL" />
             }
         </div>
-    </div>
-</section>
-@code {
+        <div class="row px-4 mb-4">
+            <a class="border-gradient cursor-pointer text-blue-dark text-center"
+               data-bs-toggle="modal"
+               data-bs-target="#modal_all_Wwts">
 
+                Visit All
+            </a>
+        </div>
+    </div>
+  </section>
+
+<div class="modal fade custom-modal-backdrop"
+     id="modal_all_Wwts"
+     tabindex="-1"
+     aria-labelledby="modalLabel_all_Wwts"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content p-3">
+            <h2 class="section-title text-center">All Accepted Insurances</h2>
+            <div class="wwts-container-modal">
+                @foreach (var card in WwtsAll)
+                {
+                    <WWTComponent Card="card" prefixImageURL="@serverURL" />
+                }
+            </div>
+        </div>
+    </div>
+</div>
+@code {
+    [Inject] IConfiguration Config { get; set; }
+
+    private string? serverURL;
+
+    public List<CardViewModel> WwtCards = new();
+    public List<CardViewModel> WwtsAll = new();
+
+    protected override void OnInitialized()
+    {
+        serverURL = Config["AppSettings:AdminServerUrl"];
+        WwtCards = mapper.Map<List<CardViewModel>>(WwtService.GetList().Take(7));
+        WwtsAll = mapper.Map<List<CardViewModel>>(WwtService.GetList());
+
+    }
 }
+<style>
+    a.cursor-pointer {
+        cursor: pointer;
+    }
+
+    .wwts-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 1.5rem;
+        padding: 1rem 0;
+    }
+
+    .wwts-container-modal{
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        gap: 1.5rem;
+        padding: 1rem 0;
+    }
+</style>
