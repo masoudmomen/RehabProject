@@ -6,24 +6,352 @@
 @using Rehab.EndPoint.Web.ViewModels
 @inject IFacilityService FacilityService
 @inject AutoMapper.IMapper mapper
+<div class="container">
+    <div class="row my-4">
+        <div class="col-md-9">
+            <div class="search-box">
+                <input type="text"
+                       class="form-control search-input"
+                       placeholder="Search by state, condition, or treatment..." />
 
-<div class="container mt-5 mb-5">
-    <h2 class="section-title text-center p-2">Our Recovery Centers</h2>
-    <div class="row g-4">
-       
-        
-        <Virtualize ItemsProvider="LoadFacilities" Context="facility" ItemSize="320" TItem="FacilityCardViewmodel">
-            <ItemContent Context="facility">
-                <div class="col-12 col-md-3">
-                    <FacilityItem ShowTags="false" FacilityCard="facility" CustomClass="small-card" />
+                <span class="search-icon">
+                    <i class="fa fa-search"></i>
+                </span>
+            </div>
+            <div class="filter-dropdowns">
+
+                <!-- States Dropdown -->
+                <div class="dropdown filter-dropdown">
+                    <button class="btn dropdown-toggle"
+                            type="button"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                        States
+                    </button>
+
+                    <ul class="dropdown-menu">
+                        <li>
+                            <label class="dropdown-item">
+                                <input type="checkbox" value="Alabama"> Alabama
+                            </label>
+                        </li>
+                        <li>
+                            <label class="dropdown-item">
+                                <input type="checkbox" value="Alaska"> Alaska
+                            </label>
+                        </li>
+                        <li>
+                            <label class="dropdown-item">
+                                <input type="checkbox" value="Arizona"> Arizona
+                            </label>
+                        </li>
+                        <li>
+                            <label class="dropdown-item">
+                                <input type="checkbox" value="Arkansas"> Arkansas
+                            </label>
+                        </li>
+                        <li>
+                            <label class="dropdown-item">
+                                <input type="checkbox" value="California"> California
+                            </label>
+                        </li>
+                        <li>
+                            <label class="dropdown-item">
+                                <input type="checkbox" value="Colorado"> Colorado
+                            </label>
+                        </li>
+                    </ul>
                 </div>
-            </ItemContent>
-        </Virtualize>
+                <!-- Conditions Dropdown -->
+                <div class="dropdown filter-dropdown">
+                    <button class="btn dropdown-toggle"
+                            type="button"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                        Conditions
+                    </button>
 
+                    <ul class="dropdown-menu">
+                        <li>
+                            <label class="dropdown-item">
+                                <input type="checkbox" value="ACT"> ACT
+                            </label>
+                        </li>
+                        <li>
+                            <label class="dropdown-item">
+                                <input type="checkbox" value="ADHD"> ADHD
+                            </label>
+                        </li>
+                        <li>
+                            <label class="dropdown-item">
+                                <input type="checkbox" value="Anxiety"> Anxiety
+                            </label>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Treatments Dropdown -->
+                <div class="dropdown filter-dropdown">
+                    <button class="btn dropdown-toggle"
+                            type="button"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                        Treatments
+                    </button>
+
+                    <ul class="dropdown-menu">
+                        <li>
+                            <label class="dropdown-item">
+                                <input type="checkbox" value="Spa"> Spa
+                            </label>
+                        </li>
+                        <li>
+                            <label class="dropdown-item">
+                                <input type="checkbox" value="Counseling"> One-by-one counseling
+                            </label>
+                        </li>
+                        <li>
+                            <label class="dropdown-item">
+                                <input type="checkbox" value="GroupTherapy"> Group therapy
+                            </label>
+                        </li>
+                    </ul>
+                </div>
+                <!-- Who We Treat Dropdown -->
+                <div class="dropdown filter-dropdown">
+                    <button class="btn dropdown-toggle"
+                            type="button"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                        Who We Treat
+                    </button>
+
+                    <ul class="dropdown-menu">
+                        <li>
+                            <label class="dropdown-item">
+                                <input type="checkbox" value="Adolescents"> Adolescents
+                            </label>
+                        </li>
+                        <li>
+                            <label class="dropdown-item">
+                                <input type="checkbox" value="Boys"> Boys
+                            </label>
+                        </li>
+                        <li>
+                            <label class="dropdown-item">
+                                <input type="checkbox" value="Children"> Children
+                            </label>
+                        </li>
+                        <li>
+                            <label class="dropdown-item">
+                                <input type="checkbox" value="LGBTQ+"> LGBTQ+
+                            </label>
+                        </li>
+                    </ul>
+                </div>
+                <!-- LevelOfCare Dropdown -->
+                <div class="dropdown filter-dropdown">
+                    <button class="btn dropdown-toggle"
+                            type="button"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                        Level of Care
+                    </button>
+
+                    <ul class="dropdown-menu">
+                        <li>
+                            <label class="dropdown-item">
+                                <input type="checkbox" value="Concierge Treatment"> Concierge Treatment
+                            </label>
+                        </li>
+                        <li>
+                            <label class="dropdown-item">
+                                <input type="checkbox" value="Co-Occurring Disorders"> Co-Occurring Disorders
+                            </label>
+                        </li>
+                        <li>
+                            <label class="dropdown-item">
+                                <input type="checkbox" value="Day Treatment"> Day Treatment
+                            </label>
+                        </li>
+                        <li>
+                            <label class="dropdown-item">
+                                <input type="checkbox" value="Detox"> Detox
+                            </label>
+                        </li>
+                    </ul>
+                </div>
+            
+                <!-- Amenities DropDown -->
+                <div class="dropdown filter-dropdown">
+                    <button class="btn dropdown-toggle"
+                            type="button"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                        Insurances
+                    </button>
+
+                    <ul class="dropdown-menu">
+                        <li>
+                            <label class="dropdown-item">
+                                <input type="checkbox" value="Aetna"> Aetna
+                            </label>
+                        </li>
+                        <li>
+                            <label class="dropdown-item">
+                                <input type="checkbox" value="Ambetter"> Ambetter
+                            </label>
+                        </li>
+                        <li>
+                            <label class="dropdown-item">
+                                <input type="checkbox" value="United Healthcare"> United Healthcare
+                            </label>
+                        </li>
+                        <li>
+                            <label class="dropdown-item">
+                                <input type="checkbox" value="Tufts Health"> Tufts Health
+                            </label>
+                        </li>
+                    </ul>
+                </div>
+            
+                <!-- Insurances DropDown -->
+                <div class="dropdown filter-dropdown">
+                    <button class="btn dropdown-toggle"
+                            type="button"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                        Amenities
+                    </button>
+
+                    <ul class="dropdown-menu">
+                        <li>
+                            <label class="dropdown-item">
+                                <input type="checkbox" value="Access to Nature"> Access to Nature
+                            </label>
+                        </li>
+                        <li>
+                            <label class="dropdown-item">
+                                <input type="checkbox" value="Air-Conditioned Rooms"> Air-Conditioned Rooms
+                            </label>
+                        </li>
+                        <li>
+                            <label class="dropdown-item">
+                                <input type="checkbox" value="Airport Transfers"> Airport Transfers
+                            </label>
+                        </li>
+                        <li>
+                            <label class="dropdown-item">
+                                <input type="checkbox" value="Gardens"> Gardens
+                            </label>
+                        </li>
+                    </ul>
+                </div>
+            
+                <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+            </div>
+
+            <div class="results-filters">
+                <h3 class="sec-title">Results for</h3>
+
+                <div class="filter-group">
+                    <span class="filter-title">Condition:</span>
+                    <div class="filter-items">
+                        <span class="filter-tag">
+                            Anxiety Disorders
+                            <button type="button" class="remove-button" aria-label="Remove filter">×</button>
+                        </span>
+
+                        <span class="filter-tag">
+                            Depression
+                            <button type="button" class="remove-button" aria-label="Remove filter">×</button>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="filter-group">
+                    <span class="filter-title">Treatment:</span>
+                    <div class="filter-items">
+                        <span class="filter-tag">
+                            ACT
+                            <button type="button" class="remove-button">×</button>
+                        </span>
+                    </div>
+                </div>
+
+                <button class="clear-filters">Clear all</button>
+            </div>
         
-    </div>
+            <div class="container mt-5 mb-5">
+                <div class="row g-4">
 
+
+                    <Virtualize ItemsProvider="LoadFacilities" Context="facility" ItemSize="320" TItem="FacilityCardViewmodel">
+                        <ItemContent Context="facility">
+                            <div class="col-12 col-md-3">
+                                <FacilityItem ShowTags="false" FacilityCard="facility" CustomClass="small-card" />
+                            </div>
+                        </ItemContent>
+                    </Virtualize>
+
+
+                </div>
+
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="popular-centers sidebar">
+                <h3 class="sidebar-header">
+                    Popular Facilities
+                </h3>
+                <ul>
+                    <li>
+                        <a href="#">1-on-1 Counseling</a>
+                    </li>
+                    <li>
+                        <a href="#">Acceptance and Commitment Therapy (ACT)</a>
+                    </li>
+                    <li>
+                        <a href="#">Acupuncture</a>
+                    </li>
+                    <li>
+                        <a href="#">Yoga</a>
+                    </li>
+                    <li>
+                        <a href="#">Weight Loss</a>
+                    </li>
+                    <li>
+                        <a href="#">Life Skills</a>
+                    </li>
+
+                </ul>
+            </div>
+            <div class="popular-centers sidebar mt-5">
+                <h3 class="sidebar-header">
+                    Top States
+                </h3>
+                <ul>
+                    <li>
+                        <a href="#">Facilities In California</a>
+                    </li>
+                    <li>
+                        <a href="#">Facilities In Florida</a>
+                    </li>
+                    <li>
+                        <a href="#">Facilities In Arizona</a>
+                    </li>
+                    <li>
+                        <a href="#">Facilities In New York</a>
+                    </li>
+
+
+                </ul>
+            </div>
+        </div>
+    </div>
+   
 </div>
+ 
 @code {
     private FacilityFieldsItem FilterItems { get; set; } = new();
     [Parameter, SupplyParameterFromQuery] public string? condition { get; set; }
@@ -52,3 +380,11 @@
         return new ItemsProviderResult<FacilityCardViewmodel>(mapper.Map<List<FacilityCardViewmodel>>(result.Item1), result.totalCount);
     }
 }
+<style>
+ 
+</style>
+<script>
+    document.querySelectorAll('.dropdown-menu').forEach(menu => {
+        menu.addEventListener('click', e => e.stopPropagation());
+    });
+</script>

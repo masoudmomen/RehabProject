@@ -130,6 +130,44 @@ h2.section-title {
 .card:nth-child(3) .center-gallery {
     background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
 }
+
+.border-gradient {
+    position: relative;
+    display: inline-block;
+    padding: 10px 20px;
+    text-decoration: none;
+    background: transparent;
+    border-radius: 12px;
+    z-index: 1;
+    color: #000;  
+    transition: all 0.3s ease; 
+    cursor: pointer;
+}
+
+    .border-gradient::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        padding: 2px;
+        border-radius: inherit;
+        background: -webkit-linear-gradient(180deg, rgb(231 154 231) 1%, rgba(238, 238, 238, 1) 50%, #0dcaf0 100%);
+        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
+        z-index: -1;
+        transition: all 0.3s ease;
+    }
+
+
+    .border-gradient:hover {
+        background-color: rgba(220, 220, 220, 0.25);
+        transform: scale(1.05);
+        color: #0dcaf0;
+    }
+
+        .border-gradient:hover::before {
+            filter: brightness(1.1);
+        }
 /*Default spin loader */
 #loading-overlay {
     position: fixed;
