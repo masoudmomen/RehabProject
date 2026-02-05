@@ -36,13 +36,13 @@ div#treatmentTabsContent {
     border-radius: 10px;
     box-shadow: gray 2px 2px 4px 0px;
 }
-::deep .united-states a{
+/*::deep .united-states a{
     color:dimgrey;
 }
     ::deep .united-states a:hover {
         background-color: dimgrey;
        color: #fff;
-    }
+    }*/
 /*.nav-item-mega .mega-menu {
     background-color:#eee;
 }*/
