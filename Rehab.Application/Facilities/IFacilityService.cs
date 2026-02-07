@@ -622,6 +622,7 @@ namespace Rehab.Application.Facilities
 
         public async Task<(List<FacilityCardDto>, int totalCount)> GetFacilityCardsAsync(int pageNumber, int pageSize, string state, string city, FacilityFieldsItem facilityFilter)
         {
+            Console.WriteLine("treatment : " + facilityFilter.Treatment);
             var query = context.Facilities.Where(c => c.Logo != "" && c.FacilitysImages!.Count > 0 && c.State.Contains(state)).AsQueryable();
             if (!string.IsNullOrEmpty(state)) query = query.Where(c => c.State.Contains(state)).AsQueryable();
             if (!string.IsNullOrEmpty(city)) query = query.Where(c => c.City.Contains(city)).AsQueryable();
