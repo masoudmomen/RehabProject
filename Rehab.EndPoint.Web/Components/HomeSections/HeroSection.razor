@@ -12,24 +12,24 @@
      
     </div>
     <div class="container-fluid d-flex justify-content-center mt-5 ">
-            <div class="col-lg-8">
+            <div class="col-lg-8 hero-search-container">
                 <div class="p-3 rounded-3">
                     <div class="row mt-0 bg-white g-2 justify-content-center rounded-5">
                     <div class="col-md-4 rounded-5">
-                        <input type="text" class="form-control border-0 rounded-5 text-center" @bind-value="@state" placeholder="State" />
+                        <input type="text" class="form-control border-0 rounded-5 text-center" @bind-value="@state" placeholder="Enter state name" />
                     </div>
                     <div class="col-md-4 rounded-5">
-                        <input type="text" class="form-control border-0 rounded-5 text-center" @bind-value="city" placeholder="City" />
+                        <input type="text" class="form-control border-0 rounded-5 text-center" @bind-value="city" placeholder="Enter city name" />
                         </div>
                     <div class="col-md-4 rounded-5">
-                        <input type="text" class="form-control border-0 rounded-5 text-center" @bind-value="condition" placeholder="Condition" />
+                        <input type="text" class="form-control border-0 rounded-5 text-center" @bind-value="condition" placeholder="Enter condition" />
                         </div>
                     </div>
                     <div class="row justify-content-center">
                     <div class="col-md-4">
-                        <a class="btn btn-primary-custom btn-lg w-100 mt-3" @onclick="GoToFacilitiesPage">
+                        <a class="btn btn-secondary btn-hero btn-lg rounded-5 w-100 mt-3" @onclick="GoToFacilitiesPage">
                             <i class="fa-solid fa-magnifying-glass"></i>
-                            Find Your Center
+                            Start your recovery today
                         </a>
                         </div>
                     </div>

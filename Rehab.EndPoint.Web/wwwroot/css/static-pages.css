@@ -2,8 +2,7 @@
     font-weight:bold;
 }
 .hero {
-    background: linear-gradient(45deg, rgb(116, 235, 213), rgb(172, 182, 229));
-    color: white;
+    background: linear-gradient(45deg, rgb(116 176 235), rgb(217 172 229)); color: white;
     padding: 80px 0;
     text-align: center;
 }
