@@ -31,12 +31,12 @@
     margin-bottom: 30px;
 }
 
-    .section:nth-child(odd) {
+  /*  .section:nth-child(odd) {
         background: #f8f9fa;
     }
     .section:nth-child(even) {
         background: #ffffff;
-    }
+    }*/
 .section h2 {
     font-size: 2.5rem;
     margin-bottom: 30px;
