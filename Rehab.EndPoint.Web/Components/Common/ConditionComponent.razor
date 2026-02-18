@@ -4,7 +4,7 @@
     <CardList List="ConditionsCards" 
         CustomClass="card-gs-3" 
         ImageURL="Conditions"
-       
+        HrefTarget="_blank"
     >
     </CardList>
 </div>
@@ -25,6 +25,7 @@
             {
                 Name = i.Name,
                 Image = i.Icon,
+                Link = "/facilities?condition="+@Uri.EscapeDataString(i.Name)
                 
             }).ToList();
     }
