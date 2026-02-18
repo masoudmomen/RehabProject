@@ -7,8 +7,11 @@
 @inject IFacilityService FacilityService
 @inject AutoMapper.IMapper mapper
 <div class="container">
-    <div class="row my-4">
-        <div class="col-md-9">
+    <input type="checkbox" id="sidebarToggle" hidden />
+    <input type="checkbox" id="sidebarToggle" hidden />
+    <div class="sidebar-overlay"></div>
+    <div class="row my-4 layout-wrapper">
+        <div class="content-a">
             <div class="search-box">
                 <input type="text"
                        class="form-control search-input"
@@ -22,7 +25,7 @@
 
                 <!-- States Dropdown -->
                 <div class="dropdown filter-dropdown">
-                    <button class="btn dropdown-toggle"
+                    <button class="btn dropdown-toggle btn-outline-secondary"
                             type="button"
                             data-bs-toggle="dropdown"
                             aria-expanded="false">
@@ -282,7 +285,7 @@
                 <button class="clear-filters">Clear all</button>
             </div>
         
-            <div class="container mt-5 mb-5">
+            <div class="container px-0 mb-5">
                 <div class="row g-4">
 
 
@@ -299,30 +302,24 @@
 
             </div>
         </div>
-        <div class="col-md-3">
+        <div class=" col-md-3  content-b">
+            <label for="sidebarToggle" class="sidebar-toggle">
+                <span class="open-text">Toggle Sidebar</span>
+                <span class="hamburger">
+                    <i class="bi bi-list"></i>
+                </span>
+            </label>
             <div class="popular-centers sidebar">
                 <h3 class="sidebar-header">
                     Popular Facilities
                 </h3>
                 <ul>
-                    <li>
-                        <a href="#">1-on-1 Counseling</a>
-                    </li>
-                    <li>
-                        <a href="#">Acceptance and Commitment Therapy (ACT)</a>
-                    </li>
-                    <li>
-                        <a href="#">Acupuncture</a>
-                    </li>
-                    <li>
-                        <a href="#">Yoga</a>
-                    </li>
-                    <li>
-                        <a href="#">Weight Loss</a>
-                    </li>
-                    <li>
-                        <a href="#">Life Skills</a>
-                    </li>
+                    <li><a href="#" title="1-on-1 Counseling"><i class="bi bi-person"></i><span>1-on-1 Counseling</span></a></li>
+                    <li><a href="#" title="ACT Therapy" ><i class="bi bi-heart"></i><span>ACT Therapy</span></a></li>
+                    <li><a href="#" title="Acupuncture" ><i class="bi bi-flower1"></i><span>Acupuncture</span></a></li>
+                    <li><a href="#" title="Yoga"><i class="bi bi-activity"></i><span>Yoga</span></a></li>
+                    <li><a href="#" title="Weight Loss"><i class="bi bi-speedometer"></i><span>Weight Loss</span></a></li>
+                    <li><a href="#" title="Life Skills"><i class="bi bi-lightbulb"></i><span>Life Skills</span></a></li>
 
                 </ul>
             </div>
@@ -332,16 +329,16 @@
                 </h3>
                 <ul>
                     <li>
-                        <a href="#">Facilities In California</a>
+                        <a href="#" title="Facilities In California"> <i class=" class=" bi bi-person""></i><span>Facilities In California</span> </a>
                     </li>
                     <li>
-                        <a href="#">Facilities In Florida</a>
+                        <a href="#" title="Facilities In Florida"> <i class="bi bi-geo-alt-fill"></i><span>Facilities In Florida</span></a>
                     </li>
                     <li>
-                        <a href="#">Facilities In Arizona</a>
+                        <a href="#" title="Facilities In Arizona"> <i class="bi bi-geo-alt-fill"></i><span>Facilities In Arizona</span></a>
                     </li>
                     <li>
-                        <a href="#">Facilities In New York</a>
+                        <a href="#" title="Facilities In New York"> <i class="bi bi-geo-alt-fill"></i><span>Facilities In New York</span></a>
                     </li>
 
 

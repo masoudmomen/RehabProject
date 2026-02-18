@@ -1,4 +1,7 @@
-﻿.search-box {
+﻿html, body {
+    overflow-x: hidden;
+}
+.search-box {
     position: relative;
     max-width: 100%;
     margin-bottom: 0px;
@@ -100,16 +103,16 @@
 }
 
 .filter-dropdown .btn {
-    color: #31c5fc;
-    border-color: #31c5fc;
+    color: var(--color-secondary);
+    border-color: var(--color-secondary);
     padding: 5px;
     font-size: 0.8rem;
 }
 
     .filter-dropdown .btn:hover, .filter-dropdown .btn:active {
         color: #fff;
-        background-color: #31c5fc;
-        border-color: #e9f4fe;
+        background-color: var(--color-secondary);
+        border-color: var(--color-secondary);
     }
 
 ul.dropdown-menu.show {
@@ -124,16 +127,212 @@ h3.sidebar-header {
 }
 
 .sidebar ul {
-    padding: 0px;
-    margin: 0px;
+    list-style: none;
+    padding-left: 0;
 }
 
-    .sidebar ul li {
-        list-style: none;
+
+    .sidebar ul li a {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 12px;
+        border-radius: 10px;
+        text-decoration: none;
+        color: var(--color-secondary);
+        text-decoration: none;
+        font-size: 0.8rem;
+        transition: all .25s;
+    }
+.sidebar a:hover {
+    background: #f1f3f5;
+}
+.sidebar i {
+    font-size: 18px;
+}
+/* smooth animation */
+.layout-wrapper > div {
+    transition: all 0.3s ease;
+}
+
+/* DEFAULT layout */
+.content-a {
+    flex: 0 0 75%;
+    max-width: 75%;
+}
+
+.content-b {
+    flex: 0 0 25%;
+    max-width: 25%;
+    box-sizing: border-box;
+}
+.sidebar-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-secondary);
+    color: white;
+    padding: 10px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    margin-bottom: 20px;
+    transition: all .3s ease;
+}
+
+.sidebar-toggle .hamburger {
+    display: none;
+}
+
+#sidebarToggle:checked ~ .layout-wrapper .sidebar-toggle {
+    position: fixed;
+    right: 18px;
+    top: 95px;
+    width: 48px;
+    height: 48px;
+    padding: 0;
+    border-radius: 50%;
+    z-index: 1000;
+    box-shadow: 0 10px 25px rgba(0,0,0,.15);
+}
+/* hide text when collapsed */
+#sidebarToggle:checked ~ .layout-wrapper .open-text {
+    display: none;
+}
+
+/* show hamburger icon */
+.sidebar-toggle .hamburger {
+    font-size: 22px;
+}
+
+#sidebarToggle:checked ~ .layout-wrapper .sidebar-toggle .hamburger {
+    display: block;
+}
+.sidebar-toggle:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0,0,0,.18);
+}
+/* WHEN CHECKED → sidebar collapses */
+#sidebarToggle:checked ~ .layout-wrapper .content-a {
+    flex: 0 0 91.6667%;
+    max-width: 91.6667%;
+}
+
+#sidebarToggle:checked ~ .layout-wrapper .content-b {
+    flex: 0 0 8.3333%;
+    max-width: 8.3333%;
+}
+/* Hide headers when collapsed */
+#sidebarToggle:checked ~ .layout-wrapper .sidebar-header {
+    display: none;
+}
+
+/* Center icons */
+#sidebarToggle:checked ~ .layout-wrapper .sidebar a {
+    justify-content: center;
+    padding: 12px 0;
+}
+
+    /* Hide text */
+    #sidebarToggle:checked ~ .layout-wrapper .sidebar a span {
+        display: none;
     }
 
-        .sidebar ul li a {
-            color: #31c5fc;
-            text-decoration: none;
-            font-size: 0.8rem;
-        }
+/* Make items round buttons */
+#sidebarToggle:checked ~ .layout-wrapper .sidebar li {
+    margin-bottom: 10px;
+}
+
+#sidebarToggle:checked ~ .layout-wrapper .sidebar a {
+    width: 42px;
+    height: 42px;
+    margin: auto;
+    border-radius: 50%;
+    position: relative;
+}
+
+    /* Tooltip on hover */
+    #sidebarToggle:checked ~ .layout-wrapper .sidebar a::after {
+        content: attr(title);
+        position: absolute;
+        white-space: nowrap;
+        left: 40px;
+        background: var(--color-secondary);
+        color: #fff;
+        padding: 4px 8px;
+        font-size: 12px;
+        border-radius: 6px;
+        opacity: 0;
+        pointer-events: none;
+        transition: .2s;
+    }
+
+    #sidebarToggle:checked ~ .layout-wrapper .sidebar a:hover::after {
+        opacity: 1;
+    }
+.sidebar-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.45);
+    opacity: 0;
+    pointer-events: none;
+    transition: .3s ease;
+    z-index: 1000;
+}
+@media (max-width: 768px) {
+
+    /* content A always full width on mobile */
+    .content-a {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+
+    /* sidebar becomes drawer */
+    .content-b {
+        position: fixed;
+        top: 0;
+        right: -320px; /* hidden outside screen */
+        width: 320px;
+        height: 100vh;
+        background: #fff;
+        z-index: 1001;
+        padding: 20px 0px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        box-shadow: -10px 0 30px rgba(0,0,0,.15);
+        transition: .35s ease;
+    }
+    .sidebar ul {
+        padding:0px;
+    }
+    #sidebarToggle:checked ~ .layout-wrapper .sidebar li {
+        display: flex;/*Centerized the icons*/
+    }
+    #sidebarToggle:checked ~ .layout-wrapper .content-b {
+        right: 0; /* slide in */
+    }
+    #sidebarToggle:checked ~ .sidebar-overlay {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    .sidebar-toggle {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        padding: 0;
+        z-index: 1100;
+    }
+
+    .open-text {
+        display: none;
+    }
+
+    .sidebar-toggle .hamburger {
+        display: block;
+        font-size: 26px;
+    }
+}
