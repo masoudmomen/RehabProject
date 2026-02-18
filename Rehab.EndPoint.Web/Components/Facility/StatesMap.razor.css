@@ -34,19 +34,18 @@ path:hover, .state-shape.hovered {
     pointer-events: none;
 }
 
-   
+
 
 #state-list {
- 
-    display: grid;
-    grid-template-columns: 50% 50%;
-    grid-column-gap: 5px;
-    grid-row-gap: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
     list-style-type: none;
     padding: 0;
 }
     #state-list li {
-        width: 80%;
+        width: 36px;
+        height: 36px;
         background-color: #88a4bc;
         padding: 5px;
         -moz-border-radius: 5px;
@@ -65,3 +64,5 @@ path:hover, .state-shape.hovered {
         background: #0056b3;
         font-weight: bold;
     }
+
+ 
