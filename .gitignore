@@ -385,3 +385,6 @@ FodyWeavers.xsd
 /Rehab.EndPoint.Web/appsettings.Development.json
 /Rehab.EndPoint.AdminPanel/appsettings.json
 /Rehab.EndPoint.Web/appsettings.json
+/Rehab.EndPoint.AdminPanel/appsettings.Development.json
+/Rehab.EndPoint.Web/appsettings.json
+/Rehab.EndPoint.Web/appsettings.Development.json
