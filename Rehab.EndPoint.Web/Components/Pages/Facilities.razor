@@ -1,11 +1,15 @@
 ﻿@page "/Facilities"
 @rendermode InteractiveServer
 @using Rehab.Application.Facilities
+@using Rehab.EndPoint.AdminPanel.CommonService
 @using Rehab.EndPoint.Web.Components.Common
 @using Rehab.EndPoint.Web.Components.Facility
 @using Rehab.EndPoint.Web.ViewModels
+@using System.Threading.Tasks
 @inject IFacilityService FacilityService
 @inject AutoMapper.IMapper mapper
+@inject InternalLocationService InternalLocationService
+
 <div class="container">
     <div class="row my-4">
         <div class="col-md-9">
@@ -30,36 +34,17 @@
                     </button>
 
                     <ul class="dropdown-menu">
-                        <li>
-                            <label class="dropdown-item">
-                                <input type="checkbox" value="Alabama"> Alabama
-                            </label>
-                        </li>
-                        <li>
-                            <label class="dropdown-item">
-                                <input type="checkbox" value="Alaska"> Alaska
-                            </label>
-                        </li>
-                        <li>
-                            <label class="dropdown-item">
-                                <input type="checkbox" value="Arizona"> Arizona
-                            </label>
-                        </li>
-                        <li>
-                            <label class="dropdown-item">
-                                <input type="checkbox" value="Arkansas"> Arkansas
-                            </label>
-                        </li>
-                        <li>
-                            <label class="dropdown-item">
-                                <input type="checkbox" value="California"> California
-                            </label>
-                        </li>
-                        <li>
-                            <label class="dropdown-item">
-                                <input type="checkbox" value="Colorado"> Colorado
-                            </label>
-                        </li>
+                        @if(States != null)
+                        {
+                            @foreach (var item in States)
+                            {
+                                <li>
+                                    <label class="dropdown-item">
+                                        <input type="checkbox" value="@item"> @item
+                                    </label>
+                                </li>
+                            }
+                        }
                     </ul>
                 </div>
                 <!-- Conditions Dropdown -->
@@ -72,21 +57,14 @@
                     </button>
 
                     <ul class="dropdown-menu">
-                        <li>
-                            <label class="dropdown-item">
-                                <input type="checkbox" value="ACT"> ACT
-                            </label>
-                        </li>
-                        <li>
-                            <label class="dropdown-item">
-                                <input type="checkbox" value="ADHD"> ADHD
-                            </label>
-                        </li>
-                        <li>
-                            <label class="dropdown-item">
-                                <input type="checkbox" value="Anxiety"> Anxiety
-                            </label>
-                        </li>
+                        @foreach (var item in Fields.Conditions!)
+                        {
+                            <li>
+                                <label class="dropdown-item">
+                                    <input type="checkbox" value="@item"> @item.Name
+                                </label>
+                            </li>
+                        }
                     </ul>
                 </div>
 
@@ -100,21 +78,14 @@
                     </button>
 
                     <ul class="dropdown-menu">
-                        <li>
-                            <label class="dropdown-item">
-                                <input type="checkbox" value="Spa"> Spa
-                            </label>
-                        </li>
-                        <li>
-                            <label class="dropdown-item">
-                                <input type="checkbox" value="Counseling"> One-by-one counseling
-                            </label>
-                        </li>
-                        <li>
-                            <label class="dropdown-item">
-                                <input type="checkbox" value="GroupTherapy"> Group therapy
-                            </label>
-                        </li>
+                        @foreach (var item in Fields.Treatments!)
+                        {
+                            <li>
+                                <label class="dropdown-item">
+                                    <input type="checkbox" value="@item"> @item.Name
+                                </label>
+                            </li>
+                        }
                     </ul>
                 </div>
                 <!-- Who We Treat Dropdown -->
@@ -127,26 +98,14 @@
                     </button>
 
                     <ul class="dropdown-menu">
-                        <li>
-                            <label class="dropdown-item">
-                                <input type="checkbox" value="Adolescents"> Adolescents
-                            </label>
-                        </li>
-                        <li>
-                            <label class="dropdown-item">
-                                <input type="checkbox" value="Boys"> Boys
-                            </label>
-                        </li>
-                        <li>
-                            <label class="dropdown-item">
-                                <input type="checkbox" value="Children"> Children
-                            </label>
-                        </li>
-                        <li>
-                            <label class="dropdown-item">
-                                <input type="checkbox" value="LGBTQ+"> LGBTQ+
-                            </label>
-                        </li>
+                        @foreach (var item in Fields.Wwts!)
+                        {
+                            <li>
+                                <label class="dropdown-item">
+                                    <input type="checkbox" value="@item"> @item.Name
+                                </label>
+                            </li>
+                        }
                     </ul>
                 </div>
                 <!-- LevelOfCare Dropdown -->
@@ -159,26 +118,14 @@
                     </button>
 
                     <ul class="dropdown-menu">
-                        <li>
-                            <label class="dropdown-item">
-                                <input type="checkbox" value="Concierge Treatment"> Concierge Treatment
-                            </label>
-                        </li>
-                        <li>
-                            <label class="dropdown-item">
-                                <input type="checkbox" value="Co-Occurring Disorders"> Co-Occurring Disorders
-                            </label>
-                        </li>
-                        <li>
-                            <label class="dropdown-item">
-                                <input type="checkbox" value="Day Treatment"> Day Treatment
-                            </label>
-                        </li>
-                        <li>
-                            <label class="dropdown-item">
-                                <input type="checkbox" value="Detox"> Detox
-                            </label>
-                        </li>
+                        @foreach (var item in Fields.Locs!)
+                        {
+                            <li>
+                                <label class="dropdown-item">
+                                    <input type="checkbox" value="@item"> @item.Name
+                                </label>
+                            </li>
+                        }
                     </ul>
                 </div>
             
@@ -192,26 +139,14 @@
                     </button>
 
                     <ul class="dropdown-menu">
-                        <li>
-                            <label class="dropdown-item">
-                                <input type="checkbox" value="Aetna"> Aetna
-                            </label>
-                        </li>
-                        <li>
-                            <label class="dropdown-item">
-                                <input type="checkbox" value="Ambetter"> Ambetter
-                            </label>
-                        </li>
-                        <li>
-                            <label class="dropdown-item">
-                                <input type="checkbox" value="United Healthcare"> United Healthcare
-                            </label>
-                        </li>
-                        <li>
-                            <label class="dropdown-item">
-                                <input type="checkbox" value="Tufts Health"> Tufts Health
-                            </label>
-                        </li>
+                        @foreach (var item in Fields.Insurances!)
+                        {
+                            <li>
+                                <label class="dropdown-item">
+                                    <input type="checkbox" value="@item"> @item.Name
+                                </label>
+                            </li>
+                        }
                     </ul>
                 </div>
             
@@ -225,26 +160,14 @@
                     </button>
 
                     <ul class="dropdown-menu">
-                        <li>
-                            <label class="dropdown-item">
-                                <input type="checkbox" value="Access to Nature"> Access to Nature
-                            </label>
-                        </li>
-                        <li>
-                            <label class="dropdown-item">
-                                <input type="checkbox" value="Air-Conditioned Rooms"> Air-Conditioned Rooms
-                            </label>
-                        </li>
-                        <li>
-                            <label class="dropdown-item">
-                                <input type="checkbox" value="Airport Transfers"> Airport Transfers
-                            </label>
-                        </li>
-                        <li>
-                            <label class="dropdown-item">
-                                <input type="checkbox" value="Gardens"> Gardens
-                            </label>
-                        </li>
+                        @foreach (var item in Fields.Amenities!)
+                        {
+                            <li>
+                                <label class="dropdown-item">
+                                    <input type="checkbox" value="@item"> @item.Name
+                                </label>
+                            </li>
+                        }
                     </ul>
                 </div>
             
@@ -353,7 +276,11 @@
 </div>
  
 @code {
+    [Inject] IConfiguration Config { get; set; } = default!;
+    private string serverUrl;
     private FacilityFieldsItem FilterItems { get; set; } = new();
+    private FacilityFieldsViewmodel Fields { get; set; } = new();
+    private List<string>? States;
     [Parameter, SupplyParameterFromQuery] public string? condition { get; set; }
     [Parameter, SupplyParameterFromQuery] public string? amenity { get; set; }
     [Parameter, SupplyParameterFromQuery] public string? treatment { get; set; }
@@ -364,8 +291,13 @@
     [Parameter, SupplyParameterFromQuery] public string? state { get; set; }
     [Parameter, SupplyParameterFromQuery] public string? city { get; set; }
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
+        serverUrl = Config["AppSettings:AdminServerUrl"]!;
+        States = await InternalLocationService!.GetStateWithoutHttpAsync(serverUrl)!;
+
+        Fields = mapper.Map<FacilityFieldsViewmodel>(FacilityService.GetListFacilityFields());
+
         if (!string.IsNullOrWhiteSpace(condition)) FilterItems.Condition = condition;
         if (!string.IsNullOrWhiteSpace(amenity)) FilterItems.Amenity = amenity;
         if (!string.IsNullOrWhiteSpace(treatment)) FilterItems.Treatment = treatment.ToLowerInvariant();

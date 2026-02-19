@@ -8,11 +8,13 @@
     {
         private readonly HttpClient _http;
         private readonly NavigationManager NavigationManager;
+      
         public InternalLocationService(HttpClient http, NavigationManager navigationManager)
         {
             _http = http;
             NavigationManager = navigationManager;
         }
+
         public async Task<List<StateModel>> GetStatesAndCitiesAsync()
         {
             var data = await _http.GetFromJsonAsync<List<StateModel>>(NavigationManager.BaseUri + "Data/states-and-cities.json");
@@ -30,6 +32,12 @@
             var all = await GetStatesAndCitiesAsync();
             var item = all.FirstOrDefault(x => x.State == stateName);
             return item?.Cities?.ToList() ?? new List<string>();
+        }
+
+        public async Task<List<string>>? GetStateWithoutHttpAsync(string baseUri)
+        {
+            var data = await _http.GetFromJsonAsync<List<StateOnlyModel>>(baseUri + "Data/states.json");
+            return data?.Select(s => s.Name!).ToList() ?? new List<string>();
         }
     }
 

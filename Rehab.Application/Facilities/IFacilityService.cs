@@ -1,9 +1,17 @@
 ﻿using AutoMapper;
 using Common;
 using Microsoft.EntityFrameworkCore;
+using Rehab.Application.Accreditations;
+using Rehab.Application.Amenities;
 using Rehab.Application.Common;
+using Rehab.Application.Conditions;
 using Rehab.Application.Contexts;
 using Rehab.Application.Dtos;
+using Rehab.Application.Insurances;
+using Rehab.Application.LevelsOfCare;
+using Rehab.Application.SubstancesWeTreat;
+using Rehab.Application.Treatments;
+using Rehab.Application.WhoWeTreat;
 using Rehab.Domain.Facilities;
 using Rehab.Domain.Images;
 using Rehab.Domain.SubstancesWeTreat;
@@ -40,6 +48,7 @@ namespace Rehab.Application.Facilities
         Task<(List<FacilityCardDto>, int totalCount)> GetFacilityCardsAsync(int pageNumber, int pageSize, string state,  string searchText, FacilityFilterItems facilityFilter);
         Task<(List<FacilityCardDto>, int totalCount)> GetFacilityCardsAsync(int pageNumber, int pageSize, string state, string city, FacilityFieldsItem facilityFilter);
         BaseDto<FacilityDetailDto> Delete(FacilityDetailDto facility);
+        FacilityFieldsDto GetListFacilityFields();
     }
 
     
@@ -678,6 +687,21 @@ namespace Rehab.Application.Facilities
                     WwtCount = c.Wwts!.Count(),
                 }).ToListAsync();
             return (facilities, totalCount);
+        }
+
+        public FacilityFieldsDto GetListFacilityFields()
+        {
+            return new FacilityFieldsDto
+            {
+                Accreditations = mapper.Map<List<AccreditationDto>>(context.Accreditations.ToList()),
+                Amenities = mapper.Map<List<AmenityDto>>(context.Amenities.ToList()),
+                Conditions = mapper.Map<List<ConditionDto>>(context.Conditions.ToList()),
+                Insurances = mapper.Map<List<InsuranceDto>>(context.Insurances.ToList()),
+                Locs = mapper.Map<List<LevelsOfCareDto>>(context.Locs.ToList()),
+                Swts = mapper.Map<List<SwtDto>>(context.Swts.ToList()),
+                Treatments = mapper.Map<List<TreatmentDto>>(context.Treatments.ToList()),
+                Wwts = mapper.Map<List<WwtDto>>(context.Wwts.ToList()),
+            };
         }
     }
 

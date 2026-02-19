@@ -37,6 +37,7 @@ namespace Rehab.EndPoint.Web.MappingProfile
         {
             CreateMap<FacilityCardDto, FacilityCardViewmodel>().ReverseMap();
             CreateMap<FacilityDetailDto, FacilityViewModel>().ReverseMap();
+            CreateMap<FacilityFieldsDto, FacilityFieldsViewmodel>().ReverseMap();
 
             CreateMap<ViewModels.InsuranceViewModel, Insurance>().ReverseMap();
             CreateMap<AccreditationViewmodel, Accreditation>().ReverseMap();

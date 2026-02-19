@@ -11,6 +11,7 @@ using Rehab.Application.SubstancesWeTreat;
 using Rehab.Application.Tags;
 using Rehab.Application.Treatments;
 using Rehab.Application.WhoWeTreat;
+using Rehab.EndPoint.AdminPanel.CommonService;
 using Rehab.EndPoint.Web.Components;
 using Rehab.EndPoint.Web.MappingProfile;
 using Rehab.Persistence.Contexts;
@@ -45,6 +46,8 @@ builder.Services.AddTransient<ITreatmentService, TreatmentService>();
 builder.Services.AddTransient<IConditionService, ConditionService>();
 builder.Services.AddTransient<ISubstancesWeTreatService, SwtService>();
 builder.Services.AddTransient<ITagService, TagService>();
+builder.Services.AddHttpClient<InternalLocationService>();
+
 #endregion
 
 
