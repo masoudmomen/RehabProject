@@ -84,4 +84,14 @@ document.addEventListener("scroll", checkFooterPosition);
 window.addEventListener("load", checkFooterPosition);
 
 
-
+window.setCheckboxState = (elementId, state) => {
+    const el = document.getElementById(elementId);
+    if (el) {
+        el.checked = state;
+    }
+};
+window.UnCheckAllCheckbox = () => {
+    document.querySelectorAll('input').forEach(i => {
+        i.checked = false;
+    });
+};

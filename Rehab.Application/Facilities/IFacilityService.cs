@@ -46,7 +46,7 @@ namespace Rehab.Application.Facilities
         List<FacilityCardDto>? GetFacilityCard(int CardCount, string state, FacilityFilterItems facilityFilterItems);
         Task<(List<FacilityCardDto>, int totalCount)> GetFacilityCardsAsync(int pageNumber, int pageSize, string? condition, string? state, string? city);
         Task<(List<FacilityCardDto>, int totalCount)> GetFacilityCardsAsync(int pageNumber, int pageSize, string state,  string searchText, FacilityFilterItems facilityFilter);
-        Task<(List<FacilityCardDto>, int totalCount)> GetFacilityCardsAsync(int pageNumber, int pageSize, string state, string city, FacilityFieldsItem facilityFilter);
+        Task<(List<FacilityCardDto>, int totalCount)> GetFacilityCardsAsync(int pageNumber, int pageSize, string city, FullFacilityFilterItemsDto facilityFilter);
         BaseDto<FacilityDetailDto> Delete(FacilityDetailDto facility);
         FacilityFieldsDto GetListFacilityFields();
     }
@@ -629,11 +629,72 @@ namespace Rehab.Application.Facilities
             
         }
 
-        public async Task<(List<FacilityCardDto>, int totalCount)> GetFacilityCardsAsync(int pageNumber, int pageSize, string state, string city, FacilityFieldsItem facilityFilter)
+        //public async Task<(List<FacilityCardDto>, int totalCount)> GetFacilityCardsAsync(int pageNumber, int pageSize, string state, string city, FacilityFieldsItem facilityFilter)
+        //{
+        //    //var query = context.Facilities.Where(c => c.Logo != "" && c.FacilitysImages!.Count > 0 && c.State.Contains(state)).AsQueryable();
+        //    var query = context.Facilities
+        //        .Include(c=>c.Treatments)
+        //        .Include(c => c.Insurances)
+        //        .Include(c => c.Accreditations)
+        //        .Include(c => c.Wwts)
+        //        .Include(c => c.Swts)
+        //        .Include(c => c.Amenities)
+        //        .Include(c => c.Conditions)
+        //        .Include(c => c.Highlights)
+        //        .Include(c => c.Locs).AsQueryable();
+        //    if (!string.IsNullOrWhiteSpace(facilityFilter.Treatment)) query = query.Where(c => c.Treatments!.Any(d => d.Name.Contains(facilityFilter.Treatment)));
+        //    if (!string.IsNullOrEmpty(state)) query = query.Where(c => c.State.Contains(state)).AsQueryable();
+        //    if (!string.IsNullOrEmpty(city)) query = query.Where(c => c.City.Contains(city)).AsQueryable();
+        //    if (!string.IsNullOrWhiteSpace(facilityFilter.Condition)) query = query.Where(c => c.Conditions!.Any(d => d.Name.Contains(facilityFilter.Condition)));
+        //    if (!string.IsNullOrWhiteSpace(facilityFilter.Amenity)) query = query.Where(c => c.Amenities!.Any(d => d.Name.Contains(facilityFilter.Amenity)));
+        //    if (!string.IsNullOrWhiteSpace(facilityFilter.Accreditation)) query = query.Where(c => c.Accreditations!.Any(d => d.Name.Contains(facilityFilter.Accreditation)));
+        //    if (!string.IsNullOrWhiteSpace(facilityFilter.Insurance)) query = query.Where(c => c.Insurances!.Any(d => d.Name.Contains(facilityFilter.Insurance)));
+        //    if (!string.IsNullOrWhiteSpace(facilityFilter.Swt)) query = query.Where(c => c.Swts!.Any(d => d.Name.Contains(facilityFilter.Swt)));
+        //    if (!string.IsNullOrWhiteSpace(facilityFilter.Loc)) query = query.Where(c => c.Locs!.Any(d => d.Name.Contains(facilityFilter.Loc)));
+
+        //    if (!string.IsNullOrWhiteSpace(facilityFilter.Wwt)) query = query.Where(c => c.Wwts!.Any(d => d.Name.Contains(facilityFilter.Wwt)));
+        //    var totalCount = await query.CountAsync();
+        //    var facilities = await query
+        //        .OrderBy(c => c.Id)
+        //        .Skip((pageNumber - 1) * pageSize)
+        //        .Take(pageSize)
+        //        .Include(c => c.FacilitysImages)
+        //        //.Include(c => c.Insurances)
+        //        //.Include(c => c.Accreditations)
+        //        //.Include(c => c.Wwts)
+        //        //.Include(c => c.Swts)
+        //        //.Include(c => c.Amenities)
+        //        //.Include(c => c.Conditions)
+        //        //.Include(c => c.Highlights)
+        //        //.Include(c => c.Locs)
+        //        //.Include(c => c.Treatments)
+        //        .Select(c => new FacilityCardDto()
+        //        {
+        //            Id = c.Id,
+        //            Name = c.Name,
+        //            Slug = c.Slug,
+        //            Address = (string.IsNullOrEmpty(c.State) ? "No State" : c.State),
+        //            Logo = c.Logo,
+        //            Cover = c.Cover,
+        //            CardImage = c.FacilitysImages!.Select(f => f.ImageAddress).FirstOrDefault(),
+        //            AccreditationCount = c.Accreditations!.Count(),
+        //            AmenityCount = c.Amenities!.Count(),
+        //            ConditionCount = c.Conditions!.Count(),
+        //            HighlightCount = c.Highlights!.Count(),
+        //            InsuranceCount = c.Insurances!.Count(),
+        //            SwtCount = c.Swts!.Count(),
+        //            TreatmentCount = c.Treatments!.Count(),
+        //            WwtCount = c.Wwts!.Count(),
+        //        }).ToListAsync();
+        //    return (facilities, totalCount);
+        //}
+
+
+        public async Task<(List<FacilityCardDto>, int totalCount)> GetFacilityCardsAsync(int pageNumber, int pageSize, string city, FullFacilityFilterItemsDto facilityFilter)
         {
             //var query = context.Facilities.Where(c => c.Logo != "" && c.FacilitysImages!.Count > 0 && c.State.Contains(state)).AsQueryable();
             var query = context.Facilities
-                .Include(c=>c.Treatments)
+                .Include(c => c.Treatments)
                 .Include(c => c.Insurances)
                 .Include(c => c.Accreditations)
                 .Include(c => c.Wwts)
@@ -642,32 +703,72 @@ namespace Rehab.Application.Facilities
                 .Include(c => c.Conditions)
                 .Include(c => c.Highlights)
                 .Include(c => c.Locs).AsQueryable();
-            if (!string.IsNullOrWhiteSpace(facilityFilter.Treatment)) query = query.Where(c => c.Treatments!.Any(d => d.Name.Contains(facilityFilter.Treatment)));
-            if (!string.IsNullOrEmpty(state)) query = query.Where(c => c.State.Contains(state)).AsQueryable();
+            //name filter
+            if (!string.IsNullOrEmpty(facilityFilter.SearchText))
+            {
+                query = query.Where(f => f.Name.Contains(facilityFilter.SearchText));
+            }
+            //state filter
+            if (facilityFilter.States.Count > 0)
+            {
+                query = query.Where(f => facilityFilter.States.Contains(f.State));
+            }
+            //condition filter
+            if (facilityFilter.Conditions.Count > 0)
+            {
+                var conditionNames = facilityFilter.Conditions.Select(t => t.Name).ToList();
+                query = query.Where(f => f.Conditions.Any(t => conditionNames.Contains(t.Name)));
+            }
+            //treatment filter
+            if (facilityFilter.Treatments.Count > 0)
+            {
+                var treatmentNames = facilityFilter.Treatments.Select(t => t.Name).ToList();
+                query = query.Where(f => f.Treatments.Any(t => treatmentNames.Contains(t.Name)));
+            }
+            //wwt filter
+            if (facilityFilter.Wwts.Count > 0)
+            {
+                var wwtNames = facilityFilter.Wwts.Select(t => t.Name).ToList();
+                query = query.Where(f => f.Wwts.Any(t => wwtNames.Contains(t.Name)));
+            }
+            //loc filter
+            if (facilityFilter.Locs.Count > 0)
+            {
+                var locNames = facilityFilter.Locs.Select(t => t.Name).ToList();
+                query = query.Where(f => f.Locs.Any(t => locNames.Contains(t.Name)));
+            }
+            //insurance filter
+            if (facilityFilter.Insurances.Count > 0)
+            {
+                var insuranceNames = facilityFilter.Insurances.Select(t => t.Name).ToList();
+                query = query.Where(f => f.Insurances.Any(t => insuranceNames.Contains(t.Name)));
+            }
+            //amenity filter
+            if (facilityFilter.Amenities.Count > 0)
+            {
+                var amenityNames = facilityFilter.Amenities.Select(t => t.Name).ToList();
+                query = query.Where(f => f.Amenities.Any(t => amenityNames.Contains(t.Name)));
+            }
+            //swt filter
+            if (facilityFilter.Swts.Count > 0)
+            {
+                var swtNames = facilityFilter.Swts.Select(t => t.Name).ToList();
+                query = query.Where(f => f.Swts.Any(t => swtNames.Contains(t.Name)));
+            }
+            //accreditation filter
+            if (facilityFilter.Accreditations.Count > 0)
+            {
+                var accreditationNames = facilityFilter.Accreditations.Select(t => t.Name).ToList();
+                query = query.Where(f => f.Accreditations.Any(t => accreditationNames.Contains(t.Name)));
+            }
             if (!string.IsNullOrEmpty(city)) query = query.Where(c => c.City.Contains(city)).AsQueryable();
-            if (!string.IsNullOrWhiteSpace(facilityFilter.Condition)) query = query.Where(c => c.Conditions!.Any(d => d.Name.Contains(facilityFilter.Condition)));
-            if (!string.IsNullOrWhiteSpace(facilityFilter.Amenity)) query = query.Where(c => c.Amenities!.Any(d => d.Name.Contains(facilityFilter.Amenity)));
-            if (!string.IsNullOrWhiteSpace(facilityFilter.Accreditation)) query = query.Where(c => c.Accreditations!.Any(d => d.Name.Contains(facilityFilter.Accreditation)));
-            if (!string.IsNullOrWhiteSpace(facilityFilter.Insurance)) query = query.Where(c => c.Insurances!.Any(d => d.Name.Contains(facilityFilter.Insurance)));
-            if (!string.IsNullOrWhiteSpace(facilityFilter.Swt)) query = query.Where(c => c.Swts!.Any(d => d.Name.Contains(facilityFilter.Swt)));
-            if (!string.IsNullOrWhiteSpace(facilityFilter.Loc)) query = query.Where(c => c.Locs!.Any(d => d.Name.Contains(facilityFilter.Loc)));
-
-            if (!string.IsNullOrWhiteSpace(facilityFilter.Wwt)) query = query.Where(c => c.Wwts!.Any(d => d.Name.Contains(facilityFilter.Wwt)));
+            
             var totalCount = await query.CountAsync();
             var facilities = await query
                 .OrderBy(c => c.Id)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
                 .Include(c => c.FacilitysImages)
-                //.Include(c => c.Insurances)
-                //.Include(c => c.Accreditations)
-                //.Include(c => c.Wwts)
-                //.Include(c => c.Swts)
-                //.Include(c => c.Amenities)
-                //.Include(c => c.Conditions)
-                //.Include(c => c.Highlights)
-                //.Include(c => c.Locs)
-                //.Include(c => c.Treatments)
                 .Select(c => new FacilityCardDto()
                 {
                     Id = c.Id,
@@ -688,6 +789,9 @@ namespace Rehab.Application.Facilities
                 }).ToListAsync();
             return (facilities, totalCount);
         }
+
+
+
 
         public FacilityFieldsDto GetListFacilityFields()
         {

@@ -117,6 +117,10 @@ ul.dropdown-menu.show {
     overflow-y: scroll;
 }
 
+ul.dropdown-menu li label {
+    cursor: pointer !important;
+}
+
 h3.sidebar-header {
     font-size: 0.9rem;
     font-weight: bold;

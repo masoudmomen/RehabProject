@@ -9,16 +9,17 @@
 @inject IFacilityService FacilityService
 @inject AutoMapper.IMapper mapper
 @inject InternalLocationService InternalLocationService
+@inject IJSRuntime JS
 
 <div class="container">
     <div class="row my-4">
         <div class="col-md-9">
             <div class="search-box">
-                <input type="text"
+                <input type="text" @bind-value="FullFacilityFilterItems.SearchText"
                        class="form-control search-input"
-                       placeholder="Search by state, condition, or treatment..." />
+                       placeholder="Search by Facility Name..." />
 
-                <span class="search-icon">
+                <span class="search-icon" @onclick="ApplyFilter">
                     <i class="fa fa-search"></i>
                 </span>
             </div>
@@ -38,9 +39,9 @@
                         {
                             @foreach (var item in States)
                             {
-                                <li>
+                                <li @onmousedown="()=>StateToggleSelectItems(item)">
                                     <label class="dropdown-item">
-                                        <input type="checkbox" value="@item"> @item
+                                        <input type="checkbox" value="@item" id="@item"> @item
                                     </label>
                                 </li>
                             }
@@ -59,9 +60,10 @@
                     <ul class="dropdown-menu">
                         @foreach (var item in Fields.Conditions!)
                         {
-                            <li>
+                            <li @onmousedown="() => ConditionToggleSelectItems(item)">
                                 <label class="dropdown-item">
-                                    <input type="checkbox" value="@item"> @item.Name
+                                    <input type="checkbox" value="@item" id="@item.Id" />
+                                     @item.Name
                                 </label>
                             </li>
                         }
@@ -80,9 +82,9 @@
                     <ul class="dropdown-menu">
                         @foreach (var item in Fields.Treatments!)
                         {
-                            <li>
+                            <li @onmousedown="() => TreatmentToggleSelectItems(item)">
                                 <label class="dropdown-item">
-                                    <input type="checkbox" value="@item"> @item.Name
+                                    <input type="checkbox" value="@item" id="@item.Id"> @item.Name
                                 </label>
                             </li>
                         }
@@ -100,9 +102,9 @@
                     <ul class="dropdown-menu">
                         @foreach (var item in Fields.Wwts!)
                         {
-                            <li>
+                            <li @onmousedown="() => WwtToggleSelectItems(item)">
                                 <label class="dropdown-item">
-                                    <input type="checkbox" value="@item"> @item.Name
+                                    <input type="checkbox" value="@item" id="@item.Id"> @item.Name
                                 </label>
                             </li>
                         }
@@ -120,9 +122,9 @@
                     <ul class="dropdown-menu">
                         @foreach (var item in Fields.Locs!)
                         {
-                            <li>
+                            <li @onmousedown="() => LocToggleSelectItems(item)">
                                 <label class="dropdown-item">
-                                    <input type="checkbox" value="@item"> @item.Name
+                                    <input type="checkbox" value="@item" id="@item.Id"> @item.Name
                                 </label>
                             </li>
                         }
@@ -141,9 +143,9 @@
                     <ul class="dropdown-menu">
                         @foreach (var item in Fields.Insurances!)
                         {
-                            <li>
+                            <li @onmousedown="() => InsuranceToggleSelectItems(item)">
                                 <label class="dropdown-item">
-                                    <input type="checkbox" value="@item"> @item.Name
+                                    <input type="checkbox" value="@item" id="@item.Id"> @item.Name
                                 </label>
                             </li>
                         }
@@ -162,54 +164,176 @@
                     <ul class="dropdown-menu">
                         @foreach (var item in Fields.Amenities!)
                         {
-                            <li>
+                            <li @onmousedown="() => AmenityToggleSelectItems(item)">
                                 <label class="dropdown-item">
-                                    <input type="checkbox" value="@item"> @item.Name
+                                    <input type="checkbox" value="@item" id="@item.Id"> @item.Name
                                 </label>
                             </li>
                         }
                     </ul>
                 </div>
             
+                <button class="btn btn-primary btn-group-lg w-25 text-nowrap" @onclick="ApplyFilter">Apply Filters</button>
                 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
             </div>
-
+            
+            
             <div class="results-filters">
-                <h3 class="sec-title">Results for</h3>
+                <h3 class="sec-title">Filtered Items:</h3>
 
-                <div class="filter-group">
-                    <span class="filter-title">Condition:</span>
-                    <div class="filter-items">
-                        <span class="filter-tag">
-                            Anxiety Disorders
-                            <button type="button" class="remove-button" aria-label="Remove filter">×</button>
-                        </span>
-
-                        <span class="filter-tag">
-                            Depression
-                            <button type="button" class="remove-button" aria-label="Remove filter">×</button>
-                        </span>
+                @if (FullFacilityFilterItems.States.Count > 0)
+                {
+                    <div class="filter-group">
+                        <span class="filter-title">State:</span>
+                        <div class="filter-items">
+                            @foreach (var item in FullFacilityFilterItems.States)
+                            {
+                                <span class="filter-tag">
+                                    @item
+                                    <button type="button" class="remove-button" aria-label="Remove filter"
+                                    @onclick="()=>{
+                                        FullFacilityFilterItems.States.Remove(item);
+                                        UncheckState(item);}" >×</button>
+                                </span>
+                            }
+                        </div>
                     </div>
-                </div>
+                }
 
-                <div class="filter-group">
-                    <span class="filter-title">Treatment:</span>
-                    <div class="filter-items">
-                        <span class="filter-tag">
-                            ACT
-                            <button type="button" class="remove-button">×</button>
-                        </span>
+                @if (FullFacilityFilterItems.Conditions.Count > 0)
+                {
+                    <div class="filter-group">
+                        <span class="filter-title">Condition:</span>
+                        <div class="filter-items">
+                            @foreach (var item in FullFacilityFilterItems.Conditions)
+                            {
+                                <span class="filter-tag">
+                                    @item.Name
+                                    <button type="button" class="remove-button" aria-label="Remove filter"
+                                            @onclick="() => {
+                                            FullFacilityFilterItems.Conditions.Remove(item);
+                                                Uncheck(item.Id);}">
+                                        ×
+                                    </button>
+                                </span>
+                            }
+                        </div>
                     </div>
-                </div>
+                }
 
-                <button class="clear-filters">Clear all</button>
+                @if (FullFacilityFilterItems.Treatments.Count > 0)
+                {
+                    <div class="filter-group">
+                        <span class="filter-title">Treatment:</span>
+                        <div class="filter-items">
+                            @foreach (var item in FullFacilityFilterItems.Treatments)
+                            {
+                                <span class="filter-tag">
+                                    @item.Name
+                                    <button type="button" class="remove-button" aria-label="Remove filter"
+                                            @onclick="() => { FullFacilityFilterItems.Treatments.Remove(item);
+                                            Uncheck(item.Id);}">
+                                        ×
+                                    </button>
+                                </span>
+                            }
+                        </div>
+                    </div>
+                }
+
+
+                @if (FullFacilityFilterItems.Wwts.Count > 0)
+                {
+                    <div class="filter-group">
+                        <span class="filter-title">Who We Treat:</span>
+                        <div class="filter-items">
+                            @foreach (var item in FullFacilityFilterItems.Wwts)
+                            {
+                                <span class="filter-tag">
+                                    @item.Name
+                                    <button type="button" class="remove-button" aria-label="Remove filter"
+                                            @onclick="() => { FullFacilityFilterItems.Wwts.Remove(item);
+                                            Uncheck(item.Id);}">
+                                        ×
+                                    </button>
+                                </span>
+                            }
+                        </div>
+                    </div>
+                }
+
+                @if (FullFacilityFilterItems.Locs.Count > 0)
+                {
+                    <div class="filter-group">
+                        <span class="filter-title">Level of Care:</span>
+                        <div class="filter-items">
+                            @foreach (var item in FullFacilityFilterItems.Locs)
+                            {
+                                <span class="filter-tag">
+                                    @item.Name
+                                    <button type="button" class="remove-button" aria-label="Remove filter"
+                                            @onclick="() => { FullFacilityFilterItems.Locs.Remove(item);
+                                            Uncheck(item.Id);}">
+                                        ×
+                                    </button>
+                                </span>
+                            }
+                        </div>
+                    </div>
+                }
+
+                @if (FullFacilityFilterItems.Insurances.Count > 0)
+                {
+                    <div class="filter-group">
+                        <span class="filter-title">Insurance:</span>
+                        <div class="filter-items">
+                            @foreach (var item in FullFacilityFilterItems.Insurances)
+                            {
+                                <span class="filter-tag">
+                                    @item.Name
+                                    <button type="button" class="remove-button" aria-label="Remove filter"
+                                            @onclick="() => { FullFacilityFilterItems.Insurances.Remove(item);
+                                            Uncheck(item.Id);}">
+                                        ×
+                                    </button>
+                                </span>
+                            }
+                        </div>
+                    </div>
+                }
+
+                @if (FullFacilityFilterItems.Amenities.Count > 0)
+                {
+                    <div class="filter-group">
+                        <span class="filter-title">Amenity:</span>
+                        <div class="filter-items">
+                            @foreach (var item in FullFacilityFilterItems.Amenities)
+                            {
+                                <span class="filter-tag">
+                                    @item.Name
+                                    <button type="button" class="remove-button" aria-label="Remove filter"
+                                            @onclick="() => { FullFacilityFilterItems.Amenities.Remove(item);
+                                            Uncheck(item.Id);}">
+                                        ×
+                                    </button>
+                                </span>
+                            }
+                        </div>
+                    </div>
+                }
+
+                <button class="clear-filters" 
+                        @onclick="() => { FullFacilityFilterItems = new();UnCheckAll(); }">
+                    Clear all
+                </button>
             </div>
+            
         
             <div class="container mt-5 mb-5">
                 <div class="row g-4">
 
 
-                    <Virtualize ItemsProvider="LoadFacilities" Context="facility" ItemSize="320" TItem="FacilityCardViewmodel">
+                    <Virtualize @ref="virtualizeRef" ItemsProvider="LoadFacilities" Context="facility" ItemSize="320" TItem="FacilityCardViewmodel">
                         <ItemContent Context="facility">
                             <div class="col-12 col-md-3">
                                 <FacilityItem ShowTags="false" FacilityCard="facility" CustomClass="small-card" />
@@ -291,6 +415,8 @@
     [Parameter, SupplyParameterFromQuery] public string? state { get; set; }
     [Parameter, SupplyParameterFromQuery] public string? city { get; set; }
 
+    private FullFacilityFilterItemsViewmodel FullFacilityFilterItems { get; set; } = new();
+    private Virtualize<FacilityCardViewmodel> virtualizeRef;
     protected override async Task OnInitializedAsync()
     {
         serverUrl = Config["AppSettings:AdminServerUrl"]!;
@@ -298,23 +424,142 @@
 
         Fields = mapper.Map<FacilityFieldsViewmodel>(FacilityService.GetListFacilityFields());
 
-        if (!string.IsNullOrWhiteSpace(condition)) FilterItems.Condition = condition;
-        if (!string.IsNullOrWhiteSpace(amenity)) FilterItems.Amenity = amenity;
-        if (!string.IsNullOrWhiteSpace(treatment)) FilterItems.Treatment = treatment.ToLowerInvariant();
-        if (!string.IsNullOrWhiteSpace(insurance)) FilterItems.Insurance = insurance;
-        if (!string.IsNullOrWhiteSpace(loc)) FilterItems.Loc = loc;
-        if (!string.IsNullOrWhiteSpace(wwt)) FilterItems.Wwt = wwt;
-        if (!string.IsNullOrWhiteSpace(swt)) FilterItems.Swt = swt;
+        // if (!string.IsNullOrWhiteSpace(condition)) FilterItems.Condition = condition;
+        // if (!string.IsNullOrWhiteSpace(amenity)) FilterItems.Amenity = amenity;
+        // if (!string.IsNullOrWhiteSpace(treatment)) FilterItems.Treatment = treatment.ToLowerInvariant();
+        // if (!string.IsNullOrWhiteSpace(insurance)) FilterItems.Insurance = insurance;
+        // if (!string.IsNullOrWhiteSpace(loc)) FilterItems.Loc = loc;
+        // if (!string.IsNullOrWhiteSpace(wwt)) FilterItems.Wwt = wwt;
+        // if (!string.IsNullOrWhiteSpace(swt)) FilterItems.Swt = swt;
+
+
+        if (!string.IsNullOrWhiteSpace(state))
+            FullFacilityFilterItems.States.Add(state);
+
+        if (!string.IsNullOrWhiteSpace(condition)) 
+            FullFacilityFilterItems.Conditions.Add(new ConditionViewModel()
+            {
+                Name = condition
+            });
+        if (!string.IsNullOrWhiteSpace(amenity)) 
+            FullFacilityFilterItems.Amenities.Add(new AmenityViewmodel()
+            {
+                Name = amenity
+            });
+        if (!string.IsNullOrWhiteSpace(treatment))
+            FullFacilityFilterItems.Treatments.Add(new TreatmentViewmodel
+                {
+                    Name = treatment.ToLowerInvariant()
+                });
+        if (!string.IsNullOrWhiteSpace(insurance))
+            FullFacilityFilterItems.Insurances.Add(new InsuranceViewModel
+                {
+                    Name = insurance
+                });
+
+        if (!string.IsNullOrWhiteSpace(loc)) 
+            FullFacilityFilterItems.Locs.Add(new LocViewmodel
+                {
+                    Name = loc
+                });
+        if (!string.IsNullOrWhiteSpace(wwt)) 
+            FullFacilityFilterItems.Wwts.Add(new WwtViewModel
+            {
+                Name = wwt
+            }) ;
+        if (!string.IsNullOrWhiteSpace(swt)) 
+            FullFacilityFilterItems.Swts.Add(new SwtViewModel
+            {
+                Name = swt
+            }) ;
     }
     private async ValueTask<ItemsProviderResult<FacilityCardViewmodel>> LoadFacilities(ItemsProviderRequest request)
     {
-        var result = await FacilityService.GetFacilityCardsAsync(request.StartIndex / 50 + 1, 50, state, city, FilterItems);
+        var result = await FacilityService.GetFacilityCardsAsync(request.StartIndex / 100 + 1, 100, city,
+            mapper.Map<FullFacilityFilterItemsDto>(FullFacilityFilterItems));
         return new ItemsProviderResult<FacilityCardViewmodel>(mapper.Map<List<FacilityCardViewmodel>>(result.Item1), result.totalCount);
     }
+
+    private void StateToggleSelectItems(string selectedItem)
+    {
+        if (FullFacilityFilterItems.States.Contains(selectedItem)) FullFacilityFilterItems.States.Remove(selectedItem);
+        else FullFacilityFilterItems.States.Add(selectedItem);
+
+    }
+    private async Task ConditionToggleSelectItems(ConditionViewModel selectedItem)
+    {
+        if (FullFacilityFilterItems.Conditions.Contains(selectedItem)){
+            FullFacilityFilterItems.Conditions.Remove(selectedItem);
+        }
+        else{
+            FullFacilityFilterItems.Conditions.Add(selectedItem);
+        }
+
+    }
+    private void TreatmentToggleSelectItems(TreatmentViewmodel selectedItem)
+    {
+        if (FullFacilityFilterItems.Treatments.Contains(selectedItem)) FullFacilityFilterItems.Treatments.Remove(selectedItem);
+        else FullFacilityFilterItems.Treatments.Add(selectedItem);
+
+    }
+    private void WwtToggleSelectItems(WwtViewModel selectedItem)
+    {
+        if (FullFacilityFilterItems.Wwts.Contains(selectedItem)) FullFacilityFilterItems.Wwts.Remove(selectedItem);
+        else FullFacilityFilterItems.Wwts.Add(selectedItem);
+
+    }
+    private void LocToggleSelectItems(LocViewmodel selectedItem)
+    {
+        if (FullFacilityFilterItems.Locs.Contains(selectedItem)) FullFacilityFilterItems.Locs.Remove(selectedItem);
+        else FullFacilityFilterItems.Locs.Add(selectedItem);
+
+    }
+    private void InsuranceToggleSelectItems(InsuranceViewModel selectedItem)
+    {
+        if (FullFacilityFilterItems.Insurances.Contains(selectedItem)) FullFacilityFilterItems.Insurances.Remove(selectedItem);
+        else FullFacilityFilterItems.Insurances.Add(selectedItem);
+
+    }
+    private void AmenityToggleSelectItems(AmenityViewmodel selectedItem)
+    {
+        if (FullFacilityFilterItems.Amenities.Contains(selectedItem)) FullFacilityFilterItems.Amenities.Remove(selectedItem);
+        else FullFacilityFilterItems.Amenities.Add(selectedItem);
+
+    }
+    async Task ApplyFilter()
+    {
+        await virtualizeRef.RefreshDataAsync();
+    }
+
+    private void Uncheck(int id)
+    {
+        HandleCheckbox(id, false);
+    }
+    
+
+    private void HandleCheckbox(int id, bool state)
+    {
+         JS.InvokeVoidAsync("setCheckboxState", id, state);
+    }
+
+    private void UncheckState(string id)
+    {
+        HandleCheckboxState(id, false);
+    }
+    private void HandleCheckboxState(string id, bool state)
+    {
+         JS.InvokeVoidAsync("setCheckboxState", id, state);
+    }
+
+    private void UnCheckAll()
+    {
+         JS.InvokeVoidAsync("UnCheckAllCheckbox");
+    }
+
 }
-<style>
- 
-</style>
+
+
+
 <script>
     document.querySelectorAll('.dropdown-menu').forEach(menu => {
         menu.addEventListener('click', e => e.stopPropagation());
