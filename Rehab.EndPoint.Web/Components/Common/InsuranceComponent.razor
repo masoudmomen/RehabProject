@@ -4,7 +4,9 @@
 <div class="insurances-container">
     <CardList List="Insurancescards"
               CustomClass="card-gs-2" 
-              ImageURL="insurances"/>
+              ImageURL="insurances"
+              HrefTarget="_blank"
+              />
 </div>
 @code {
     private List<CardViewModel> Insurancescards = new();
@@ -15,6 +17,7 @@
         {
             Name = i.Name,
             Image = i.Icon,
+            Link = "/facilities?insurance=" + @Uri.EscapeDataString(i.Name)
         }).ToList();
     }
 }

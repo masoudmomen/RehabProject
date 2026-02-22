@@ -1,6 +1,6 @@
 ﻿@using Rehab.EndPoint.Web.ViewModels
 
-<a href="@CardLink" class="card">
+<a href="@CardLink" class="card" target="@HrefTarget">
          <div class="card-image-container">
             @if (!string.IsNullOrEmpty(Image))
             {
@@ -88,4 +88,7 @@
 
     [Parameter]
     public string CardLink { get; set; } = "/#";
+
+    [Parameter]
+    public string HrefTarget { get; set; } = "_self";
 }

@@ -50,6 +50,7 @@ namespace Rehab.Infrastructure.MappingProfile
             CreateMap<Swt, SwtDto>().ReverseMap();
             CreateMap<Treatment, TreatmentDto>().ReverseMap();
             CreateMap<Tag,TagDto>().ReverseMap();
+
         }
     }
 }
