@@ -95,3 +95,21 @@ window.UnCheckAllCheckbox = () => {
         i.checked = false;
     });
 };
+
+
+window.infiniteScroll = {
+    initialize: function (elementId, dotnetHelper) {
+
+        const observer = new IntersectionObserver(entries => {
+            if (entries[0].isIntersecting) {
+                dotnetHelper.invokeMethodAsync("LoadMore");
+            }
+        });
+
+        const element = document.getElementById(elementId);
+
+        if (element) {
+            observer.observe(element);
+        }
+    }
+};
