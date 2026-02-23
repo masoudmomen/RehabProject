@@ -29,6 +29,17 @@
     <Compile Remove="Migrations\20250809050238_Pull-08-09.Designer.cs" />
     <Compile Remove="Migrations\20250809051149_Pull11-08-09.cs" />
     <Compile Remove="Migrations\20250809051149_Pull11-08-09.Designer.cs" />
+    <Compile Remove="Migrations\20250810151727_InitCreate.cs" />
+    <Compile Remove="Migrations\20250810151727_InitCreate.Designer.cs" />
+    <Compile Remove="Migrations\20250920094055_updateShahrivar.cs" />
+    <Compile Remove="Migrations\20250920094055_updateShahrivar.Designer.cs" />
+    <Compile Remove="Migrations\20251207090555_ConditionFacility.cs" />
+    <Compile Remove="Migrations\20251207090555_ConditionFacility.Designer.cs" />
+    <Compile Remove="Migrations\20260125084917_swts.cs" />
+    <Compile Remove="Migrations\20260125084917_swts.Designer.cs" />
+    <Compile Remove="Migrations\20260125091500_initdb2026.cs" />
+    <Compile Remove="Migrations\20260125091500_initdb2026.Designer.cs" />
+    <Compile Remove="Migrations\DatabaseContextModelSnapshot.cs" />
   </ItemGroup>
 
   <ItemGroup>
