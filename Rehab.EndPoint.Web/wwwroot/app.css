@@ -1,14 +1,6 @@
 ﻿
 :root {
-    --bs-primary: #4a90e2;
-    --primary-blue: #4a90e2;
-    --secondary-blue: #7fb8d3;
-    --light-blue: #e3f2fd;
-    --soft-green: #74ebd5;
-    --accent-green: #43e97b;
-    --text-dark: #2c3e50;
-    --text-muted: #5a6c7d;
-    --bg-light: #fafbfc;
+  
 }
 body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;

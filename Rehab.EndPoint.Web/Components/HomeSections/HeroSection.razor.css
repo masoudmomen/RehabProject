@@ -47,3 +47,13 @@
 .form-control:focus {
     box-shadow :none !important;
 }
+
+a.btn-hero{
+    font-size:1rem;
+    padding:20px 5px;
+}
+@media (width:1024px) {
+    .hero-search-container {
+        width:80%;
+    }
+}

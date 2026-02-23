@@ -32,3 +32,14 @@ h5.footer-section-title {
 .footer ul li {
     margin-top: 10px;
 }
+a.footer-tell {
+    color: #fff;
+    font-size: 1rem;
+}
+    a.footer-tell:hover {
+        background-color: #007bff;
+        -moz-border-radius: 5px;
+        -webkit-border-radius: 5px;
+        border-radius: 5px;
+        padding: 0.5rem 1rem;
+    }

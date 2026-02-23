@@ -37,9 +37,9 @@ a.cursor-pointer{
     transition: .5s;
 }
 
-    .btn.btn-primary {
+  /*  .btn.btn-primary {
         color: #FFFFFF;
-    }
+    }*/
 
 .btn-square {
     width: 38px;

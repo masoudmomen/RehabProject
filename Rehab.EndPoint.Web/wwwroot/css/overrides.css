@@ -1,0 +1,17 @@
+﻿.btn-primary{
+    background:var(--color-primary);
+    color:#fff;
+    border:none;
+}
+    .btn-primary:hover {
+        background-color: var(--color-secondary);
+    }
+
+.btn-secondary {
+    background-color: var(--color-secondary);
+    color: #fff;
+    border: none;
+}
+    .btn-secondary:hover {
+        background: var(--color-primary);
+    }

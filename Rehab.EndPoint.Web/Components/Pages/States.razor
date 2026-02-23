@@ -26,24 +26,8 @@
 <div class="container  rounded-2 py-2">
     <BreadCrumbComponent Items="@breadCrumbItems"></BreadCrumbComponent>
 </div>
-
-<div class="container mt-3">
-    <div class="row g-4 rounded-3 p-2 bg-eee">
-        <div class="col-12 col-lg-6">
-            <div class="row">
-                <div class="col-12">
-                    <h2 class="state-title mb-2">Recovery Centers in @statename</h2>
-                </div>
-                <div class="col-12">
-                    <p class="state-description mb-0">@GetStateDescription()</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-12 col-lg-6 mt-0 p-2 image-container">
-            <img src="@GetStateImagePath()" class="state-image" />
-        </div>
-    </div>
-</div>
+<PageCover CustomImageUrl="@GetStateImagePath()"
+           PageTitle=@("Recovery centers in " + statename) />
 <div class="container mt-3">
     <div class="row">
         <div class="col-md-9">
@@ -138,7 +122,7 @@
     {
         if (string.IsNullOrWhiteSpace(statename))
         {
-            return "/images/statesimages/no-image.jpg";
+            return "/img/statesimages/no-image.jpg";
         }
 
         var state = USStates.All.FirstOrDefault(s =>
@@ -149,10 +133,10 @@
 
         if (string.IsNullOrWhiteSpace(imageFileName))
         {
-            return "/images/statesimages/no-image.jpg";
+            return "/img/statesimages/no-image.jpg";
         }
 
-        return $"/images/statesimages/{imageFileName}";
+        return $"/img/statesimages/{imageFileName}";
     }
 
     private string GetStateDescription()

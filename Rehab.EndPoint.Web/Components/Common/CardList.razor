@@ -6,7 +6,8 @@
     {
         <Card Title="@item.Name"
               Image="@(prefixImageURL + ImageURL +"/" + item.Image)"
-              CardLink="#"
+              CardLink="@item.Link"
+              HrefTarget="@HrefTarget"
               IconClass="fa-solid fa-certificate"
               Description="@item.Description" />
     } 
@@ -18,6 +19,7 @@
     [Parameter] public string ImageURL { get; set; } = "";
     [Parameter] public int ItemsToShow { get; set; } 
     [Parameter] public string prefixImageURL { get; set; } = "/images/" ;
+    [Parameter] public string HrefTarget { get; set; } = "_self" ;
 
     protected  override void OnInitialized()
     {
