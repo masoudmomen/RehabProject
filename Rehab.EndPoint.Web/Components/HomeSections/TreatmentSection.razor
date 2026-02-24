@@ -34,7 +34,7 @@
     protected override void OnInitialized()
     {
         serverUrl = Config["AppSettings:AdminServerUrl"];
-        TreatmentCards = mapper.Map<List<CardViewModel>>(TreatmentService.GetList());
+        TreatmentCards = mapper.Map<List<CardViewModel>>(TreatmentService.GetList().Take(4));
   
     }
 }

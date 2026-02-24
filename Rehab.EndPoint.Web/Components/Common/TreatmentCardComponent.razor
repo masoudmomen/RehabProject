@@ -1,6 +1,11 @@
 ﻿@using Rehab.EndPoint.Web.ViewModels
         <div class="card  h-100 px-0 rounded-2 border-0 @CustomClass ">
-            <img src="@prefixImageURL/@Card.Image" class="card-img-top card-img-fixed" alt="@Card.Name">
+
+    <img src="@((string.IsNullOrWhiteSpace(Card.Image) ? "/images/nopic.jpg" : $"{prefixImageURL}/{Card.Image}"))"
+         class="card-img-top card-img-fixed" 
+         alt="@Card.Name"
+         onerror="this.onerror=null; this.src='/images/nopic.jpg';" />
+       
             <div class="card-body d-flex flex-column">
                 <h5 class="card-title fs-6" title="@Card.Name">@Card.Name</h5>
                 <p class="card-text">
@@ -19,7 +24,7 @@
             }
                 </p>
 
-        <a href="/facilities?treatment=@Uri.EscapeDataString(Card.Name!)" class="btn btn-primary-gradient">View facilities </a>
+        <a href="/facilities?treatment=@Uri.EscapeDataString(Card.Name!)" class="btn btn-primary-gradient mt-auto">View facilities </a>
         @* <a href="/facilities?treatment=@Uri.EscapeDataString(Card.Name!)" class="btn-link-arrow align-self-end mt-auto">View facilities<span class="arrow">→</span></a> *@
             </div>
         </div> 

@@ -2,16 +2,9 @@
 
 <a href="@CardLink" class="card" target="@HrefTarget">
          <div class="card-image-container">
-            @if (!string.IsNullOrEmpty(Image))
-            {
-                <img src="@Image" alt="@Title logo" class="card-image" />
-            }
-            else
-            {
-                <div class="card-placeholder">
-                    <i class="@(IconClass ?? "fas fa-shield-alt")"></i>
-                </div>
-            }
+        <img src="@Image" alt="@Title logo"
+            class="card-image"
+             onerror="this.onerror=null; this.src='/images/nopic.jpg';" />
         </div>
 
         <div class="card-info">

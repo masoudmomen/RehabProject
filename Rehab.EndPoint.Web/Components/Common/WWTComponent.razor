@@ -4,7 +4,8 @@
 
     <a class="wwt-card" target="_blank" href="/facilities?wwt=@Uri.EscapeDataString(@Card.Name)">
             <div class="wwt-image-container">
-            <img src="@PrefixImageURL/@Card.Image" alt="@Card.Name" class="wwt-image" />
+        <img src="@((string.IsNullOrWhiteSpace(Card.Image) ? "/images/nopic.jpg" : $"{@PrefixImageURL}/{Card.Image}"))" alt="@Card.Name" class="wwt-image"
+             onerror="this.onerror=null; this.src='/images/nopic.jpg';" />
             <div class="wwt-title">@Card.Name</div>
             </div>
         </a>
