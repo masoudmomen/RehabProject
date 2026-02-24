@@ -336,16 +336,33 @@
                 <div class="row g-4">
 
 
-                    <Virtualize @ref="virtualizeRef" ItemsProvider="LoadFacilities" Context="facility" ItemSize="320" TItem="FacilityCardViewmodel">
+                    @* <Virtualize @ref="virtualizeRef" ItemsProvider="LoadFacilities" Context="facility" ItemSize="320" TItem="FacilityCardViewmodel">
                         <ItemContent Context="facility">
                             <div class="col-12 col-md-3">
                                 <FacilityItem ShowTags="false" FacilityCard="facility" CustomClass="small-card" />
                             </div>
                         </ItemContent>
-                    </Virtualize>
+                    </Virtualize> *@
+
+
+
+                @foreach (var facility in FacilityCards)
+                    {
+                        <div class="col-md-4 mb-3">
+                            <FacilityItem ShowTags="false" FacilityCard="facility" CustomClass="small-card" />
+                        </div>
+                    }
+
+
 
 
                 </div>
+                @if (IsLoading)
+                {
+                    <p>Loading...</p>
+                }
+
+                <div id="scrollTrigger"></div>
 
             </div>
         </div>
@@ -397,23 +414,17 @@
 </div>
  
 @code {
-    [Inject] IConfiguration Config { get; set; } = default!;
-    private string serverUrl;
-    private FacilityFieldsItem FilterItems { get; set; } = new();
-    private FacilityFieldsViewmodel Fields { get; set; } = new();
-    private List<string>? States;
-    [Parameter, SupplyParameterFromQuery] public string? condition { get; set; }
-    [Parameter, SupplyParameterFromQuery] public string? amenity { get; set; }
-    [Parameter, SupplyParameterFromQuery] public string? treatment { get; set; }
-    [Parameter, SupplyParameterFromQuery] public string? insurance { get; set; }
-    [Parameter, SupplyParameterFromQuery] public string? loc { get; set; }
-    [Parameter, SupplyParameterFromQuery] public string? wwt { get; set; }
-    [Parameter, SupplyParameterFromQuery] public string? swt { get; set; }
-    [Parameter, SupplyParameterFromQuery] public string? state { get; set; }
-    [Parameter, SupplyParameterFromQuery] public string? city { get; set; }
+    //infinite scroll
+    //----------------------------------------------------------
 
-    private FullFacilityFilterItemsViewmodel FullFacilityFilterItems { get; set; } = new();
-    private Virtualize<FacilityCardViewmodel> virtualizeRef;
+    private List<FacilityCardViewmodel> FacilityCards = new();
+    private int page = 1;
+    private int pageSize = 12;
+    private bool IsLoading = false;
+    private bool HasMore = true;
+
+    private DotNetObjectReference<Facilities>? objRef;
+
     protected override async Task OnInitializedAsync()
     {
         serverUrl = Config["AppSettings:AdminServerUrl"]!;
@@ -421,15 +432,7 @@
 
         Fields = mapper.Map<FacilityFieldsViewmodel>(FacilityService.GetListFacilityFields());
 
-        // if (!string.IsNullOrWhiteSpace(condition)) FilterItems.Condition = condition;
-        // if (!string.IsNullOrWhiteSpace(amenity)) FilterItems.Amenity = amenity;
-        // if (!string.IsNullOrWhiteSpace(treatment)) FilterItems.Treatment = treatment.ToLowerInvariant();
-        // if (!string.IsNullOrWhiteSpace(insurance)) FilterItems.Insurance = insurance;
-        // if (!string.IsNullOrWhiteSpace(loc)) FilterItems.Loc = loc;
-        // if (!string.IsNullOrWhiteSpace(wwt)) FilterItems.Wwt = wwt;
-        // if (!string.IsNullOrWhiteSpace(swt)) FilterItems.Swt = swt;
-
-
+        #region FilterOperation
         if (!string.IsNullOrWhiteSpace(state))
             FullFacilityFilterItems.States.Add(state);
 
@@ -469,13 +472,132 @@
             {
                 Name = swt
             }) ;
+        #endregion
+
+        await LoadMore();
     }
-    private async ValueTask<ItemsProviderResult<FacilityCardViewmodel>> LoadFacilities(ItemsProviderRequest request)
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        var result = await FacilityService.GetFacilityCardsAsync(request.StartIndex / 100 + 1, 100, city,
-            mapper.Map<FullFacilityFilterItemsDto>(FullFacilityFilterItems));
-        return new ItemsProviderResult<FacilityCardViewmodel>(mapper.Map<List<FacilityCardViewmodel>>(result.Item1), result.totalCount);
+        if (firstRender)
+        {
+            objRef = DotNetObjectReference.Create(this);
+            await JS.InvokeVoidAsync("infiniteScroll.initialize",
+                "scrollTrigger",
+                objRef);
+        }
     }
+
+    [JSInvokable]
+    public async Task LoadMore()
+    {
+        if (IsLoading || !HasMore)
+            return;
+
+        IsLoading = true;
+        StateHasChanged();
+
+        var newItems = await FacilityService.GetFacilityCardsAsync(page, pageSize, city, 
+        mapper.Map<FullFacilityFilterItemsDto>(FullFacilityFilterItems));
+
+        if (newItems.Item1.Count < pageSize)
+            HasMore = false;
+
+        FacilityCards.AddRange(mapper.Map<List<FacilityCardViewmodel>>(newItems.Item1));
+        page++;
+
+        IsLoading = false;
+        StateHasChanged();
+    }
+
+    public void Dispose()
+    {
+        objRef?.Dispose();
+    }
+
+
+    //----------------------------------------------------------
+
+    [Inject] IConfiguration Config { get; set; } = default!;
+    private string serverUrl;
+    private FacilityFieldsItem FilterItems { get; set; } = new();
+    private FacilityFieldsViewmodel Fields { get; set; } = new();
+    private List<string>? States;
+    [Parameter, SupplyParameterFromQuery] public string? condition { get; set; }
+    [Parameter, SupplyParameterFromQuery] public string? amenity { get; set; }
+    [Parameter, SupplyParameterFromQuery] public string? treatment { get; set; }
+    [Parameter, SupplyParameterFromQuery] public string? insurance { get; set; }
+    [Parameter, SupplyParameterFromQuery] public string? loc { get; set; }
+    [Parameter, SupplyParameterFromQuery] public string? wwt { get; set; }
+    [Parameter, SupplyParameterFromQuery] public string? swt { get; set; }
+    [Parameter, SupplyParameterFromQuery] public string? state { get; set; }
+    [Parameter, SupplyParameterFromQuery] public string? city { get; set; }
+
+    private FullFacilityFilterItemsViewmodel FullFacilityFilterItems { get; set; } = new();
+    private Virtualize<FacilityCardViewmodel> virtualizeRef;
+    // protected override async Task OnInitializedAsync()
+    // {
+    //     serverUrl = Config["AppSettings:AdminServerUrl"]!;
+    //     States = await InternalLocationService!.GetStateWithoutHttpAsync(serverUrl)!;
+
+    //     Fields = mapper.Map<FacilityFieldsViewmodel>(FacilityService.GetListFacilityFields());
+
+    //     // if (!string.IsNullOrWhiteSpace(condition)) FilterItems.Condition = condition;
+    //     // if (!string.IsNullOrWhiteSpace(amenity)) FilterItems.Amenity = amenity;
+    //     // if (!string.IsNullOrWhiteSpace(treatment)) FilterItems.Treatment = treatment.ToLowerInvariant();
+    //     // if (!string.IsNullOrWhiteSpace(insurance)) FilterItems.Insurance = insurance;
+    //     // if (!string.IsNullOrWhiteSpace(loc)) FilterItems.Loc = loc;
+    //     // if (!string.IsNullOrWhiteSpace(wwt)) FilterItems.Wwt = wwt;
+    //     // if (!string.IsNullOrWhiteSpace(swt)) FilterItems.Swt = swt;
+
+
+    //     if (!string.IsNullOrWhiteSpace(state))
+    //         FullFacilityFilterItems.States.Add(state);
+
+    //     if (!string.IsNullOrWhiteSpace(condition)) 
+    //         FullFacilityFilterItems.Conditions.Add(new ConditionViewModel()
+    //         {
+    //             Name = condition
+    //         });
+    //     if (!string.IsNullOrWhiteSpace(amenity)) 
+    //         FullFacilityFilterItems.Amenities.Add(new AmenityViewmodel()
+    //         {
+    //             Name = amenity
+    //         });
+    //     if (!string.IsNullOrWhiteSpace(treatment))
+    //         FullFacilityFilterItems.Treatments.Add(new TreatmentViewmodel
+    //             {
+    //                 Name = treatment.ToLowerInvariant()
+    //             });
+    //     if (!string.IsNullOrWhiteSpace(insurance))
+    //         FullFacilityFilterItems.Insurances.Add(new InsuranceViewModel
+    //             {
+    //                 Name = insurance
+    //             });
+
+    //     if (!string.IsNullOrWhiteSpace(loc)) 
+    //         FullFacilityFilterItems.Locs.Add(new LocViewmodel
+    //             {
+    //                 Name = loc
+    //             });
+    //     if (!string.IsNullOrWhiteSpace(wwt)) 
+    //         FullFacilityFilterItems.Wwts.Add(new WwtViewModel
+    //         {
+    //             Name = wwt
+    //         }) ;
+    //     if (!string.IsNullOrWhiteSpace(swt)) 
+    //         FullFacilityFilterItems.Swts.Add(new SwtViewModel
+    //         {
+    //             Name = swt
+    //         }) ;
+    // }
+
+    // private async ValueTask<ItemsProviderResult<FacilityCardViewmodel>> LoadFacilities(ItemsProviderRequest request)
+    // {
+    //     var result = await FacilityService.GetFacilityCardsAsync(request.StartIndex / 100 + 1, 100, city,
+    //         mapper.Map<FullFacilityFilterItemsDto>(FullFacilityFilterItems));
+    //     return new ItemsProviderResult<FacilityCardViewmodel>(mapper.Map<List<FacilityCardViewmodel>>(result.Item1), result.totalCount);
+    // }
 
     private void StateToggleSelectItems(string selectedItem)
     {
@@ -525,7 +647,11 @@
     }
     async Task ApplyFilter()
     {
-        await virtualizeRef.RefreshDataAsync();
+        FacilityCards = new();
+        page = 1;
+        IsLoading = false;
+        HasMore = true;
+        await LoadMore();
     }
 
     private void Uncheck(int id)
