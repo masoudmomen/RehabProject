@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -10,6 +10,10 @@
     <Compile Remove="Migrations\20251212093919_InitialIdentity.cs" />
     <Compile Remove="Migrations\20251212093919_InitialIdentity.Designer.cs" />
     <Compile Remove="Migrations\ApplicationDbContextModelSnapshot.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="wwwroot\uploads\facilities\images\19bf1ecd-3438-4eaa-8913-4d3228a58456.jfif" />
   </ItemGroup>
 
   <ItemGroup>
