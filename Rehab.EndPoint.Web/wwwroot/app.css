@@ -205,7 +205,13 @@ h2.section-title {
     }
 }
 
- 
+button#scrollToTopBtn {
+    position: fixed;
+    bottom: 100px;
+    width: 48px;
+    height: 48px;
+    align-items: center;
+}
 /*@keyframes glow {
     from {
         filter: brightness(1) drop-shadow(0 0 0px rgba(0, 123, 255, 0));
