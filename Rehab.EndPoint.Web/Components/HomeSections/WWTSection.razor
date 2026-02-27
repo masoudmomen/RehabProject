@@ -52,7 +52,7 @@
     protected override void OnInitialized()
     {
         serverURL = Config["AppSettings:AdminServerUrl"];
-        WwtCards = mapper.Map<List<CardViewModel>>(WwtService.GetList().Take(7));
+        WwtCards = mapper.Map<List<CardViewModel>>( WwtService.GetList().Take(7));
         WwtsAll = mapper.Map<List<CardViewModel>>(WwtService.GetList());
 
     }
