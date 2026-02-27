@@ -30,130 +30,160 @@
             </div>
         </div>
 
-        <div class="bg-white shadow position-relative z  py-5">
-            <h2 class="section-title">Insurances</h2>
-            <div class="container px-3  insurance">
-            
-                <div class="cards-grid">
-                    @foreach (var item in facility.Insurances)
-                    {
-                        <Card Title="@item.Name"
-                              Image="@(serverUrl + item.Logo)"
-                              Description="@item.Description"
-                              CharacterLimit="100"
-                              CardLink="#" />
-                    }
-                </div>
-            </div>
-        </div>
+        @if(facility.Insurances.Count>0)
+        {
+            <div class="bg-white shadow position-relative z  py-5">
+                <h2 class="section-title">Insurances</h2>
+                <div class="container px-3  insurance">
 
-        <div class="Accreditations py-5">
-            <div class="container px-3  mt-5  ">
-                <h2 class="section-title sticky-title"> Amenities </h2>
-                @foreach (var item in facility.Amenities)
-                {
-                    <ItemRowComponent Title="@item.Name"
-                                      Image="@(serverUrl + item.Logo)"
-                                      Description="@item.Description"
-                                      IconClass="fa-solid fa-person-swimming" />
-                }
-            </div>
-
-        </div>
-        <div class="bg-white shadow position-relative py-5">
-            <div class="container px-3  ">
-                <h2 class="section-title"> Accreditations </h2>
-                <div class="cards-grid">
-                    @foreach (var item in facility.Accreditations)
-                    {
-                        <Card Title="@item.Name"
-                              Image="@(serverUrl + item.Logo)"
-                              Description="@item.Description"
-                              CharacterLimit="50"
-                              CardLink="#"
-                              IconClass="fa-solid fa-certificate" />
-                    }
-                </div>
-            </div>
-        </div>
-        <div class="py-5">
-            <h2 class="section-title"> Highlights </h2>
-            <div class="container px-3  mt-5  ">
-                @foreach (var item in facility.Highlights)
-                {
-                    <ItemRowComponent Title="@item.Name"
-                                      Image="@(serverUrl + item.Logo)"
-                                      Description="@item.Description"
-                                      IconClass="fa-solid fa-star" />
-                }
-            </div>
-        </div>
-
-
-        <div class="bg-white shadow position-relative py-5">
-            <div class="container px-3 ">
-                <h2 class="section-title"> Who We Treat </h2>
-                <div class="cards-grid">
-                    @foreach (var item in facility.Wwts)
-                    {
-                        <Card Title="@item.Name"
-                              Image="@(serverUrl + item.Logo)"
-                              Description="@item.Description"
-                              IconClass="fa-solid fa-hands-helping" />
-                    }
-                </div>
-            </div>
-        </div>
-        <div class="container px-3  py-5">
-            <h2 class="section-title"> Treatments </h2>
-            @foreach (var item in facility.Treatments)
-            {
-                <ItemRowComponent Title="@item.Name"
+                    <div class="cards-grid">
+                        @foreach (var item in facility.Insurances)
+                        {
+                            <Card Title="@item.Name"
                                   Image="@(serverUrl + item.Logo)"
                                   Description="@item.Description"
-                                  IconClass="fa-solid fa-hand-holding-medical" />
-            }
-        </div>
+                                  CharacterLimit="100"
+                                  CardLink="#" />
+                        }
+                    </div>
+                </div>
+            </div>
+        }
 
-        <div class="bg-white shadow position-relative py-5">
-            <div class="container px-3  ">
-                <h2 class="section-title"> Level Of Cares </h2>
-                <div class="cards-grid loc">
-                    @foreach (var item in facility.Locs)
+        @if (facility.Amenities.Count > 0)
+        {
+            <div class="Accreditations py-5">
+                <div class="container px-3  mt-5  ">
+                    <h2 class="section-title sticky-title"> Amenities </h2>
+                    @foreach (var item in facility.Amenities)
                     {
-                        <Card Title="@item.Name"
-                              Image="@(serverUrl + item.Logo)"
-                              Description="@item.Description"
-                              IconClass="fa-solid fa-layer-group" />
+                        <ItemRowComponent Title="@item.Name"
+                                          Image="@(serverUrl + item.Logo)"
+                                          Description="@item.Description"
+                                          IconClass="fa-solid fa-person-swimming" />
+                    }
+                </div>
+
+            </div>
+        }
+        @if (facility.Accreditations.Count > 0)
+        {
+            <div class="bg-white shadow position-relative py-5">
+                <div class="container px-3  ">
+                    <h2 class="section-title"> Accreditations </h2>
+                    <div class="cards-grid">
+                        @foreach (var item in facility.Accreditations)
+                        {
+                            <Card Title="@item.Name"
+                                  Image="@(serverUrl + item.Logo)"
+                                  Description="@item.Description"
+                                  CharacterLimit="50"
+                                  CardLink="#"
+                                  IconClass="fa-solid fa-certificate" />
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+
+        @if (facility.Highlights.Count > 0)
+        {
+            <div class="py-5">
+                <h2 class="section-title"> Highlights </h2>
+                <div class="container px-3  mt-5  ">
+                    @foreach (var item in facility.Highlights)
+                    {
+                        <ItemRowComponent Title="@item.Name"
+                                          Image="@(serverUrl + item.Logo)"
+                                          Description="@item.Description"
+                                          IconClass="fa-solid fa-star" />
                     }
                 </div>
             </div>
-        </div>
-        <div class="container px-3  py-5">
-            <h2 class="section-title"> Conditions </h2>
+        }
 
-            @foreach (var item in facility.Conditions)
-            {
-                <ItemRowComponent Title="@item.Name"
+        @if (facility.Wwts.Count > 0)
+        {
+            <div class="bg-white shadow position-relative py-5">
+                <div class="container px-3 ">
+                    <h2 class="section-title"> Who We Treat </h2>
+                    <div class="cards-grid">
+                        @foreach (var item in facility.Wwts)
+                        {
+                            <Card Title="@item.Name"
                                   Image="@(serverUrl + item.Logo)"
                                   Description="@item.Description"
-                                  IconClass="fa-solid fa-notes-medical" />
-            }
+                                  IconClass="fa-solid fa-hands-helping" />
+                        }
+                    </div>
+                </div>
+            </div>
+        }
 
-        </div>
-        <div class="bg-white shadow position-relative py-5">
-            <div class="container px-3">
-                <h2 class="section-title"> Substances We Treat</h2>
-                @foreach (var item in facility.Swts)
+        @if (facility.Treatments.Count > 0)
+        {
+            <div class="container px-3  py-5">
+                <h2 class="section-title"> Treatments </h2>
+                @foreach (var item in facility.Treatments)
                 {
                     <ItemRowComponent Title="@item.Name"
                                       Image="@(serverUrl + item.Logo)"
                                       Description="@item.Description"
-                                      IconClass="fa-solid fa-pills" />
+                                      IconClass="fa-solid fa-hand-holding-medical" />
+                }
+            </div>
+        }
+
+        @if (facility.Locs.Count > 0)
+        {
+            <div class="bg-white shadow position-relative py-5">
+                <div class="container px-3  ">
+                    <h2 class="section-title"> Level Of Cares </h2>
+                    <div class="cards-grid loc">
+                        @foreach (var item in facility.Locs)
+                        {
+                            <Card Title="@item.Name"
+                                  Image="@(serverUrl + item.Logo)"
+                                  Description="@item.Description"
+                                  IconClass="fa-solid fa-layer-group" />
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+
+        @if (facility.Conditions.Count > 0)
+        {
+            <div class="container px-3  py-5">
+                <h2 class="section-title"> Conditions </h2>
+
+                @foreach (var item in facility.Conditions)
+                {
+                    <ItemRowComponent Title="@item.Name"
+                                      Image="@(serverUrl + item.Logo)"
+                                      Description="@item.Description"
+                                      IconClass="fa-solid fa-notes-medical" />
                 }
 
             </div>
-        </div>
+        }
+
+        @if (facility.Swts.Count > 0)
+        {
+            <div class="bg-white shadow position-relative py-5">
+                <div class="container px-3">
+                    <h2 class="section-title"> Substances We Treat</h2>
+                    @foreach (var item in facility.Swts)
+                    {
+                        <ItemRowComponent Title="@item.Name"
+                                          Image="@(serverUrl + item.Logo)"
+                                          Description="@item.Description"
+                                          IconClass="fa-solid fa-pills" />
+                    }
+
+                </div>
+            </div>
+        }
 
     }
 </div>
