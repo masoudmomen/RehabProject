@@ -1,9 +1,12 @@
 ﻿@using Rehab.EndPoint.Web.ViewModels
-<div class="col-12 col-md-3 mb-2  ">
-    <div class="card @CustomClass  h-100 rounded-2 p-2">
-        <div class="card-image-container">
-            <img src="/images/conditions/@Card.Image" class="card-image" alt="@Card.Name">
-        </div>
+
+<div class="card  h-100 px-0 rounded-2 border-0  @CustomClass">
+ 
+            <img src="@((string.IsNullOrWhiteSpace(Card.Image) ? "/images/nopic.jpg" : $"{prefixImageURL}/{Card.Image}"))"
+                 class="card-img-top card-img-fixed"
+                 alt="@Card.Name"
+                 onerror="this.onerror=null; this.src='/images/nopic.jpg';" />
+    <div class="card-body d-flex flex-column">
      <h5 class="card-title">@Card.Name</h5>
         <p class="card-text">
             @((MarkupString)(Card.Description.Length > CharacterLimit
@@ -21,9 +24,11 @@
             }
         </p>
         
-        <a href="#"  class="btn show-facilities-btn rounded-2 w-100">Show Facilities</a>
+
+        <a href="/facilities?condition=@Uri.EscapeDataString(Card.Name!)" class="btn btn-primary-gradient mt-auto"
+           target="_blank">View facilities </a>
     </div>
-</div>
+ </div>
 @if (!string.IsNullOrEmpty(Card.Description))
 {
     <div class="modal fade custom-modal-backdrop"
@@ -54,4 +59,6 @@
     public string CustomClass { get; set;}
     [Parameter]
     public CardViewModel Card{ get; set; }
+    [Parameter]
+    public string prefixImageURL { get; set; } = "/images/";
 }

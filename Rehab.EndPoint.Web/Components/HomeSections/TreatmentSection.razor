@@ -9,16 +9,16 @@
     <div class="container">
         <h2 class="section-title text-center">Treatments</h2>
 
-        <div class="row mb-3 px-3 justify-content-center align-items-stretch">
+        <div class="row mb-3 px-0 justify-content-center align-items-stretch">
             @foreach (var card in TreatmentCards)
             {
-                <div class="col-12 col-md-3 mb-2">
+                <div class="col-12 px-0 col-md-3 mb-2 px-0 px-md-2">
                    <TreatmentCardComponent Card="card" prefixImageURL="@serverUrl" />
                 </div>
             }
         </div>
 
-        <div class="row px-4 mb-4">
+        <div class="row px-3 mb-4">
             <a class="border-gradient text-blue-dark text-center" target="_blank" href="/TreatmentsList">Visit All Treatments</a>
         </div>
 

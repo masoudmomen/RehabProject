@@ -1,6 +1,6 @@
 ﻿::deep .card {
     border-radius: 10px;
-    padding: 10px;
+ 
     background: #ffe3ff;
     background: -webkit-linear-gradient(180deg,rgba(255, 227, 255, 1) 1%, rgba(238, 238, 238, 1) 50%, rgba(212, 249, 255, 1) 100%);
     background: -moz-linear-gradient(180deg,rgba(255, 227, 255, 1) 1%, rgba(238, 238, 238, 1) 50%, rgba(212, 249, 255, 1) 100%);
@@ -16,11 +16,6 @@
     ::deep .card:hover {
         transform: scale(1.05);
     }
- 
-
-
-
-
 
     .btn.btn-blue-dark {
         background-color: #0a58ca;
