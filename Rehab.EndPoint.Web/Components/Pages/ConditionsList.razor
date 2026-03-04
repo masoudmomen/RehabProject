@@ -1,9 +1,9 @@
-﻿@page "/TreatmentsList"
-@using Rehab.EndPoint.Web.ViewModels
+﻿@page "/ConditionsList"
 @using Rehab.EndPoint.Web.Components.Common
+@using Rehab.EndPoint.Web.ViewModels
 @using AutoMapper
-@using Rehab.Application.Treatments
-@inject ITreatmentService TreatmentService;
+@using Rehab.Application.Conditions
+@inject IConditionService ConditionService
 @inject IMapper mapper;
 <div class="container">
     <input type="checkbox" id="sidebarToggle" hidden />
@@ -14,15 +14,15 @@
             <div class="">
                 <input class="search-input rounded-3 p-2 bg-white w-100 fs-7" placeholder="Treatment name" />
             </div>
-            <div class="top-treatments mt-4">
+            <div class="top-conditions mt-4">
                 <h3 class="section-title">
-                    Most Popular Treatments
+                    Most Popular Conditions
                 </h3>
                 <div class="row mb-3 px-0 align-items-stretch">
-                    @foreach (var card in SpecialTreatment)
+                    @foreach (var card in SpecialConditions)
                     {
                         <div class="col-12 col-md-3 mb-2">
-                            <TreatmentCardComponent Card="card"
+                            <ConditionCardComponent Card="card"
                                                     CharacterLimit="120"
                                                     CustomClass="special"
                                                     prefixImageURL="@serverUrl" />
@@ -31,15 +31,15 @@
                 </div>
 
             </div>
-            <div class="all-treatments mt-4">
+            <div class="all-conditon mt-4">
                 <h3 class="section-title">
-                    All Treatments
+                    All Conditions
                 </h3>
                 <div class="row mb-3 px-0 align-items-stretch">
-                    @foreach (var card in AllTreatment)
+                    @foreach (var card in AllConditions )
                     {
                         <div class="col-12 col-md-3 mb-2">
-                            <TreatmentCardComponent Card="card"
+                            <ConditionCardComponent Card="card"
                                CustomClass="" />
                         </div>
                     }
@@ -52,62 +52,17 @@
         </div>
 
     </div>
-</div>
+    </div>
 @code {
-    private List<CardViewModel> SpecialTreatment = new();
-    private List<CardViewModel> AllTreatment = new();
+    private List<CardViewModel> SpecialConditions = new();
+    private List<CardViewModel> AllConditions = new();
     private string? serverUrl;
     [Inject] IConfiguration Config { get; set; } = default!;
+
     protected override void OnInitialized()
     {
         serverUrl = Config["AppSettings:AdminServerUrl"];
-        SpecialTreatment = mapper.Map<List<CardViewModel>>(TreatmentService.GetList().Take(4));
-        AllTreatment = mapper.Map<List<CardViewModel>>(TreatmentService.GetList());
+        SpecialConditions = mapper.Map<List<CardViewModel>>(ConditionService.GetList().Take(4));
+        AllConditions = mapper.Map<List<CardViewModel>>(ConditionService.GetList());
     }
 }
-<style>
-
-    h2.page-title {
-        font-size: 1.5rem;
-    }
-
-    h3.section-title {
-        font-size: 1rem;
-        border-bottom: solid 2px;
-        width: 30%;
-        padding-bottom: 10px;
-        border-color: #dee2e6;
-    }
-
-    h3.section-title::after{
-        display:none;
-    }
-        
-
-    .search-input {
-        width: 100% !important;
-        font-size: 12px;
-        max-width: 100% !important;
-    }
-
-    h3.sidebar-header {
-        font-size: 0.9rem;
-        font-weight: bold;
-        border-bottom: solid 2px #eeee;
-    }
-
-    .sidebar ul {
-        padding: 0px;
-        margin: 0px;
-    }
-
-        .sidebar ul li {
-            list-style: none;
-        }
-
-            .sidebar ul li a {
-                color: #31c5fc;
-                text-decoration: none;
-                font-size: 0.8rem;
-            }
-</style>
