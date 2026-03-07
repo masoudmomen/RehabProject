@@ -65,14 +65,13 @@
                         {
                             <li @onmousedown="() => ConditionToggleSelectItems(item)">
                                 <label class="dropdown-item">
-                                    <input type="checkbox" value="@item" id="@item.Id" />
+                                    <input type="checkbox" value="@item" id="condition-@item.Id" />
                                      @item.Name
                                 </label>
                             </li>
                         }
                     </ul>
                 </div>
-
                 <!-- Treatments Dropdown -->
                 <div class="dropdown filter-dropdown">
                     <button class="btn dropdown-toggle"
@@ -87,7 +86,7 @@
                         {
                             <li @onmousedown="() => TreatmentToggleSelectItems(item)">
                                 <label class="dropdown-item">
-                                    <input type="checkbox" value="@item" id="@item.Id"> @item.Name
+                                    <input type="checkbox" value="@item" id="treatment-@item.Id"> @item.Name
                                 </label>
                             </li>
                         }
@@ -107,7 +106,7 @@
                         {
                             <li @onmousedown="() => WwtToggleSelectItems(item)">
                                 <label class="dropdown-item">
-                                    <input type="checkbox" value="@item" id="@item.Id"> @item.Name
+                                    <input type="checkbox" value="@item" id="wwt-@item.Id"> @item.Name
                                 </label>
                             </li>
                         }
@@ -127,14 +126,13 @@
                         {
                             <li @onmousedown="() => LocToggleSelectItems(item)">
                                 <label class="dropdown-item">
-                                    <input type="checkbox" value="@item" id="@item.Id"> @item.Name
+                                    <input type="checkbox" value="@item" id="loc-@item.Id"> @item.Name
                                 </label>
                             </li>
                         }
                     </ul>
                 </div>
-            
-                <!-- Amenities DropDown -->
+                <!-- Insurances DropDown -->
                 <div class="dropdown filter-dropdown">
                     <button class="btn dropdown-toggle"
                             type="button"
@@ -148,14 +146,13 @@
                         {
                             <li @onmousedown="() => InsuranceToggleSelectItems(item)">
                                 <label class="dropdown-item">
-                                    <input type="checkbox" value="@item" id="@item.Id"> @item.Name
+                                    <input type="checkbox" value="@item" id="insurance-@item.Id"> @item.Name
                                 </label>
                             </li>
                         }
                     </ul>
                 </div>
-            
-                <!-- Insurances DropDown -->
+                <!-- Amenities DropDown -->
                 <div class="dropdown filter-dropdown">
                     <button class="btn dropdown-toggle"
                             type="button"
@@ -169,7 +166,7 @@
                         {
                             <li @onmousedown="() => AmenityToggleSelectItems(item)">
                                 <label class="dropdown-item">
-                                    <input type="checkbox" value="@item" id="@item.Id"> @item.Name
+                                    <input type="checkbox" value="@item" id="amenity-@item.Id"> @item.Name
                                 </label>
                             </li>
                         }
@@ -210,12 +207,13 @@
                         <div class="filter-items">
                             @foreach (var item in FullFacilityFilterItems.Conditions)
                             {
+                                string tagId = "condition-" + item.Id.ToString();
                                 <span class="filter-tag">
                                     @item.Name
                                     <button type="button" class="remove-button" aria-label="Remove filter"
                                             @onclick="() => {
                                             FullFacilityFilterItems.Conditions.Remove(item);
-                                                Uncheck(item.Id);}">
+                                                Uncheck(tagId);}">
                                         ×
                                     </button>
                                 </span>
@@ -231,11 +229,12 @@
                         <div class="filter-items">
                             @foreach (var item in FullFacilityFilterItems.Treatments)
                             {
+                                string tagId = "treatment-" + item.Id.ToString();
                                 <span class="filter-tag">
                                     @item.Name
                                     <button type="button" class="remove-button" aria-label="Remove filter"
                                             @onclick="() => { FullFacilityFilterItems.Treatments.Remove(item);
-                                            Uncheck(item.Id);}">
+                                            Uncheck(tagId);}">
                                         ×
                                     </button>
                                 </span>
@@ -252,11 +251,12 @@
                         <div class="filter-items">
                             @foreach (var item in FullFacilityFilterItems.Wwts)
                             {
+                                string tagId = "wwt-" + item.Id.ToString();
                                 <span class="filter-tag">
                                     @item.Name
                                     <button type="button" class="remove-button" aria-label="Remove filter"
                                             @onclick="() => { FullFacilityFilterItems.Wwts.Remove(item);
-                                            Uncheck(item.Id);}">
+                                            Uncheck(tagId);}">
                                         ×
                                     </button>
                                 </span>
@@ -272,11 +272,12 @@
                         <div class="filter-items">
                             @foreach (var item in FullFacilityFilterItems.Locs)
                             {
+                                string tagId = "loc-" + item.Id.ToString();
                                 <span class="filter-tag">
                                     @item.Name
                                     <button type="button" class="remove-button" aria-label="Remove filter"
                                             @onclick="() => { FullFacilityFilterItems.Locs.Remove(item);
-                                            Uncheck(item.Id);}">
+                                            Uncheck(tagId);}">
                                         ×
                                     </button>
                                 </span>
@@ -292,11 +293,12 @@
                         <div class="filter-items">
                             @foreach (var item in FullFacilityFilterItems.Insurances)
                             {
+                                string tagId = "insurance-" + item.Id.ToString();
                                 <span class="filter-tag">
                                     @item.Name
                                     <button type="button" class="remove-button" aria-label="Remove filter"
                                             @onclick="() => { FullFacilityFilterItems.Insurances.Remove(item);
-                                            Uncheck(item.Id);}">
+                                            Uncheck(tagId);}">
                                         ×
                                     </button>
                                 </span>
@@ -312,11 +314,12 @@
                         <div class="filter-items">
                             @foreach (var item in FullFacilityFilterItems.Amenities)
                             {
+                                string tagId = "amenity-" + item.Id.ToString();
                                 <span class="filter-tag">
                                     @item.Name
                                     <button type="button" class="remove-button" aria-label="Remove filter"
                                             @onclick="() => { FullFacilityFilterItems.Amenities.Remove(item);
-                                            Uncheck(item.Id);}">
+                                            Uncheck(tagId);}">
                                         ×
                                     </button>
                                 </span>
@@ -334,28 +337,12 @@
         
             <div class="container px-0 mb-5">
                 <div class="row g-4">
-
-
-                    @* <Virtualize @ref="virtualizeRef" ItemsProvider="LoadFacilities" Context="facility" ItemSize="320" TItem="FacilityCardViewmodel">
-                        <ItemContent Context="facility">
-                            <div class="col-12 col-md-3">
-                                <FacilityItem ShowTags="false" FacilityCard="facility" CustomClass="small-card" />
-                            </div>
-                        </ItemContent>
-                    </Virtualize> *@
-
-
-
-                @foreach (var facility in FacilityCards)
+                    @foreach (var facility in FacilityCards)
                     {
                         <div class="col-md-4 mb-3">
                             <FacilityItem ShowTags="false" FacilityCard="facility" CustomClass="small-card" />
                         </div>
                     }
-
-
-
-
                 </div>
                 @if (IsLoading)
                 {
@@ -383,7 +370,7 @@
     private bool IsLoading = false;
     private bool HasMore = true;
 
-    private DotNetObjectReference<Facilities>? objRef;
+    private DotNetObjectReference<Facilities>? objRefState;
 
     protected override async Task OnInitializedAsync()
     {
@@ -441,10 +428,10 @@
     {
         if (firstRender)
         {
-            objRef = DotNetObjectReference.Create(this);
+            objRefState = DotNetObjectReference.Create(this);
             await JS.InvokeVoidAsync("infiniteScroll.initialize",
                 "scrollTrigger",
-                objRef);
+                objRefState);
         }
     }
 
@@ -472,7 +459,7 @@
 
     public void Dispose()
     {
-        objRef?.Dispose();
+        objRefState?.Dispose();
     }
 
 
@@ -494,7 +481,6 @@
     [Parameter, SupplyParameterFromQuery] public string? city { get; set; }
 
     private FullFacilityFilterItemsViewmodel FullFacilityFilterItems { get; set; } = new();
-    private Virtualize<FacilityCardViewmodel> virtualizeRef;
     // protected override async Task OnInitializedAsync()
     // {
     //     serverUrl = Config["AppSettings:AdminServerUrl"]!;
@@ -614,13 +600,13 @@
         await LoadMore();
     }
 
-    private void Uncheck(int id)
+    private void Uncheck(string id)
     {
         HandleCheckbox(id, false);
     }
     
 
-    private void HandleCheckbox(int id, bool state)
+    private void HandleCheckbox(string id, bool state)
     {
          JS.InvokeVoidAsync("setCheckboxState", id, state);
     }

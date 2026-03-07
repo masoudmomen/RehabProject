@@ -4,24 +4,11 @@
 @using Rehab.EndPoint.Web.Components.Common
 @using Rehab.EndPoint.Web.Components.Facility
 @using Rehab.EndPoint.Web.Data
-@using Rehab.Application.Accreditations
-@using Rehab.Application.Amenities
 @using Rehab.Application.Facilities
-@using Rehab.Application.Highlights
-@using Rehab.Application.Insurances
-@using Rehab.Application.SubstancesWeTreat
-@using Rehab.Application.Treatments
-@using Rehab.Application.WhoWeTreat
 
-@inject IAmenityService AmenitiesService
-@inject IInsuranceService InsuranceService
-@inject IAccreditationService AccreditationService
-@inject IHighlightService HighlightService
-@inject IWwtService WwtService
-@inject ITreatmentService TreatmentService
-@inject ISubstancesWeTreatService SwtService
 @inject IFacilityService FacilityService
 @inject AutoMapper.IMapper mapper
+@inject IJSRuntime JS
 
 <div class="container  rounded-2 py-2">
     <BreadCrumbComponent Items="@breadCrumbItems"></BreadCrumbComponent>
@@ -32,6 +19,150 @@
     <div class="row">
         <div class="col-md-9">
             <SearchComponent searchTextFromComponent="@searchText" ApplySearchTextCallback="ApplySearch"></SearchComponent>
+
+            @* report of filtering *@
+            <div class="results-filters">
+                <h5 class="mt-2">Filtered Items:</h5>
+
+
+                @if (FullFacilityFilterItems.Conditions.Count > 0)
+                {
+                    <div class="filter-group">
+                        <span class="filter-title">Condition:</span>
+                        <div class="filter-items">
+                            @foreach (var item in FullFacilityFilterItems.Conditions)
+                            {
+                                string tagId = "condition-" + item.Id.ToString();
+                                <span class="filter-tag">
+                                    @item.Name
+                                    <button type="button" class="remove-button" aria-label="Remove filter"
+                                            @onclick="() => {
+                                            FullFacilityFilterItems.Conditions.Remove(item);
+                                                Uncheck(tagId);}">
+                                        ×
+                                    </button>
+                                </span>
+                            }
+                        </div>
+                    </div>
+                }
+
+                @if (FullFacilityFilterItems.Treatments.Count > 0)
+                {
+                    <div class="filter-group">
+                        <span class="filter-title">Treatment:</span>
+                        <div class="filter-items">
+                            @foreach (var item in FullFacilityFilterItems.Treatments)
+                            {
+                                string tagId = "treatment-" + item.Id.ToString();
+                                <span class="filter-tag">
+                                    @item.Name
+                                    <button type="button" class="remove-button" aria-label="Remove filter"
+                                            @onclick="() => { FullFacilityFilterItems.Treatments.Remove(item);
+                                            Uncheck(tagId);}">
+                                        ×
+                                    </button>
+                                </span>
+                            }
+                        </div>
+                    </div>
+                }
+
+
+                @if (FullFacilityFilterItems.Wwts.Count > 0)
+                {
+                    <div class="filter-group">
+                        <span class="filter-title">Who We Treat:</span>
+                        <div class="filter-items">
+                            @foreach (var item in FullFacilityFilterItems.Wwts)
+                            {
+                                string tagId = "wwt-" + item.Id.ToString();
+                                <span class="filter-tag">
+                                    @item.Name
+                                    <button type="button" class="remove-button" aria-label="Remove filter"
+                                            @onclick="() => { FullFacilityFilterItems.Wwts.Remove(item);
+                                            Uncheck(tagId);}">
+                                        ×
+                                    </button>
+                                </span>
+                            }
+                        </div>
+                    </div>
+                }
+
+                @if (FullFacilityFilterItems.Locs.Count > 0)
+                {
+                    <div class="filter-group">
+                        <span class="filter-title">Level of Care:</span>
+                        <div class="filter-items">
+                            @foreach (var item in FullFacilityFilterItems.Locs)
+                            {
+                                string tagId = "loc-" + item.Id.ToString();
+                                <span class="filter-tag">
+                                    @item.Name
+                                    <button type="button" class="remove-button" aria-label="Remove filter"
+                                            @onclick="() => { FullFacilityFilterItems.Locs.Remove(item);
+                                            Uncheck(tagId);}">
+                                        ×
+                                    </button>
+                                </span>
+                            }
+                        </div>
+                    </div>
+                }
+
+                @if (FullFacilityFilterItems.Insurances.Count > 0)
+                {
+                    <div class="filter-group">
+                        <span class="filter-title">Insurance:</span>
+                        <div class="filter-items">
+                            @foreach (var item in FullFacilityFilterItems.Insurances)
+                            {
+                                string tagId = "insurance-" + item.Id.ToString();
+                                <span class="filter-tag">
+                                    @item.Name
+                                    <button type="button" class="remove-button" aria-label="Remove filter"
+                                            @onclick="() => { FullFacilityFilterItems.Insurances.Remove(item);
+                                            Uncheck(tagId);}">
+                                        ×
+                                    </button>
+                                </span>
+                            }
+                        </div>
+                    </div>
+                }
+
+                @if (FullFacilityFilterItems.Amenities.Count > 0)
+                {
+                    <div class="filter-group">
+                        <span class="filter-title">Amenity:</span>
+                        <div class="filter-items">
+                            @foreach (var item in FullFacilityFilterItems.Amenities)
+                            {
+                                string tagId = "amenity-" + item.Id.ToString();
+                                <span class="filter-tag">
+                                    @item.Name
+                                    <button type="button" class="remove-button" aria-label="Remove filter"
+                                            @onclick="() => { FullFacilityFilterItems.Amenities.Remove(item);
+                                            Uncheck(tagId);}">
+                                        ×
+                                    </button>
+                                </span>
+                            }
+                        </div>
+                    </div>
+                }
+
+                <button class="clear-filters" 
+                        @onclick="() => { 
+                            FullFacilityFilterItems = new();
+                            FullFacilityFilterItems.States.Add(statename);
+                            UnCheckAll();
+                            searchText = string.Empty;
+                            }">
+                    Clear all
+                </button>
+            </div>
             
             <div class="container mt-3 mb-5 featured-centers ">
                 <div class="d-md-none mb-3">
@@ -44,22 +175,25 @@
                 </div>
 
                 <div class="row g-4">
-                    <Virtualize @ref="virtualizeRef" ItemsProvider="LoadFacilities" Context="facility" ItemSize="320" TItem="FacilityCardViewmodel">
-                        <ItemContent Context="facility">
-                            <div class="col-12 col-md-3">
-                                <FacilityItem ShowTags="false" FacilityCard="facility" CustomClass="small-card" />
-                            </div>
-                        </ItemContent>
-                    </Virtualize>
+                    @foreach (var facility in FacilityCards)
+                    {
+                        <div class="col-md-4 mb-3">
+                            <FacilityItem ShowTags="false" FacilityCard="facility" CustomClass="small-card" />
+                        </div>
+                    }
                 </div>
+
+                @if (IsLoading)
+                {
+                    <p>Loading...</p>
+                }
+
+                <div id="scrollTrigger"></div>
             </div>
         </div>
         <div class="col-md-3 d-md-block">
-            <div class="border border-1 px-3 rounded-3 filter-sticky">
-                <FacilityFilter
-                    
-                    FilteredItems="FilteredItems"
-                    ApplyFilterCallback="ApplyFilter" />
+            <div class="border border-1 px-3 rounded-3 ">
+                <FacilityFilter ApplyFilterCallback="ApplyFilter" FullFacilityFilterItems="FullFacilityFilterItems"  />
             </div>
 
         </div>
@@ -69,37 +203,10 @@
 
 @code {
     [Parameter]
-    public string? statename { get; set; }
+    public string? statename { get; set; }   
+
     [Parameter]
     public string? searchText { get; set; }
-
-    public List<AmenityViewmodel>? Amenities { get; set; }
-    public List<InsuranceViewModel>? Insurances { get; set; }
-    public List<AccreditationViewmodel>? Accreditations { get; set; }
-    public List<HighlightViewmodel>? Highlights { get; set; }
-    public List<WwtViewModel>? Wwts { get; set; }
-    public List<TreatmentViewmodel>? Treatments { get; set; }
-    public List<SwtViewModel>? Swts { get; set; }
-
-    
-
-    // private bool _dataLoaded = false;
-    // protected override async Task OnAfterRenderAsync(bool firstRender)
-    // {
-    //     // if (!_dataLoaded)
-    //     // {
-    //         Amenities = mapper.Map<List<AmenityViewmodel>>(AmenitiesService.GetList());
-    //         Insurances = mapper.Map<List<InsuranceViewModel>>(InsuranceService.GetList());
-    //         Accreditations = mapper.Map<List<AccreditationViewmodel>>(AccreditationService.GetList());
-    //         Highlights = mapper.Map<List<HighlightViewmodel>>(HighlightService.GetList());
-    //         Wwts = mapper.Map<List<WwtViewModel>>(WwtService.GetList());
-    //         Treatments = mapper.Map<List<TreatmentViewmodel>>(TreatmentService.GetList());
-    //         Swts = mapper.Map<List<SwtViewModel>>(SwtService.GetList());
-
-    //     //     _dataLoaded = true;
-    //     // }
-
-    // }
 
     private List<BreadCrumbComponent.BreadCrumbItem> breadCrumbItems = new();
     public FacilityFilterItems FilteredItems { get; set; } = new();
@@ -114,15 +221,11 @@
         };
 
     }
-
-    private Virtualize<FacilityCardViewmodel> virtualizeRef;
-    private List<FacilityCardViewmodel>? FacilityCards { get; set; }
-
     private string GetStateImagePath()
     {
         if (string.IsNullOrWhiteSpace(statename))
         {
-            return "/img/statesimages/no-image.jpg";
+            return "img/statesimages/no-image.jpg";
         }
 
         var state = USStates.All.FirstOrDefault(s =>
@@ -133,33 +236,121 @@
 
         if (string.IsNullOrWhiteSpace(imageFileName))
         {
-            return "/img/statesimages/no-image.jpg";
+            return "img/statesimages/no-image.jpg";
         }
 
-        return $"/img/statesimages/{imageFileName}";
+        return $"img/statesimages/{imageFileName}";
     }
-
     private string GetStateDescription()
     {
         var stateLabel = string.IsNullOrWhiteSpace(statename) ? "this state" : statename;
         return $"Explore accredited recovery centers, resources, and support options across {stateLabel}.";
     }
 
+    //infinite scroll
+    //----------------------------------------------------------
 
-    private async ValueTask<ItemsProviderResult<FacilityCardViewmodel>> LoadFacilities(ItemsProviderRequest request)
+    private List<FacilityCardViewmodel> FacilityCards = new();
+    private int page = 1;
+    private int pageSize = 12;
+    private bool IsLoading = false;
+    private bool HasMore = true;
+
+    private DotNetObjectReference<States>? objRefState;
+
+    [Parameter]
+    public FullFacilityFilterItemsViewmodel FullFacilityFilterItems { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
     {
-        var result = await FacilityService.GetFacilityCardsAsync(request.StartIndex / 50 + 1, 50, statename, searchText, FilteredItems);
-        return new ItemsProviderResult<FacilityCardViewmodel>(mapper.Map<List<FacilityCardViewmodel>>(result.Item1), result.totalCount);
+        if (statename.Contains("-")) statename = statename.Replace("-", " ");
+        FullFacilityFilterItems.States.Add(statename);
+
+        //await LoadMore();
     }
 
-    async Task ApplyFilter(FacilityFilterItems facilityFilterItems)
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        FilteredItems = facilityFilterItems;
-        await virtualizeRef.RefreshDataAsync();
+        if (firstRender)
+        {
+            objRefState = DotNetObjectReference.Create(this);
+            await JS.InvokeVoidAsync("infiniteScroll.initialize",
+                "scrollTrigger",
+                objRefState);
+        }
+    }
+
+    [JSInvokable]
+    public async Task LoadMore()
+    {
+        if (IsLoading || !HasMore)
+            return;
+
+        IsLoading = true;
+        StateHasChanged();
+
+        var newItems = await FacilityService.GetFacilityCardsAsync(page, pageSize, "",
+        mapper.Map<FullFacilityFilterItemsDto>(FullFacilityFilterItems));
+
+        if (newItems.Item1.Count < pageSize)
+            HasMore = false;
+
+        FacilityCards.AddRange(mapper.Map<List<FacilityCardViewmodel>>(newItems.Item1));
+        page++;
+
+        IsLoading = false;
+        StateHasChanged();
+    }
+
+    public void Dispose()
+    {
+        objRefState?.Dispose();
+    }
+
+
+    //----------------------------------------------------------
+
+
+    async Task ApplyFilter(FullFacilityFilterItemsViewmodel FullFacilityFilterItemsArg)
+    {
+        this.FullFacilityFilterItems = FullFacilityFilterItemsArg;
+        FacilityCards = new();
+        page = 1;
+        IsLoading = false;
+        HasMore = true;
+        await LoadMore();
     }
     async Task ApplySearch(string searchTextFromComponent)
     {
-        searchText = searchTextFromComponent;
-        await virtualizeRef.RefreshDataAsync();
+        searchText = FullFacilityFilterItems.SearchText = searchTextFromComponent;
+        await ApplyFilter(FullFacilityFilterItems);
+    }
+
+
+
+
+    private void Uncheck(string id)
+    {
+        HandleCheckbox(id, false);
+    }
+    
+
+    private void HandleCheckbox(string id, bool state)
+    {
+         JS.InvokeVoidAsync("setCheckboxState", id, state);
+    }
+
+    private void UncheckState(string id)
+    {
+        HandleCheckboxState(id, false);
+    }
+    private void HandleCheckboxState(string id, bool state)
+    {
+         JS.InvokeVoidAsync("setCheckboxState", id, state);
+    }
+
+    private void UnCheckAll()
+    {
+         JS.InvokeVoidAsync("UnCheckAllCheckbox");
     }
 }
