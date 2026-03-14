@@ -32,6 +32,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="wwwroot\css\fonts\" />
     <Folder Include="wwwroot\lib\bootstrap\" />
   </ItemGroup>
 

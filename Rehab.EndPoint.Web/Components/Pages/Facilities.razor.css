@@ -1,6 +1,7 @@
 ﻿html, body {
     overflow-x: hidden;
 }
+
 .search-box {
     position: relative;
     max-width: 100%;
@@ -40,6 +41,27 @@
     margin-right: 0.5rem;
     white-space: nowrap;
 }
+
+.filter-search-group {
+    display: flex;
+}
+
+    .filter-search-group .filters-search-input {
+        padding: 5px !important;
+        width: 90%;
+        font-size: 0.8rem;
+    }
+    .filter-search-group .btn.btn-filter-search {
+        width: 10% !important;
+        border:none;
+        margin:1px;
+        color:#fff;
+
+    }
+    .filter-search-group .btn.btn-filter-search:hover {
+        transform: none !important;
+        background-color: var(--color-primary);
+    }
 
 .filter-items {
     display: flex;
@@ -88,11 +110,25 @@
     margin-bottom: 20px;
 }
 
+.filter-dropdown {
+    flex: 1 1 100px;
+    max-width: 200px;
+    box-sizing: border-box;
+}
+
+button.btn.dropdown-toggle.show {
+    background-color: var(--color-secondary);
+    color: #fff;
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
+}
+
 .filter-dropdown .dropdown-menu {
     padding: 0.5rem;
     min-width: 240px;
     font-size: 0.8rem;
 }
+
 
 .filter-dropdown input[type="checkbox"] {
     margin-right: 0.5rem;
@@ -103,6 +139,7 @@
 }
 
 .filter-dropdown .btn {
+    width: 100%;
     color: var(--color-secondary);
     border-color: var(--color-secondary);
     padding: 5px;
@@ -118,6 +155,11 @@
 ul.dropdown-menu.show {
     max-height: 200px;
     overflow-y: scroll;
+    border: solid 1px #6c34b9;
+    /* border-top: 0px; */
+    margin-top: -1px !important;
+    border-radius: 0;
+    /* background-color: #f0f0f0;
 }
 
 ul.dropdown-menu li label {
@@ -156,11 +198,13 @@ h3.sidebar-header {
 }
 
 /* DEFAULT layout */
+    /* smooth animation */
+    .layout-wrapper > div
 
-/* smooth animation */
-.layout-wrapper > div {
+{
     transition: all 0.3s ease;
 }
+
 .content-a {
     flex: 0 0 75%;
     max-width: 75%;
@@ -196,15 +240,19 @@ h3.sidebar-header {
         box-shadow: -10px 0 30px rgba(0,0,0,.15);
         transition: .35s ease;
     }
+
     .sidebar ul {
-        padding:0px;
+        padding: 0px;
     }
+
     #sidebarToggle:checked ~ .layout-wrapper .sidebar li {
-        display: flex;/*Centerized the icons*/
+        display: flex; /*Centerized the icons*/
     }
+
     #sidebarToggle:checked ~ .layout-wrapper .content-b {
         right: 0; /* slide in */
     }
+
     #sidebarToggle:checked ~ .sidebar-overlay {
         opacity: 1;
         pointer-events: auto;

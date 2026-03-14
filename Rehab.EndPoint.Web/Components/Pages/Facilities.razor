@@ -38,6 +38,14 @@
                     </button>
 
                     <ul class="dropdown-menu">
+                        <li>
+                         <div class="input-group filter-search-group mb-3 shadow-sm d-flex">
+                            <input type="text" class="form-control filters-search-input" placeholder="Search..." aria-label="State-Search" aria-describedby="button-addon2">
+                            <button class="btn btn-secondary btn-filter-search" type="button" id="button-addon2">
+                                 <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                        </li>
                         @if(States != null)
                         {
                             @foreach (var item in States)
@@ -61,6 +69,14 @@
                     </button>
 
                     <ul class="dropdown-menu">
+                          <li>
+                         <div class="input-group filter-search-group mb-3 shadow-sm d-flex">
+                            <input type="text" class="form-control filters-search-input" placeholder="Search..." aria-label="State-Search" aria-describedby="button-addon2">
+                            <button class="btn btn-secondary btn-filter-search" type="button" id="button-addon2">
+                                 <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                        </li>
                         @foreach (var item in Fields.Conditions!)
                         {
                             <li @onmousedown="() => ConditionToggleSelectItems(item)">
@@ -82,6 +98,14 @@
                     </button>
 
                     <ul class="dropdown-menu">
+                          <li>
+                         <div class="input-group filter-search-group mb-3 shadow-sm d-flex">
+                            <input type="text" class="form-control filters-search-input" placeholder="Search..." aria-label="State-Search" aria-describedby="button-addon2">
+                            <button class="btn btn-secondary btn-filter-search" type="button" id="button-addon2">
+                                 <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                        </li>
                         @foreach (var item in Fields.Treatments!)
                         {
                             <li @onmousedown="() => TreatmentToggleSelectItems(item)">
@@ -102,6 +126,14 @@
                     </button>
 
                     <ul class="dropdown-menu">
+                          <li>
+                         <div class="input-group filter-search-group mb-3 shadow-sm d-flex">
+                            <input type="text" class="form-control filters-search-input" placeholder="Search..." aria-label="State-Search" aria-describedby="button-addon2">
+                            <button class="btn btn-secondary btn-filter-search" type="button" id="button-addon2">
+                                 <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                        </li>
                         @foreach (var item in Fields.Wwts!)
                         {
                             <li @onmousedown="() => WwtToggleSelectItems(item)">
@@ -122,6 +154,14 @@
                     </button>
 
                     <ul class="dropdown-menu">
+                          <li>
+                         <div class="input-group filter-search-group mb-3 shadow-sm d-flex">
+                            <input type="text" class="form-control filters-search-input" placeholder="Search..." aria-label="State-Search" aria-describedby="button-addon2">
+                            <button class="btn btn-secondary btn-filter-search" type="button" id="button-addon2">
+                                 <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                        </li>
                         @foreach (var item in Fields.Locs!)
                         {
                             <li @onmousedown="() => LocToggleSelectItems(item)">
@@ -142,6 +182,14 @@
                     </button>
 
                     <ul class="dropdown-menu">
+                          <li>
+                         <div class="input-group filter-search-group mb-3 shadow-sm d-flex">
+                            <input type="text" class="form-control filters-search-input" placeholder="Search..." aria-label="State-Search" aria-describedby="button-addon2">
+                            <button class="btn btn-secondary btn-filter-search" type="button" id="button-addon2">
+                                 <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                        </li>
                         @foreach (var item in Fields.Insurances!)
                         {
                             <li @onmousedown="() => InsuranceToggleSelectItems(item)">
@@ -162,6 +210,14 @@
                     </button>
 
                     <ul class="dropdown-menu">
+                          <li>
+                         <div class="input-group filter-search-group mb-3 shadow-sm d-flex">
+                            <input type="text" class="form-control filters-search-input" placeholder="Search..." aria-label="State-Search" aria-describedby="button-addon2">
+                            <button class="btn btn-secondary btn-filter-search" type="button" id="button-addon2">
+                                 <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                        </li>
                         @foreach (var item in Fields.Amenities!)
                         {
                             <li @onmousedown="() => AmenityToggleSelectItems(item)">
@@ -172,12 +228,13 @@
                         }
                     </ul>
                 </div>
-            
-                <button class="btn btn-primary btn-group-lg w-25 text-nowrap" @onclick="ApplyFilter">Apply Filters</button>
-                <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
             </div>
-            
-            
+            <script src="/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+@*                 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+ *@            <div>
+                 <button class="btn btn-secondary btn-group-lg w-100 text-nowrap" @onclick="ApplyFilter">Apply Filters</button>
+            </div>
             <div class="results-filters">
                 <h3 class="sec-title">Filtered Items:</h3>
 
