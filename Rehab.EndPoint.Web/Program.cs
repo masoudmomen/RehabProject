@@ -26,11 +26,13 @@ builder.Services.AddRazorComponents()
 #region Connection String
 builder.Services.AddScoped<IDatabaseContext, DatabaseContext>();
 var connection = builder.Configuration["ConnectionString:sqlServer"];
-builder.Services.AddDbContext<DatabaseContext>(option=>option.UseSqlServer(connection));
-#endregion
-
 builder.Services.AddDbContext<DatabaseContext>(options =>
-    options.UseSqlServer(connection).EnableSensitiveDataLogging().LogTo(Console.WriteLine));
+{
+    options.UseSqlServer(connection);
+    if (builder.Environment.IsDevelopment())
+        options.EnableSensitiveDataLogging().LogTo(Console.WriteLine);
+});
+#endregion
 
 #region IOC
 builder.Services.AddAutoMapper(typeof(CommonMappingProfile)); //Mapper

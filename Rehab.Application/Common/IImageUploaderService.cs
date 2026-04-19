@@ -14,6 +14,8 @@ namespace Rehab.Application.Common
         Task<List<string>> UploadAsync(IEnumerable<IBrowserFile> files, string webRootPath, string relativePath, CancellationToken cancellationToken = default);
 
         Task<string> UploadAsync(byte[] fileBytes, string fileName, string webRootPath, string relativePath, CancellationToken cancellationToken = default);
+        //For single and simple Upload file
+        Task<string> UploadAsync(IBrowserFile file, string webRootPath, string relativePath, CancellationToken cancellationToken = default);
     }
 
     public class ImageUploaderService : IImageUploaderService
@@ -57,5 +59,27 @@ namespace Rehab.Application.Common
             return Path.Combine(relativePath, uniqueFileName).Replace("\\", "/");
         }
 
+        public async Task<string> UploadAsync(IBrowserFile file, string webRootPath, string relativePath, CancellationToken cancellationToken = default)
+        {
+            var allowedExtentions = new[] { ".jpg", ".jpeg", ".png" };
+            var extention = Path.GetExtension(file.Name).ToLowerInvariant();
+            if (!allowedExtentions.Contains(extention))
+            {
+                throw new InvalidOperationException("Only JPG and PNG images are allowed.");
+            }
+
+            string folderPath = Path.Combine(webRootPath, relativePath);
+            if (!Directory.Exists(folderPath))
+                Directory.CreateDirectory(folderPath);
+            var fileName = $"{Guid.NewGuid()}{Path.GetExtension(file.Name)}";
+            var filePath = Path.Combine(folderPath, fileName);
+            await using var stream = file.OpenReadStream(10 * 1024 * 1024);
+            await using var fileStream = new FileStream(filePath, FileMode.Create);
+            await stream.CopyToAsync(fileStream, cancellationToken);
+            return Path.Combine(relativePath, fileName).Replace("\\", "/");
+
+        }
     }
+
+   
 }

@@ -23,6 +23,53 @@
             <SearchBoxComponent />
 
             <div class="navbar-nav align-items-center ms-auto">
+                <div class="nav-item dropdown blog-dropdown ">
+                    <a href="#" class="nav-link dropdown-toggle btn-primary-gradient text-white" data-bs-toggle="dropdown">
+                        <i class="fas fa-newspaper main-dpdn-icon"></i>
+                        <span class="d-none d-lg-inline-flex">Blog</span>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-end bg-blog-dpdn-show border-0 rounded-0 rounded-bottom m-0">
+                            <a href="/blog/post-editor" class="dropdown-item">
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-plus-circle"></i>                             <div class="ms-2">
+                                    <h6 class="fw-normal mb-0">Add Post</h6>
+                                    
+                                </div>
+                            </div>
+                        </a>
+                        <hr class="dropdown-divider">
+                        <a href="/blog/post-list" class="dropdown-item">
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-list"></i>
+                                <div class="ms-2">
+                                    <h6 class="fw-normal mb-0">Post List</h6>
+                                   
+                                </div>
+                            </div>
+                          
+                        </a>
+                        <hr class="dropdown-divider">
+                        <a href="/blogtopic" class="dropdown-item">
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-folder-open"></i>                                <div class="ms-2">
+                                    <h6 class="fw-normal mb-0">Topics</h6>
+                                    <small>Manage Topics</small>
+                                </div>
+                            </div>
+                        </a>
+                         <hr class="dropdown-divider">
+                        <a href="/blogtag" class="dropdown-item">
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-tags"></i>                                 <div class="ms-2">
+                                    <h6 class="fw-normal mb-0">Tags</h6>
+                                    <small>Manage Tags</small>
+                                </div>
+                            </div>
+                        </a>
+                        
+                       
+                    </div>
+                </div>
                 <div class="nav-item dropdown">
                     <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
                         <i class="fa fa-envelope me-lg-2"></i>
@@ -101,10 +148,10 @@
         </nav>
         <!-- Navbar End -->
         <!-- Blank Start -->
-        <div class="container-fluid pt-4 px-4">
+        <div class="container-fluid pt-4 px-4 ">
            @*  <Microsoft.AspNetCore.Components.Authorization.AuthorizeView>
                 <Authorized> *@
-            <div class="row  bg-light rounded p-2 mx-0 ">
+            <div class="row  bg-light rounded p-2 mx-0 main-content">
                 @* vh-100 align-items-center justify-content-center *@
                 <GlobalAlertComponent />
                 @Body

@@ -1,0 +1,215 @@
+﻿@page "/blogtopic"
+@rendermode InteractiveServer
+@using Rehab.EndPoint.AdminPanel.Viewmodels
+@using AutoMapper
+@using Rehab.EndPoint.AdminPanel.Components.Controls
+@using System.Text.Json
+@using Rehab.Application.Blog
+ 
+@inject IMapper mapper
+@inject Rehab.Application.Blog.IBlogTopicService BlogTopicService
+@inject IWebHostEnvironment Env
+@inject IImageUploaderService Uploader
+@inject AlertService AlertService
+<div class="w-75 mx-auto p-4">
+    <div class="d-flex justify-content-between">
+        <h3>Blog Topics</h3>
+        <a href="/blogtopic/add" class="btn btn btn-outline-primary">
+            <i class="fa-solid fa-plus"></i> Add
+        </a>
+    </div>
+
+    @if (BlogTopicList is not null)
+    {
+        <div class="row g-4">
+            <div class="col-sm-12 col-xl-6 w-100">
+                <div class="bg-light rounded h-100 p-4">
+                    <table class="table table-responsive-lg">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Icon</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Description</th>
+                                <th scope="col">Operation</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                var i = 0;
+                            }
+                            @foreach (var item in BlogTopicList)
+                            {
+                                i++;
+                                <tr>
+                                    <th scope="row">@i</th>
+                                    <td>
+                                        <img src="@item.Logo" width="30" height="30" />
+                                    </td>
+                                    <td style="max-width:200px;max-height:50px;overflow:hidden;">@item.Name</td>
+                                    <td>
+                                        <p style="max-width:400px;max-height:50px;overflow-y:auto">
+                                            @item.Description
+                                        </p>
+                                    </td>
+                                    <td>
+                                        <i class="fa fa-edit cursor-pointer" title="Edit Topic" @onclick="() => OpenEditModal(item)"></i>
+                                        &ensp;&ensp;&ensp;
+                                        <i class="fa fa-image cursor-pointer" title="Show Image" @onclick="() => OpenImageModal(item)"></i>
+                                        &ensp;&ensp;&ensp;
+                                        <i class="fa fa-trash cursor-pointer" title="Delete Topic" @onclick="() => OpenDeleteModal(item)"></i>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+<!-- #region Edit Modal -->
+<ModalComponent @rendermode="InteractiveServer"
+                TModel="BlogPostTopicViewModel"
+                Title="Edit Topic"
+                OkButton="Apply Changes"
+                OkButtonClass="btn btn-primary"
+                CancelButton="Cancel"
+                Model="@tempBlogTopic"
+                OnValidSubmit="@Update"
+                @ref="EditModal">
+    <div class="form-group">
+        <label>Name</label>
+        <InputText class="form-control" @bind-Value="tempBlogTopic.Name" />
+        <label>Icon</label>
+        <div class="row">
+            <div class="col-10">
+                <InputFile OnChange="HandleSelected" class="form-control my-2" accept="image/*" />
+            </div>
+            <div class="col-2">
+                <img src="@((UploadedPaths.Count > 0) ? UploadedPaths[0] : tempBlogTopic.Logo)" width="40" height="40" />
+            </div>
+        </div>
+
+        <label>Description</label>
+        <InputTextArea @bind-Value="tempBlogTopic.Description" class="form-control my-2"></InputTextArea>
+    </div>
+</ModalComponent>
+<!-- #endregion Edit Modal -->
+<!-- #region Image Modal -->
+<ImageModalComponent @rendermode="InteractiveServer"
+                     Title="Topic's Logo Image"
+                     Image="@Image"
+                     Model="EditTopic"
+                     @ref="ImageModal">
+</ImageModalComponent>
+<!-- #endregion Image Modal -->
+<!-- #region Delete Modal -->
+<ModalComponent @rendermode="InteractiveServer"
+                TModel="BlogPostTopicViewModel"
+                Title="Delete Topic"
+                OkButton="Yes, I am Sure"
+                OkButtonClass="btn btn-danger"
+                CancelButton="Cancel"
+                Model="@EditTopic"
+                OnValidSubmit="@Delete"
+                @ref="DeleteModal">
+    <h6 class="text-muted">Do you really want to Delete this Topic?</h6>
+    <div class="container mb-2 px-0">
+        <div class="row my-3">
+            <div class="col-4">Name</div>
+            <div class="col-8">@EditTopic.Name</div>
+        </div>
+        <div class="row my-3">
+            <div class="col-4">Icon</div>
+            <div class="col-8"><img src="@EditTopic.Logo" width="40" height="40" /></div>
+        </div>
+        <div class="row my-3">
+            <div class="col-4">Description</div>
+            <div class="col-8">
+                <p style="max-width:400px;max-height:150px;overflow-y:auto">@EditTopic.Description</p>
+            </div>
+        </div>
+    </div>
+</ModalComponent>
+<!-- #endregion Delete Modal -->
+@code {
+    public string? Image { get; set; } = string.Empty;
+
+    public ModalComponent<BlogPostTopicViewModel> EditModal;
+    public ModalComponent<BlogPostTopicViewModel> DeleteModal;
+    public ImageModalComponent<BlogPostTopicViewModel> ImageModal;
+    public BlogPostTopicViewModel EditTopic { get; set; } = new();
+    public ResultViewmodel<BlogPostTopicViewModel> Result { get; set; } = new();
+    private BlogPostTopicViewModel? tempBlogTopic = new();
+     public List<BlogPostTopicViewModel> BlogTopicList { get; set; } = new List<BlogPostTopicViewModel>();
+
+    protected override void OnInitialized()
+    {
+        var BlogTopicListDto = BlogTopicService.GetList();
+        BlogTopicList = mapper.Map<List<BlogPostTopicViewModel>>(BlogTopicListDto);
+    }
+    List<string> UploadedPaths = new();
+
+    private async Task HandleSelected(InputFileChangeEventArgs e)
+    {
+        EditModal.SetIsAddBtnActive(false);
+        UploadedPaths.Clear();
+        var files = e.GetMultipleFiles();
+        var paths = await Uploader.UploadAsync(files, Env.WebRootPath, "uploads/blogtopics");
+        UploadedPaths.AddRange(paths);
+        if (UploadedPaths.Count > 0)
+        {
+            EditModal.SetIsAddBtnActive(true);
+        }
+    }
+ 
+    void OpenEditModal(BlogPostTopicViewModel blogTopic)
+    {
+        tempBlogTopic = JsonSerializer.Deserialize<BlogPostTopicViewModel>(
+            JsonSerializer.Serialize(blogTopic));
+        UploadedPaths.Clear();
+        EditModal.Show();
+    }
+
+    void OpenDeleteModal(BlogPostTopicViewModel blogTopic)
+    {
+        EditTopic = blogTopic;
+        DeleteModal.Show();
+    }
+    void OpenImageModal(BlogPostTopicViewModel blogTopic)
+    {
+        Image = blogTopic.Logo;
+        ImageModal?.Show();
+    }
+
+
+    private void Update(BlogPostTopicViewModel blogTopic)
+    {
+        if (UploadedPaths.Count > 0)
+        {
+            blogTopic.Logo = UploadedPaths[0];
+        }
+        else
+        {
+            blogTopic.Logo = "";
+        }
+        BaseDto<BlogTopicDto> result = BlogTopicService.Update(mapper.Map<BlogTopicDto>(blogTopic));
+        Result = mapper.Map<ResultViewmodel<BlogPostTopicViewModel>>(result);
+        if (Result.Success)
+            BlogTopicList = mapper.Map<List<BlogPostTopicViewModel>>(BlogTopicService.GetList());
+            AlertService.ShowAsync(Result.Message, Result.Status);
+
+    }
+
+
+    private void Delete(BlogPostTopicViewModel blogTopic)
+    {
+        var result = BlogTopicService.Delete(mapper.Map<BlogTopicDto>(blogTopic));
+        Result = mapper.Map<ResultViewmodel<BlogPostTopicViewModel>>(result);
+        if (Result.Success)
+            BlogTopicList = mapper.Map<List<BlogPostTopicViewModel>>(BlogTopicService.GetList());
+        AlertService.ShowAsync(Result.Message, Result.Status);
+    }
+
+}

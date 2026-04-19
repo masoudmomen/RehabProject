@@ -46,6 +46,7 @@
     <Folder Include="wwwroot\uploads\facilities\logo\" />
     <Folder Include="wwwroot\uploads\facilities\cover\" />
     <Folder Include="wwwroot\uploads\facilities\images\" />
+    <Folder Include="wwwroot\uploads\blogtopics\" />
   </ItemGroup>
 
 </Project>

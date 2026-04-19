@@ -11,8 +11,10 @@ using Rehab.Application.Tags;
 using Rehab.Application.Treatments;
 using Rehab.Application.Users;
 using Rehab.Application.WhoWeTreat;
+using Rehab.Application.Blog;
 using Rehab.Domain.Accreditations;
 using Rehab.Domain.Amenities;
+using Rehab.Domain.Blog;
 using Rehab.Domain.Conditions;
 using Rehab.Domain.Facilities;
 using Rehab.Domain.Highlights;
@@ -49,7 +51,18 @@ namespace Rehab.Infrastructure.MappingProfile
             CreateMap<Condition, ConditionDto>().ReverseMap();
             CreateMap<Swt, SwtDto>().ReverseMap();
             CreateMap<Treatment, TreatmentDto>().ReverseMap();
-            CreateMap<Tag,TagDto>().ReverseMap();
+            CreateMap<Tag, TagDto>().ReverseMap();
+            CreateMap<BlogPost, BlogPostDto>()
+                .ForMember(dest => dest.TopicsId, opt => opt.MapFrom(src => src.Topics.Select(t => t.Id)))
+                .ForMember(dest => dest.TagsId, opt => opt.MapFrom(src => src.Tags.Select(t => t.Id))).ReverseMap();
+
+            CreateMap<BlogPostDto, BlogPost>()
+                .ForMember(dest => dest.Tags, opt => opt.Ignore())
+                .ForMember(dest => dest.Topics, opt => opt.Ignore())
+                .ForMember(dest => dest.Comments, opt => opt.Ignore());
+
+            CreateMap<BlogPostTopic, BlogTopicDto>().ReverseMap();
+            CreateMap<BlogPostTag, BlogTagDto>().ReverseMap();
 
         }
     }

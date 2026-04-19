@@ -1,0 +1,44 @@
+﻿@inject IJSRuntime JS
+@rendermode InteractiveServer
+<textarea id="@EditorId"></textarea>
+
+@code {
+    [Parameter]
+    public string EditorId { get; set; } = "tiny-editor";
+    private string _lastValue = string.Empty;
+    [Parameter]
+    public string? Value { get; set; }
+    [Parameter]
+    public EventCallback<string> ValueChanged { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await Task.Delay(100); 
+
+            await JS.InvokeVoidAsync("tinyMceInterop.init", EditorId, Value ?? "");
+            _lastValue = Value ?? "";
+        }
+        else if (!string.Equals(Value, _lastValue, StringComparison.Ordinal))
+        {
+            await JS.InvokeVoidAsync("tinyMceInterop.setContent", EditorId, Value ?? "");
+            _lastValue = Value ?? "";
+        }
+    }
+    //Get Content from Editor
+    public async Task<string> GetContent()
+    {
+        return await JS.InvokeAsync<string>("tinyMceInterop.getContent", EditorId);
+    }
+    //Set Content in Editor
+    public async Task SetContent(string content)
+    {
+        await JS.InvokeVoidAsync("tinyMceInterop.setContent", EditorId, content);
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+         await JS.InvokeVoidAsync("tinyMceInterop.destroy", EditorId);
+    }
+}   

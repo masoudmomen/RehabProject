@@ -1,0 +1,251 @@
+﻿@page "/blog/post-list"
+@using Rehab.Application.Dtos
+@using Rehab.EndPoint.AdminPanel.Viewmodels
+@using Rehab.Application.Blog
+@using Rehab.EndPoint.AdminPanel.Components.Controls
+@inject AutoMapper.IMapper mapper
+@inject IBlogPostService BlogPostService
+@rendermode InteractiveServer
+
+<div class="mx-auto p-4">
+    @if (!string.IsNullOrWhiteSpace(ActionResultMessage))
+    {
+        <div class="alert @(IsActionSuccess ? "alert-success" : "alert-danger")" role="alert">
+            @ActionResultMessage
+        </div>
+    }
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3 class="mb-0">Blog posts</h3>
+        <a href="/blog/post-editor" class="btn btn-outline-primary">
+            <i class="fa-solid fa-plus"></i> New post
+        </a>
+    </div>
+
+    @if (PostsList is not null && PostsList.Count > 0)
+    {
+        <div class="row g-4">
+            <div class="col-sm-12 col-xl-6 w-100">
+                <div class="bg-light rounded h-100 p-4">
+                    <table class="table table-responsive-lg">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Image</th>
+                                <th scope="col">Title</th>
+                                <th scope="col">Published</th>
+                                <th scope="col">Read (min)</th>
+                                <th scope="col">Featured</th>
+                                <th scope="col">Active</th>
+                                <th scope="col">Operation</th>
+                                <th scope="col">Delete</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                var i = 0;
+                            }
+                            @foreach (var item in PostsList.Data)
+                            {
+                                i++;
+                                <tr>
+                                    <th scope="row" style="width:40px;">@i</th>
+                                    <td style="width:56px;">
+                                        @if (!string.IsNullOrWhiteSpace(item.ImageUrl))
+                                        {
+                                            <img src="@item.ImageUrl" width="40" height="40" class="rounded object-fit-cover" alt="" />
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted small">—</span>
+                                        }
+                                    </td>
+                                    <td style="max-width:280px;">
+                                        <div class="text-truncate" title="@item.Title">@item.Title</div>
+                                    </td>
+                                    <td style="white-space:nowrap;">@item.PublisheDate.ToLocalTime().ToString("yyyy-MM-dd")</td>
+                                    <td>@item.TimeToRead</td>
+                                    <td>
+                                        @if (item.IsFetured)
+                                        {
+                                            <span class="badge bg-info text-dark">Yes</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-secondary">No</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (item.IsActive)
+                                        {
+                                            <span class="badge bg-success">Yes</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-warning text-dark">No</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        <a class="btn btn-sm btn-outline-primary" href="/blog/post-editor/@item.Id">Edit</a>
+                                    </td>
+                                    <td>
+                                        <button type="button"
+                                                class="btn btn-sm btn-outline-danger"
+                                                @onclick="() => OpenDeleteModal(item)">
+                                            Delete
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+    else if (PostsList is not null)
+    {
+        <p class="text-warning">There are no blog posts yet.</p>
+    }
+
+    @if (PostsList is not null && TotalPages > 1)
+    {
+        <nav class="mt-3">
+            <ul class="pagination justify-content-center">
+                <li class="page-item @(CurrentPage == 1 ? "disabled" : "")">
+                    <button type="button" class="page-link" @onclick="() => OnPageChanged(CurrentPage - 1)">Previous</button>
+                </li>
+
+                @for (int i = MinPagingButton; i <= MaxPagingButton; i++)
+                {
+                    int ii = i;
+                    <li class="page-item @(ii == CurrentPage ? "active" : "")">
+                        <button type="button" class="page-link" @onclick="() => OnPageChanged(ii)">@i</button>
+                    </li>
+                }
+
+                <li class="page-item @(CurrentPage == TotalPages ? "disabled" : "")">
+                    <button type="button" class="page-link" @onclick="() => OnPageChanged(CurrentPage + 1)">Next</button>
+                </li>
+            </ul>
+        </nav>
+    }
+</div>
+
+<ModalComponent @rendermode="InteractiveServer"
+                TModel="BlogPostViewmodel"
+                Title="Delete Post"
+                OkButton="Yes, I am Sure"
+                OkButtonClass="btn btn-danger"
+                CancelButton="Cancel"
+                Model="@DeletePostModel"
+                OnValidSubmit="@DeletePostAsync"
+                @ref="DeleteModal">
+    <h6 class="text-muted">Do you really want to delete this post?</h6>
+    <div class="container mb-2 px-0">
+        <div class="row my-3">
+            <div class="col-4">Title</div>
+            <div class="col-8">@DeletePostModel.Title</div>
+        </div>
+        <div class="row my-3">
+            <div class="col-4">Image</div>
+            <div class="col-8">
+                @if (!string.IsNullOrWhiteSpace(DeletePostModel.ImageUrl))
+                {
+                    <img src="@DeletePostModel.ImageUrl" width="40" height="40" class="rounded object-fit-cover" alt="" />
+                }
+                else
+                {
+                    <span class="text-muted small">—</span>
+                }
+            </div>
+        </div>
+        <div class="row my-3">
+            <div class="col-4">Published</div>
+            <div class="col-8">@DeletePostModel.PublisheDate.ToLocalTime().ToString("yyyy-MM-dd")</div>
+        </div>
+    </div>
+</ModalComponent>
+
+@if (PostsList is not null)
+{
+    <div class="w-100 mx-auto text-center pb-4">
+        <label class="d-inline">Go to page:</label>
+        <input @bind-value="gotoPageNumber" @bind-value:event="oninput" type="number" min="1" class="form-text d-inline" style="width:72px;" />
+        <button type="button" style="width:40px;border:solid 1px gray;" class="d-inline" @onclick="() => OnPageChanged(gotoPageNumber)">Go</button>
+
+        <span class="mx-5">Total pages: @TotalPages</span>
+        <span class="text-muted">(@PostsList.Count post(s))</span>
+    </div>
+}
+
+@code {
+    public PaginatedItemDto<BlogPostViewmodel>? PostsList { get; set; }
+    public ModalComponent<BlogPostViewmodel> DeleteModal;
+    public BlogPostViewmodel DeletePostModel { get; set; } = new();
+    private string? ActionResultMessage;
+    private bool IsActionSuccess;
+    private int TotalPages;
+    private int CurrentPage;
+    private int PageSize = 10;
+    private int PagingButtonCount = 5;
+    private int MaxPagingButton = 5;
+    private int MinPagingButton = 1;
+    private int gotoPageNumber = 1;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadPageAsync(1);
+    }
+
+    private async Task LoadPageAsync(int page)
+    {
+        var result = await BlogPostService.GetPostsAsync(page, PageSize);
+        var mapped = mapper.Map<IEnumerable<BlogPostViewmodel>>(result.Data);
+        PostsList = new PaginatedItemDto<BlogPostViewmodel>(result.PageIndex, result.PageSize, result.Count, mapped);
+        TotalPages = PostsList.Pager.TotalPages;
+        CurrentPage = PostsList.PageIndex;
+        gotoPageNumber = CurrentPage;
+        await CheckPagingButtons();
+    }
+
+    private async Task OnPageChanged(int page)
+    {
+        if (page < 1 || (TotalPages > 0 && page > TotalPages))
+            return;
+        await LoadPageAsync(page);
+    }
+
+    private void OpenDeleteModal(BlogPostViewmodel blogPost)
+    {
+        DeletePostModel = blogPost;
+        DeleteModal.Show();
+    }
+
+    private async Task DeletePostAsync(BlogPostViewmodel blogPost)
+    {
+        var result = await BlogPostService.DeletePostAsync(blogPost.Id);
+        ActionResultMessage = result.Message;
+        IsActionSuccess = result.Success;
+
+        if (result.Success)
+        {
+            await LoadPageAsync(CurrentPage);
+        }
+    }
+
+    private Task CheckPagingButtons()
+    {
+        PagingButtonCount = 5;
+        if (PagingButtonCount > TotalPages) PagingButtonCount = TotalPages;
+
+        MinPagingButton = ((CurrentPage - (PagingButtonCount / 2)) < 1) ? 1 : (CurrentPage - (PagingButtonCount / 2));
+        MaxPagingButton = MinPagingButton + (PagingButtonCount - 1);
+        if (MinPagingButton + (PagingButtonCount - 1) > TotalPages)
+        {
+            MinPagingButton = MinPagingButton - (MaxPagingButton - TotalPages);
+            MaxPagingButton = TotalPages;
+        }
+        return Task.CompletedTask;
+    }
+}

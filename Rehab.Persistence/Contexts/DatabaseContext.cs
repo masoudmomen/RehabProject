@@ -2,6 +2,7 @@
 using Rehab.Application.Contexts;
 using Rehab.Domain.Accreditations;
 using Rehab.Domain.Amenities;
+using Rehab.Domain.Blog;
 using Rehab.Domain.Conditions;
 using Rehab.Domain.Facilities;
 using Rehab.Domain.Highlights;
@@ -46,5 +47,9 @@ namespace Rehab.Persistence.Contexts
         public DbSet<Tag> Tags { get; set; }
         public DbSet<Condition> Conditions { get; set; }
         public DbSet<Swt> Swts { get; set; }
+        public DbSet<BlogPost> BlogPosts { get; set; }
+        public DbSet<BlogPostComment> BlogPostComments { get; set; }
+        public DbSet<BlogPostTag> BlogPostTags { get; set; }
+        public DbSet<BlogPostTopic> BlogPostTopics { get; set; }
     }
 }
