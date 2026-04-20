@@ -1,0 +1,510 @@
+﻿@page "/packages"
+<div class="container py-4 px-4">
+    <h1 class="hero-title mb-1">List your rehab center</h1>
+    <p class="hero-sub mb-0">Reach patients and families actively searching for treatment. Upgrade anytime.</p>
+</div>
+
+<!-- Pricing Cards -->
+<div class="container pb-2 px-4">
+    <div class="row g-4">
+
+        <!-- Basic -->
+        <div class="col-12 col-md-4">
+            <div class="pkg-card p-4">
+                <p class="pkg-name mb-1">Basic</p>
+                <p class="pkg-sub mb-2">A presence on the platform for newly listed or smaller centers</p>
+                <hr class="my-2" style="border-color:#e8e7e0;opacity:1;">
+                <p class="price-from mb-1">Monthly price</p>
+                <p class="price-val mb-0">$9 <span class="price-range">– $19</span></p>
+                <p class="price-period mb-2">per month · 14-day free trial</p>
+                <hr class="my-2" style="border-color:#e8e7e0;opacity:1;">
+                <p class="section-label mb-2">Listings</p>
+                <ul class="feature-list mb-3">
+                    <li><span class="check-dot check-gray"><i class="fa-solid fa-check check-icon" aria-hidden="true"></i></span>1 center listing</li>
+                    <li><span class="check-dot check-gray"><i class="fa-solid fa-check check-icon" aria-hidden="true"></i></span>Name, location & contact info</li>
+                    <li><span class="check-dot check-gray"><i class="fa-solid fa-check check-icon" aria-hidden="true"></i></span>Up to 5 photos</li>
+                    <li><span class="check-dot check-gray"><i class="fa-solid fa-check check-icon" aria-hidden="true"></i></span>Listed in search results</li>
+                </ul>
+                <p class="section-label mb-2">Features</p>
+                <ul class="feature-list mb-4">
+                    <li><span class="check-dot check-gray"><i class="fa-solid fa-check check-icon" aria-hidden="true"></i></span>Facility type & specialization tags</li>
+                    <li><span class="check-dot check-gray"><i class="fa-solid fa-check check-icon" aria-hidden="true"></i></span>Email inquiry form</li>
+                </ul>
+                <div class="mt-auto">
+                    <button class="btn-pkg" onclick="openModal('Basic', '$9 – $19')">Get started</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Premium -->
+        <div class="col-12 col-md-4">
+            <div class="pkg-card featured p-4">
+                <span class="popular-badge">Most popular</span>
+                <p class="pkg-name mb-1">Premium</p>
+                <p class="pkg-sub mb-2">For established centers wanting to stand out and attract more patients</p>
+                <hr class="my-2" style="border-color:#e8e7e0;opacity:1;">
+                <p class="price-from mb-1">Monthly price</p>
+                <p class="price-val mb-0">$39 <span class="price-range">– $79</span></p>
+                <p class="price-period mb-2">per month · 14-day free trial</p>
+                <hr class="my-2" style="border-color:#e8e7e0;opacity:1;">
+                <p class="section-label mb-2">Listings</p>
+                <ul class="feature-list mb-3">
+                    <li><span class="check-dot check-teal"><i class="fa-solid fa-check check-icon" aria-hidden="true"></i></span>Up to 3 center listings</li>
+                    <li><span class="check-dot check-teal"><i class="fa-solid fa-check check-icon" aria-hidden="true"></i></span>Full profile with rich description</li>
+                    <li><span class="check-dot check-teal"><i class="fa-solid fa-check check-icon" aria-hidden="true"></i></span>Up to 30 photos + video tour</li>
+                    <li><span class="check-dot check-teal"><i class="fa-solid fa-check check-icon" aria-hidden="true"></i></span>Priority placement in search</li>
+                </ul>
+                <p class="section-label mb-2">Features</p>
+                <ul class="feature-list mb-4">
+                    <li><span class="check-dot check-teal"><i class="fa-solid fa-check check-icon" aria-hidden="true"></i></span>Treatment programs & therapies</li>
+                    <li><span class="check-dot check-teal"><i class="fa-solid fa-check check-icon" aria-hidden="true"></i></span>Staff & accreditation showcase</li>
+                    <li><span class="check-dot check-teal"><i class="fa-solid fa-check check-icon" aria-hidden="true"></i></span>Patient review collection</li>
+                    <li><span class="check-dot check-teal"><i class="fa-solid fa-check check-icon" aria-hidden="true"></i></span>Bed availability indicator</li>
+                    <li><span class="check-dot check-teal"><i class="fa-solid fa-check check-icon" aria-hidden="true"></i></span>Analytics dashboard</li>
+                </ul>
+                <div class="mt-auto">
+                    <button class="btn-pkg-primary" onclick="openModal('Premium', '$39 – $79')">Get started</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Premium+ -->
+        <div class="col-12 col-md-4">
+            <div class="pkg-card p-4">
+                <p class="pkg-name mb-1">Premium+</p>
+                <p class="pkg-sub mb-2">Full-power visibility and lead generation for large networks</p>
+                <hr class="my-2" style="border-color:#e8e7e0;opacity:1;">
+                <p class="price-from mb-1">Monthly price</p>
+                <p class="price-val mb-0">$149 <span class="price-range">– $299</span></p>
+                <p class="price-period mb-2">per month · 14-day free trial</p>
+                <hr class="my-2" style="border-color:#e8e7e0;opacity:1;">
+                <p class="section-label mb-2">Listings</p>
+                <ul class="feature-list mb-3">
+                    <li><span class="check-dot check-purple"><i class="fa-solid fa-check check-icon" aria-hidden="true"></i></span>Unlimited listings</li>
+                    <li><span class="check-dot check-purple"><i class="fa-solid fa-check check-icon" aria-hidden="true"></i></span>Everything in Premium</li>
+                    <li><span class="check-dot check-purple"><i class="fa-solid fa-check check-icon" aria-hidden="true"></i></span>Featured homepage placement</li>
+                    <li><span class="check-dot check-purple"><i class="fa-solid fa-check check-icon" aria-hidden="true"></i></span>Verified badge</li>
+                </ul>
+                <p class="section-label mb-2">Features</p>
+                <ul class="feature-list mb-4">
+                    <li><span class="check-dot check-purple"><i class="fa-solid fa-check check-icon" aria-hidden="true"></i></span>Insurance & payment options listed</li>
+                    <li><span class="check-dot check-purple"><i class="fa-solid fa-check check-icon" aria-hidden="true"></i></span>Multilingual profile support</li>
+                    <li><span class="check-dot check-purple"><i class="fa-solid fa-check check-icon" aria-hidden="true"></i></span>Custom intake form integration</li>
+                    <li><span class="check-dot check-purple"><i class="fa-solid fa-check check-icon" aria-hidden="true"></i></span>Direct booking & appointment requests</li>
+                    <li><span class="check-dot check-purple"><i class="fa-solid fa-check check-icon" aria-hidden="true"></i></span>Dedicated account manager</li>
+                    <li><span class="check-dot check-purple"><i class="fa-solid fa-check check-icon" aria-hidden="true"></i></span>API access & CRM integration</li>
+                    <li><span class="check-dot check-purple"><i class="fa-solid fa-check check-icon" aria-hidden="true"></i></span>Monthly performance reports</li>
+                </ul>
+                <div class="mt-auto">
+                    <button class="btn-pkg" onclick="openModal('Premium+', '$149 – $299')">Get started</button>
+                </div>
+            </div>
+        </div>
+
+    </div><!-- /row -->
+
+    <p class="text-center footer-note mt-4 mb-0">All plans include a 14-day free trial. No credit card required. Cancel anytime.</p>
+</div><!-- /container -->
+<!-- Modal -->
+<div class="modal fade" id="requestModal" tabindex="-1" aria-labelledby="requestModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content p-4">
+
+            <!-- Form view -->
+            <div id="formView">
+                <div class="d-flex justify-content-between align-items-start mb-1">
+                    <div>
+                        <h5 class="modal-title fw-500 mb-0" id="requestModalLabel">Request access</h5>
+                        <p class="text-muted mb-0" style="font-size:0.8rem;">Fill in your details and we'll send you a payment link</p>
+                    </div>
+                    <button type="button" class="btn-close ms-3" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="mb-3 mt-3">
+                    <span class="pkg-pill" id="pkgPill">Basic — $9 – $19/mo</span>
+                </div>
+
+                <div class="row g-2 mb-2">
+                    <div class="col-6">
+                        <label class="form-label">First name</label>
+                        <input type="text" class="form-control" id="firstName" placeholder="Jane" required>
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label">Last name</label>
+                        <input type="text" class="form-control" id="lastName" placeholder="Smith">
+                    </div>
+                </div>
+
+                <div class="mb-2">
+                    <label class="form-label">Email address</label>
+                    <input type="email" class="form-control" id="email" placeholder="jane@rehabcenter.com" required>
+                </div>
+
+                <div class="mb-2">
+                    <label class="form-label">Phone number</label>
+                    <input type="tel" class="form-control" id="phone" placeholder="+1 (555) 000-0000">
+                </div>
+
+                <div class="mb-2">
+                    <label class="form-label">Center name</label>
+                    <input type="text" class="form-control" id="centerName" placeholder="Sunrise Recovery Center" required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Message <span class="text-muted fw-normal">(optional)</span></label>
+                    <textarea class="form-control" id="message" rows="3" placeholder="Tell us a bit about your center or any questions you have..."></textarea>
+                </div>
+
+                <div class="info-box mb-3">
+                    <div class="info-icon">i</div>
+                    <p class="info-text">After submitting, our team will review your request and send a secure payment link to your email within 1 business day.</p>
+                </div>
+
+                <button class="btn-submit" onclick="submitForm()">Submit request</button>
+            </div>
+
+            <!-- Success view -->
+            <div id="successView" class="text-center py-3" style="display:none;">
+                <div class="success-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <circle cx="12" cy="12" r="11" fill="#1D9E75" />
+                        <polyline points="7,12 10.5,15.5 17,9" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                </div>
+                <h5 class="fw-500 mb-2">Request received!</h5>
+                <p class="text-muted mb-4" style="font-size:0.85rem;line-height:1.6;">
+                    Thank you for your interest in the <strong id="successPkg"></strong> plan.<br>
+                    Our team will send a secure payment link to<br>
+                    <strong id="successEmail"></strong> within 1 business day.
+                </p>
+                <button class="btn-pkg" style="max-width:180px;margin:0 auto;display:block;" data-bs-dismiss="modal">Back to plans</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+@code {
+
+}
+<style>
+    .hero-title {
+        font-size: 2rem;
+        font-weight: 500;
+        color: #1a1a1a;
+    }
+
+    .hero-sub {
+        font-size: 1rem;
+        color: #6b6b6b;
+    }
+
+    /* ── Cards ── */
+    .pkg-card {
+        background: #ffffff;
+        border: 1px solid #e0dfd8;
+        border-radius: 14px;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        position: relative;
+    }
+
+        .pkg-card.featured {
+            border: 2px solid #7F77DD;
+        }
+
+    .pkg-name {
+        font-size: 1.1rem;
+        font-weight: 500;
+    }
+
+    .pkg-sub {
+        font-size: 0.78rem;
+        color: #6b6b6b;
+    }
+
+    .price-from {
+        font-size: 0.65rem;
+        color: #aaa;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+    }
+
+    .price-val {
+        font-size: 1.75rem;
+        font-weight: 500;
+        line-height: 1.2;
+    }
+
+    .price-range {
+        font-size: 1rem;
+        font-weight: 400;
+        color: #6b6b6b;
+    }
+
+    .price-period {
+        font-size: 0.75rem;
+        color: #6b6b6b;
+    }
+
+    .section-label {
+        font-size: 0.65rem;
+        font-weight: 600;
+        color: #aaa;
+        text-transform: uppercase;
+        letter-spacing: 0.07em;
+    }
+
+    .feature-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 7px;
+    }
+
+        .feature-list li {
+            font-size: 0.78rem;
+            color: #555;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            line-height: 1.4;
+        }
+
+    .check-dot {
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        margin-top: 1px;
+    }
+
+    .check-icon {
+        color: #fff;
+        font-size: 7px;
+        line-height: 1;
+    }
+
+    .check-gray {
+        background: #B4B2A9;
+    }
+
+    .check-teal {
+        background: #5DCAA5;
+    }
+
+    .check-purple {
+        background: #7F77DD;
+    }
+
+    /* ── Popular badge ── */
+    .popular-badge {
+        position: absolute;
+        top: -13px;
+        left: 50%;
+        transform: translateX(-50%);
+        white-space: nowrap;
+        background: #EEEDFE;
+        color: #3C3489;
+        font-size: 0.7rem;
+        font-weight: 500;
+        padding: 3px 12px;
+        border-radius: 6px;
+    }
+
+    /* ── CTA buttons ── */
+    .btn-pkg {
+        border: 1px solid #ccc;
+        background: transparent;
+        color: #1a1a1a;
+        border-radius: 8px;
+        font-size: 0.85rem;
+        font-weight: 500;
+        padding: 9px;
+        width: 100%;
+        transition: background 0.15s;
+    }
+
+        .btn-pkg:hover {
+            background: #f3f3f3;
+        }
+
+    .btn-pkg-primary {
+        background: #534AB7;
+        color: #EEEDFE;
+        border: none;
+        border-radius: 8px;
+        font-size: 0.85rem;
+        font-weight: 500;
+        padding: 9px;
+        width: 100%;
+        transition: background 0.15s;
+    }
+
+        .btn-pkg-primary:hover {
+            background: #7F77DD;
+            color: #fff;
+        }
+
+    /* ── Footer note ── */
+    .footer-note {
+        font-size: 0.72rem;
+        color: #bbb;
+    }
+
+    /* ── Modal ── */
+    .modal-content {
+        border-radius: 14px;
+        border: 1px solid #e0dfd8;
+    }
+
+    .pkg-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.72rem;
+        font-weight: 500;
+        padding: 4px 10px;
+        border-radius: 6px;
+        background: #EEEDFE;
+        color: #3C3489;
+    }
+
+    .info-box {
+        background: #EEEDFE;
+        border-radius: 8px;
+        padding: 10px 12px;
+        display: flex;
+        gap: 10px;
+        align-items: flex-start;
+    }
+
+    .info-icon {
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        background: #7F77DD;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        margin-top: 1px;
+        color: #fff;
+        font-size: 0.6rem;
+        font-weight: 700;
+    }
+
+    .info-text {
+        font-size: 0.72rem;
+        color: #3C3489;
+        line-height: 1.5;
+        margin: 0;
+    }
+
+    .form-label {
+        font-size: 0.75rem;
+        font-weight: 500;
+        color: #555;
+        margin-bottom: 4px;
+    }
+
+    .form-control {
+        font-size: 0.85rem;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 8px 10px;
+    }
+
+        .form-control:focus {
+            border-color: #7F77DD;
+            box-shadow: 0 0 0 3px #EEEDFE;
+        }
+
+    .btn-submit {
+        background: #534AB7;
+        color: #EEEDFE;
+        border: none;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        padding: 10px;
+        width: 100%;
+        transition: background 0.15s;
+    }
+
+        .btn-submit:hover {
+            background: #7F77DD;
+        }
+
+    /* ── Success state ── */
+    .success-icon {
+        width: 52px;
+        height: 52px;
+        border-radius: 50%;
+        background: #E1F5EE;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1rem;
+    }
+</style>
+<script>
+    window.openModal = function (pkgName, pkgPrice) {
+        var pkgPill = document.getElementById("pkgPill");
+        if (pkgPill) {
+            pkgPill.textContent = pkgName + " - " + pkgPrice + "/mo";
+        }
+
+        var successPkg = document.getElementById("successPkg");
+        if (successPkg) {
+            successPkg.textContent = pkgName;
+        }
+
+        var formView = document.getElementById("formView");
+        var successView = document.getElementById("successView");
+        if (formView) {
+            formView.style.display = "block";
+        }
+        if (successView) {
+            successView.style.display = "none";
+        }
+
+        var modalElement = document.getElementById("requestModal");
+        if (!modalElement || !window.bootstrap || !window.bootstrap.Modal) {
+            return;
+        }
+
+        var modal = window.bootstrap.Modal.getOrCreateInstance(modalElement);
+        modal.show();
+    };
+
+    window.submitForm = function () {
+        var emailInput = document.getElementById("email");
+        var email = emailInput ? emailInput.value.trim() : "";
+        if (!email) {
+            if (emailInput) {
+                emailInput.focus();
+            }
+            return;
+        }
+
+        var successEmail = document.getElementById("successEmail");
+        if (successEmail) {
+            successEmail.textContent = email;
+        }
+
+        var formView = document.getElementById("formView");
+        var successView = document.getElementById("successView");
+        if (formView) {
+            formView.style.display = "none";
+        }
+        if (successView) {
+            successView.style.display = "block";
+        }
+    };
+</script>

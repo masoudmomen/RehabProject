@@ -13,6 +13,21 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Remove="wwwroot\uploads\BlogTags\a9db71fe-fea1-41d0-bc80-f973d61399da.png" />
+    <Content Remove="wwwroot\uploads\BlogTags\d5ae6bcd-756f-42ba-b813-e0b90a3aecf8.png" />
+    <Content Remove="wwwroot\uploads\BlogTags\d684d1f4-00e8-4d87-a51a-367240c239ca.png" />
+    <Content Remove="wwwroot\uploads\BlogTags\e412bba4-f1d3-4dc5-bd4a-4b513e90a700.png" />
+    <Content Remove="wwwroot\uploads\blogtopics\2e314894-c8ac-4abd-82f5-dc9b3f919093.png" />
+    <Content Remove="wwwroot\uploads\blogtopics\3349562d-1a50-4177-b617-b94a1550db44.png" />
+    <Content Remove="wwwroot\uploads\blogtopics\38c12db8-7cfc-4120-a4b5-f744615ddf2a.png" />
+    <Content Remove="wwwroot\uploads\blogtopics\3cc2e4c3-a3c1-4d8b-83d0-49285dcaa458.png" />
+    <Content Remove="wwwroot\uploads\blogtopics\41808d9e-9930-42d0-8e3f-beb5422b6eea.png" />
+    <Content Remove="wwwroot\uploads\blogtopics\53719a8d-9813-4ab9-a568-0b7b7ac83fa2.png" />
+    <Content Remove="wwwroot\uploads\blogtopics\585b89c6-dbe7-416d-be9f-615924044220.png" />
+    <Content Remove="wwwroot\uploads\blogtopics\6880a8a6-c225-4069-81cd-7e162cdd8edb.png" />
+    <Content Remove="wwwroot\uploads\blogtopics\aa94ec2c-5d66-4c96-8b25-8301bb9c5776.png" />
+    <Content Remove="wwwroot\uploads\blogtopics\ad6fd5d9-d5f6-46a9-b5f7-a731040bcf29.png" />
+    <Content Remove="wwwroot\uploads\blogtopics\be7f2d0d-f05f-4b2b-9a0e-af443e491f90.png" />
     <Content Remove="wwwroot\uploads\facilities\images\19bf1ecd-3438-4eaa-8913-4d3228a58456.jfif" />
   </ItemGroup>
 
@@ -46,7 +61,6 @@
     <Folder Include="wwwroot\uploads\facilities\logo\" />
     <Folder Include="wwwroot\uploads\facilities\cover\" />
     <Folder Include="wwwroot\uploads\facilities\images\" />
-    <Folder Include="wwwroot\uploads\blogtopics\" />
   </ItemGroup>
 
 </Project>
