@@ -1,4 +1,6 @@
 ﻿@page "/packages"
+@using Rehab.EndPoint.Web.Components.Common
+@rendermode InteractiveServer
 <div class="container py-4 px-4">
     <h1 class="hero-title mb-1">List your rehab center</h1>
     <p class="hero-sub mb-0">Reach patients and families actively searching for treatment. Upgrade anytime.</p>
@@ -31,7 +33,9 @@
                     <li><span class="check-dot check-gray"><i class="fa-solid fa-check check-icon" aria-hidden="true"></i></span>Email inquiry form</li>
                 </ul>
                 <div class="mt-auto">
-                    <button class="btn-pkg" onclick="openModal('Basic', '$9 – $19')">Get started</button>
+                    <button class="btn-pkg" @onclick='@(() => OpenModal("Basic","$9 – $19"))'>
+                        Get started
+                    </button>
                 </div>
             </div>
         </div>
@@ -63,8 +67,10 @@
                     <li><span class="check-dot check-teal"><i class="fa-solid fa-check check-icon" aria-hidden="true"></i></span>Analytics dashboard</li>
                 </ul>
                 <div class="mt-auto">
-                    <button class="btn-pkg-primary" onclick="openModal('Premium', '$39 – $79')">Get started</button>
-                </div>
+                    <button class="btn-pkg-primary" @onclick='@(() => OpenModal("Premium", "$39 – $79"))'>
+                        Get started
+                    </button>
+                 </div>
             </div>
         </div>
 
@@ -96,7 +102,9 @@
                     <li><span class="check-dot check-purple"><i class="fa-solid fa-check check-icon" aria-hidden="true"></i></span>Monthly performance reports</li>
                 </ul>
                 <div class="mt-auto">
-                    <button class="btn-pkg" onclick="openModal('Premium+', '$149 – $299')">Get started</button>
+                    <button class="btn-pkg" @onclick='@(() => OpenModal("Premium+", "$149 – $299"))'>
+                        Get started
+                    </button>
                 </div>
             </div>
         </div>
@@ -183,8 +191,34 @@
         </div>
     </div>
 </div>
-@code {
 
+
+<PackagesModalComponent 
+    Visible="@showModal"
+    VisibleChanged="v => showModal = v"
+    PackageName="@selectedPackage"
+    PackagePrice="@selectedPrice"
+    OnSubmit="HandleSubmit" />
+
+
+@code {
+    private bool showModal = false;
+    private string selectedPackage;
+    private string selectedPrice;
+
+    void OpenModal(string package,string price)
+    {
+        selectedPackage = package;
+        selectedPrice = price;
+        showModal = true;
+    }
+
+    private async Task HandleSubmit(PackagesModalComponent.PackageRequestModel model)
+    {
+
+        Console.WriteLine(model.Email);
+    }
+  
 }
 <style>
     .hero-title {
@@ -358,153 +392,6 @@
     }
 
     /* ── Modal ── */
-    .modal-content {
-        border-radius: 14px;
-        border: 1px solid #e0dfd8;
-    }
-
-    .pkg-pill {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        font-size: 0.72rem;
-        font-weight: 500;
-        padding: 4px 10px;
-        border-radius: 6px;
-        background: #EEEDFE;
-        color: #3C3489;
-    }
-
-    .info-box {
-        background: #EEEDFE;
-        border-radius: 8px;
-        padding: 10px 12px;
-        display: flex;
-        gap: 10px;
-        align-items: flex-start;
-    }
-
-    .info-icon {
-        width: 16px;
-        height: 16px;
-        border-radius: 50%;
-        background: #7F77DD;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-shrink: 0;
-        margin-top: 1px;
-        color: #fff;
-        font-size: 0.6rem;
-        font-weight: 700;
-    }
-
-    .info-text {
-        font-size: 0.72rem;
-        color: #3C3489;
-        line-height: 1.5;
-        margin: 0;
-    }
-
-    .form-label {
-        font-size: 0.75rem;
-        font-weight: 500;
-        color: #555;
-        margin-bottom: 4px;
-    }
-
-    .form-control {
-        font-size: 0.85rem;
-        border: 1px solid #ddd;
-        border-radius: 8px;
-        padding: 8px 10px;
-    }
-
-        .form-control:focus {
-            border-color: #7F77DD;
-            box-shadow: 0 0 0 3px #EEEDFE;
-        }
-
-    .btn-submit {
-        background: #534AB7;
-        color: #EEEDFE;
-        border: none;
-        border-radius: 8px;
-        font-size: 0.9rem;
-        font-weight: 500;
-        padding: 10px;
-        width: 100%;
-        transition: background 0.15s;
-    }
-
-        .btn-submit:hover {
-            background: #7F77DD;
-        }
-
-    /* ── Success state ── */
-    .success-icon {
-        width: 52px;
-        height: 52px;
-        border-radius: 50%;
-        background: #E1F5EE;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 0 auto 1rem;
-    }
+   
 </style>
-<script>
-    window.openModal = function (pkgName, pkgPrice) {
-        var pkgPill = document.getElementById("pkgPill");
-        if (pkgPill) {
-            pkgPill.textContent = pkgName + " - " + pkgPrice + "/mo";
-        }
-
-        var successPkg = document.getElementById("successPkg");
-        if (successPkg) {
-            successPkg.textContent = pkgName;
-        }
-
-        var formView = document.getElementById("formView");
-        var successView = document.getElementById("successView");
-        if (formView) {
-            formView.style.display = "block";
-        }
-        if (successView) {
-            successView.style.display = "none";
-        }
-
-        var modalElement = document.getElementById("requestModal");
-        if (!modalElement || !window.bootstrap || !window.bootstrap.Modal) {
-            return;
-        }
-
-        var modal = window.bootstrap.Modal.getOrCreateInstance(modalElement);
-        modal.show();
-    };
-
-    window.submitForm = function () {
-        var emailInput = document.getElementById("email");
-        var email = emailInput ? emailInput.value.trim() : "";
-        if (!email) {
-            if (emailInput) {
-                emailInput.focus();
-            }
-            return;
-        }
-
-        var successEmail = document.getElementById("successEmail");
-        if (successEmail) {
-            successEmail.textContent = email;
-        }
-
-        var formView = document.getElementById("formView");
-        var successView = document.getElementById("successView");
-        if (formView) {
-            formView.style.display = "none";
-        }
-        if (successView) {
-            successView.style.display = "block";
-        }
-    };
-</script>
+ 

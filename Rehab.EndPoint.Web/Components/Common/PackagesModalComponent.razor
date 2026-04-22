@@ -1,0 +1,237 @@
+﻿@using Microsoft.AspNetCore.Components 
+@rendermode InteractiveServer
+@if (Visible)
+{
+    <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content p-4">
+
+                @if (!isSuccess)
+                {
+                    <!-- FORM VIEW -->
+                    <div>
+                        <div class="d-flex justify-content-between align-items-start mb-1">
+                            <div>
+                                <h5 class="modal-title fw-500 mb-0">Request access</h5>
+                                <p class="text-muted mb-0" style="font-size:0.8rem;">
+                                    Fill in your details and we'll send you a payment link
+                                </p>
+                            </div>
+
+                            <button type="button" class="btn-close" @onclick="Close"></button>
+                        </div>
+                        <div class="mb-3 mt-3">
+                            <span class="pkg-pill" id="pkgPill">@PackageName @PackagePrice</span>
+                        </div>
+                    
+
+                        <div class="row g-2 mb-2">
+                            <div class="col-6">
+                                <label class="form-label">First name</label>
+                                <input class="form-control" @bind="model.FirstName" placeholder="Jane" />
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label">Last name</label>
+                                <input class="form-control" @bind="model.LastName" placeholder="Smith" />
+                            </div>
+                        </div>
+
+                        <div class="mb-2">
+                            <label class="form-label">Email</label>
+                            <input class="form-control" type="email" @bind="model.Email" placeholder="Jane@rehabnavigator.com" />
+                        </div>
+
+                        <div class="mb-2">
+                            <label class="form-label">Phone</label>
+                            <input class="form-control" @bind="model.Phone" placeholder="+1 (555) 000-0000" />
+                        </div>
+
+                        <div class="mb-2">
+                            <label class="form-label">Center name</label>
+                            <input class="form-control" @bind="model.CenterName" placeholder="Sunrise Recovery Center" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Message</label>
+                            <textarea class="form-control" @bind="model.Message" placeholder="Teel us a bit about your center or any questions you have..."></textarea>
+                        </div>
+                        <div class="info-box mb-3">
+                            <div class="info-icon">i</div>
+                            <p class="info-text">After submitting, our team will review your request and send a secure payment link to your email within 1 business day.</p>
+                        </div>
+                        <button class="btn-submit" @onclick="SubmitAsync" disabled="@isLoading">
+                            @if (isLoading)
+                            {
+                                <span>Sending...</span>
+                            }
+                            else
+                            {
+                                <span>Submit request</span>
+                            }
+                        </button>
+                    </div>
+                }
+                else
+                {
+                    <!-- SUCCESS VIEW -->
+                    <div class="text-center py-3">
+                        <div class="success-icon"></div>
+
+                        <h5 class="fw-500 mb-2">Request received!</h5>
+
+                        <p class="text-muted mb-4" style="font-size:0.85rem;">
+                            Thank you for your interest in <strong>@PackageName</strong><br />
+                            We will contact you soon.
+                        </p>
+
+                        <button class="btn-pkg" @onclick="Close">
+                            Close
+                        </button>
+                    </div>
+                }
+
+            </div>
+        </div>
+    </div>
+}
+@code {
+    [Parameter] public bool Visible { get; set; }
+    [Parameter] public EventCallback<bool> VisibleChanged { get; set; }
+
+    [Parameter] public string PackageName { get; set; }
+    [Parameter] public string PackagePrice { get; set; }
+
+    [Parameter] public EventCallback<PackageRequestModel> OnSubmit { get; set; }
+
+    private PackageRequestModel model = new();
+    private bool isLoading = false;
+    private bool isSuccess = false;
+
+    private async Task SubmitAsync()
+    {
+        isLoading = true;
+
+        model.Package = PackageName;
+
+        await OnSubmit.InvokeAsync(model);
+
+        isLoading = false;
+        isSuccess = true;
+    }
+
+    private async Task Close()
+    {
+        isSuccess = false;
+        model = new();
+
+        await VisibleChanged.InvokeAsync(false);
+    }
+
+    public class PackageRequestModel
+    {
+        public string FirstName { get; set; } = string.Empty;
+        public string LastName { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
+        public string Phone { get; set; } = string.Empty;
+        public string CenterName { get; set; } = string.Empty;
+        public string Message { get; set; } = string.Empty;
+        public string Package { get; set; } = string.Empty;
+    }
+}
+
+<style>
+    .modal-content {
+        border-radius: 14px;
+        border: 1px solid #e0dfd8;
+    }
+
+    .pkg-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.72rem;
+        font-weight: 500;
+        padding: 4px 10px;
+        border-radius: 6px;
+        background: #EEEDFE;
+        color: #3C3489;
+    }
+
+    .info-box {
+        background: #EEEDFE;
+        border-radius: 8px;
+        padding: 10px 12px;
+        display: flex;
+        gap: 10px;
+        align-items: flex-start;
+    }
+
+    .info-icon {
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        background: #7F77DD;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        margin-top: 1px;
+        color: #fff;
+        font-size: 0.6rem;
+        font-weight: 700;
+    }
+
+    .info-text {
+        font-size: 0.72rem;
+        color: #3C3489;
+        line-height: 1.5;
+        margin: 0;
+    }
+
+    .form-label {
+        font-size: 0.75rem;
+        font-weight: 500;
+        color: #555;
+        margin-bottom: 4px;
+    }
+
+    .form-control {
+        font-size: 0.85rem;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 8px 10px;
+    }
+
+        .form-control:focus {
+            border-color: #7F77DD;
+            box-shadow: 0 0 0 3px #EEEDFE;
+        }
+
+    .btn-submit {
+        background: #534AB7;
+        color: #EEEDFE;
+        border: none;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        padding: 10px;
+        width: 100%;
+        transition: background 0.15s;
+    }
+
+        .btn-submit:hover {
+            background: #7F77DD;
+        }
+
+    /* ── Success state ── */
+    .success-icon {
+        width: 52px;
+        height: 52px;
+        border-radius: 50%;
+        background: #E1F5EE;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1rem;
+    }
+</style>
