@@ -17,9 +17,9 @@
 
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h3 class="mb-0">Blog posts</h3>
-        <a href="/blog/post-editor" class="btn btn-outline-primary">
+        <NavLink Match="NavLinkMatch.All" href="blog/post-editor" class="btn btn-outline-primary">
             <i class="fa-solid fa-plus"></i> New post
-        </a>
+        </NavLink>
     </div>
 
     @if (PostsList is not null && PostsList.Count > 0)

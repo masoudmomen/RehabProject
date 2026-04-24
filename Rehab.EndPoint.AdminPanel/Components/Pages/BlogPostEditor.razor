@@ -138,7 +138,7 @@
 
 
         <div class="section-card d-flex justify-content-end">
-            <a type="" class="btn btn-outline-secondary me-2" href="/blog/post-list" style="width:105px;">Cancel</a>
+                <NavLink Match="NavLinkMatch.All" type="" class="btn btn-outline-secondary me-2" href="blog/post-list" style="width:105px;">Cancel</NavLink>
             <button type="submit" class="btn btn-primary" style="width:105px;">@(BlogPost.Id != 0 ? "Save" : "Submit")</button>
         </div>
     </EditForm>
