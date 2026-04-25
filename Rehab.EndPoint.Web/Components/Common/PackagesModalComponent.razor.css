@@ -1,0 +1,94 @@
+﻿.modal-content {
+    border-radius: 14px;
+    border: 1px solid #e0dfd8;
+}
+
+.pkg-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.72rem;
+    font-weight: 500;
+    padding: 4px 10px;
+    border-radius: 6px;
+    background: #EEEDFE;
+    color: #3C3489;
+}
+
+.info-box {
+    background: #EEEDFE;
+    border-radius: 8px;
+    padding: 10px 12px;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+}
+
+.info-icon {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #7F77DD;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+    color: #fff;
+    font-size: 0.6rem;
+    font-weight: 700;
+}
+
+.info-text {
+    font-size: 0.72rem;
+    color: #3C3489;
+    line-height: 1.5;
+    margin: 0;
+}
+
+.form-label {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: #555;
+    margin-bottom: 4px;
+}
+
+.form-control {
+    font-size: 0.85rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 8px 10px;
+}
+
+    .form-control:focus {
+        border-color: #7F77DD;
+        box-shadow: 0 0 0 3px #EEEDFE;
+    }
+
+.btn-submit {
+    background: #534AB7;
+    color: #EEEDFE;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    padding: 10px;
+    width: 100%;
+    transition: background 0.15s;
+}
+
+    .btn-submit:hover {
+        background: #7F77DD;
+    }
+
+/* ── Success state ── */
+.success-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: #E1F5EE;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+}

@@ -3,6 +3,7 @@ using Rehab.Application.Accreditations;
 using Rehab.Application.Amenities;
 using Rehab.Application.Conditions;
 using Rehab.Application.Contexts;
+using Rehab.Application.Email;
 using Rehab.Application.Facilities;
 using Rehab.Application.Highlights;
 using Rehab.Application.Insurances;
@@ -49,6 +50,7 @@ builder.Services.AddTransient<IConditionService, ConditionService>();
 builder.Services.AddTransient<ISubstancesWeTreatService, SwtService>();
 builder.Services.AddTransient<ITagService, TagService>();
 builder.Services.AddHttpClient<InternalLocationService>();
+builder.Services.AddTransient<IEmailService, EmailService>();
 
 #endregion
 
