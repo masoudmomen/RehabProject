@@ -31,6 +31,8 @@ using System.Linq;
 using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
+using Rehab.Domain.Packages;
+using Rehab.Application.Packages;
 
 namespace Rehab.Infrastructure.MappingProfile
 {
@@ -63,6 +65,7 @@ namespace Rehab.Infrastructure.MappingProfile
 
             CreateMap<BlogPostTopic, BlogTopicDto>().ReverseMap();
             CreateMap<BlogPostTag, BlogTagDto>().ReverseMap();
+            CreateMap<PackageRequest, PackageRequestDto>().ReverseMap();
 
         }
     }
