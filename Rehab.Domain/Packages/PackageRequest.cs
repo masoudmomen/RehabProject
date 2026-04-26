@@ -17,7 +17,6 @@ namespace Rehab.Domain.Packages
         public string? PhoneNumber { get; set; }
         public PackageType PackageType { get; set; }
         public RequestStatus RequestStatus { get; set; }
-
         public DateTime CreatedDate { get; set; }
     }
 
