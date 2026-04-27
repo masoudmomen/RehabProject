@@ -22,9 +22,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <!-- Icon Font Stylesheet -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
-
+    <link rel="stylesheet" href="lib/fonts/font-awsome/css/all.css" />
+@*     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+ *@
     <!-- Libraries Stylesheet -->
     <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
     <link href="lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css" rel="stylesheet" />
@@ -37,6 +37,7 @@
 
 
     <!-- Template Stylesheet -->
+    <link href="css/components.css?v=@version" rel="stylesheet" />
     <link href="css/style.css?v=@version" rel="stylesheet">
     <link href="Rehab.EndPoint.AdminPanel.styles.css" rel="stylesheet" >
     <HeadOutlet />
@@ -66,8 +67,9 @@
     <script src="_framework/blazor.web.js"></script>
    
     <!-- JavaScript Libraries -->
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    @* <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script> *@
+    <script src="lib/jQuery/jquery-3.6.4.min.js"></script>
+    <script src="lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     @* <script src="lib/chart/chart.min.js"></script> *@
     <script src="lib/easing/easing.min.js"></script>
     <script src="lib/waypoints/waypoints.min.js"></script>
@@ -75,7 +77,9 @@
     <script src="lib/tempusdominus/js/moment.min.js"></script>
     <script src="lib/tempusdominus/js/moment-timezone.min.js"></script>
     <script src="lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
-    
+
+    <script src="lib/tinymce/js/tinymce/tinymce.min.js"></script>
+    <script src="js/tinymceInterop.js"></script>
     <script src="_content/Cropper.Blazor/cropper.min.js"></script>
 
 

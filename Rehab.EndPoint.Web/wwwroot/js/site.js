@@ -6,15 +6,15 @@ window.bootstrap.Lightbox = {
         modal.show();
     }
 }
+//Scroll To Top
+//document.addEventListener("DOMContentLoaded", function () {
 
-document.addEventListener("DOMContentLoaded", function () {
-
-    document.querySelectorAll("a").forEach(function (link) {
-        link.addEventListener("click", function () {
-            window.scrollTo({ top: 0, behavior: 'auto' });
-        });
-    });
-
+//    document.querySelectorAll("a").forEach(function (link) {
+//        link.addEventListener("click", function () {
+//            window.scrollTo({ top: 0, behavior: 'auto' });
+//        });
+//    });
+//});
 
     // Handle mobile mega menu toggle for Recovery Centers
     const recoveryCentersLink = document.querySelector('.recovery-centers-link');
@@ -64,7 +64,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 item.classList.remove('mobile-mega-open');
             });
     });
-});
+
 
 
 
@@ -113,3 +113,24 @@ window.infiniteScroll = {
         }
     }
 };
+//scroll to top button
+const scrollBtn = document.getElementById("scrollToTopBtn");
+
+scrollBtn.addEventListener("click", function () {
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+});
+
+// Show button only after scrolling
+window.addEventListener("scroll", function () {
+    if (window.scrollY > 200) {
+        scrollBtn.style.display = "flex";
+    } else {
+        scrollBtn.style.display = "none";
+    }
+});
+
+// Hide initially
+scrollBtn.style.display = "none";

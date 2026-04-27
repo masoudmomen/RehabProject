@@ -1,0 +1,68 @@
+﻿@page "/ConditionsList"
+@using Rehab.EndPoint.Web.Components.Common
+@using Rehab.EndPoint.Web.ViewModels
+@using AutoMapper
+@using Rehab.Application.Conditions
+@inject IConditionService ConditionService
+@inject IMapper mapper;
+<div class="container">
+    <input type="checkbox" id="sidebarToggle" hidden />
+    <div class="sidebar-overlay"></div>
+    <div class="row my-4 layout-wrapper">
+        <div class="content-a">
+            <h2 class="page-title">Conditions</h2>
+            <div class="">
+                <input class="search-input rounded-3 p-2 bg-white w-100 fs-7" placeholder="Condition name" />
+            </div>
+            <div class="top-conditions mt-4">
+                <h3 class="section-title">
+                    Most Popular Conditions
+                </h3>
+                <div class="row mb-3 px-0 align-items-stretch">
+                    @foreach (var card in SpecialConditions)
+                    {
+                        <div class="col-12 col-md-3 mb-2">
+                            <ConditionCardComponent Card="card"
+                                                    CharacterLimit="120"
+                                                    CustomClass="special"
+                                                    prefixImageURL="@serverUrl" />
+                        </div>
+                    }
+                </div>
+
+            </div>
+            <div class="all-conditon mt-4">
+                <h3 class="section-title">
+                    All Conditions
+                </h3>
+                <div class="row mb-3 px-0 align-items-stretch">
+                    @foreach (var card in AllConditions )
+                    {
+                        <div class="col-12 col-md-3 mb-2">
+                            <ConditionCardComponent Card="card"
+                               CustomClass="" />
+                        </div>
+                    }
+                </div>
+
+            </div>
+        </div>
+        <div class="content-b">
+         <SidebarComponent />
+        </div>
+
+    </div>
+    </div>
+@code {
+    private List<CardViewModel> SpecialConditions = new();
+    private List<CardViewModel> AllConditions = new();
+    private string? serverUrl;
+    [Inject] IConfiguration Config { get; set; } = default!;
+
+    protected override void OnInitialized()
+    {
+        serverUrl = Config["AppSettings:AdminServerUrl"];
+        SpecialConditions = mapper.Map<List<CardViewModel>>(ConditionService.GetList().Take(4));
+        AllConditions = mapper.Map<List<CardViewModel>>(ConditionService.GetList());
+    }
+}

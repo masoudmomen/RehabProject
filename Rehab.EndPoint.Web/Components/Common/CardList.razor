@@ -5,7 +5,7 @@
     @foreach (var item in List)
     {
         <Card Title="@item.Name"
-              Image="@(prefixImageURL + ImageURL +"/" + item.Image)"
+              Image="@((string.IsNullOrWhiteSpace(item.Image) ? "/images/nopic.jpg" : $"{prefixImageURL}/{ImageURL}/{item.Image}" ))"
               CardLink="@item.Link"
               HrefTarget="@HrefTarget"
               IconClass="fa-solid fa-certificate"

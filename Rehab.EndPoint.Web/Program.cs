@@ -3,10 +3,12 @@ using Rehab.Application.Accreditations;
 using Rehab.Application.Amenities;
 using Rehab.Application.Conditions;
 using Rehab.Application.Contexts;
+using Rehab.Application.Email;
 using Rehab.Application.Facilities;
 using Rehab.Application.Highlights;
 using Rehab.Application.Insurances;
 using Rehab.Application.LevelsOfCare;
+using Rehab.Application.Packages;
 using Rehab.Application.SubstancesWeTreat;
 using Rehab.Application.Tags;
 using Rehab.Application.Treatments;
@@ -26,11 +28,13 @@ builder.Services.AddRazorComponents()
 #region Connection String
 builder.Services.AddScoped<IDatabaseContext, DatabaseContext>();
 var connection = builder.Configuration["ConnectionString:sqlServer"];
-builder.Services.AddDbContext<DatabaseContext>(option=>option.UseSqlServer(connection));
-#endregion
-
 builder.Services.AddDbContext<DatabaseContext>(options =>
-    options.UseSqlServer(connection).EnableSensitiveDataLogging().LogTo(Console.WriteLine));
+{
+    options.UseSqlServer(connection);
+    if (builder.Environment.IsDevelopment())
+        options.EnableSensitiveDataLogging().LogTo(Console.WriteLine);
+});
+#endregion
 
 #region IOC
 builder.Services.AddAutoMapper(typeof(CommonMappingProfile)); //Mapper
@@ -47,6 +51,8 @@ builder.Services.AddTransient<IConditionService, ConditionService>();
 builder.Services.AddTransient<ISubstancesWeTreatService, SwtService>();
 builder.Services.AddTransient<ITagService, TagService>();
 builder.Services.AddHttpClient<InternalLocationService>();
+builder.Services.AddTransient<IEmailService, EmailService>();
+builder.Services.AddTransient<IPackageRequestService, PackageRequestService>();
 
 #endregion
 

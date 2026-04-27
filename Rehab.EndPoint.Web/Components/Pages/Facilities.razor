@@ -13,7 +13,7 @@
 
 <div class="container">
     <input type="checkbox" id="sidebarToggle" hidden />
-    <input type="checkbox" id="sidebarToggle" hidden />
+  @*   <input type="checkbox" id="sidebarToggle" hidden /> *@
     <div class="sidebar-overlay"></div>
     <div class="row my-4 layout-wrapper">
         <div class="content-a">
@@ -38,6 +38,14 @@
                     </button>
 
                     <ul class="dropdown-menu">
+                        <li>
+                         <div class="input-group filter-search-group mb-3 shadow-sm d-flex">
+                            <input type="text" class="form-control filters-search-input" placeholder="Search..." aria-label="State-Search" aria-describedby="button-addon2">
+                            <button class="btn btn-secondary btn-filter-search" type="button" id="button-addon2">
+                                 <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                        </li>
                         @if(States != null)
                         {
                             @foreach (var item in States)
@@ -61,18 +69,25 @@
                     </button>
 
                     <ul class="dropdown-menu">
+                          <li>
+                         <div class="input-group filter-search-group mb-3 shadow-sm d-flex">
+                            <input type="text" class="form-control filters-search-input" placeholder="Search..." aria-label="State-Search" aria-describedby="button-addon2">
+                            <button class="btn btn-secondary btn-filter-search" type="button" id="button-addon2">
+                                 <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                        </li>
                         @foreach (var item in Fields.Conditions!)
                         {
                             <li @onmousedown="() => ConditionToggleSelectItems(item)">
                                 <label class="dropdown-item">
-                                    <input type="checkbox" value="@item" id="@item.Id" />
+                                    <input type="checkbox" value="@item" id="condition-@item.Id" />
                                      @item.Name
                                 </label>
                             </li>
                         }
                     </ul>
                 </div>
-
                 <!-- Treatments Dropdown -->
                 <div class="dropdown filter-dropdown">
                     <button class="btn dropdown-toggle"
@@ -83,11 +98,19 @@
                     </button>
 
                     <ul class="dropdown-menu">
+                          <li>
+                         <div class="input-group filter-search-group mb-3 shadow-sm d-flex">
+                            <input type="text" class="form-control filters-search-input" placeholder="Search..." aria-label="State-Search" aria-describedby="button-addon2">
+                            <button class="btn btn-secondary btn-filter-search" type="button" id="button-addon2">
+                                 <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                        </li>
                         @foreach (var item in Fields.Treatments!)
                         {
                             <li @onmousedown="() => TreatmentToggleSelectItems(item)">
                                 <label class="dropdown-item">
-                                    <input type="checkbox" value="@item" id="@item.Id"> @item.Name
+                                    <input type="checkbox" value="@item" id="treatment-@item.Id"> @item.Name
                                 </label>
                             </li>
                         }
@@ -103,11 +126,19 @@
                     </button>
 
                     <ul class="dropdown-menu">
+                          <li>
+                         <div class="input-group filter-search-group mb-3 shadow-sm d-flex">
+                            <input type="text" class="form-control filters-search-input" placeholder="Search..." aria-label="State-Search" aria-describedby="button-addon2">
+                            <button class="btn btn-secondary btn-filter-search" type="button" id="button-addon2">
+                                 <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                        </li>
                         @foreach (var item in Fields.Wwts!)
                         {
                             <li @onmousedown="() => WwtToggleSelectItems(item)">
                                 <label class="dropdown-item">
-                                    <input type="checkbox" value="@item" id="@item.Id"> @item.Name
+                                    <input type="checkbox" value="@item" id="wwt-@item.Id"> @item.Name
                                 </label>
                             </li>
                         }
@@ -123,18 +154,25 @@
                     </button>
 
                     <ul class="dropdown-menu">
+                          <li>
+                         <div class="input-group filter-search-group mb-3 shadow-sm d-flex">
+                            <input type="text" class="form-control filters-search-input" placeholder="Search..." aria-label="State-Search" aria-describedby="button-addon2">
+                            <button class="btn btn-secondary btn-filter-search" type="button" id="button-addon2">
+                                 <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                        </li>
                         @foreach (var item in Fields.Locs!)
                         {
                             <li @onmousedown="() => LocToggleSelectItems(item)">
                                 <label class="dropdown-item">
-                                    <input type="checkbox" value="@item" id="@item.Id"> @item.Name
+                                    <input type="checkbox" value="@item" id="loc-@item.Id"> @item.Name
                                 </label>
                             </li>
                         }
                     </ul>
                 </div>
-            
-                <!-- Amenities DropDown -->
+                <!-- Insurances DropDown -->
                 <div class="dropdown filter-dropdown">
                     <button class="btn dropdown-toggle"
                             type="button"
@@ -144,18 +182,25 @@
                     </button>
 
                     <ul class="dropdown-menu">
+                          <li>
+                         <div class="input-group filter-search-group mb-3 shadow-sm d-flex">
+                            <input type="text" class="form-control filters-search-input" placeholder="Search..." aria-label="State-Search" aria-describedby="button-addon2">
+                            <button class="btn btn-secondary btn-filter-search" type="button" id="button-addon2">
+                                 <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                        </li>
                         @foreach (var item in Fields.Insurances!)
                         {
                             <li @onmousedown="() => InsuranceToggleSelectItems(item)">
                                 <label class="dropdown-item">
-                                    <input type="checkbox" value="@item" id="@item.Id"> @item.Name
+                                    <input type="checkbox" value="@item" id="insurance-@item.Id"> @item.Name
                                 </label>
                             </li>
                         }
                     </ul>
                 </div>
-            
-                <!-- Insurances DropDown -->
+                <!-- Amenities DropDown -->
                 <div class="dropdown filter-dropdown">
                     <button class="btn dropdown-toggle"
                             type="button"
@@ -165,22 +210,31 @@
                     </button>
 
                     <ul class="dropdown-menu">
+                          <li>
+                         <div class="input-group filter-search-group mb-3 shadow-sm d-flex">
+                            <input type="text" class="form-control filters-search-input" placeholder="Search..." aria-label="State-Search" aria-describedby="button-addon2">
+                            <button class="btn btn-secondary btn-filter-search" type="button" id="button-addon2">
+                                 <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                        </li>
                         @foreach (var item in Fields.Amenities!)
                         {
                             <li @onmousedown="() => AmenityToggleSelectItems(item)">
                                 <label class="dropdown-item">
-                                    <input type="checkbox" value="@item" id="@item.Id"> @item.Name
+                                    <input type="checkbox" value="@item" id="amenity-@item.Id"> @item.Name
                                 </label>
                             </li>
                         }
                     </ul>
                 </div>
-            
-                <button class="btn btn-primary btn-group-lg w-25 text-nowrap" @onclick="ApplyFilter">Apply Filters</button>
-                <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
             </div>
-            
-            
+            <script src="/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+@*                 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+ *@            <div>
+                 <button class="btn btn-secondary btn-group-lg w-100 text-nowrap" @onclick="ApplyFilter">Apply Filters</button>
+            </div>
             <div class="results-filters">
                 <h3 class="sec-title">Filtered Items:</h3>
 
@@ -210,12 +264,13 @@
                         <div class="filter-items">
                             @foreach (var item in FullFacilityFilterItems.Conditions)
                             {
+                                string tagId = "condition-" + item.Id.ToString();
                                 <span class="filter-tag">
                                     @item.Name
                                     <button type="button" class="remove-button" aria-label="Remove filter"
                                             @onclick="() => {
                                             FullFacilityFilterItems.Conditions.Remove(item);
-                                                Uncheck(item.Id);}">
+                                                Uncheck(tagId);}">
                                         ×
                                     </button>
                                 </span>
@@ -231,11 +286,12 @@
                         <div class="filter-items">
                             @foreach (var item in FullFacilityFilterItems.Treatments)
                             {
+                                string tagId = "treatment-" + item.Id.ToString();
                                 <span class="filter-tag">
                                     @item.Name
                                     <button type="button" class="remove-button" aria-label="Remove filter"
                                             @onclick="() => { FullFacilityFilterItems.Treatments.Remove(item);
-                                            Uncheck(item.Id);}">
+                                            Uncheck(tagId);}">
                                         ×
                                     </button>
                                 </span>
@@ -252,11 +308,12 @@
                         <div class="filter-items">
                             @foreach (var item in FullFacilityFilterItems.Wwts)
                             {
+                                string tagId = "wwt-" + item.Id.ToString();
                                 <span class="filter-tag">
                                     @item.Name
                                     <button type="button" class="remove-button" aria-label="Remove filter"
                                             @onclick="() => { FullFacilityFilterItems.Wwts.Remove(item);
-                                            Uncheck(item.Id);}">
+                                            Uncheck(tagId);}">
                                         ×
                                     </button>
                                 </span>
@@ -272,11 +329,12 @@
                         <div class="filter-items">
                             @foreach (var item in FullFacilityFilterItems.Locs)
                             {
+                                string tagId = "loc-" + item.Id.ToString();
                                 <span class="filter-tag">
                                     @item.Name
                                     <button type="button" class="remove-button" aria-label="Remove filter"
                                             @onclick="() => { FullFacilityFilterItems.Locs.Remove(item);
-                                            Uncheck(item.Id);}">
+                                            Uncheck(tagId);}">
                                         ×
                                     </button>
                                 </span>
@@ -292,11 +350,12 @@
                         <div class="filter-items">
                             @foreach (var item in FullFacilityFilterItems.Insurances)
                             {
+                                string tagId = "insurance-" + item.Id.ToString();
                                 <span class="filter-tag">
                                     @item.Name
                                     <button type="button" class="remove-button" aria-label="Remove filter"
                                             @onclick="() => { FullFacilityFilterItems.Insurances.Remove(item);
-                                            Uncheck(item.Id);}">
+                                            Uncheck(tagId);}">
                                         ×
                                     </button>
                                 </span>
@@ -312,11 +371,12 @@
                         <div class="filter-items">
                             @foreach (var item in FullFacilityFilterItems.Amenities)
                             {
+                                string tagId = "amenity-" + item.Id.ToString();
                                 <span class="filter-tag">
                                     @item.Name
                                     <button type="button" class="remove-button" aria-label="Remove filter"
                                             @onclick="() => { FullFacilityFilterItems.Amenities.Remove(item);
-                                            Uncheck(item.Id);}">
+                                            Uncheck(tagId);}">
                                         ×
                                     </button>
                                 </span>
@@ -334,28 +394,12 @@
         
             <div class="container px-0 mb-5">
                 <div class="row g-4">
-
-
-                    @* <Virtualize @ref="virtualizeRef" ItemsProvider="LoadFacilities" Context="facility" ItemSize="320" TItem="FacilityCardViewmodel">
-                        <ItemContent Context="facility">
-                            <div class="col-12 col-md-3">
-                                <FacilityItem ShowTags="false" FacilityCard="facility" CustomClass="small-card" />
-                            </div>
-                        </ItemContent>
-                    </Virtualize> *@
-
-
-
-                @foreach (var facility in FacilityCards)
+                    @foreach (var facility in FacilityCards)
                     {
                         <div class="col-md-4 mb-3">
                             <FacilityItem ShowTags="false" FacilityCard="facility" CustomClass="small-card" />
                         </div>
                     }
-
-
-
-
                 </div>
                 @if (IsLoading)
                 {
@@ -367,47 +411,7 @@
             </div>
         </div>
         <div class=" col-md-3  content-b">
-            <label for="sidebarToggle" class="sidebar-toggle">
-                <span class="open-text">Toggle Sidebar</span>
-                <span class="hamburger">
-                    <i class="bi bi-list"></i>
-                </span>
-            </label>
-            <div class="popular-centers sidebar">
-                <h3 class="sidebar-header">
-                    Popular Facilities
-                </h3>
-                <ul>
-                    <li><a href="#" title="1-on-1 Counseling"><i class="bi bi-person"></i><span>1-on-1 Counseling</span></a></li>
-                    <li><a href="#" title="ACT Therapy" ><i class="bi bi-heart"></i><span>ACT Therapy</span></a></li>
-                    <li><a href="#" title="Acupuncture" ><i class="bi bi-flower1"></i><span>Acupuncture</span></a></li>
-                    <li><a href="#" title="Yoga"><i class="bi bi-activity"></i><span>Yoga</span></a></li>
-                    <li><a href="#" title="Weight Loss"><i class="bi bi-speedometer"></i><span>Weight Loss</span></a></li>
-                    <li><a href="#" title="Life Skills"><i class="bi bi-lightbulb"></i><span>Life Skills</span></a></li>
-
-                </ul>
-            </div>
-            <div class="popular-centers sidebar mt-5">
-                <h3 class="sidebar-header">
-                    Top States
-                </h3>
-                <ul>
-                    <li>
-                        <a href="#" title="Facilities In California"> <i class=" class=" bi bi-person""></i><span>Facilities In California</span> </a>
-                    </li>
-                    <li>
-                        <a href="#" title="Facilities In Florida"> <i class="bi bi-geo-alt-fill"></i><span>Facilities In Florida</span></a>
-                    </li>
-                    <li>
-                        <a href="#" title="Facilities In Arizona"> <i class="bi bi-geo-alt-fill"></i><span>Facilities In Arizona</span></a>
-                    </li>
-                    <li>
-                        <a href="#" title="Facilities In New York"> <i class="bi bi-geo-alt-fill"></i><span>Facilities In New York</span></a>
-                    </li>
-
-
-                </ul>
-            </div>
+           <SidebarComponent />
         </div>
     </div>
    
@@ -423,7 +427,7 @@
     private bool IsLoading = false;
     private bool HasMore = true;
 
-    private DotNetObjectReference<Facilities>? objRef;
+    private DotNetObjectReference<Facilities>? objRefState;
 
     protected override async Task OnInitializedAsync()
     {
@@ -481,10 +485,10 @@
     {
         if (firstRender)
         {
-            objRef = DotNetObjectReference.Create(this);
+            objRefState = DotNetObjectReference.Create(this);
             await JS.InvokeVoidAsync("infiniteScroll.initialize",
                 "scrollTrigger",
-                objRef);
+                objRefState);
         }
     }
 
@@ -512,7 +516,7 @@
 
     public void Dispose()
     {
-        objRef?.Dispose();
+        objRefState?.Dispose();
     }
 
 
@@ -534,7 +538,6 @@
     [Parameter, SupplyParameterFromQuery] public string? city { get; set; }
 
     private FullFacilityFilterItemsViewmodel FullFacilityFilterItems { get; set; } = new();
-    private Virtualize<FacilityCardViewmodel> virtualizeRef;
     // protected override async Task OnInitializedAsync()
     // {
     //     serverUrl = Config["AppSettings:AdminServerUrl"]!;
@@ -654,13 +657,13 @@
         await LoadMore();
     }
 
-    private void Uncheck(int id)
+    private void Uncheck(string id)
     {
         HandleCheckbox(id, false);
     }
     
 
-    private void HandleCheckbox(int id, bool state)
+    private void HandleCheckbox(string id, bool state)
     {
          JS.InvokeVoidAsync("setCheckboxState", id, state);
     }

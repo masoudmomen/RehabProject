@@ -1,0 +1,140 @@
+﻿@using Rehab.EndPoint.AdminPanel.Viewmodels
+@inject HttpClient http
+@inject IJSRuntime js
+<div >
+    <input type="text" class="form-control mt-2"
+           placeholder="Type tag name..."
+           @ref="TagInputElement"
+           @bind="TagInput"
+           @bind:event="oninput"
+           @onkeydown="HandleKeyDown" />
+
+    @if (SuggestedTags.Any())
+    {
+        <ul class="border bg-white suggested-list">
+            @foreach (var suggestion in SuggestedTags)
+            {
+                bool isSelected = SelectedTags.Any(t => t.Name.Equals(suggestion.Name, StringComparison.OrdinalIgnoreCase));
+                <li class="p-2 cursor-pointer suggested-item @(isSelected ? "disable" : "")"
+                    @onclick="@(() => SelectTag(suggestion))">@suggestion.Name</li>
+            }
+        </ul>
+    }
+    <span class="d-block alert-info rounded-2 p-2 mt-2 d-inline-block" style="font-size:13px">
+        <i class="fa fa-lightbulb" /> Type tag name and press Enter 
+    </span>
+    
+    <span class="mt-1">Selected Tags:</span>
+    <div class="mt-1 mb-2">
+      
+        <div class="flex g-3 mt-2 border border-1 border-light py-2">
+            @foreach(var tag in SelectedTags)
+            {
+                <div class="border-1 px-3 py-1 mx-1 rounded-3 d-inline-block mt-1 selected-item">
+                    @tag.Name
+                    <a class="ml-2 text-danger cursor-pointer" @onclick="@(() => RemoveTag(tag))">x</a>
+                </div>
+            }
+        </div>
+
+      
+    </div>
+  
+</div>
+
+@code {
+    [Parameter] public List<BlogPostTagViewModel> SelectedTags { get; set; } = new();
+    [Parameter] public EventCallback<string> OnInputChanged{ get; set; }
+    [Parameter] public EventCallback<List<BlogPostTagViewModel>> OnTagsChanged { get; set; }
+    [Parameter] public List<BlogPostTagViewModel> SuggestedTags { get; set; } = new();
+
+  
+    private ElementReference TagInputElement;
+ 
+    private string _tagInput = "";
+    private string TagInput
+    {
+        get => _tagInput;
+        set
+        {
+            if (_tagInput != value)
+            {
+                _tagInput = value;
+                _ = OnInputChanged.InvokeAsync(value);
+            }
+        }
+    }
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await js.InvokeVoidAsync("preventSubmitOnEnter", TagInputElement);
+        }
+    }
+
+ 
+    //Add typed tag using Enter key
+    private async Task HandleKeyDown(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter" && !string.IsNullOrWhiteSpace(TagInput))
+        {
+            var exist = SuggestedTags.Any(t => t.Name.Equals(TagInput, StringComparison.OrdinalIgnoreCase))
+                        || SelectedTags.Any(t => t.Name.Equals(TagInput, StringComparison.OrdinalIgnoreCase));
+            if (!exist)
+            {
+                var newTag = new BlogPostTagViewModel
+                {
+                    Id = 0,
+                    Name = TagInput,
+                    Description = TagInput
+                };
+                await SelectTag(newTag);
+            }
+        }
+    }
+  
+    //Select Tag from Suggestion list
+    private async Task SelectTag(BlogPostTagViewModel tag)
+    {
+        if (!SelectedTags.Any(t => t.Name.Equals(tag.Name, StringComparison.OrdinalIgnoreCase)))
+        {
+            SelectedTags.Add(tag);
+            TagInput = "";
+            SuggestedTags.Clear();
+            await OnTagsChanged.InvokeAsync(SelectedTags);
+        }
+    }
+  
+    //Remove tag from selected tags
+    private void RemoveTag(BlogPostTagViewModel tag)
+    {
+        SelectedTags.Remove(tag);
+        OnTagsChanged.InvokeAsync(SelectedTags);
+    }
+
+
+}
+<style>
+    ul.suggested-list {
+        list-style: none;
+        padding: 0;
+        height: 200px;
+        overflow-y: scroll;
+    }
+
+    .suggested-item.disable {
+        color: #999;
+        cursor: not-allowed;
+        -webkit-text-decoration: inherit;
+        text-decoration: inherit;
+    }
+
+    li.suggested-item:hover {
+        background-color: #d0eeef;
+    }
+
+    .selected-item {
+        background-color: #d0eeef;
+    }
+
+</style>

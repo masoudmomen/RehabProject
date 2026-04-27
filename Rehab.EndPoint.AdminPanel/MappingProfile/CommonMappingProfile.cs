@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Rehab.Application.Accreditations;
 using Rehab.Application.Amenities;
+using Rehab.Application.Blog;
 using Rehab.Application.Common;
 using Rehab.Application.Conditions;
 using Rehab.Application.Facilities;
@@ -14,6 +15,7 @@ using Rehab.Application.Users;
 using Rehab.Application.WhoWeTreat;
 using Rehab.Domain.Accreditations;
 using Rehab.Domain.Amenities;
+using Rehab.Domain.Blog;
 using Rehab.Domain.Conditions;
 using Rehab.Domain.Highlights;
 using Rehab.Domain.Images;
@@ -83,7 +85,11 @@ namespace Rehab.EndPoint.AdminPanel.MappingProfile
 
             CreateMap<FacilityImagesViewmodel, FacilityImagesDto>().ReverseMap();
             CreateMap<SetFacilityImagesViewmodel, SetFacilityImagesDto>().ReverseMap();
-
+            CreateMap<BlogPostDto, BlogPostViewmodel>().ReverseMap();
+            CreateMap<BlogTopicDto , BlogPostTopicViewModel>().ReverseMap();
+            CreateMap<BlogTopicDto , BlogPostTopicSelectViewmodel>().ReverseMap();
+            CreateMap<BlogTagDto, BlogPostTagViewModel>().ReverseMap();
+          
 
         }
 

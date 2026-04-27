@@ -39,7 +39,9 @@
     <Compile Remove="Migrations\20260125084917_swts.Designer.cs" />
     <Compile Remove="Migrations\20260125091500_initdb2026.cs" />
     <Compile Remove="Migrations\20260125091500_initdb2026.Designer.cs" />
-    <Compile Remove="Migrations\DatabaseContextModelSnapshot.cs" />
+    <Compile Remove="Migrations\20260125092624_initdb2026.cs" />
+    <Compile Remove="Migrations\20260125092624_initdb2026.Designer.cs" />
+    <Compile Remove="Migrations\20260317105639_Blog.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

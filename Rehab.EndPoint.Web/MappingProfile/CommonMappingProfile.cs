@@ -6,6 +6,7 @@ using Rehab.Application.Facilities;
 using Rehab.Application.Highlights;
 using Rehab.Application.Insurances;
 using Rehab.Application.LevelsOfCare;
+using Rehab.Application.Packages;
 using Rehab.Application.SubstancesWeTreat;
 using Rehab.Application.Tags;
 using Rehab.Application.Treatments;
@@ -75,8 +76,11 @@ namespace Rehab.EndPoint.Web.MappingProfile
                 .ForMember(dest => dest.Image, opt => opt.MapFrom(src => src.Logo));
             CreateMap<TreatmentDto, CardViewModel>()
                 .ForMember(dest => dest.Image, opt => opt.MapFrom(src => src.Logo));
+            CreateMap<ConditionDto, CardViewModel>()
+                .ForMember(dest => dest.Image, opt => opt.MapFrom(src => src.Logo));
             CreateMap<WwtDto, CardViewModel>()
                 .ForMember(dest => dest.Image, opt => opt.MapFrom(src => src.Logo));
+            CreateMap<PackageRequestViewModel, PackageRequestDto>().ReverseMap();
         }
 
     }

@@ -1,12 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Rehab.Domain.Accreditations;
 using Rehab.Domain.Amenities;
+using Rehab.Domain.Blog;
 using Rehab.Domain.Conditions;
 using Rehab.Domain.Facilities;
 using Rehab.Domain.Highlights;
 using Rehab.Domain.Images;
 using Rehab.Domain.Insurances;
 using Rehab.Domain.LevelsOfCare;
+using Rehab.Domain.Packages;
 using Rehab.Domain.SubstancesWeTreat;
 using Rehab.Domain.Tags;
 using Rehab.Domain.Treatments;
@@ -35,6 +37,11 @@ namespace Rehab.Application.Contexts
         DbSet<Tag> Tags { get;set; }
         DbSet<Condition> Conditions { get; set; }
         DbSet<Swt> Swts { get; set; }
+        DbSet<BlogPost> BlogPosts { get; set; }
+        DbSet<BlogPostComment> BlogPostComments { get; set; }
+        DbSet<BlogPostTag> BlogPostTags { get; set; }
+        DbSet<BlogPostTopic> BlogPostTopics { get; set; }
+        DbSet<PackageRequest> PackageRequests { get; set; }
 
         int SaveChanges();
         int SaveChanges(bool acceptAllChangesOnSuccess);

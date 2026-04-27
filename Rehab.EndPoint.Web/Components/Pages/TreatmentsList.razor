@@ -6,8 +6,10 @@
 @inject ITreatmentService TreatmentService;
 @inject IMapper mapper;
 <div class="container">
-    <div class="row my-4">
-        <div class="col-md-9">
+    <input type="checkbox" id="sidebarToggle" hidden />
+    <div class="sidebar-overlay"></div>
+    <div class="row my-4 layout-wrapper">
+        <div class="content-a">
             <h2 class="page-title">Treatments</h2>
             <div class="">
                 <input class="search-input rounded-3 p-2 bg-white w-100 fs-7" placeholder="Treatment name" />
@@ -34,67 +36,19 @@
                     All Treatments
                 </h3>
                 <div class="row mb-3 px-0 align-items-stretch">
-                    @foreach (var card in SpecialTreatment)
+                    @foreach (var card in AllTreatment)
                     {
                         <div class="col-12 col-md-3 mb-2">
                             <TreatmentCardComponent Card="card"
-                                                    CharacterLimit="120"
-                                                    prefixImageURL="@serverUrl"
-                                                    CustomClass="" />
+                               CustomClass="" />
                         </div>
                     }
                 </div>
 
             </div>
         </div>
-        <div class="col-md-3">
-            <div class="popular-centers sidebar">
-                <h3 class="sidebar-header">
-                    Popular Facilities
-                </h3>
-                <ul>
-                    <li>
-                        <a href="#">1-on-1 Counseling</a>
-                    </li>
-                    <li>
-                        <a href="#">Acceptance and Commitment Therapy (ACT)</a>
-                    </li>
-                    <li>
-                        <a href="#">Acupuncture</a>
-                    </li>
-                    <li>
-                        <a href="#">Yoga</a>
-                    </li>
-                    <li>
-                        <a href="#">Weight Loss</a>
-                    </li>
-                    <li>
-                        <a href="#">Life Skills</a>
-                    </li>
-
-                </ul>
-            </div>
-            <div class="popular-centers sidebar mt-5">
-                <h3 class="sidebar-header">
-                    Top States
-                </h3>
-                <ul>
-                    <li>
-                        <a href="#">Facilities In California</a>
-                    </li>
-                    <li>
-                        <a href="#">Facilities In Florida</a>
-                    </li>
-                    <li>
-                        <a href="#">Facilities In Arizona</a>
-                    </li>
-                    <li>
-                        <a href="#">Facilities In New York</a>
-                    </li>
-
-
-                </ul>
-            </div>
+        <div class="content-b">
+         <SidebarComponent />
         </div>
 
     </div>

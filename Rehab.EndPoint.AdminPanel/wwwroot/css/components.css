@@ -1,0 +1,9 @@
+﻿.btn-primary-gradient , .btn.btn-primary-gradient {
+    background: linear-gradient(135deg, #a157fc, #84c8fd);
+    border: none;
+    padding: 10px 22px;
+    color: #fff;
+    border-radius: 25px;
+    font-weight: normal;
+    transition: all 0.3s ease;
+}

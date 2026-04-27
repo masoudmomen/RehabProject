@@ -1,0 +1,410 @@
+@page "/blog/post-editor/{Id:int?}"
+@rendermode InteractiveServer
+@using Rehab.EndPoint.AdminPanel.Viewmodels
+@using Rehab.EndPoint.AdminPanel.Components.Controls
+@using Rehab.Application.Blog
+@using AutoMapper
+@inject IWebHostEnvironment Env
+@inject IImageUploaderService Uploader
+@inject IMapper mapper;
+@inject AlertService AlertService
+@inject IBlogPostService BlogPostService;
+@inject IBlogTopicService BlogTopicService;
+@inject IBlogTagService BlogTagService;
+<div class="container w-80 mx-auto my-5 ">
+
+    <h3>
+       Blog Post
+        <span class="badge bg-primary fs-6">
+            @(BlogPost is not null && BlogPost.Id != 0 ? "Edit Mode" : "Add Mode")
+        </span>
+    </h3>
+
+    @if (_isLoading)
+    {
+        <p class="text-muted py-4">Loading post…</p>
+    }
+    else
+    {
+
+    <EditForm Model="BlogPost"
+              OnSubmit="SaveAsync"
+              class="d-flex flex-column"
+              FormName="AddBlogPostForm">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <div class="section-card">
+            <div class="section-title">Basic info</div>
+            <div class="row g-3">
+                <div class="col-12">
+                    <label for="Title">Title </label>
+                    <InputText @bind-Value="@BlogPost.Title" placeholder="Enter title..." id="name" class="form-control" />
+                </div>
+            </div>
+            <div class="row g-3">
+                <div class="col-12">
+                    <label for="Description">Description</label>
+                    <InputTextArea @bind-Value="@BlogPost.Description" placeholder="Enter description..." class="form-control" id="name" />
+                </div>
+            </div>
+        </div>
+        <div class="section-card">
+            <div class="section-title">Media & Settings</div>
+            <div class="row g-3">
+                <div class="col-12">
+                    @if (!string.IsNullOrEmpty(errorMessage))
+                    {
+                        <div class="alert alert-danger mt-2">
+                            @errorMessage
+                        </div>
+                    }
+                    <label for="Image">Image </label>
+                    <InputFile OnChange="HandleSelected" class="form-control my-2" accept="image/*" />
+                </div>
+            </div>
+
+            <div class="row g-3 px-1">
+                <div class="col-4 px-1">
+                    <div class="d-flex bg-light rounded-1 h-100 p-1">
+                        <div class="w-50">
+                            <label for="TimeToRead">Time to read</label>
+                            <InputNumber @bind-Value="@BlogPost.TimeToRead" id="name" class="form-control" />
+                        </div>
+                        <div class="w-50 position-relative">
+                            <span class="fs-6 position-absolute top-50">Minutes</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4 px-1">
+                    <div class="bg-light rounded-1 h-100 p-1">
+                        <label for="Publiseddate">Published date</label>
+                        <InputDate class="form-control" @bind-Value="@BlogPost.PublisheDate"></InputDate>
+                    </div>
+                </div>
+                <div class="col-4 px-1">
+                    <div class="bg-light rounded-1 h-100 p-1">
+                        <span>Show article</span><br />
+                        <InputCheckbox @bind-Value="@BlogPost.IsActive"></InputCheckbox>
+                        <label for="active">Active</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="section-card">
+            <div class="section-title">Content</div>
+            <div class="row g-3">
+                <label for="Content" class="">Main Content</label>
+                <TinyEditorComponent @ref="editor" Value="@BlogPost.Content" />
+            </div>
+        </div>
+
+        <div class="section-card">
+            <div class="section-title">Topics & tags</div>
+            <div class="row">
+                <div class="col-6">
+                    <h6>Tags</h6>
+                    <PostTagSelectorComponent SelectedTags="@BlogPost.TagList"
+                                              OnTagsChanged="@((tags) => BlogPost.TagList = tags)"
+                                              SuggestedTags="SuggestedTags"
+                                              OnInputChanged="OnTagInputChanged">
+                    </PostTagSelectorComponent>
+                </div>
+                <div class="col-6">
+                    <h6>Topics</h6>
+                    <div class="col-12">
+                        <button type="button" class="btn w-100 btn-outline-primary" @onclick="OpenTopicModal">
+                            <i class="fas fa-folder" style=""></i> Select Topics
+                        </button>
+                    </div>
+                    <div class="p-2">
+                        <h6 class="text-secondary fw-normal">Selected Topics :</h6>
+                        <div class="d-flex">
+                            @foreach (var topic in SelectedTopics)
+                            {
+                                <div class="badge bg-secondary me-2">
+                                    @topic.Name
+                                    <button type="button"
+                                            class="btn-close btn-close-white ms-2"
+                                            style="font-size:10px"
+                                            @onclick="() => RemoveTopic(topic)">
+                                    </button>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="section-card d-flex justify-content-end">
+            <a type="" class="btn btn-outline-secondary me-2" href="/blog/post-list" style="width:105px;">Cancel</a>
+            <button type="submit" class="btn btn-primary" style="width:105px;">@(BlogPost.Id != 0 ? "Save" : "Submit")</button>
+        </div>
+    </EditForm>
+    <PostTopicModalComponent Topics="AllTopic"
+                             OnSubmit="OnTopicSelected"
+                             @ref="TopicModal">
+    </PostTopicModalComponent>
+
+    }
+</div>
+@code {
+    [Parameter] public int? Id { get; set; }
+    public BlogPostViewmodel BlogPost { get; set; } = new() { TagList = new List<BlogPostTagViewModel>() };
+    public PostTopicModalComponent TopicModal;
+    public List<BlogPostTopicSelectViewmodel> AllTopic { get; set; } = new();
+    public List<BlogPostTopicSelectViewmodel> SelectedTopics = new();
+    public List<BlogPostTagViewModel> SuggestedTags = new();
+    private CancellationTokenSource? _cts;
+    private TinyEditorComponent? editor;
+    private string? errorMessage;
+    private string? status;
+    private bool isUploading = false;
+    private bool _isLoading;
+    private bool _routeStateApplied;
+    private int? _lastAppliedRouteId;
+
+    protected override void OnInitialized()
+    {
+        AllTopic = mapper.Map<List<BlogPostTopicSelectViewmodel>>(BlogTopicService.GetList()).ToList();
+        if (Id is int editId && editId > 0)
+            _isLoading = true;
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await base.OnParametersSetAsync();
+
+        var routeId = Id;
+        if (_routeStateApplied && Nullable.Equals(routeId, _lastAppliedRouteId))
+            return;
+
+        if (routeId is int editId && editId > 0)
+        {
+            await LoadPostForEditAsync(editId);
+        }
+        else
+        {
+            ApplyNewPostState();
+        }
+
+        _routeStateApplied = true;
+        _lastAppliedRouteId = routeId;
+    }
+
+    private void ApplyNewPostState()
+    {
+        BlogPost = new BlogPostViewmodel { TagList = new List<BlogPostTagViewModel>() };
+        SelectedTopics = new List<BlogPostTopicSelectViewmodel>();
+        foreach (var topic in AllTopic)
+            topic.IsSelected = false;
+        UploadedPath = "uploads/BlogPosts/default.jpg";
+        _isLoading = false;
+    }
+
+    private async Task LoadPostForEditAsync(int postId)
+    {
+        _isLoading = true;
+        try
+        {
+            var result = await BlogPostService.GetPostByIdAsync(postId);
+            if (!result.Success || result.Data is null)
+            {
+                await AlertService.ShowAsync(result.Message, result.Status);
+                ApplyNewPostState();
+                return;
+            }
+
+            BlogPost = mapper.Map<BlogPostViewmodel>(result.Data);
+            BlogPost.TagList ??= new List<BlogPostTagViewModel>();
+            if (BlogPost.TagList.Count == 0 && result.Data.TagsId is { Count: > 0 })
+            {
+                var tagDtos = BlogTagService.GetList().Where(t => result.Data.TagsId!.Contains(t.Id)).ToList();
+                BlogPost.TagList = mapper.Map<List<BlogPostTagViewModel>>(tagDtos);
+            }
+
+            foreach (var topic in AllTopic)
+                topic.IsSelected = BlogPost.TopicsId != null && BlogPost.TopicsId.Contains(topic.Id);
+            SelectedTopics = AllTopic.Where(t => t.IsSelected).ToList();
+
+            UploadedPath = string.IsNullOrWhiteSpace(BlogPost.ImageUrl)
+                ? "uploads/BlogPosts/default.jpg"
+                : BlogPost.ImageUrl!;
+        }
+        finally
+        {
+            _isLoading = false;
+        }
+    }
+
+    private async Task SaveAsync(EditContext editContext)
+    {
+        if (BlogPost is null)
+            return;
+
+        BlogPost.ImageUrl = UploadedPath;
+        BlogPost.TopicsId = SelectedTopics.Select(t => t.Id).ToList();
+        BlogPost.Content = await editor!.GetContent();
+        if (!editContext.Validate())
+            return;
+
+        var blogPostDto = mapper.Map<BlogPostDto>(BlogPost);
+
+        if (BlogPost.Id != 0)
+        {
+            blogPostDto.TagsId = null;
+            blogPostDto.TagList = mapper.Map<List<BlogTagDto>>(BlogPost.TagList ?? new List<BlogPostTagViewModel>());
+            var updateResult = await BlogPostService.UpdatePostAsync(blogPostDto);
+            await AlertService.ShowAsync(updateResult.Message, updateResult.Status);
+            return;
+        }
+
+        var result = await BlogPostService.AddPost(blogPostDto);
+        if (result.Success)
+        {
+            BlogPost = new BlogPostViewmodel { TagList = new List<BlogPostTagViewModel>() };
+            SelectedTopics = new();
+            foreach (var topic in AllTopic)
+                topic.IsSelected = false;
+            UploadedPath = "uploads/BlogPosts/default.jpg";
+            if (editor is not null)
+            {
+                await editor.SetContent(string.Empty);
+            }
+        }
+        await AlertService.ShowAsync(result.Message, result.Status);
+    }
+
+    string UploadedPath = "uploads/BlogPosts/default.jpg";
+    private async Task HandleSelected(InputFileChangeEventArgs e)
+    {
+        errorMessage = null;
+        try
+        {
+            var file = e.File;
+            if (file == null)
+            {
+                errorMessage = "No file selected.";
+                return;
+            }
+
+            var extension = Path.GetExtension(file.Name).ToLowerInvariant();
+            if (extension != ".jpg" && extension != ".jpeg" && extension != ".png")
+            {
+                errorMessage = "Only JPG and PNG are allowed.";
+                return;
+            }
+            var path = await Uploader.UploadAsync(
+                file,
+                Env.WebRootPath,
+                "uploads/BlogPosts");
+            UploadedPath = path;
+        }
+        catch (InvalidOperationException ex)
+        {
+            errorMessage = ex.Message;
+        }
+        catch (IOException)
+        {
+            errorMessage = "File upload failed. Please try again.";
+        }
+        catch (Exception)
+        {
+            errorMessage = "Something went wrong.";
+        }
+
+
+    }
+
+    void OpenTopicModal()
+    {
+        Console.WriteLine("CLICKED");
+        TopicModal?.Show();
+    }
+
+    void OnTopicSelected(List<BlogPostTopicSelectViewmodel> topicSelected)
+    {
+        SelectedTopics = topicSelected;
+    }
+    void RemoveTopic(BlogPostTopicSelectViewmodel topic)
+    {
+        SelectedTopics.Remove(topic);
+        var mainTopic = AllTopic.FirstOrDefault(t => t.Id == topic.Id);
+        if (mainTopic != null)
+            mainTopic.IsSelected = false;
+    }
+
+    async Task OnTagInputChanged(string input)
+    {
+        _cts?.Cancel();
+        _cts = new CancellationTokenSource();
+        try
+        {
+            await Task.Delay(300, _cts.Token);
+            if (string.IsNullOrEmpty(input))
+            {
+                SuggestedTags.Clear();
+                return;
+            }
+
+            var result = await BlogTagService.GetSuggestedTagsAsync(input);
+            SuggestedTags = mapper.Map<List<BlogPostTagViewModel>>(result);
+        }
+        catch (TaskCanceledException)
+        {
+            return;
+        }
+
+    }
+
+ 
+}
+<style>
+    .section-card {
+        background: #fff;
+        border: 1px solid #eee;
+        border-radius: 5px;
+        padding: 1.25rem 1.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .section-title {
+        font-size: 11px;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--color-text-tertiary);
+        margin-bottom: 1rem;
+    }
+
+    .main-content {
+        background: linear-gradient(180deg, #dee8ff, #fbefff) !important;
+    }
+
+    .w-80 {
+        width: 80%;
+    }
+
+    .custom-modal-content {
+        width: 500px;
+        display: block;
+    }
+
+    /** Validation **/
+    input.invalid {
+        border-color: #dc3545;
+    }
+
+    .validation-errors {
+        background-color: #f8d7da;
+        border: 1px solid #f5c2c7;
+        color: #842029;
+        border-radius: 8px;
+        padding: 10px;
+    }
+
+    ul.validation-errors {
+        list-style: none;
+    }
+</style>

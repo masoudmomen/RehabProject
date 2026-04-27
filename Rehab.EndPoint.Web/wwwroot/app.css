@@ -123,43 +123,7 @@ h2.section-title {
     background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
 }
 
-.border-gradient {
-    position: relative;
-    display: inline-block;
-    padding: 10px 20px;
-    text-decoration: none;
-    background: transparent;
-    border-radius: 12px;
-    z-index: 1;
-    color: #000;  
-    transition: all 0.3s ease; 
-    cursor: pointer;
-}
 
-    .border-gradient::before {
-        content: "";
-        position: absolute;
-        inset: 0;
-        padding: 2px;
-        border-radius: inherit;
-        background: -webkit-linear-gradient(180deg, rgb(231 154 231) 1%, rgba(238, 238, 238, 1) 50%, #0dcaf0 100%);
-        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-        -webkit-mask-composite: xor;
-        mask-composite: exclude;
-        z-index: -1;
-        transition: all 0.3s ease;
-    }
-
-
-    .border-gradient:hover {
-        background-color: rgba(220, 220, 220, 0.25);
-        transform: scale(1.05);
-        color: #0dcaf0;
-    }
-
-        .border-gradient:hover::before {
-            filter: brightness(1.1);
-        }
 /*Default spin loader */
 #loading-overlay {
     position: fixed;
@@ -205,7 +169,98 @@ h2.section-title {
     }
 }
 
- 
+button#scrollToTopBtn {
+    position: fixed;
+    bottom: 100px;
+    width: 48px;
+    height: 48px;
+    align-items: center;
+}
+
+/*******Layout Sidebar Toggle*******/
+.layout-wrapper > div {
+    transition: all 0.3s ease;
+}
+
+.content-a {
+    flex: 0 0 75%;
+    max-width: 75%;
+}
+
+.content-b {
+    flex: 0 0 25%;
+    max-width: 25%;
+    box-sizing: border-box;
+}
+
+.sidebar-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-secondary);
+    color: white;
+    padding: 10px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    margin-bottom: 20px;
+    transition: all .3s ease;
+}
+
+    .sidebar-toggle .hamburger {
+        display: none;
+    }
+
+#sidebarToggle:checked ~ .layout-wrapper .sidebar-toggle {
+    position: fixed;
+    right: 18px;
+    top: 95px;
+    width: 48px;
+    height: 48px;
+    padding: 0;
+    border-radius: 50%;
+    z-index: 1000;
+    box-shadow: 0 10px 25px rgba(0,0,0,.15);
+}
+/* hide text when collapsed */
+#sidebarToggle:checked ~ .layout-wrapper .open-text {
+    display: none;
+}
+
+/* show hamburger icon */
+.sidebar-toggle .hamburger {
+    font-size: 22px;
+}
+
+#sidebarToggle:checked ~ .layout-wrapper .sidebar-toggle .hamburger {
+    display: block;
+}
+
+.sidebar-toggle:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0,0,0,.18);
+}
+/* WHEN CHECKED → sidebar collapses */
+#sidebarToggle:checked ~ .layout-wrapper .content-a {
+    flex: 0 0 91.6667%;
+    max-width: 91.6667%;
+}
+
+#sidebarToggle:checked ~ .layout-wrapper .content-b {
+    flex: 0 0 8.3333%;
+    max-width: 8.3333%;
+}
+/* Hide headers when collapsed */
+#sidebarToggle:checked ~ .layout-wrapper .sidebar-header {
+    display: none;
+}
+
+/* Center icons */
+#sidebarToggle:checked ~ .layout-wrapper .sidebar a {
+    justify-content: center;
+    padding: 12px 0;
+}
+
 /*@keyframes glow {
     from {
         filter: brightness(1) drop-shadow(0 0 0px rgba(0, 123, 255, 0));

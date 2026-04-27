@@ -1,0 +1,58 @@
+﻿@using Rehab.EndPoint.AdminPanel.Viewmodels
+@using Rehab.Application.Blog
+
+@if (IsVisible)
+{
+    <div class="custom-modal-overlay">
+        <div class="custom-modal-content">
+            <button type="button" class="btn-close" @onclick="Close"
+                    style="position: absolute; top: 6px; right: 6px;z-index:2000"></button>
+            <div class="d-block">
+                <h5 class="border-1 border-bottom pb-1">Select topics</h5>
+
+                @foreach (var topic in Topics)
+                {
+                    <label class="d-flex align-items-center p-2 border rounded mb-1"
+                           style="cursor:pointer; transition:0.2s;"
+                           onmouseover="this.style.background='#f8f9fa'"
+                           onmouseout="this.style.background='white'">
+
+                        <input type="checkbox"
+                               @bind="topic.IsSelected"
+                               class="me-2" />
+
+                        <span>@topic.Name</span>
+                    </label>
+                }
+                <div class="modal-actions">
+                    <button type="submit" class="btn btn-primary" @onclick="Submit">Apply Changes</button>
+                    <button type="button" class="btn btn-secondary">Cancel</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+}
+@code {
+    public bool IsVisible { get; set; }
+    [Parameter] public List<BlogPostTopicSelectViewmodel> Topics { get; set; } = new();
+    [Parameter] public EventCallback<List<BlogPostTopicSelectViewmodel>> OnSubmit { get; set; }
+
+    protected override void OnInitialized()
+    {
+
+    }
+    public void Show()
+    {
+        IsVisible = true;
+        InvokeAsync(StateHasChanged);
+    }
+    public void Close() => IsVisible = false;
+
+    public async Task Submit()
+    {
+        var selectedTopics = Topics.Where(t => t.IsSelected).ToList();
+        await OnSubmit.InvokeAsync(selectedTopics);
+        Close();
+    }
+}

@@ -55,3 +55,58 @@
         overflow-y: auto;
     }
 }
+
+.results-filters {
+    margin-bottom: 1rem;
+}
+
+.filter-group {
+    display: flex;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    margin-bottom: 0.5rem;
+}
+
+.filter-title {
+    font-weight: 600;
+    margin-right: 0.5rem;
+    white-space: nowrap;
+}
+
+.filter-items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.filter-tag {
+    display: inline-flex;
+    align-items: center;
+    background-color: #f1f3f5;
+    border-radius: 20px;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.9rem;
+}
+
+.remove-button {
+    background: none;
+    border: none;
+    color: #dc3545;
+    font-size: 1rem;
+    margin-left: 0.5rem;
+    cursor: pointer;
+    line-height: 1;
+}
+
+    .remove-button:hover {
+        color: #a71d2a;
+    }
+
+.clear-filters {
+    background: none;
+    border: none;
+    color: #0d6efd;
+    padding: 0;
+    font-size: 0.9rem;
+    cursor: pointer;
+}

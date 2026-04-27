@@ -1,6 +1,7 @@
 ﻿html, body {
     overflow-x: hidden;
 }
+
 .search-box {
     position: relative;
     max-width: 100%;
@@ -40,6 +41,27 @@
     margin-right: 0.5rem;
     white-space: nowrap;
 }
+
+.filter-search-group {
+    display: flex;
+}
+
+    .filter-search-group .filters-search-input {
+        padding: 5px !important;
+        width: 90%;
+        font-size: 0.8rem;
+    }
+    .filter-search-group .btn.btn-filter-search {
+        width: 10% !important;
+        border:none;
+        margin:1px;
+        color:#fff;
+
+    }
+    .filter-search-group .btn.btn-filter-search:hover {
+        transform: none !important;
+        background-color: var(--color-primary);
+    }
 
 .filter-items {
     display: flex;
@@ -88,11 +110,25 @@
     margin-bottom: 20px;
 }
 
+.filter-dropdown {
+    flex: 1 1 100px;
+    max-width: 200px;
+    box-sizing: border-box;
+}
+
+button.btn.dropdown-toggle.show {
+    background-color: var(--color-secondary);
+    color: #fff;
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
+}
+
 .filter-dropdown .dropdown-menu {
     padding: 0.5rem;
     min-width: 240px;
     font-size: 0.8rem;
 }
+
 
 .filter-dropdown input[type="checkbox"] {
     margin-right: 0.5rem;
@@ -103,6 +139,7 @@
 }
 
 .filter-dropdown .btn {
+    width: 100%;
     color: var(--color-secondary);
     border-color: var(--color-secondary);
     padding: 5px;
@@ -118,6 +155,11 @@
 ul.dropdown-menu.show {
     max-height: 200px;
     overflow-y: scroll;
+    border: solid 1px #6c34b9;
+    /* border-top: 0px; */
+    margin-top: -1px !important;
+    border-radius: 0;
+    /* background-color: #f0f0f0;
 }
 
 ul.dropdown-menu li label {
@@ -154,12 +196,15 @@ h3.sidebar-header {
 .sidebar i {
     font-size: 18px;
 }
-/* smooth animation */
-.layout-wrapper > div {
+
+/* DEFAULT layout */
+    /* smooth animation */
+    .layout-wrapper > div
+
+{
     transition: all 0.3s ease;
 }
 
-/* DEFAULT layout */
 .content-a {
     flex: 0 0 75%;
     max-width: 75%;
@@ -170,119 +215,8 @@ h3.sidebar-header {
     max-width: 25%;
     box-sizing: border-box;
 }
-.sidebar-toggle {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--color-secondary);
-    color: white;
-    padding: 10px 16px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: 500;
-    margin-bottom: 20px;
-    transition: all .3s ease;
-}
 
-.sidebar-toggle .hamburger {
-    display: none;
-}
 
-#sidebarToggle:checked ~ .layout-wrapper .sidebar-toggle {
-    position: fixed;
-    right: 18px;
-    top: 95px;
-    width: 48px;
-    height: 48px;
-    padding: 0;
-    border-radius: 50%;
-    z-index: 1000;
-    box-shadow: 0 10px 25px rgba(0,0,0,.15);
-}
-/* hide text when collapsed */
-#sidebarToggle:checked ~ .layout-wrapper .open-text {
-    display: none;
-}
-
-/* show hamburger icon */
-.sidebar-toggle .hamburger {
-    font-size: 22px;
-}
-
-#sidebarToggle:checked ~ .layout-wrapper .sidebar-toggle .hamburger {
-    display: block;
-}
-.sidebar-toggle:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(0,0,0,.18);
-}
-/* WHEN CHECKED → sidebar collapses */
-#sidebarToggle:checked ~ .layout-wrapper .content-a {
-    flex: 0 0 91.6667%;
-    max-width: 91.6667%;
-}
-
-#sidebarToggle:checked ~ .layout-wrapper .content-b {
-    flex: 0 0 8.3333%;
-    max-width: 8.3333%;
-}
-/* Hide headers when collapsed */
-#sidebarToggle:checked ~ .layout-wrapper .sidebar-header {
-    display: none;
-}
-
-/* Center icons */
-#sidebarToggle:checked ~ .layout-wrapper .sidebar a {
-    justify-content: center;
-    padding: 12px 0;
-}
-
-    /* Hide text */
-    #sidebarToggle:checked ~ .layout-wrapper .sidebar a span {
-        display: none;
-    }
-
-/* Make items round buttons */
-#sidebarToggle:checked ~ .layout-wrapper .sidebar li {
-    margin-bottom: 10px;
-}
-
-#sidebarToggle:checked ~ .layout-wrapper .sidebar a {
-    width: 42px;
-    height: 42px;
-    margin: auto;
-    border-radius: 50%;
-    position: relative;
-}
-
-    /* Tooltip on hover */
-    #sidebarToggle:checked ~ .layout-wrapper .sidebar a::after {
-        content: attr(title);
-        position: absolute;
-        white-space: nowrap;
-        left: 40px;
-        background: var(--color-secondary);
-        color: #fff;
-        padding: 4px 8px;
-        font-size: 12px;
-        border-radius: 6px;
-        opacity: 0;
-        pointer-events: none;
-        transition: .2s;
-    }
-
-    #sidebarToggle:checked ~ .layout-wrapper .sidebar a:hover::after {
-        opacity: 1;
-    }
-.sidebar-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,.45);
-    opacity: 0;
-    pointer-events: none;
-    transition: .3s ease;
-    z-index: 1000;
-}
 @media (max-width: 768px) {
 
     /* content A always full width on mobile */
@@ -306,15 +240,19 @@ h3.sidebar-header {
         box-shadow: -10px 0 30px rgba(0,0,0,.15);
         transition: .35s ease;
     }
+
     .sidebar ul {
-        padding:0px;
+        padding: 0px;
     }
+
     #sidebarToggle:checked ~ .layout-wrapper .sidebar li {
-        display: flex;/*Centerized the icons*/
+        display: flex; /*Centerized the icons*/
     }
+
     #sidebarToggle:checked ~ .layout-wrapper .content-b {
         right: 0; /* slide in */
     }
+
     #sidebarToggle:checked ~ .sidebar-overlay {
         opacity: 1;
         pointer-events: auto;

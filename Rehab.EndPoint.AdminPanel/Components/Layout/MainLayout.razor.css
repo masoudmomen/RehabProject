@@ -95,3 +95,33 @@ main {
         top: 0.5rem;
     }
 */
+
+.blog-dropdown{
+    padding: 0px;
+    width: 200px;
+    box-sizing: content-box;
+}
+.blog-dropdown a.dropdown-item {
+    color: #5d55b0;
+}
+    .blog-dropdown  .dropdown-menu.show{
+        width:200px;
+    }
+    .blog-dropdown .nav-link {
+        margin-left: 0px !important;
+        width: 100%;
+        padding: 5px !important;
+        border-radius: 5px;
+        color: #fff;
+    }
+i.main-dpdn-icon {
+    opacity: 0.8;
+    color: #8ab0fd;
+}
+.blog-dropdown .dropdown-toggle::after {
+    margin-left:80px;
+}
+
+.bg-blog-dpdn-show {
+    background: linear-gradient(180deg, #dee8ff, #fbefff) !important;
+}
