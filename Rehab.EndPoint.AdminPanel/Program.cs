@@ -27,6 +27,7 @@ using Rehab.EndPoint.AdminPanel.CommonService.Identity;
 using Rehab.EndPoint.AdminPanel.Components;
 using Rehab.EndPoint.AdminPanel.MappingProfile;
 using Rehab.Persistence.Contexts;
+using Rehab.Application.Packages;
 
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
@@ -101,6 +102,7 @@ builder.Services.AddTransient<IBlogTagService, BlogTagService>();
 builder.Services.AddTransient<IConditionService, ConditionService>();
 builder.Services.AddTransient<ISubstancesWeTreatService, SwtService>();
 builder.Services.AddTransient<ITagService,TagService>();
+builder.Services.AddTransient<IPackageRequestService, PackageRequestService>();
 builder.Services.AddHttpClient<InternalLocationService>();
 builder.Services.AddScoped<LocationService>();
 builder.Services.AddScoped<AlertService>();

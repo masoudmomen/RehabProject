@@ -221,7 +221,6 @@
         DeletePostModel = blogPost;
         DeleteModal.Show();
     }
-
     private async Task DeletePostAsync(BlogPostViewmodel blogPost)
     {
         var result = await BlogPostService.DeletePostAsync(blogPost.Id);
