@@ -1,5 +1,6 @@
 ﻿@page "/packages"
 @using Rehab.EndPoint.Web.Components.Common
+@using Rehab.EndPoint.Web.ViewModels
 @rendermode InteractiveServer
 <div class="container py-4 px-4">
     <h1 class="hero-title mb-1">List your rehab center</h1>
@@ -213,10 +214,8 @@
         showModal = true;
     }
 
-    private async Task HandleSubmit(PackagesModalComponent.PackageRequestModel model)
+    private async Task HandleSubmit(PackageRequestViewModel model)
     {
-
-        Console.WriteLine(model.Email);
     }
   
 }

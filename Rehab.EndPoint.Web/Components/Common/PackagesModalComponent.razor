@@ -1,8 +1,13 @@
-﻿@using Microsoft.AspNetCore.Components 
+﻿@using Microsoft.AspNetCore.Components
 @rendermode InteractiveServer
 @using Rehab.Application.Email
+@using Rehab.EndPoint.Web.ViewModels
+@using Rehab.Application.Packages
+@using AutoMapper
 @inject IEmailService EmailService
 @inject IConfiguration Config
+@inject IPackageRequestService PackageService
+@inject IMapper mapper
 @if (Visible)
 {
     <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
@@ -20,59 +25,62 @@
                                     Fill in your details and we'll send you a payment link
                                 </p>
                             </div>
-
                             <button type="button" class="btn-close" @onclick="Close"></button>
                         </div>
                         <div class="mb-3 mt-3">
                             <span class="pkg-pill" id="pkgPill">@PackageName @PackagePrice</span>
                         </div>
-                    
 
-                        <div class="row g-2 mb-2">
-                            <div class="col-6">
-                                <label class="form-label">First name</label>
-                                <input class="form-control" @bind="model.FirstName" placeholder="Jane" />
+                        <EditForm Model="model" OnValidSubmit="SubmitAsync">
+                            <DataAnnotationsValidator />
+                            <ValidationSummary />
+                            <div class="row g-2 mb-2">
+                                <div class="col-6">
+                                    <label class="form-label">First name</label>
+                                    <InputText class="form-control" @bind-value="model.FirstName" placeholder="Jane" />
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label">Last name</label>
+                                    <InputText class="form-control" @bind-value="model.LastName" placeholder="Smith" />
+                                </div>
                             </div>
-                            <div class="col-6">
-                                <label class="form-label">Last name</label>
-                                <input class="form-control" @bind="model.LastName" placeholder="Smith" />
+
+                            <div class="mb-2">
+                                <label class="form-label">Email</label>
+                                <InputText class="form-control" type="email" @bind-value="model.Email" placeholder="Jane@rehabnavigator.com" />
                             </div>
-                        </div>
 
-                        <div class="mb-2">
-                            <label class="form-label">Email</label>
-                            <input class="form-control" type="email" @bind="model.Email" placeholder="Jane@rehabnavigator.com" />
-                        </div>
+                            <div class="mb-2">
+                                <label class="form-label">Phone</label>
+                                <input class="form-control" @bind-value="model.PhoneNumber" placeholder="+1 (555) 000-0000" />
+                            </div>
 
-                        <div class="mb-2">
-                            <label class="form-label">Phone</label>
-                            <input class="form-control" @bind="model.Phone" placeholder="+1 (555) 000-0000" />
-                        </div>
+                            <div class="mb-2">
+                                <label class="form-label">Center name</label>
+                                <InputText class="form-control" @bind-value="model.CenterName" placeholder="Sunrise Recovery Center" />
+                            </div>
 
-                        <div class="mb-2">
-                            <label class="form-label">Center name</label>
-                            <input class="form-control" @bind="model.CenterName" placeholder="Sunrise Recovery Center" />
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label">Message</label>
-                            <textarea class="form-control" @bind="model.Message" placeholder="Teel us a bit about your center or any questions you have..."></textarea>
-                        </div>
-                        <div class="info-box mb-3">
-                            <div class="info-icon">i</div>
-                            <p class="info-text">After submitting, our team will review your request and send a secure payment link to your email within 1 business day.</p>
-                        </div>
-                        <button class="btn-submit" @onclick="SubmitAsync" disabled="@isLoading">
-                            @if (isLoading)
-                            {
-                                <span>Sending...</span>
-                            }
-                            else
-                            {
-                                <span>Submit request</span>
-                            }
-                        </button>
+                            <div class="mb-3">
+                                <label class="form-label">Message</label>
+                                <InputTextArea class="form-control" @bind-value="model.Message" placeholder="Tell us a bit about your center or any questions you have..."></InputTextArea>
+                            </div>
+                            <div class="info-box mb-3">
+                                <div class="info-icon">i</div>
+                                <p class="info-text">After submitting, our team will review your request and send a secure payment link to your email within 1 business day.</p>
+                            </div>
+                            <button class="btn-submit" type="submit" disabled="@isLoading">
+                                @if (isLoading)
+                                {
+                                    <span>Sending...</span>
+                                }
+                                else
+                                {
+                                    <span>Submit request</span>
+                                }
+                            </button>
+                        </EditForm>
                     </div>
+
                 }
                 else
                 {
@@ -104,36 +112,69 @@
     [Parameter] public string PackageName { get; set; }
     [Parameter] public string PackagePrice { get; set; }
 
-    [Parameter] public EventCallback<PackageRequestModel> OnSubmit { get; set; }
+    [Parameter] public EventCallback<PackageRequestViewModel> OnSubmit { get; set; }
 
-    private PackageRequestModel model = new();
+    private PackageRequestViewModel model = new();
     private bool isLoading = false;
     private bool isSuccess = false;
 
     private async Task SubmitAsync()
     {
         isLoading = true;
-        model.Package = PackageName;
+        model.PackageType = PackageName;
         string admin = Config["Email:ToAdmin"];
+        if (string.IsNullOrWhiteSpace(model.FirstName) ||
+            string.IsNullOrWhiteSpace(model.LastName) ||
+            string.IsNullOrWhiteSpace(model.Email))
+        {
+            // Handle validation error (e.g., show a message to the user)
+            isLoading = false;
+            return;
+        }
 
-    await EmailService.SendEmailAsync(
-        to: admin,
-        subject: "New Package Request",
-            body: BuildEmailBody(model.FirstName, model.LastName, PackageName, model.Phone, model.Email)
-    );
+        var requestDto = mapper.Map<PackageRequestDto>(model);
+        var addResult = PackageService.Add(requestDto);
+        if (!addResult.Success)
+        {
+            isLoading = false;
+            return;
+        }
+
+        if (OnSubmit.HasDelegate)
+            await OnSubmit.InvokeAsync(model);
+
+        if (!string.IsNullOrWhiteSpace(admin))
+        {
+            await EmailService.SendEmailAsync(
+                to: admin,
+                subject: "New Package Request",
+                body: BuildEmailBody(model.FirstName, model.LastName, PackageName, model.PhoneNumber, model.Email, model.CenterName, model.Message)
+            );
+        }
 
         isLoading = false;
         isSuccess = true;
     }
 
-    private string BuildEmailBody(string fname, string lName, string packageName, string phone, string email)
+    private static string NormalizePackageType(string packageName)
+    {
+        return packageName switch
+        {
+            "Premium+" => "PremiumPlus",
+            _ => packageName
+        };
+    }
+
+    private string BuildEmailBody(string fname, string lName, string packageName, string phone, string email, string centerName, string message)
     {
         return $@"
             <h2>New Package Request</h2>
             <p><strong>Name:</strong> {fname}  {lName} </p>
             <p><strong>Package:</strong> {packageName}</p>
+            <p><strong>Center name:</strong> {centerName}</p>
             <p><strong>Phone:</strong> {phone}</p>
             <p><strong>Email:</strong> {email}</p>
+            <p><strong>Message:</strong> {message}</p>
             <p><strong>Date:</strong> {DateTime.UtcNow}</p>
         ";
     }
@@ -145,16 +186,5 @@
         await VisibleChanged.InvokeAsync(false);
     }
 
-    public class PackageRequestModel
-    {
-        public string FirstName { get; set; } = string.Empty;
-        public string LastName { get; set; } = string.Empty;
-        public string Email { get; set; } = string.Empty;
-        public string Phone { get; set; } = string.Empty;
-        public string CenterName { get; set; } = string.Empty;
-        public string Message { get; set; } = string.Empty;
-        public string Package { get; set; } = string.Empty;
-    }
 }
-
  

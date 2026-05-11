@@ -8,6 +8,7 @@ using Rehab.Domain.Highlights;
 using Rehab.Domain.Images;
 using Rehab.Domain.Insurances;
 using Rehab.Domain.LevelsOfCare;
+using Rehab.Domain.Packages;
 using Rehab.Domain.SubstancesWeTreat;
 using Rehab.Domain.Tags;
 using Rehab.Domain.Treatments;
@@ -40,6 +41,7 @@ namespace Rehab.Application.Contexts
         DbSet<BlogPostComment> BlogPostComments { get; set; }
         DbSet<BlogPostTag> BlogPostTags { get; set; }
         DbSet<BlogPostTopic> BlogPostTopics { get; set; }
+        DbSet<PackageRequest> PackageRequests { get; set; }
 
         int SaveChanges();
         int SaveChanges(bool acceptAllChangesOnSuccess);
