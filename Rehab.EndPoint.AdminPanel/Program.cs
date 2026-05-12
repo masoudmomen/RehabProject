@@ -1,8 +1,6 @@
 using AutoMapper;
 using Cropper.Blazor.Extensions;
-using Cropper.Blazor.Extensions;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Identity;
@@ -83,8 +81,8 @@ builder.Services.ConfigureApplicationCookie(options =>
 #endregion
 
 #region IOC
-builder.Services.AddAutoMapper(typeof(CommonMappingProfile)); //Mapper
-builder.Services.AddAutoMapper(typeof(Rehab.Infrastructure.MappingProfile.CommonMappingProfile)); //Mapper
+//builder.Services.AddAutoMapper(typeof(CommonMappingProfile)); //Mapper
+//builder.Services.AddAutoMapper(typeof(Rehab.Infrastructure.MappingProfile.CommonMappingProfile)); //Mapper
 builder.Services.AddScoped<SearchService>();
 builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<IFacilityService, FacilityService>();
