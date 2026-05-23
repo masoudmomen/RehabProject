@@ -1,8 +1,6 @@
 using AutoMapper;
 using Cropper.Blazor.Extensions;
-using Cropper.Blazor.Extensions;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Identity;
