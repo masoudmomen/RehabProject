@@ -28,6 +28,9 @@ using Rehab.EndPoint.AdminPanel.Components;
 using Rehab.EndPoint.AdminPanel.MappingProfile;
 using Rehab.Persistence.Contexts;
 using Rehab.Application.Packages;
+using Rehab.Infrastructure.Settings;
+using Rehab.Application.PaymentLinks;
+using Rehab.Application.Email;
 
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
@@ -103,11 +106,23 @@ builder.Services.AddTransient<IConditionService, ConditionService>();
 builder.Services.AddTransient<ISubstancesWeTreatService, SwtService>();
 builder.Services.AddTransient<ITagService,TagService>();
 builder.Services.AddTransient<IPackageRequestService, PackageRequestService>();
+builder.Services.AddTransient<IPaymentLinkService, PaymentLinkService>();
+builder.Services.AddTransient<IEmailService, EmailService>();
 builder.Services.AddHttpClient<InternalLocationService>();
 builder.Services.AddScoped<LocationService>();
 builder.Services.AddScoped<AlertService>();
 builder.Services.AddScoped<IImageUploaderService, ImageUploaderService>();
+builder.Services.Configure<PaymentLinksOptions>(
+    builder.Configuration.GetSection(PaymentLinksOptions.SectionName));
 #endregion
+
+#region stripe
+builder.Services.Configure<StripeSettings>(
+    builder.Configuration.GetSection("Stripe"));
+//    StripeConfiguration.ApiKey = builder.Configuration["Stripe:SecretKey"];
+//builder.Services.AddScoped<IStripeService, StripeService>();
+#endregion
+
 builder.Services.AddSingleton<HeadOutlet>();
 
 builder.Services.AddCropper();

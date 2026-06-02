@@ -121,13 +121,13 @@
     private async Task SubmitAsync()
     {
         isLoading = true;
-        model.PackageType = PackageName;
+        model.PackageType = NormalizePackageType(PackageName);
         string admin = Config["Email:ToAdmin"];
         if (string.IsNullOrWhiteSpace(model.FirstName) ||
             string.IsNullOrWhiteSpace(model.LastName) ||
             string.IsNullOrWhiteSpace(model.Email))
         {
-            // Handle validation error (e.g., show a message to the user)
+         
             isLoading = false;
             return;
         }

@@ -9,12 +9,17 @@ using Rehab.Application.Highlights;
 using Rehab.Application.Insurances;
 using Rehab.Application.LevelsOfCare;
 using Rehab.Application.Packages;
+using Rehab.Application.PaymentLinks;
 using Rehab.Application.SubstancesWeTreat;
+using Rehab.Application.Stripe;
 using Rehab.Application.Tags;
 using Rehab.Application.Treatments;
 using Rehab.Application.WhoWeTreat;
+using Rehab.Infrastructure.Settings;
+using Rehab.Infrastructure.Stripe;
 using Rehab.EndPoint.AdminPanel.CommonService;
 using Rehab.EndPoint.Web.Components;
+using Rehab.EndPoint.Web.Endpoints;
 using Rehab.EndPoint.Web.MappingProfile;
 using Rehab.Persistence.Contexts;
 using System;
@@ -53,6 +58,11 @@ builder.Services.AddTransient<ITagService, TagService>();
 builder.Services.AddHttpClient<InternalLocationService>();
 builder.Services.AddTransient<IEmailService, EmailService>();
 builder.Services.AddTransient<IPackageRequestService, PackageRequestService>();
+builder.Services.AddTransient<IPaymentLinkService, PaymentLinkService>();
+builder.Services.Configure<PaymentLinksOptions>(
+    builder.Configuration.GetSection(PaymentLinksOptions.SectionName));
+builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("Stripe"));
+builder.Services.AddTransient<IStripeService, StripeService>();
 
 #endregion
 
@@ -71,8 +81,7 @@ app.UseHttpsRedirection();
 
 app.UseStaticFiles();
 app.UseAntiforgery();
-
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
-
+app.MapStripeWebHook();
 app.Run();

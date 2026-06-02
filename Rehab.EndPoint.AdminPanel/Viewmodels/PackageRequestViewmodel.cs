@@ -1,10 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Rehab.Application.PaymentLinks;
+using System.ComponentModel.DataAnnotations;
 
 namespace Rehab.EndPoint.AdminPanel.Viewmodels
 {
     public class PackageRequestViewModel
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         [Required(ErrorMessage = "The first name is required")]
         public string FirstName { get; set; }
         [Required(ErrorMessage = "The last name is required")]
@@ -19,6 +20,11 @@ namespace Rehab.EndPoint.AdminPanel.Viewmodels
         public string RequestStatus { get; set; }
 
         public DateTime CreatedDate { get; set; }
+
+        public string? PaymentCheckoutUrl { get; set; }
+        public int PaymentStatus { get; set; }
+        public ICollection<PaymentLinkViewModel>? PaymentLink { get; set; }
+        public PaymentLinkViewModel? LastPaymentLink { get; set; }
     }
 }
  

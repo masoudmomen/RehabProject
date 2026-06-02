@@ -9,6 +9,7 @@ using Rehab.Application.Highlights;
 using Rehab.Application.Insurances;
 using Rehab.Application.LevelsOfCare;
 using Rehab.Application.Packages;
+using Rehab.Application.PaymentLinks;
 using Rehab.Application.SubstancesWeTreat;
 using Rehab.Application.Tags;
 using Rehab.Application.Treatments;
@@ -91,7 +92,7 @@ namespace Rehab.EndPoint.AdminPanel.MappingProfile
             CreateMap<BlogTopicDto , BlogPostTopicSelectViewmodel>().ReverseMap();
             CreateMap<BlogTagDto, BlogPostTagViewModel>().ReverseMap();
             CreateMap<PackageRequestViewModel, PackageRequestDto>().ReverseMap();
-          
+            CreateMap<PaymentLinkViewModel, PaymentLinkDto>().ReverseMap();
 
         }
 

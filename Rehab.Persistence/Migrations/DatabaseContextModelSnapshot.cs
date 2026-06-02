@@ -584,9 +584,11 @@ namespace Rehab.Persistence.Migrations
 
             modelBuilder.Entity("Rehab.Domain.Packages.PackageRequest", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("CenterName")
                         .HasColumnType("nvarchar(max)");
@@ -621,6 +623,54 @@ namespace Rehab.Persistence.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("PackageRequests");
+                });
+
+            modelBuilder.Entity("Rehab.Domain.Packages.PaymentLink", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsUsed")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("LinkExpiresAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("PackageRequestId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("PaidAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("PaymentStatus")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("SessionExpiredsAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("StripeSessionId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("StripeSessionUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Token")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PackageRequestId");
+
+                    b.ToTable("PaymentLinks");
                 });
 
             modelBuilder.Entity("Rehab.Domain.SubstancesWeTreat.Swt", b =>
@@ -928,6 +978,17 @@ namespace Rehab.Persistence.Migrations
                     b.Navigation("Facility");
                 });
 
+            modelBuilder.Entity("Rehab.Domain.Packages.PaymentLink", b =>
+                {
+                    b.HasOne("Rehab.Domain.Packages.PackageRequest", "PackageRequest")
+                        .WithMany("PaymentLink")
+                        .HasForeignKey("PackageRequestId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("PackageRequest");
+                });
+
             modelBuilder.Entity("Rehab.Domain.Blog.BlogPost", b =>
                 {
                     b.Navigation("Comments");
@@ -936,6 +997,11 @@ namespace Rehab.Persistence.Migrations
             modelBuilder.Entity("Rehab.Domain.Facilities.Facility", b =>
                 {
                     b.Navigation("FacilitysImages");
+                });
+
+            modelBuilder.Entity("Rehab.Domain.Packages.PackageRequest", b =>
+                {
+                    b.Navigation("PaymentLink");
                 });
 #pragma warning restore 612, 618
         }

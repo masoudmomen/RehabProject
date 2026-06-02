@@ -3,10 +3,17 @@
 @using Rehab.EndPoint.AdminPanel.Viewmodels
 @using Rehab.Application.Packages
 @using Rehab.EndPoint.AdminPanel.Components.Controls
+@using Rehab.Application.PaymentLinks
+@using Microsoft.Extensions.Options
 @inject AutoMapper.IMapper mapper
+@inject IOptions<PaymentLinksOptions> PaymentLinksOptions
 @inject IPackageRequestService PackageRequestService
+@inject IPaymentLinkService PaymentLinkService
+@inject IJSRuntime JSRuntime
 @rendermode InteractiveServer
 <div class="mx-auto p-4">
+
+
     @if (!string.IsNullOrWhiteSpace(ActionResultMessage))
     {
         <div class="alert @(IsActionSuccess ? "alert-success" : "alert-danger")" role="alert">
@@ -46,6 +53,8 @@
                             @foreach (var item in PackageRequestList.Data)
                             {
                                 i++;
+                                var hasPaymentLinkRecord = HasPaymentLinkRecord(item);
+                               
                                 <tr>
                                     <th scope="row" style="width:40px;">@i</th>
                                     <td style="width:56px;">
@@ -59,21 +68,25 @@
                                     <td>@item.PhoneNumber</td>
                                     <td>@item.PackageType</td>
                                     <td>
-                                        @if (item.RequestStatus == "New")
-                                        {
-                                            <span class="badge bg-danger text-light">New</span>
-                                        }
-                                        else
-                                        {
-                                            <span class="badge bg-secondary">@item.RequestStatus</span>
-                                        }
+                                       
+                                        
+                                         <span class="badge @(_paymentStatuses.GetValueOrDefault(item.Id, "new") switch {
+                                            "New*" => "bg-warning text-dark",
+                                            "Pending" => "bg-info text-light",
+                                            "Paid" => "bg-success text-light",
+                                            "Faild" => "bg-danger text-light",
+                                            "Expired" => "bg-dark text-light",
+                                            _ => "bg-secondary"
+                                        })">@_paymentStatuses.GetValueOrDefault(item.Id, "new")</span>
+                                        
+                      
                                     </td>
                                     <td>
                                         <button type="button"
-                                                class="btn btn-sm btn-outline-success"
+                                                class="btn btn-sm btn-outline-success" 
                                                 @onclick="() => OpenPaymentLinkModal(item)">
-                                            Add Link
-                                        </button>
+                                                Payment Link
+                                         </button>
                                     </td>
                                     <td>
                                         <button type="button"
@@ -125,7 +138,7 @@
         </nav>
     }
 </div>
-
+@* Request Details Modal*@
 <ModalComponent @rendermode="InteractiveServer"
                 TModel="PackageRequestViewModel"
                 Title="Request Details"
@@ -136,6 +149,10 @@
                 OnValidSubmit="@CloseDetailsModal"
                 @ref="DetailsModal">
     <div class="container mb-2 px-0">
+        <div class="row my-3">
+            <div class="col-4">Request Id</div>
+            <div class="col-8">@DetailsRequestModal.Id</div>
+        </div>
         <div class="row my-3">
             <div class="col-4">Name</div>
             <div class="col-8">@DetailsRequestModal.FirstName @DetailsRequestModal.LastName</div>
@@ -168,28 +185,32 @@
             <div class="col-4">Message</div>
             <div class="col-8">@DetailsRequestModal.Message</div>
         </div>
+        <div class="row my-3">
+            <div class="col-4">Status</div>
+            <div class="col-8">@DetailsRequestModal.RequestStatus</div>
+        </div>
     </div>
 </ModalComponent>
 
+
+@* Payment Link Modal *@
 <ModalComponent @rendermode="InteractiveServer"
-                TModel="PaymentLinkFormModel"
-                Title="Add Payment Link"
-                OkButton="Save Link"
-                OkButtonClass="btn btn-success"
+                TModel="PackageRequestViewModel"
+                Title="Payment Link Handler"
                 CancelButton="Cancel"
-                Model="@PaymentLinkForm"
-                OnValidSubmit="@SavePaymentLinkAsync"
+                Model="@SelectedRequest" 
+                CloseOnValidSubmit="false"
+                OnValidSubmit="@DeleteReauestAsync"
+                UseEditForm="false"
+                ShowFooter="false"
                 @ref="PaymentLinkModal">
-    <h6 class="text-muted">Add payment link for @SelectedPaymentLinkRequestName</h6>
-    <div class="mb-3 mt-3">
-        <label class="form-label">Payment Link</label>
-        <InputText type="text"
-                   class="form-control"
-                   @bind-Value="PaymentLinkForm.PaymentLink"
-                   placeholder="https://your-payment-provider.com/link" />
-    </div>
-</ModalComponent>
 
+    <h6 class="text-muted">@PaymentLinkModalSubtitle</h6>
+    <PaymentLinkComponent  RequestedPackage="@SelectedRequest" OnClose="ClosePaymentModal">
+        
+    </PaymentLinkComponent>
+</ModalComponent>
+@* Delete modal *@
 <ModalComponent @rendermode="InteractiveServer"
                 TModel="PackageRequestViewModel"
                 Title="Delete Request"
@@ -235,13 +256,12 @@
     public PaginatedItemDto<PackageRequestViewModel>? PackageRequestList { get; set; }
     public ModalComponent<PackageRequestViewModel> DeleteModal;
     public ModalComponent<PackageRequestViewModel> DetailsModal;
-    public ModalComponent<PaymentLinkFormModel> PaymentLinkModal;
-    public PackageRequestViewModel DetailsRequestModal { get; set; } = new();
-    public PackageRequestViewModel DeleteRequestModal { get; set; } = new();
-    public PaymentLinkFormModel PaymentLinkForm { get; set; } = new();
+    public ModalComponent<PackageRequestViewModel> PaymentLinkModal;
+    public PackageRequestViewModel SelectedRequest =new PackageRequestViewModel();
+
     private string? ActionResultMessage;
     private bool IsActionSuccess;
-    private Guid SelectedPaymentLinkRequestId;
+    private int SelectedPaymentLinkRequestId;
     private string SelectedPaymentLinkRequestName = string.Empty;
     private int TotalPages;
     private int CurrentPage;
@@ -251,15 +271,41 @@
     private int MinPagingButton = 1;
     private int gotoPageNumber = 1;
 
+    private bool _isLoading = false;
+    private decimal _amount;
+
+    private DateTime _createdDate;
+    private DateTime _expiredDate;
+
+    private string _description = string.Empty;
+    private string? _displayPaymentUrl;
+    private bool _selectedRequestHasPaymentLink;
+    private bool _openedWithExistingLink;
+    private bool _showLinkCreatedMessage;
+    private string? _errorMessage;
+
+    private string PaymentLinkModalTitle = "Add Payment Link";
+    private string PaymentLinkModalOkLabel = "Save Link";
+    private string PaymentLinkModalOkClass = "btn btn-success";
+    private string PaymentLinkModalSubtitle = string.Empty;
+    private Dictionary<int, string> _paymentStatuses = new();
+    public PackageRequestViewModel DetailsRequestModal { get; set; } = new();
+    public PackageRequestViewModel DeleteRequestModal { get; set; } = new();
+    // public CreatePaymentLinkCommandViewModel PaymentLinkForm { get; set; } = new();
     protected override async Task OnInitializedAsync()
     {
         await LoadPageAsync(1);
+
     }
 
     private async Task LoadPageAsync(int page)
     {
         var result = await PackageRequestService.GetListAsync(page, PageSize);
         var mapped = mapper.Map<IEnumerable<PackageRequestViewModel>>(result.Data);
+        foreach (var item in mapped)
+        {
+            _paymentStatuses[item.Id] = await PaymentStatus(item.Id);
+        }
         PackageRequestList = new PaginatedItemDto<PackageRequestViewModel>(result.PageIndex, result.PageSize, result.Count, mapped);
         TotalPages = PackageRequestList.Pager.TotalPages;
         CurrentPage = PackageRequestList.PageIndex;
@@ -273,7 +319,10 @@
             return;
         await LoadPageAsync(page);
     }
-
+    private void ClosePaymentModal()
+    {
+        PaymentLinkModal.Close();
+    }
     private void OpenDeleteModal(PackageRequestViewModel PackageRequest)
     {
         DeleteRequestModal = PackageRequest;
@@ -291,19 +340,20 @@
         return Task.CompletedTask;
     }
 
-    private void OpenPaymentLinkModal(PackageRequestViewModel packageRequest)
+    private async Task OpenPaymentLinkModal(PackageRequestViewModel packageRequest)
     {
-        SelectedPaymentLinkRequestId = packageRequest.Id;
-        SelectedPaymentLinkRequestName = $"{packageRequest.FirstName} {packageRequest.LastName}".Trim();
-        PaymentLinkForm = new PaymentLinkFormModel();
+        SelectedRequest = packageRequest;
         PaymentLinkModal.Show();
+        PaymentLinkModal.SetIsAddBtnActive(true);
     }
 
-    private Task SavePaymentLinkAsync(PaymentLinkFormModel model)
+
+    private async Task CopyPaymentLinkAsync()
     {
-        ActionResultMessage = $"Payment link saved for {SelectedPaymentLinkRequestName}.";
-        IsActionSuccess = true;
-        return Task.CompletedTask;
+        if (string.IsNullOrEmpty(_displayPaymentUrl))
+            return;
+        await JSRuntime.InvokeVoidAsync(
+            "navigator.clipboard.writeText", _displayPaymentUrl);
     }
 
     private async Task DeleteReauestAsync(PackageRequestViewModel PackageRequest)
@@ -318,6 +368,11 @@
             await LoadPageAsync(CurrentPage);
         }
     }
+
+    // List API sets PaymentCheckoutUrl only when a PaymentLinks row exists (customer pay-page URL from token).
+    private static bool HasPaymentLinkRecord(PackageRequestViewModel packageRequest) =>
+        !string.IsNullOrWhiteSpace(packageRequest.PaymentCheckoutUrl);
+
 
     private Task CheckPagingButtons()
     {
@@ -334,10 +389,30 @@
         return Task.CompletedTask;
     }
 
-    public class PaymentLinkFormModel
+    private async Task<string> PaymentStatus(int requestid)
     {
-        [System.ComponentModel.DataAnnotations.Required(ErrorMessage = "Payment link is required")]
-        [System.ComponentModel.DataAnnotations.Url(ErrorMessage = "Please enter a valid URL")]
-        public string PaymentLink { get; set; } = string.Empty;
+        string status = "New*";
+        if(requestid > 0)
+        {
+
+            var paymentlink = await PaymentLinkService.GetPaymentLinkByRequestIdAsync(requestid);
+            if (paymentlink.Data != null)
+            {
+                status = paymentlink.Data.PaymentStatus switch
+                {
+                    0 => "Pending",
+                    1 => "Paid",
+                    2 => "Faild",
+                    // 3 => "Expired"
+                };
+                if(paymentlink.Data.LinkExpiresAt < DateTime.UtcNow && paymentlink.Data.PaymentStatus ==0 )
+                {
+                    status = "Expired";
+                }
+            }
+        }
+        return status;
     }
+
+  
 }

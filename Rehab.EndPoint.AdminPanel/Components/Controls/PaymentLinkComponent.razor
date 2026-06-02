@@ -1,0 +1,363 @@
+﻿@using Rehab.EndPoint.AdminPanel.Viewmodels
+@using Rehab.Application.PaymentLinks
+@using Microsoft.Extensions.Options
+@using AutoMapper
+@inject IPaymentLinkService PaymentLinkService
+@inject IMapper mapper
+@inject IOptions<PaymentLinksOptions> PaymentLinksOptions
+@inject IJSRuntime JSRuntime
+@inject AlertService AlertService
+<div class="btn btn-close position-absolute top-0 end-0 m-2" @onclick="Close"></div>
+
+<div class="alert @GetStatusClass()" role="alert">
+    <div class="d-flex">
+        <i class="@Status.IconClass pt-1"></i>
+        <div class="ps-2">
+            <strong>@Status.Title</strong>
+            <p>@Status.Description</p>
+        </div>
+    </div>
+    @if (PaymentLink?.PaymentStatus == 3)
+    {
+        <button class="btn btn-warning w-100 @(showPaymentForm ? "d-none" : "d-block")"
+                @onclick="() => { showPaymentForm = true; showPaymentInfo = false; }">
+            Regenerate link
+        </button>
+    }
+</div>
+@if (isExpired || !selectedRequestHasPaymentLink)
+{
+    @if (showPaymentForm)
+    {
+        <EditForm Model="@model" OnValidSubmit="CreatePaymentLink">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+            <h6>Create new paymentlink</h6>
+            <div class="mb-3">
+                <label class="form-label">Amount (USD)</label>
+                <input type="number" class="form-control"
+                       @bind="model.Amount" />
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Expired date</label>
+                <input type="date" class="form-control" 
+                       @bind="model.LinkExpiresAt" />
+            </div>
+
+            <div class="d-flex justify-content-end gap-2">
+                <button type="submit"
+                        class="btn btn-success  @(isLoading ? "disabled" : "") ">
+                    @if (isLoading)
+                    {
+                        <span>Sending...</span>
+                    }
+                    else
+                    {
+                        <span>Create Link</span>
+                    }
+                </button>
+
+                <button type="button"
+                        class="btn btn-secondary @(isLoading ? "disabled" : "")"
+                        @onclick="Close">
+                    Close
+                </button>
+
+            </div>
+
+        </EditForm>
+
+    }
+    else
+    {
+        @* 
+        <div class="alert alert-success">
+            @successMesage
+        </div> *@
+
+    }
+
+}
+
+@if (PaymentLink != null)
+{
+    <hr />
+    @if (showPaymentInfo)
+    {
+        <div class="input-group">
+            <input class="form-control"
+                   value="@displayPaymentUrl" readonly />
+            <button type="button" class="btn btn-outline-secondary"
+                    @onclick="CopyPaymentLinkAsync">
+                <i class="fa-regular fa-copy"></i>
+                Copy
+            </button>
+        </div>
+        <div class="payment-detial mt-3 ">
+
+            <div class="payment-detial-item">
+                <div class="detail-label">Amount:</div>
+                <div class="fw-bold">@PaymentLink.Amount</div>
+            </div>
+
+            <div class="payment-detial-item">
+                <div class="detail-label">Created Date:</div>
+                <div class="fw-bold">@PaymentLink.CreatedAt.ToString("yyyy-MM-dd HH:mm")</div>
+            </div>
+
+            <div class="payment-detial-item">
+                <div class="detail-label">Expired Date:</div>
+                <div class="fw-bold">@PaymentLink.LinkExpiresAt.ToString("yyyy-MM-dd HH:mm")</div>
+            </div>
+
+            <div class="payment-detial-item">
+                <div class="detail-label">Payment date:</div>
+                <div class="fw-bold">@PaymentLink.PaidAt.ToString("yyyy-MM-dd HH:mm")</div>
+            </div>
+        </div>
+    }
+
+    <div class="d-flex justify-content-end gap-2 mt-2">
+        @if (PaymentLink.PaymentStatus != 1 && showPaymentForm == false)
+        {
+            <button class="btn btn-danger" @onclick="() => OpenDeleteModal(PaymentLink)">Delete</button>
+            <button class="btn btn-secondary" @onclick="Close">Close</button>
+        }
+
+    </div>
+
+}
+
+<ModalComponent @rendermode="InteractiveServer"
+                TModel="PaymentLinkViewModel"
+                Title="Delete Request"
+                OkButton="Yes, I am Sure"
+                OkButtonClass="btn btn-danger"
+                CancelButton="Cancel"
+                Model="@DeleteLink"
+                OnValidSubmit="@DeletePaymentLink"
+                @ref="DeleteModal">
+    <h1>Are you sure for delete this Payment Link?</h1>
+</ModalComponent>
+
+@code {
+
+    [Parameter] public PackageRequestViewModel? RequestedPackage { get; set; }
+    [Parameter] public EventCallback OnClose { get; set; }
+
+    private PaymentLinkStatus Status = new();
+    public PaymentLinkViewModel DeleteLink = new();
+    public ModalComponent<PaymentLinkViewModel> DeleteModal;
+    private bool selectedRequestHasPaymentLink;
+    private PaymentLinkViewModel model = new();
+    private PaymentLinkViewModel? PaymentLink;
+    private string statusMessage = string.Empty;
+    private bool isLoading = false;
+    private string? displayPaymentUrl;
+    private string SelectedRequestName = string.Empty;
+    private bool ispaid;
+    private bool isUsed;
+    private string paymentStatus;
+    private bool isExpired;
+    private bool showPaymentInfo = false;
+    private bool showPaymentForm = true;
+    private bool showSuccessMessage = false;
+    private bool isDeletedPaymentLinks = false;
+    private string DeletedSuccessMessage = string.Empty;
+    private string successMesage = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        SelectedRequestName = $"{RequestedPackage.FirstName} {RequestedPackage.LastName}".Trim();
+        if (RequestedPackage != null)
+        {
+            await CheckPaymentLinkAsync(RequestedPackage);
+        }
+
+        await base.OnInitializedAsync();
+    }
+
+    private async Task CheckPaymentLinkAsync(PackageRequestViewModel packageRequest)
+    {
+        paymentStatus = "New";
+        showPaymentInfo = false;
+        showPaymentForm = false;
+        selectedRequestHasPaymentLink = false;
+        PaymentLink = null;
+        var paymentlink = await PaymentLinkService.GetPaymentLinkByRequestIdAsync(packageRequest.Id);
+        if (paymentlink.Data == null)
+        {
+            showPaymentForm = true;
+        }
+        if (paymentlink.Success && paymentlink.Data is not null &&
+            !string.IsNullOrWhiteSpace(paymentlink.Data.Token))
+        {
+            if (paymentlink.Data.LinkExpiresAt < DateTime.UtcNow)
+                isExpired = true;
+            if (paymentlink.Data.PaymentStatus == 1)
+            {
+                ispaid = true;
+                isUsed = true;
+                paymentStatus = "Paid";
+                showPaymentInfo = true;
+                showPaymentForm = false;
+
+            }
+            else if (paymentlink.Data.PaymentStatus == 2)
+            {
+                isUsed = true;
+                ispaid = false;
+                paymentStatus = "Faild";
+                showPaymentInfo = true;
+            }
+            else
+            {
+                paymentStatus = "Pending";
+                showPaymentInfo = true;
+            }
+
+            PaymentLink = mapper.Map<PaymentLinkViewModel>(paymentlink.Data);
+
+            displayPaymentUrl = PaymentLinkAddressBuilder.BuildCustomerPayPageUrl(
+                                PaymentLinksOptions.Value.PublicWebBaseUrl,
+                                paymentlink.Data.Token);
+            selectedRequestHasPaymentLink = true;
+            if (PaymentLink.LinkExpiresAt < DateTime.UtcNow && PaymentLink.PaymentStatus != 1)
+            {
+                PaymentLink.PaymentStatus = 3;
+                paymentStatus = "Expired";
+                showPaymentForm = false;
+            }
+
+
+        }
+        else
+        {
+
+            //NEW
+        }
+        Status = PaymentLink?.PaymentStatus switch
+        {
+            null => new()
+            {
+                Type = PaymentLinkStatus.StatusType.New,
+                Title = "No payment link yet",
+                Description = "Fill in the details below to generate a link.",
+                IconClass = "fa-solid fa-plus"
+            },
+            0 => new()
+            {
+                Type = PaymentLinkStatus.StatusType.Pending,
+                Title = "Link sent — awaiting payment",
+                Description = "Waiting for the user to complete payment.",
+                IconClass = "ti-mail-forward"
+            },
+            1 => new()
+            {
+                Type = PaymentLinkStatus.StatusType.Paid,
+                Title = "Payment completed successfully.",
+                Description = "The user has paid in full. This request is now active and complete.",
+                IconClass = "fa-regular fa-circle-check"
+
+            },
+            2 => new()
+            {
+                Type = PaymentLinkStatus.StatusType.Faild,
+                Title = "Payment link has expired",
+                Description = "The deadline has passed. You can regenerate a new link.",
+                IconClass = "ti-calendar-x"
+            },
+            3 => new()
+            {
+                Type = PaymentLinkStatus.StatusType.Expired,
+                Title = "Payment link has expired",
+                Description = "The payment deadline has passed. You can regenerate a new link if needed..",
+                IconClass = "fa-solid fa-calendar-xmark"
+            }
+        };
+
+    }
+    public async Task CreatePaymentLink()
+    {
+        isLoading = true;
+        if (model != null && RequestedPackage != null)
+        {
+            model.PackageRequestId = RequestedPackage.Id;
+            var paymentLink = mapper.Map<PaymentLinkDto>(model);
+            var result = await PaymentLinkService.CreateAsync(paymentLink);
+            if (result.Success && result.Data != null)
+            {
+                isLoading = false;
+                await CheckPaymentLinkAsync(RequestedPackage);
+                StateHasChanged();
+            }
+        }
+    }
+    private async Task Close()
+    {
+        await OnClose.InvokeAsync();
+    }
+    private async Task CopyPaymentLinkAsync()
+    {
+        if (string.IsNullOrEmpty(displayPaymentUrl))
+            return;
+        await JSRuntime.InvokeVoidAsync(
+            "navigator.clipboard.writeText", displayPaymentUrl);
+    }
+
+
+    private void OpenDeleteModal(PaymentLinkViewModel paymentLink)
+    {
+        DeleteLink = paymentLink;
+        DeleteModal.Show();
+    }
+    private async Task DeletePaymentLink()
+    {
+        if (RequestedPackage != null && PaymentLink != null && PaymentLink.PackageRequestId > 0)
+        {
+            var result = await PaymentLinkService.DeleteLinksByRequestId(PaymentLink.PackageRequestId);
+            if (result.Success)
+            {
+                isDeletedPaymentLinks = true;
+                isLoading = false;
+                await CheckPaymentLinkAsync(RequestedPackage);
+                StateHasChanged();
+            }
+        }
+
+
+    }
+    private string GetStatusClass() => paymentStatus switch
+    {
+        "New" => "alert-secondary",
+        "Paid" => "alert-success",
+        "Pending" => "alert-info",
+        "Faild" => "alert-danger",
+        "Expired" => "alert-warning",
+        _ => ""
+    };
+    public class PaymentLinkStatus
+    {
+        public StatusType Type { get; set; }
+        public string Title { get; set; }
+        public string Description { get; set; }
+        public string IconClass { get; set; }
+
+        public enum StatusType { New, Pending, Paid, Faild, Expired }
+    }
+}
+<style>
+    .payment-detial {
+        display: grid;
+        grid-template-columns: 50% 50%;
+        grid-column-gap: 10px;
+        grid-row-gap: 10px;
+    }
+
+        .payment-detial .payment-detial-item {
+            background-color: #F5F4ED;
+            border-radius: 5px;
+            padding: 5px;
+        }
+</style>

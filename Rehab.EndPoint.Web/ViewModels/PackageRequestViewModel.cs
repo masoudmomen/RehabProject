@@ -5,7 +5,7 @@ namespace Rehab.EndPoint.Web.ViewModels
 {
     public class PackageRequestViewModel
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         [Required(ErrorMessage ="The first name is required")]
         public string FirstName { get; set; }
         [Required(ErrorMessage = "The last name is required")]
@@ -20,5 +20,9 @@ namespace Rehab.EndPoint.Web.ViewModels
         public string RequestStatus { get; set; }
 
         public DateTime CreatedDate { get; set; }
+
+        public string? PaymentCheckoutUrl { get; set; }
+
+
     }
 }
