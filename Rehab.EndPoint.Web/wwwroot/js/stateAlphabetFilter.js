@@ -42,7 +42,7 @@ function showStates(letter, btn) {
     const filtered = states.filter(s => s.startsWith(letter));
     statesListDiv.innerHTML = filtered
         .map(s => {
-            const url = s.toLowerCase().replace(/\s+/g, '-');
+            const url = s.replace(/\s+/g, '-');
             return `<div><a target="_blank" class="state-link" href="/states/${url}"> 
             <i class="fa-solid fa-location-dot"></i> ${s} </a>
             </div>`;

@@ -14,9 +14,9 @@
 <div class="w-75 mx-auto p-4">
     <div class="d-flex justify-content-between">
         <h3>Blog Tags</h3>
-        <a href="/blog/tag/add" class="btn btn btn-outline-primary">
+        <NavLink Match="NavLinkMatch.All" href="blog/tag/add" class="btn btn btn-outline-primary">
             <i class="fa-solid fa-plus"></i> Add
-        </a>
+        </NavLink>
     </div>
 
     @if (BlogTagList is not null)
