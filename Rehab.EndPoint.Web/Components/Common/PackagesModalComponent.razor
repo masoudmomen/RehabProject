@@ -27,10 +27,10 @@
                             </div>
                             <button type="button" class="btn-close" @onclick="Close"></button>
                         </div>
-                        <div class="mb-3 mt-3">
+                        @* <div class="mb-3 mt-3">
                             <span class="pkg-pill" id="pkgPill">@PackageName @PackagePrice</span>
-                        </div>
-
+                        </div> *@
+                        <hr />
                         <EditForm Model="model" OnValidSubmit="SubmitAsync">
                             <DataAnnotationsValidator />
                             <ValidationSummary />
