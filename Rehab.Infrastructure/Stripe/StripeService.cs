@@ -18,6 +18,8 @@ namespace Rehab.Infrastructure.Stripe
         public StripeService(IOptions<StripeSettings> settings)
         {
             _stripeSettings = settings.Value;
+            //Console.WriteLine("STRIPE KEY = " + _stripeSettings.SecretKey);
+            //Console.WriteLine("webhook KEY = " + _stripeSettings.WebhookSecret);
             if (!string.IsNullOrEmpty(_stripeSettings.SecretKey))
                 StripeConfiguration.ApiKey = _stripeSettings.SecretKey;
         }

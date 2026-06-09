@@ -3,6 +3,9 @@
     text-decoration: inherit;
     font-size: 0.8rem;
 }
+    .footer a:hover {
+        color: #718bfd !important;
+    }
 .btn-blue {
     border: none;
     background-color: #007bff;
@@ -42,4 +45,12 @@ a.footer-tell {
         -webkit-border-radius: 5px;
         border-radius: 5px;
         padding: 0.5rem 1rem;
+    }
+
+li.social-icons a, li.social-icons a:visited{
+    color:#fff ;
+    font-size: 1.2rem;
+}
+    li.social-icons a:hover {
+        color: #718bfd;
     }

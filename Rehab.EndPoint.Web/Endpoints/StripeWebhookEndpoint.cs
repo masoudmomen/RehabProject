@@ -12,6 +12,7 @@ namespace Rehab.EndPoint.Web.Endpoints
     {
         public static IEndpointRouteBuilder MapStripeWebHook(this IEndpointRouteBuilder app)
         {
+          
             app.MapPost("/api/stripe/webhook/", async (
 
                 HttpRequest req,
@@ -32,11 +33,29 @@ namespace Rehab.EndPoint.Web.Endpoints
                     catch (Exception ex)
                     {
                         return Results.BadRequest($"Webhook Error: {ex.Message}");
-                    }
+                     }
 
                     if (stripeEvent.Type == "checkout.session.completed")
                     {
                         var session = (Session)stripeEvent.Data.Object;
+                        //Console.WriteLine("=== STRIPE SESSION DEBUG ===");
+                        //Console.WriteLine($"SessionId: {session.Id}");
+                        //Console.WriteLine($"Metadata count: {session.Metadata?.Count}");
+                        //if (session.Metadata != null)
+                        //{
+                        //    foreach (var item in session.Metadata)
+                        //    {
+                        //        Console.WriteLine($"{item.Key}={item.Value}");
+                        //    }
+                        //}
+                        //else
+                        //{
+                        //    Console.WriteLine("Metadata is NULL ❌");
+                        //    Console.WriteLine(stripeEvent.Type);
+                        //}
+
+                        Console.WriteLine("=== END DEBUG ===");
+
                         var token = session.Metadata["token"];
 
                         var linkResult = await paymentLink.GetByTokenAsync(token);

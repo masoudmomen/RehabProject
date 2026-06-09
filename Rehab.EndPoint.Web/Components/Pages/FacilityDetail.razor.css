@@ -2,9 +2,7 @@
     margin-left: 0px !important;
     margin-right: 0px !important;
 }
-h2.section-title {
-    text-align: center
-}
+
 ::deep .facility-tab .nav.nav-tabs {
     -webkit-justify-content: center;
     justify-content: center;
@@ -43,21 +41,7 @@ h2.section-title {
     ::deep .facility-tab .nav-tabs .nav-link.active::after {
         transform: translateX(-50%) scaleX(1);
     }
-.cards-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 1rem;
-}
-.insurance .cards-grid {
-    grid-template-columns: repeat(auto-fit, minmax(200px, 200px));
-    justify-content: center;
-}
-    .insurance .card-content{
-        padding:5px;
-    }
-    .cards-grid.loc {
-        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    }
+
 ::deep .insurance .card-content .btn-link {
     color: #4a90e2;
     font-size: 12px !important;
