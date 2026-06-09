@@ -1,19 +1,19 @@
-﻿using Rehab.Domain.Packages;
+﻿using Rehab.Application.PaymentLinks;
 using System.ComponentModel.DataAnnotations;
 
-namespace Rehab.EndPoint.Web.ViewModels
+namespace Rehab.EndPoint.AdminPanel.Viewmodels
 {
     public class PackageRequestViewModel
     {
         public int Id { get; set; }
-        [Required(ErrorMessage ="The first name is required")]
+        [Required(ErrorMessage = "The first name is required")]
         public string FirstName { get; set; }
         [Required(ErrorMessage = "The last name is required")]
         public string LastName { get; set; }
         public string? CenterName { get; set; }
         public string? Message { get; set; }
         [Required(ErrorMessage = "The email is required")]
- 
+
         public string Email { get; set; }
         public string? PhoneNumber { get; set; }
         public string PackageType { get; set; }
@@ -22,7 +22,9 @@ namespace Rehab.EndPoint.Web.ViewModels
         public DateTime CreatedDate { get; set; }
 
         public string? PaymentCheckoutUrl { get; set; }
-
-
+        public int PaymentStatus { get; set; }
+        public ICollection<PaymentLinkViewModel>? PaymentLink { get; set; }
+        public PaymentLinkViewModel? LastPaymentLink { get; set; }
     }
 }
+ 

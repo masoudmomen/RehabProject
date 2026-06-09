@@ -10,6 +10,7 @@
     <Compile Remove="Migrations\20251212093919_InitialIdentity.cs" />
     <Compile Remove="Migrations\20251212093919_InitialIdentity.Designer.cs" />
     <Compile Remove="Migrations\ApplicationDbContextModelSnapshot.cs" />
+    <Compile Remove="Viewmodels\CreatePaymentLinkCommandViewModel.cs" />
   </ItemGroup>
 
   <ItemGroup>

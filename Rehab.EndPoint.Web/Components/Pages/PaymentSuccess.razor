@@ -1,0 +1,62 @@
+@page "/Packages/payment/success"
+@using Rehab.Application.PaymentLinks
+@using Rehab.EndPoint.Web.ViewModels
+@using AutoMapper
+@inject IPaymentLinkService PaymentLinkService
+@inject IMapper _mapper;
+<div class="container py-5">
+    <div class="mx-auto" style="max-width: 28rem;">
+        <div class="">
+            <p>
+                Package:<strong> Basic </strong>
+
+            </p>
+            <div class="alert alert-success p-3">
+              <i class="far fa-check-circle"></i>
+              Payment completed
+            </div>
+            <h2 class="text-success">@PaymentLink.Amount $</h2>
+            <hr/>
+           
+            <div class="text-center">
+                <div class="text-success fs-2"> <i class="far fa-check-circle"></i></div>
+                Your payment was received successfully.<br/>
+                Your package is now active.
+            </div>
+         
+        </div>
+    </div>
+</div>
+@code {
+    [SupplyParameterFromQuery(Name = "session_id")]
+    public string? SessionId { get; set; }
+    private PaymentLinkViewmodel PaymentLink = new();
+    private bool IsLoading = true;
+    private string? ErrorMessage;
+
+    // private PaymentSuccessDto? PaymentInfo;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (string.IsNullOrWhiteSpace(SessionId))
+        {
+            ErrorMessage = "Payment session not found.";
+            IsLoading = false;
+            return;
+        }
+        var paymentLink = PaymentLinkService.GetByStripeSessionId(SessionId);
+        if (paymentLink.Success && paymentLink.Data is not null)
+        {
+            PaymentLink = _mapper.Map<PaymentLinkViewmodel>(paymentLink.Data);
+        }
+        else
+        {
+            ErrorMessage = paymentLink.Message ?? "Payment not found.";
+        }
+
+        IsLoading = false;
+
+
+
+    }
+}

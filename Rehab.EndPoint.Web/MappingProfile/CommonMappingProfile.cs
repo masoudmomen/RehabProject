@@ -7,6 +7,7 @@ using Rehab.Application.Highlights;
 using Rehab.Application.Insurances;
 using Rehab.Application.LevelsOfCare;
 using Rehab.Application.Packages;
+using Rehab.Application.PaymentLinks;
 using Rehab.Application.SubstancesWeTreat;
 using Rehab.Application.Tags;
 using Rehab.Application.Treatments;
@@ -27,6 +28,7 @@ using AccreditationViewmodel = Rehab.EndPoint.Web.ViewModels.AccreditationViewmo
 using AmenityViewmodel = Rehab.EndPoint.Web.ViewModels.AmenityViewmodel;
 using HighlightViewmodel = Rehab.EndPoint.Web.ViewModels.HighlightViewmodel;
 using LocViewmodel = Rehab.EndPoint.Web.ViewModels.LocViewmodel;
+using PackageRequestViewModel = Rehab.EndPoint.Web.ViewModels.PackageRequestViewModel;
 using TagViewModel = Rehab.EndPoint.Web.ViewModels.TagViewModel;
 using TreatmentViewmodel = Rehab.EndPoint.Web.ViewModels.TreatmentViewmodel;
 
@@ -81,6 +83,7 @@ namespace Rehab.EndPoint.Web.MappingProfile
             CreateMap<WwtDto, CardViewModel>()
                 .ForMember(dest => dest.Image, opt => opt.MapFrom(src => src.Logo));
             CreateMap<PackageRequestViewModel, PackageRequestDto>().ReverseMap();
+            CreateMap<PaymentLinkViewmodel, PaymentLinkDto>().ReverseMap();
         }
 
     }

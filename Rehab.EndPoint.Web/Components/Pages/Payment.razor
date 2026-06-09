@@ -1,0 +1,239 @@
+﻿@page "/Packages/pay/{Token}"
+@rendermode InteractiveServer
+@using System.Globalization
+@using Rehab.Application.PaymentLinks
+@using Rehab.Application.Stripe
+@using Rehab.Application.Packages
+@inject IPaymentLinkService PaymentLinkService
+@inject IStripeService StripeService
+@inject IPackageRequestService PackageRequestService
+@inject NavigationManager Navigation
+
+<div class="container py-5">
+     
+    @if (IsExpired)
+    {
+        <div class="mx-auto" style="max-width: 28rem;">
+
+            <p class="mb-1"><strong>Name:</strong> @_requesterName</p>
+            <p class="text-muted mb-3"><strong>Package:</strong> @_packageName</p>
+            <p class="alert alert-danger mb-4 p-3">
+                <i class="far fa-calendar-times"></i>  Payment link has expired
+            </p>
+            <p class="display-6 fw-semibold text-primary mb-2">@FormatAmount(_link.Amount)</p>
+
+            <p class="alert alert-warning mb-4">
+                 This payment link expired on 
+                 <strong>@_link.LinkExpiresAt.ToString("MMMM d, yyyy", CultureInfo.InvariantCulture) (UTC).</strong>.
+                You can no longer complete this payment using this link. Please contact support to request a new one.
+             </p>
+           
+        </div>
+    } else if (!string.IsNullOrEmpty(ErrorMessage))
+    {
+        <div class="alert alert-danger" role="alert">@ErrorMessage</div>
+    }
+    else if (IsLoading)
+    {
+        <p class="text-muted mb-0">Loading payment details…</p>
+    }
+    else if (_link is not null)
+    {
+        <div class="mx-auto" style="max-width: 28rem;">
+           
+            <p class="mb-1"><strong>Name:</strong> @_requesterName</p>
+            <p class="text-muted mb-3"><strong>Package:</strong> @_packageName</p>
+             <p class="alert alert-info mb-4 p-3">
+                <i class="far fa-clock"></i>   Awaiting your payment
+            </p>
+            <p class="display-6 fw-semibold text-primary mb-2">@FormatAmount(_link.Amount)</p>
+
+            <p class="alert alert-light mb-4">
+                You will be taken to secure Stripe checkout to pay for your package request.
+                This link is valid until <strong>@_link.LinkExpiresAt.ToString("MMMM d, yyyy", CultureInfo.InvariantCulture) (UTC).</strong>
+            </p>
+            <button type="button"
+                    class="btn btn-primary btn-lg w-100"
+                    disabled="@(IsStartingCheckout || IsRedirecting)"
+                    @onclick="StartCheckoutAsync">
+                @if (IsStartingCheckout || IsRedirecting)
+                {
+                    <span>Please wait…</span>
+                }
+                else
+                {
+                    <span>Continue to secure checkout</span>
+                }
+            </button>
+        </div>
+    }
+</div>
+
+@code {
+
+
+
+    [Parameter]
+    public string Token { get; set; } = string.Empty;
+
+    private string? ErrorMessage;
+    private bool IsLoading = true;
+    private bool IsRedirecting;
+    private bool IsStartingCheckout;
+
+    private bool IsExpired = false;
+    private PaymentLinkDto? _link;
+    private string _requestEmail = string.Empty;
+    private string _checkoutDescription = string.Empty;
+    private string _requesterName = string.Empty;
+    private string _packageName = "Package request";
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        IsLoading = true;
+        ErrorMessage = null;
+
+        if (string.IsNullOrWhiteSpace(Token))
+        {
+            ErrorMessage = "Invalid payment link.";
+            IsLoading = false;
+            return;
+        }
+
+        var linkResult = await PaymentLinkService.GetByTokenAsync(Token);
+        if (!linkResult.Success || linkResult.Data is null)
+        {
+            ErrorMessage = string.IsNullOrWhiteSpace(linkResult.Message)
+                ? "This payment link could not be found."
+                : linkResult.Message;
+            IsLoading = false;
+            return;
+        }
+
+        var link = linkResult.Data;
+
+        if (link.IsUsed)
+        {
+            ErrorMessage = "This payment link has already been used.";
+            IsLoading = false;
+            return;
+        }
+
+      
+
+        var requestResult = await PackageRequestService.GetByIdAsync(link.PackageRequestId);
+        if (!requestResult.Success || requestResult.Data is null || string.IsNullOrWhiteSpace(requestResult.Data.Email))
+        {
+            ErrorMessage = "Unable to load payment details. Please contact support.";
+            IsLoading = false;
+            return;
+        }
+        if (link.LinkExpiresAt < DateTime.UtcNow)
+        {
+            IsLoading = false;
+            IsExpired = true;
+           
+        }
+
+        var request = requestResult.Data;
+        _link = link;
+        _requestEmail = request.Email;
+        _requesterName = $"{request.FirstName} {request.LastName}".Trim();
+        _packageName = GetPackageName(request);
+        _checkoutDescription = $"Rehab package — {_requesterName}".Trim();
+
+        IsLoading = false;
+    }
+
+    private static string FormatAmount(decimal amount) =>
+        amount.ToString("C2", CultureInfo.CreateSpecificCulture("en-US"));
+
+    private static string GetPackageName(object request)
+    {
+        var requestType = request.GetType();
+        var packageType = requestType.GetProperty("PackageType")?.GetValue(request)?.ToString();
+        var packageName = requestType.GetProperty("PackageName")?.GetValue(request)?.ToString();
+
+        return !string.IsNullOrWhiteSpace(packageType)
+            ? packageType
+            : !string.IsNullOrWhiteSpace(packageName)
+                ? packageName
+                : "Package request";
+    }
+
+    private async Task StartCheckoutAsync()
+    {
+        if (_link is null)
+            return;
+
+        IsStartingCheckout = true;
+        ErrorMessage = null;
+
+        try
+        {
+            var link = _link;
+            var baseUri = Navigation.BaseUri.TrimEnd('/');
+            var successUrl = $"{baseUri}/Packages/payment/success?session_id={{CHECKOUT_SESSION_ID}}";
+            var cancelUrl = $"{baseUri}/Packages/pay/{Uri.EscapeDataString(Token)}";
+
+            var sessionExpiredOrMissing =
+                string.IsNullOrWhiteSpace(link.StripeSessionUrl)
+                || string.IsNullOrWhiteSpace(link.StripeSessionId)
+                || !link.SessionExpiredsAt.HasValue
+                || link.SessionExpiredsAt.Value < DateTime.UtcNow;
+
+            if (sessionExpiredOrMissing)
+            {
+                var metadata = new Dictionary<string, string> { ["token"] = link.Token };
+
+                CreateSessionResult session;
+                try
+                {
+                    session = await StripeService.CreateCheckoutSessionAsync(new CreateSessionRequest(
+                        Amount: link.Amount,
+                        Currency: "usd",
+                        Description: _checkoutDescription,
+                        CustomerEmail: _requestEmail,
+                        SuccessUrl: successUrl,
+                        CancelUrl: cancelUrl,
+                        Metadata: metadata));
+                }
+                catch
+                {
+                    ErrorMessage = "We could not start checkout. Please try again later.";
+                    return;
+                }
+
+                link.StripeSessionId = session.SessionId;
+                link.StripeSessionUrl = session.SessionUrl;
+                link.SessionExpiredsAt = DateTime.UtcNow.AddMinutes(28);
+
+                var updateResult = await PaymentLinkService.UpdateAsync(link);
+                if (!updateResult.Success || updateResult.Data is null)
+                {
+                    ErrorMessage = string.IsNullOrWhiteSpace(updateResult.Message)
+                        ? "Could not save checkout session."
+                        : updateResult.Message;
+                    return;
+                }
+
+                link = updateResult.Data;
+                _link = link;
+            }
+
+            if (string.IsNullOrWhiteSpace(link.StripeSessionUrl))
+            {
+                ErrorMessage = "Checkout is unavailable.";
+                return;
+            }
+
+            IsRedirecting = true;
+            Navigation.NavigateTo(link.StripeSessionUrl, forceLoad: true);
+        }
+        finally
+        {
+            IsStartingCheckout = false;
+        }
+    }
+}

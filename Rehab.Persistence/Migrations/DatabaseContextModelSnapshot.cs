@@ -693,6 +693,11 @@ namespace Rehab.Persistence.Migrations
                 {
                     b.Navigation("FacilitysImages");
                 });
+
+            modelBuilder.Entity("Rehab.Domain.Packages.PackageRequest", b =>
+                {
+                    b.Navigation("PaymentLink");
+                });
 #pragma warning restore 612, 618
         }
     }

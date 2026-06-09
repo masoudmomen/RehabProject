@@ -17,11 +17,12 @@
 
     public List<CardViewModel> WwtCards = new();
 
-    protected override void OnInitialized()
-    {
-        serverURL = Config["AppSettings:AdminServerUrl"];
-        WwtCards = mapper.Map<List<CardViewModel>>(WwtService.GetList().Take(12));
-    }
+    // protected override Task OnInitializedAsync()
+    // {
+    //     // serverURL = Config["AppSettings:AdminServerUrl"];
+    //     // WwtCards = mapper.Map<List<CardViewModel>>(WwtService.GetList().Take(12));
+    //     // return base.OnInitializedAsync();
+    // }
 }
 <style>
     .wwts-container {

@@ -42,7 +42,7 @@ namespace Rehab.Application.Contexts
         DbSet<BlogPostTag> BlogPostTags { get; set; }
         DbSet<BlogPostTopic> BlogPostTopics { get; set; }
         DbSet<PackageRequest> PackageRequests { get; set; }
-
+        DbSet<PaymentLink> PaymentLinks { get; set; }
         int SaveChanges();
         int SaveChanges(bool acceptAllChangesOnSuccess);
         Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default);

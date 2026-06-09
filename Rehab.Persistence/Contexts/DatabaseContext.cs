@@ -53,5 +53,6 @@ namespace Rehab.Persistence.Contexts
         public DbSet<BlogPostTag> BlogPostTags { get; set; }
         public DbSet<BlogPostTopic> BlogPostTopics { get; set; }
         public DbSet<PackageRequest> PackageRequests { get; set; }
-    }
+        public DbSet<PaymentLink> PaymentLinks { get; set; }
+        }
 }

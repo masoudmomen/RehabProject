@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
 using MimeKit;
 using System;
 using System.Collections.Generic;
@@ -34,13 +35,21 @@ namespace Rehab.Application.Email
             message.Body = new TextPart("html") { Text = body };
 
             using var client = new MailKit.Net.Smtp.SmtpClient();
-            await client.ConnectAsync(_config["Email:Host"], int.Parse(_config["Email:Port"]!),
-                MailKit.Security.SecureSocketOptions.StartTls); await client.AuthenticateAsync(_config["Email:Username"], _config["Email:Password"]);
-            await client.SendAsync(message);
-            await client.DisconnectAsync(true);
+            try
+            {
+                await client.ConnectAsync(_config["Email:Host"], int.Parse(_config["Email:Port"]!),MailKit.Security.SecureSocketOptions.StartTls);
+                await client.AuthenticateAsync(_config["Email:Username"], _config["Email:Password"]);
+                await client.SendAsync(message);
+                await client.DisconnectAsync(true);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Cannot connect to SMTP: _config[\"Email:Host\"], int.Parse(_config[\"Email:Port\"] — {ex.Message}", ex);
+            }
+
 
         }
-    
+
 
     }
 }

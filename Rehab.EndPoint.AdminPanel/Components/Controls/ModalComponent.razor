@@ -1,5 +1,4 @@
-﻿
-@typeparam TModel
+﻿@typeparam TModel
 
 @if (IsVisible)
 {
@@ -7,28 +6,54 @@
         <div class="modal-content">
             <h3>@Title</h3>
             <hr />
-            <EditForm Model="Model" OnValidSubmit="HandleValidSubmit">
-                @*                 <AntiforgeryToken></AntiforgeryToken>
- *@                <DataAnnotationsValidator />
-                <ValidationSummary />
+            @if (UseEditForm)
+            {
 
-                @if(ChildContent != null)
+                <EditForm Model="Model" OnValidSubmit="HandleValidSubmit">
+                    @*                 <AntiforgeryToken></AntiforgeryToken>
+ *@                <DataAnnotationsValidator />
+                    <ValidationSummary />
+
+                    @if (ChildContent != null)
+                    {
+                        @ChildContent
+                    }
+                    @if (ShowFooter)
+                    {
+                        <div class="modal-actions">
+                            @if (isAddBtnActive)
+                            {
+                                <button type="submit" class="@OkButtonClass">@OkButton</button>
+                            }
+                            else
+                            {
+                                <button class="btn btn-outline-danger" disabled>@OkButton</button>
+                            }
+                            <button type="button" class="btn btn-secondary" @onclick="Close">@CancelButton</button>
+                        </div>
+                    }
+                </EditForm>
+            }
+            else
+            {
+                @if (ChildContent != null)
                 {
                     @ChildContent
                 }
 
-                <div class="modal-actions">
-                    @if (isAddBtnActive)
-                    {
-                        <button type="submit" class="@OkButtonClass">@OkButton</button>
-                    }
-                    else
-                    {
-                        <button class="btn btn-outline-danger" disabled>@OkButton</button>
-                    }
-                    <button type="button" class="btn btn-secondary" @onclick="Close">@CancelButton</button>
-                </div>
-            </EditForm>
+                @if (ShowFooter)
+                {
+                    <div class="modal-actions">
+
+                        <button type="button"
+                                class="btn btn-secondary"
+                                @onclick="Close">
+                            @CancelButton
+                        </button>
+
+                    </div>
+                }
+            }
         </div>
     </div>
 }
@@ -40,6 +65,10 @@
     [Parameter] public string OkButton { get; set; }
     [Parameter] public string CancelButton { get; set; }
     [Parameter] public string OkButtonClass { get; set; }
+    [Parameter] public bool CloseOnValidSubmit { get; set; } = true;
+    [Parameter] public bool ShowFooter { get; set; } = true;
+    [Parameter] public bool UseEditForm { get; set; } = true;
+
     private bool isAddBtnActive = true;
 
 
@@ -49,8 +78,8 @@
     {
         IsVisible = true;
         InvokeAsync(StateHasChanged);
-    } 
-    public void Close() 
+    }
+    public void Close()
     {
         IsVisible = false;
         InvokeAsync(StateHasChanged);
@@ -65,6 +94,7 @@
     private async Task HandleValidSubmit()
     {
         await OnValidSubmit.InvokeAsync(Model);
-        Close();
+        if (CloseOnValidSubmit)
+            Close();
     }
 }

@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Rehab.Application.PaymentLinks;
+using Rehab.Domain.Packages;
 
-namespace Rehab.Domain.Packages
+namespace Rehab.Application.Packages
 {
-    public class PackageRequest
+    public class PackageRequestDto
     {
         public int Id { get; set; }
         public string FirstName { get; set; }
@@ -19,21 +16,9 @@ namespace Rehab.Domain.Packages
         public RequestStatus RequestStatus { get; set; }
         public DateTime CreatedDate { get; set; }
 
-        public ICollection<PaymentLink>? PaymentLink { get; set; }
-    }
-
-    public enum PackageType
-    {
-        Basic,
-        Premium,
-        PremiumPlus
-    }
-    public enum RequestStatus
-    {
-        New,
-        Pending,
-        Paid,
-        Faild,
-        Expired,
+        /// <summary>Latest Stripe checkout URL for this request, if a payment link exists.</summary>
+        public string? PaymentCheckoutUrl { get; set; }
+        public PaymentLinkDto? LastPaymentLink { get; set; }
+        public ICollection<PaymentLinkDto>? PaymentLinks { get; set; }
     }
 }

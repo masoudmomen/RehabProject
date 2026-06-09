@@ -1,0 +1,418 @@
+﻿@page "/packages/package-requests"
+@using Rehab.Application.Dtos
+@using Rehab.EndPoint.AdminPanel.Viewmodels
+@using Rehab.Application.Packages
+@using Rehab.EndPoint.AdminPanel.Components.Controls
+@using Rehab.Application.PaymentLinks
+@using Microsoft.Extensions.Options
+@inject AutoMapper.IMapper mapper
+@inject IOptions<PaymentLinksOptions> PaymentLinksOptions
+@inject IPackageRequestService PackageRequestService
+@inject IPaymentLinkService PaymentLinkService
+@inject IJSRuntime JSRuntime
+@rendermode InteractiveServer
+<div class="mx-auto p-4">
+
+
+    @if (!string.IsNullOrWhiteSpace(ActionResultMessage))
+    {
+        <div class="alert @(IsActionSuccess ? "alert-success" : "alert-danger")" role="alert">
+            @ActionResultMessage
+        </div>
+    }
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3 class="mb-0">Package Requests</h3>
+    </div>
+
+    @if (PackageRequestList is not null && PackageRequestList.Count > 0)
+    {
+        <div class="row g-4">
+            <div class="col-sm-12 col-xl-6 w-100">
+                <div class="bg-light rounded h-100 p-4">
+                    <table class="table table-responsive-lg">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">First Name</th>
+                                <th scope="col">Last Name</th>
+                                <th scope="col">Center Name</th>
+                                <th scope="col">Email</th>
+                                <th scope="col">Phone</th>
+                                <th scope="col">Package</th>
+                                <th scope="col">Status</th>
+                                <th scope="col">PaymentLink</th>
+                                <th scope="col">Details</th>
+                                <th scope="col">Delete</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                var i = 0;
+                            }
+                            @foreach (var item in PackageRequestList.Data)
+                            {
+                                i++;
+                                var hasPaymentLinkRecord = HasPaymentLinkRecord(item);
+                               
+                                <tr>
+                                    <th scope="row" style="width:40px;">@i</th>
+                                    <td style="width:56px;">
+                                        <span class="text-truncate">@item.FirstName</span>
+                                    </td>
+                                    <td style="max-width:280px;">
+                                        <span class="text-truncate">@item.LastName</span>
+                                    </td>
+                                    <td>@item.CenterName</td>
+                                    <td>@item.Email</td>
+                                    <td>@item.PhoneNumber</td>
+                                    <td>@item.PackageType</td>
+                                    <td>
+                                       
+                                        
+                                         <span class="badge @(_paymentStatuses.GetValueOrDefault(item.Id, "new") switch {
+                                            "New*" => "bg-warning text-dark",
+                                            "Pending" => "bg-info text-light",
+                                            "Paid" => "bg-success text-light",
+                                            "Faild" => "bg-danger text-light",
+                                            "Expired" => "bg-dark text-light",
+                                            _ => "bg-secondary"
+                                        })">@_paymentStatuses.GetValueOrDefault(item.Id, "new")</span>
+                                        
+                      
+                                    </td>
+                                    <td>
+                                        <button type="button"
+                                                class="btn btn-sm btn-outline-success" 
+                                                @onclick="() => OpenPaymentLinkModal(item)">
+                                                Payment Link
+                                         </button>
+                                    </td>
+                                    <td>
+                                        <button type="button"
+                                                class="btn btn-sm btn-outline-primary"
+                                                @onclick="() => OpenDetailsModal(item)">
+                                            Details
+                                        </button>
+                                    </td>
+                                    <td>
+                                        <button type="button"
+                                                class="btn btn-sm btn-outline-danger"
+                                                @onclick="() => OpenDeleteModal(item)">
+                                            Delete
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+    else if (PackageRequestList is not null)
+    {
+        <p class="text-warning">There are no package requests yet.</p>
+    }
+
+    @if (PackageRequestList is not null && TotalPages > 1)
+    {
+        <nav class="mt-3">
+            <ul class="pagination justify-content-center">
+                <li class="page-item @(CurrentPage == 1 ? "disabled" : "")">
+                    <button type="button" class="page-link" @onclick="() => OnPageChanged(CurrentPage - 1)">Previous</button>
+                </li>
+
+                @for (int i = MinPagingButton; i <= MaxPagingButton; i++)
+                {
+                    int ii = i;
+                    <li class="page-item @(ii == CurrentPage ? "active" : "")">
+                        <button type="button" class="page-link" @onclick="() => OnPageChanged(ii)">@i</button>
+                    </li>
+                }
+
+                <li class="page-item @(CurrentPage == TotalPages ? "disabled" : "")">
+                    <button type="button" class="page-link" @onclick="() => OnPageChanged(CurrentPage + 1)">Next</button>
+                </li>
+            </ul>
+        </nav>
+    }
+</div>
+@* Request Details Modal*@
+<ModalComponent @rendermode="InteractiveServer"
+                TModel="PackageRequestViewModel"
+                Title="Request Details"
+                OkButton="Close"
+                OkButtonClass="btn btn-primary"
+                CancelButton="Cancel"
+                Model="@DetailsRequestModal"
+                OnValidSubmit="@CloseDetailsModal"
+                @ref="DetailsModal">
+    <div class="container mb-2 px-0">
+        <div class="row my-3">
+            <div class="col-4">Request Id</div>
+            <div class="col-8">@DetailsRequestModal.Id</div>
+        </div>
+        <div class="row my-3">
+            <div class="col-4">Name</div>
+            <div class="col-8">@DetailsRequestModal.FirstName @DetailsRequestModal.LastName</div>
+        </div>
+        <div class="row my-3">
+            <div class="col-4">Center</div>
+            <div class="col-8">@DetailsRequestModal.CenterName</div>
+        </div>
+        <div class="row my-3">
+            <div class="col-4">Email</div>
+            <div class="col-8">@DetailsRequestModal.Email</div>
+        </div>
+        <div class="row my-3">
+            <div class="col-4">Phone</div>
+            <div class="col-8">@DetailsRequestModal.PhoneNumber</div>
+        </div>
+        <div class="row my-3">
+            <div class="col-4">Package</div>
+            <div class="col-8">@DetailsRequestModal.PackageType</div>
+        </div>
+        <div class="row my-3">
+            <div class="col-4">Status</div>
+            <div class="col-8">@DetailsRequestModal.RequestStatus</div>
+        </div>
+        <div class="row my-3">
+            <div class="col-4">Created</div>
+            <div class="col-8">@DetailsRequestModal.CreatedDate.ToLocalTime().ToString("yyyy-MM-dd HH:mm")</div>
+        </div>
+        <div class="row my-3">
+            <div class="col-4">Message</div>
+            <div class="col-8">@DetailsRequestModal.Message</div>
+        </div>
+        <div class="row my-3">
+            <div class="col-4">Status</div>
+            <div class="col-8">@DetailsRequestModal.RequestStatus</div>
+        </div>
+    </div>
+</ModalComponent>
+
+
+@* Payment Link Modal *@
+<ModalComponent @rendermode="InteractiveServer"
+                TModel="PackageRequestViewModel"
+                Title="Payment Link Handler"
+                CancelButton="Cancel"
+                Model="@SelectedRequest" 
+                CloseOnValidSubmit="false"
+                OnValidSubmit="@DeleteReauestAsync"
+                UseEditForm="false"
+                ShowFooter="false"
+                @ref="PaymentLinkModal">
+
+    <h6 class="text-muted">@PaymentLinkModalSubtitle</h6>
+    <PaymentLinkComponent  RequestedPackage="@SelectedRequest" OnClose="ClosePaymentModal">
+        
+    </PaymentLinkComponent>
+</ModalComponent>
+@* Delete modal *@
+<ModalComponent @rendermode="InteractiveServer"
+                TModel="PackageRequestViewModel"
+                Title="Delete Request"
+                OkButton="Yes, I am Sure"
+                OkButtonClass="btn btn-danger"
+                CancelButton="Cancel"
+                Model="@DeleteRequestModal"
+                OnValidSubmit="@DeleteReauestAsync"
+                @ref="DeleteModal">
+    <h6 class="text-muted">Do you really want to delete this request?</h6>
+    <div class="container mb-2 px-0">
+        <div class="row my-3">
+            <div class="col-4">Name</div>
+            <div class="col-8">@DeleteRequestModal.FirstName @DeleteRequestModal.LastName</div>
+        </div>
+        <div class="row my-3">
+            <div class="col-4">Package</div>
+            <div class="col-8">@DeleteRequestModal.PackageType</div>
+        </div>
+        <div class="row my-3">
+            <div class="col-4">Created</div>
+            <div class="col-8">@DeleteRequestModal.CreatedDate.ToLocalTime().ToString("yyyy-MM-dd")</div>
+        </div>
+    </div>
+</ModalComponent>
+
+@if (PackageRequestList is not null)
+{
+    <div class="w-100 mx-auto text-center pb-4">
+        <label class="d-inline">Go to page:</label>
+        <input @bind-value="gotoPageNumber" @bind-value:event="oninput" type="number" min="1" class="form-text d-inline" style="width:72px;" />
+        <button type="button" style="width:40px;border:solid 1px gray;" class="d-inline" @onclick="() => OnPageChanged(gotoPageNumber)">Go</button>
+
+        <span class="mx-5">Total pages: @TotalPages</span>
+        <span class="text-muted">(@PackageRequestList.Count request(s))</span>
+    </div>
+}
+
+
+
+
+@code {
+    public PaginatedItemDto<PackageRequestViewModel>? PackageRequestList { get; set; }
+    public ModalComponent<PackageRequestViewModel> DeleteModal;
+    public ModalComponent<PackageRequestViewModel> DetailsModal;
+    public ModalComponent<PackageRequestViewModel> PaymentLinkModal;
+    public PackageRequestViewModel SelectedRequest =new PackageRequestViewModel();
+
+    private string? ActionResultMessage;
+    private bool IsActionSuccess;
+    private int SelectedPaymentLinkRequestId;
+    private string SelectedPaymentLinkRequestName = string.Empty;
+    private int TotalPages;
+    private int CurrentPage;
+    private int PageSize = 10;
+    private int PagingButtonCount = 5;
+    private int MaxPagingButton = 5;
+    private int MinPagingButton = 1;
+    private int gotoPageNumber = 1;
+
+    private bool _isLoading = false;
+    private decimal _amount;
+
+    private DateTime _createdDate;
+    private DateTime _expiredDate;
+
+    private string _description = string.Empty;
+    private string? _displayPaymentUrl;
+    private bool _selectedRequestHasPaymentLink;
+    private bool _openedWithExistingLink;
+    private bool _showLinkCreatedMessage;
+    private string? _errorMessage;
+
+    private string PaymentLinkModalTitle = "Add Payment Link";
+    private string PaymentLinkModalOkLabel = "Save Link";
+    private string PaymentLinkModalOkClass = "btn btn-success";
+    private string PaymentLinkModalSubtitle = string.Empty;
+    private Dictionary<int, string> _paymentStatuses = new();
+    public PackageRequestViewModel DetailsRequestModal { get; set; } = new();
+    public PackageRequestViewModel DeleteRequestModal { get; set; } = new();
+    // public CreatePaymentLinkCommandViewModel PaymentLinkForm { get; set; } = new();
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadPageAsync(1);
+
+    }
+
+    private async Task LoadPageAsync(int page)
+    {
+        var result = await PackageRequestService.GetListAsync(page, PageSize);
+        var mapped = mapper.Map<IEnumerable<PackageRequestViewModel>>(result.Data);
+        foreach (var item in mapped)
+        {
+            _paymentStatuses[item.Id] = await PaymentStatus(item.Id);
+        }
+        PackageRequestList = new PaginatedItemDto<PackageRequestViewModel>(result.PageIndex, result.PageSize, result.Count, mapped);
+        TotalPages = PackageRequestList.Pager.TotalPages;
+        CurrentPage = PackageRequestList.PageIndex;
+        gotoPageNumber = CurrentPage;
+        await CheckPagingButtons();
+    }
+
+    private async Task OnPageChanged(int page)
+    {
+        if (page < 1 || (TotalPages > 0 && page > TotalPages))
+            return;
+        await LoadPageAsync(page);
+    }
+    private void ClosePaymentModal()
+    {
+        PaymentLinkModal.Close();
+    }
+    private void OpenDeleteModal(PackageRequestViewModel PackageRequest)
+    {
+        DeleteRequestModal = PackageRequest;
+        DeleteModal.Show();
+    }
+
+    private void OpenDetailsModal(PackageRequestViewModel packageRequest)
+    {
+        DetailsRequestModal = packageRequest;
+        DetailsModal.Show();
+    }
+
+    private Task CloseDetailsModal(PackageRequestViewModel _)
+    {
+        return Task.CompletedTask;
+    }
+
+    private async Task OpenPaymentLinkModal(PackageRequestViewModel packageRequest)
+    {
+        SelectedRequest = packageRequest;
+        PaymentLinkModal.Show();
+        PaymentLinkModal.SetIsAddBtnActive(true);
+    }
+
+
+    private async Task CopyPaymentLinkAsync()
+    {
+        if (string.IsNullOrEmpty(_displayPaymentUrl))
+            return;
+        await JSRuntime.InvokeVoidAsync(
+            "navigator.clipboard.writeText", _displayPaymentUrl);
+    }
+
+    private async Task DeleteReauestAsync(PackageRequestViewModel PackageRequest)
+    {
+        var request = mapper.Map<PackageRequestDto>(PackageRequest);
+        var result = PackageRequestService.Delete(request);
+        ActionResultMessage = result.Message;
+        IsActionSuccess = result.Success;
+
+        if (result.Success)
+        {
+            await LoadPageAsync(CurrentPage);
+        }
+    }
+
+    // List API sets PaymentCheckoutUrl only when a PaymentLinks row exists (customer pay-page URL from token).
+    private static bool HasPaymentLinkRecord(PackageRequestViewModel packageRequest) =>
+        !string.IsNullOrWhiteSpace(packageRequest.PaymentCheckoutUrl);
+
+
+    private Task CheckPagingButtons()
+    {
+        PagingButtonCount = 5;
+        if (PagingButtonCount > TotalPages) PagingButtonCount = TotalPages;
+
+        MinPagingButton = ((CurrentPage - (PagingButtonCount / 2)) < 1) ? 1 : (CurrentPage - (PagingButtonCount / 2));
+        MaxPagingButton = MinPagingButton + (PagingButtonCount - 1);
+        if (MinPagingButton + (PagingButtonCount - 1) > TotalPages)
+        {
+            MinPagingButton = MinPagingButton - (MaxPagingButton - TotalPages);
+            MaxPagingButton = TotalPages;
+        }
+        return Task.CompletedTask;
+    }
+
+    private async Task<string> PaymentStatus(int requestid)
+    {
+        string status = "New*";
+        if(requestid > 0)
+        {
+
+            var paymentlink = await PaymentLinkService.GetPaymentLinkByRequestIdAsync(requestid);
+            if (paymentlink.Data != null)
+            {
+                status = paymentlink.Data.PaymentStatus switch
+                {
+                    0 => "Pending",
+                    1 => "Paid",
+                    2 => "Faild",
+                    // 3 => "Expired"
+                };
+                if(paymentlink.Data.LinkExpiresAt < DateTime.UtcNow && paymentlink.Data.PaymentStatus ==0 )
+                {
+                    status = "Expired";
+                }
+            }
+        }
+        return status;
+    }
+
+  
+}

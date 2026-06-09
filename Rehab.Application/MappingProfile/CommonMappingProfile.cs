@@ -33,6 +33,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Rehab.Domain.Packages;
 using Rehab.Application.Packages;
+using Rehab.Application.PaymentLinks;
 
 namespace Rehab.Infrastructure.MappingProfile
 {
@@ -65,7 +66,10 @@ namespace Rehab.Infrastructure.MappingProfile
 
             CreateMap<BlogPostTopic, BlogTopicDto>().ReverseMap();
             CreateMap<BlogPostTag, BlogTagDto>().ReverseMap();
-            CreateMap<PackageRequest, PackageRequestDto>().ReverseMap();
+            CreateMap<PackageRequest, PackageRequestDto>()
+                .ForMember(dest => dest.PaymentCheckoutUrl, opt => opt.Ignore())
+                .ReverseMap();
+            CreateMap<PaymentLink, PaymentLinkDto>().ReverseMap();
 
         }
     }
