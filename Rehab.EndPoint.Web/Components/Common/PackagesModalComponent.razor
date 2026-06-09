@@ -27,20 +27,20 @@
                             </div>
                             <button type="button" class="btn-close" @onclick="Close"></button>
                         </div>
-                        <div class="mb-3 mt-3">
+                        @* <div class="mb-3 mt-3">
                             <span class="pkg-pill" id="pkgPill">@PackageName @PackagePrice</span>
-                        </div>
-
+                        </div> *@
+                        <hr />
                         <EditForm Model="model" OnValidSubmit="SubmitAsync">
                             <DataAnnotationsValidator />
                             <ValidationSummary />
                             <div class="row g-2 mb-2">
                                 <div class="col-6">
-                                    <label class="form-label">First name</label>
+                                    <label class="form-label">First Name</label>
                                     <InputText class="form-control" @bind-value="model.FirstName" placeholder="Jane" />
                                 </div>
                                 <div class="col-6">
-                                    <label class="form-label">Last name</label>
+                                    <label class="form-label">Last Name</label>
                                     <InputText class="form-control" @bind-value="model.LastName" placeholder="Smith" />
                                 </div>
                             </div>
@@ -56,7 +56,7 @@
                             </div>
 
                             <div class="mb-2">
-                                <label class="form-label">Center name</label>
+                                <label class="form-label">Facility Name</label>
                                 <InputText class="form-control" @bind-value="model.CenterName" placeholder="Sunrise Recovery Center" />
                             </div>
 
