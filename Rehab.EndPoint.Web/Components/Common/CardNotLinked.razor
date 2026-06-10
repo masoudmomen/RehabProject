@@ -1,15 +1,14 @@
 ﻿@using Rehab.EndPoint.Web.ViewModels
 
-<a href="@CardLink" class="card" target="@HrefTarget">
+<div  class="card">
     <div class="card-image-container">
         <img src="@Image" alt="@Title logo"
              class="card-image"
              onerror="this.onerror=null; this.src='/images/nopic.jpg';" />
     </div>
     <h4 class="card-title text-center">@(Title ?? "Card Title")</h4>
-
     <div class="card-info">
-
+      
         @if (!string.IsNullOrEmpty(Description))
         {
             <div class="card-description">
@@ -22,9 +21,7 @@
                     <button type="button"
                             class="btn btn-link p-0 mt-1 show-more-btn"
                             data-bs-toggle="modal"
-                            data-bs-target="#modal_@Title.Replace(" ", "_")"
-                    
-                    >
+                            data-bs-target="#modal_@Title.Replace(" ", "_")">
                         Show more
                     </button>
                 }
@@ -38,7 +35,7 @@
             <i class="fas fa-spinner fa-spin"></i>
         </div>
     }
-</a>
+</div>
 
 
 @if (!string.IsNullOrEmpty(Description))
@@ -80,9 +77,6 @@
 
     [Parameter]
     public int CharacterLimit { get; set; } = 150;
-
-    [Parameter]
-    public string CardLink { get; set; } = "/#";
 
     [Parameter]
     public string HrefTarget { get; set; } = "_self";
