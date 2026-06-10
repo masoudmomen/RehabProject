@@ -22,6 +22,7 @@ h3.sidebar-header {
         text-decoration: none;
         font-size: 0.8rem;
         transition: all .25s;
+        border-bottom: solid 1px #eee;
     }
 
 .sidebar a:hover {
@@ -70,7 +71,7 @@ h3.sidebar-header {
     position: fixed;
     right: 18px;
     top: 95px;
-    width: 48px;
+    width: 48px !important;
     height: 48px;
     padding: 0;
     border-radius: 50%;

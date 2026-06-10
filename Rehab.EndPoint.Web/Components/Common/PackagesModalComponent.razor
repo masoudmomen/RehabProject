@@ -112,7 +112,7 @@
     [Parameter] public string PackageName { get; set; }
     [Parameter] public string PackagePrice { get; set; }
 
-    [Parameter] public EventCallback<PackageRequestViewModel> OnSubmit { get; set; }
+    // [Parameter] public EventCallback<PackageRequestViewModel> OnSubmit { get; set; }
 
     private PackageRequestViewModel model = new();
     private bool isLoading = false;
@@ -139,9 +139,8 @@
             isLoading = false;
             return;
         }
-
-        if (OnSubmit.HasDelegate)
-            await OnSubmit.InvokeAsync(model);
+        // if (OnSubmit.HasDelegate)
+        //     await OnSubmit.InvokeAsync(model);
 
         if (!string.IsNullOrWhiteSpace(admin))
         {
