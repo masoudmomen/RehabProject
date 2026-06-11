@@ -9,7 +9,9 @@
               CardLink="@item.Link"
               HrefTarget="@HrefTarget"
               IconClass="fa-solid fa-certificate"
-              Description="@item.Description" />
+              Description="@item.Description"
+              ShowDescription="@ShowDescription"
+              />
     } 
 
 </div>
@@ -20,7 +22,7 @@
     [Parameter] public int ItemsToShow { get; set; } 
     [Parameter] public string prefixImageURL { get; set; } = "/images/" ;
     [Parameter] public string HrefTarget { get; set; } = "_self" ;
-
+    [Parameter] public bool ShowDescription { get; set; } = true;
     protected  override void OnInitialized()
     {
         if (ItemsToShow > 0 && List.Count > ItemsToShow)
