@@ -22,8 +22,12 @@
     font-size: 1.3rem;
     color: var(--text-muted);
     opacity: 0.9;
+    color: #2d2d2d;
+    text-shadow: 2px 2px 13px #f8f9fa;
+    font-weight: 500;
     animation: fadeInUp 1s ease-out 0.2s both;
 }
+
 .search-row-wrapper {
     width: 100%;
     padding-left: 0;
@@ -31,8 +35,8 @@
 }
 
 .search-row {
-    background-color: rgba(128, 0, 128, 0.6); 
-    backdrop-filter: blur(4px);  
+    background-color: rgba(128, 0, 128, 0.6);
+    backdrop-filter: blur(4px);
 }
 
     .search-row .form-control {
@@ -44,16 +48,18 @@
         padding: 0.75rem;
         font-weight: 600;
     }
+
 .form-control:focus {
-    box-shadow :none !important;
+    box-shadow: none !important;
 }
 
-a.btn-hero{
-    font-size:1rem;
-    padding:20px 5px;
+a.btn-hero {
+    font-size: 1rem;
+    padding: 20px 5px;
 }
+
 @media (width:1024px) {
     .hero-search-container {
-        width:80%;
+        width: 80%;
     }
 }
