@@ -16,3 +16,7 @@
     font-weight: 600;
     color: #4a90e2;
 }
+.insuranceList-container{
+    max-height:600px;
+    overflow-y:scroll;
+}

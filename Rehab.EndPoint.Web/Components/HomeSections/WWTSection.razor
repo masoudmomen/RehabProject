@@ -6,7 +6,8 @@
 @inject IWwtService WwtService
 <section class="section my-5 pt-5 bg-light-gray" id="WWtSection">
     <div class="container">
-        <h2 class="section-title text-center mb-3">Who We Treat</h2>
+        <h2 class="section-title text-center">Find Treatment Centers by Age Group & Population</h2>
+        <p class="fs-5 text-center text-dark-subtle"> Explore treatment centers for different age groups, communities, and individual needs.</p>
         <div class="wwts-container">
             @foreach (var card in WwtCards)
             {
@@ -18,7 +19,7 @@
                data-bs-toggle="modal"
                data-bs-target="#modal_all_Wwts">
 
-                Visit All
+                Brows Age Groups & Populations
             </a>
         </div>
     </div>
@@ -31,7 +32,8 @@
      aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content p-3">
-            <h2 class="section-title text-center">Who We Treat </h2>
+            <h2 class="section-title text-center">Find Treatment Centers by <br />
+                Age Group & Population </h2>
             <div class="wwts-container-modal">
                 @foreach (var card in WwtsAll)
                 {

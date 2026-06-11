@@ -40,7 +40,9 @@
                     {
                         <div class="col-12 col-md-3 mb-2">
                             <ConditionCardComponent Card="card"
-                               CustomClass="" />
+                                                    CustomClass=""
+                                                    CharacterLimit="120"
+                                                    prefixImageURL="@serverUrl" />
                         </div>
                     }
                 </div>
@@ -66,3 +68,8 @@
         AllConditions = mapper.Map<List<CardViewModel>>(ConditionService.GetList());
     }
 }
+<style>
+    .section-title::after{
+        display:none
+    }
+</style>

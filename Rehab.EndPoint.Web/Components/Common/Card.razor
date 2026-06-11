@@ -10,7 +10,7 @@
 
     <div class="card-info">
 
-        @if (!string.IsNullOrEmpty(Description))
+        @if (ShowDescription && !string.IsNullOrEmpty(Description))
         {
             <div class="card-description">
                 @((MarkupString)(Description.Length > CharacterLimit
@@ -89,4 +89,7 @@
 
     [Parameter]
     public string CustomClass { get; set; } = string.Empty;
+
+    [Parameter] 
+    public bool ShowDescription { get; set; } = true;
 }

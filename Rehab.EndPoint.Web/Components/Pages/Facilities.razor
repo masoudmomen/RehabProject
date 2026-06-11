@@ -88,6 +88,34 @@
                         }
                     </ul>
                 </div>
+                <!-- LevelOfCare Dropdown -->
+                <div class="dropdown filter-dropdown">
+                    <button class="btn dropdown-toggle"
+                            type="button"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                        Level of Care
+                    </button>
+
+                    <ul class="dropdown-menu">
+                          <li>
+                         <div class="input-group filter-search-group mb-3 shadow-sm d-flex">
+                            <input type="text" class="form-control filters-search-input" placeholder="Search..." aria-label="State-Search" aria-describedby="button-addon2">
+                            <button class="btn btn-secondary btn-filter-search" type="button" id="button-addon2">
+                                 <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                        </li>
+                        @foreach (var item in Fields.Locs!)
+                        {
+                            <li @onmousedown="() => LocToggleSelectItems(item)">
+                                <label class="dropdown-item">
+                                    <input type="checkbox" value="@item" id="loc-@item.Id"> @item.Name
+                                </label>
+                            </li>
+                        }
+                    </ul>
+                </div>
                 <!-- Treatments Dropdown -->
                 <div class="dropdown filter-dropdown">
                     <button class="btn dropdown-toggle"
@@ -122,7 +150,7 @@
                             type="button"
                             data-bs-toggle="dropdown"
                             aria-expanded="false">
-                        Who We Treat
+                        Age Groups & Populations
                     </button>
 
                     <ul class="dropdown-menu">
@@ -139,34 +167,6 @@
                             <li @onmousedown="() => WwtToggleSelectItems(item)">
                                 <label class="dropdown-item">
                                     <input type="checkbox" value="@item" id="wwt-@item.Id"> @item.Name
-                                </label>
-                            </li>
-                        }
-                    </ul>
-                </div>
-                <!-- LevelOfCare Dropdown -->
-                <div class="dropdown filter-dropdown">
-                    <button class="btn dropdown-toggle"
-                            type="button"
-                            data-bs-toggle="dropdown"
-                            aria-expanded="false">
-                        Level of Care
-                    </button>
-
-                    <ul class="dropdown-menu">
-                          <li>
-                         <div class="input-group filter-search-group mb-3 shadow-sm d-flex">
-                            <input type="text" class="form-control filters-search-input" placeholder="Search..." aria-label="State-Search" aria-describedby="button-addon2">
-                            <button class="btn btn-secondary btn-filter-search" type="button" id="button-addon2">
-                                 <i class="fas fa-search"></i>
-                            </button>
-                        </div>
-                        </li>
-                        @foreach (var item in Fields.Locs!)
-                        {
-                            <li @onmousedown="() => LocToggleSelectItems(item)">
-                                <label class="dropdown-item">
-                                    <input type="checkbox" value="@item" id="loc-@item.Id"> @item.Name
                                 </label>
                             </li>
                         }
