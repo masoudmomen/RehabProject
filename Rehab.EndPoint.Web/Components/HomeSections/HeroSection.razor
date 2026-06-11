@@ -9,28 +9,19 @@
             </div>
         </div>
     </div>
-    <div class="container-fluid d-flex justify-content-center mt-5 ">
+    @* <div class="container-fluid d-flex justify-content-center mt-5 ">
             <div class="col-lg-8 hero-search-container">
                 <div class="p-3 rounded-3">
                     <div class="row mt-0 bg-white g-2 justify-content-center rounded-5">
                     <div class="col-md-4 rounded-5">
-                        <input type="text" class="form-control border-0 rounded-5 text-center"
-                               @bind-value="@state" @bind-value:event="oninput"
-                               @onkeydown="HandleKeyDown"
-                               placeholder="State" />
+                        <input type="text" spellcheck="true" class="form-control border-0 rounded-5 text-center" @bind-value="@state" placeholder="State" />
                     </div>
                     <div class="col-md-4 rounded-5">
-                        <input type="text" class="form-control border-0 rounded-5 text-center" 
-                               @bind-value="city" @bind-value:event="oninput" 
-                               @onkeydown="HandleKeyDown" 
-                               placeholder="City" />
+                        <input type="text" class="form-control border-0 rounded-5 text-center" @bind-value="city" placeholder="City" />
                         </div>
                     <div class="col-md-4 rounded-5">
-                        <input type="text" class="form-control border-0 rounded-5 text-center"
-                               @bind-value="condition" 
-                               @bind-value:event="oninput" @onkeydown="HandleKeyDown" 
-                               placeholder="Condition" />
-                    </div>
+                        <input type="text" class="form-control border-0 rounded-5 text-center" @bind-value="condition" placeholder="Condition" />
+                        </div>
                     </div>
                     <div class="row justify-content-center">
                     <div class="col-md-4">
@@ -42,28 +33,143 @@
                     </div>
                 </div>
             </div>
+        </div> *@
+
+
+
+    <form @onsubmit="GoToFacilitiesPage" class="container-fluid d-flex justify-content-center mt-5">
+        <div class="col-lg-8 hero-search-container">
+            <div class="p-3 rounded-3">
+                <div class="row mt-0 bg-white g-2 justify-content-center rounded-5">
+                    <div class="col-md-4 rounded-5">
+                        <input type="text"
+                               class="form-control border-0 rounded-5 text-center"
+                               @bind="state"
+                               @bind:event="oninput"
+                               placeholder="State"
+                               list="statesList"
+                               autocomplete="on"
+                               spellcheck="true"
+                               autocapitalize="words" />
+                        <datalist id="statesList">
+                            @foreach (var item in States)
+                            {
+                                <option value="@item" />
+                            }
+                        </datalist>
+                    </div>
+
+                    <div class="col-md-4 rounded-5">
+                        <input type="text"
+                               class="form-control border-0 rounded-5 text-center"
+                               @bind="city"
+                               @bind:event="oninput"
+                               placeholder="City"
+                               list="citiesList"
+                               autocomplete="on"
+                               spellcheck="true"
+                               autocapitalize="words" />
+                        <datalist id="citiesList">
+                            @foreach (var item in Cities)
+                            {
+                                <option value="@item" />
+                            }
+                        </datalist>
+                    </div>
+
+                    <div class="col-md-4 rounded-5">
+                        <input type="text"
+                               class="form-control border-0 rounded-5 text-center"
+                               @bind="condition"
+                               @bind:event="oninput"
+                               placeholder="Condition"
+                               list="conditionsList"
+                               autocomplete="on"
+                               spellcheck="true"
+                               autocapitalize="words" />
+                        <datalist id="conditionsList">
+                            @foreach (var item in Conditions)
+                            {
+                                <option value="@item" />
+                            }
+                        </datalist>
+                    </div>
+                </div>
+
+                <div class="row justify-content-center">
+                    <div class="col-md-4">
+                        <button type="submit" class="btn btn-primary-gradient btn-hero btn-lg rounded-5 w-100 mt-3">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            Find Treatment Centers
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
+    </form>
+
 </section>
 @code {
-    private string? state { get; set; } = string.Empty;
-    private string? city { get; set; } = string.Empty;
-    private string? condition { get; set; } = string.Empty;
-    private string url = "/facilities";
-    private List<string> query = new List<string>();
+    // private string? state { get; set; } = string.Empty;
+    // private string? city { get; set; } = string.Empty;
+    // private string? condition { get; set; } = string.Empty;
+    // private string url = "/facilities";
+    // private List<string> query = new List<string>();
 
-    private void GoToFacilitiesPage()
+    // private void GoToFacilitiesPage()
+    // {
+    //     if (!string.IsNullOrEmpty(state)) query.Add($"state={Uri.EscapeDataString(state)}");
+    //     if (!string.IsNullOrEmpty(city)) query.Add($"city={Uri.EscapeDataString(city)}");
+    //     if (!string.IsNullOrEmpty(condition)) query.Add($"condition={Uri.EscapeDataString(condition)}");
+    //     if (query.Any()) url += "?" + string.Join("&", query);
+    //     NavigationManager.NavigateTo(url);
+    // }
+
+
+
+    @code {
+        private string? state = string.Empty;
+        private string? city = string.Empty;
+        private string? condition = string.Empty;
+
+        private List<string> query = new();
+        private string url = "/facilities";
+
+        // نمونه داده‌ها - در عمل می‌تواند از API/DB بیاید
+        private List<string> States = new()
     {
-        if (!string.IsNullOrEmpty(state)) query.Add($"state={Uri.EscapeDataString(state)}");
-        if (!string.IsNullOrEmpty(city)) query.Add($"city={Uri.EscapeDataString(city)}");
-        if (!string.IsNullOrEmpty(condition)) query.Add($"condition={Uri.EscapeDataString(condition)}");
-        if (query.Any()) url += "?" + string.Join("&", query);
-        NavigationManager.NavigateTo(url);
-    }
-    private void HandleKeyDown(KeyboardEventArgs e)
+        "California", "Texas", "Florida", "New York"
+    };
+
+        private List<string> Cities = new()
     {
-        if (e.Key == "Enter")
+        "Los Angeles", "Houston", "Miami", "New York"
+    };
+
+        private List<string> Conditions = new()
+    {
+        "Depression", "Anxiety", "Addiction", "PTSD"
+    };
+
+        private void GoToFacilitiesPage()
         {
-            GoToFacilitiesPage();
+            query.Clear();
+            url = "/facilities";
+
+            if (!string.IsNullOrWhiteSpace(state))
+                query.Add($"state={Uri.EscapeDataString(state.Trim())}");
+
+            if (!string.IsNullOrWhiteSpace(city))
+                query.Add($"city={Uri.EscapeDataString(city.Trim())}");
+
+            if (!string.IsNullOrWhiteSpace(condition))
+                query.Add($"condition={Uri.EscapeDataString(condition.Trim())}");
+
+            if (query.Any())
+                url += "?" + string.Join("&", query);
+
+            NavigationManager.NavigateTo(url);
         }
     }
+
 }
