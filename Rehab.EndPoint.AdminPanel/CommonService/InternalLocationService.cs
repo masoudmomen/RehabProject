@@ -34,6 +34,18 @@
             return item?.Cities?.ToList() ?? new List<string>();
         }
 
+        public async Task<List<string>> GetCitiesByStatesAsync(string baseUri, List<string> statesName)
+        {
+            var all = await _http.GetFromJsonAsync<List<StateModel>>(baseUri + "Data/states-and-cities.json");
+            var items = all.Where(c => statesName.Contains(c.State!)).ToList();
+            List<string> cities = new();
+            foreach (var item in items)
+            {
+                cities.AddRange(item.Cities!.ToList());
+            }
+            return cities;
+        }
+
         public async Task<List<string>>? GetStateWithoutHttpAsync(string baseUri)
         {
             var data = await _http.GetFromJsonAsync<List<StateOnlyModel>>(baseUri + "Data/states.json");

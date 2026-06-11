@@ -289,7 +289,7 @@
         IsLoading = true;
         StateHasChanged();
 
-        var newItems = await FacilityService.GetFacilityCardsAsync(page, pageSize, "",
+        var newItems = await FacilityService.GetFacilityCardsAsync(page, pageSize, 
         mapper.Map<FullFacilityFilterItemsDto>(FullFacilityFilterItems));
 
         if (newItems.Item1.Count < pageSize)

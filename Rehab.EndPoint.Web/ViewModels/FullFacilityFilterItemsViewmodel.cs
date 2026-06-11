@@ -5,6 +5,7 @@ namespace Rehab.EndPoint.Web.ViewModels
     {
         public string SearchText { get; set; } = string.Empty;
         public List<string> States { get; set; } = new();
+        public List<string> Cities { get; set; } = new();
         public List<ConditionViewModel> Conditions { get; set; } = new();
         public List<TreatmentViewmodel> Treatments { get; set; } = new();
         public List<WwtViewModel> Wwts { get; set; } = new();

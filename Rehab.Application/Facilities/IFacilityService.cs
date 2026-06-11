@@ -46,7 +46,7 @@ namespace Rehab.Application.Facilities
         List<FacilityCardDto>? GetFacilityCard(int CardCount, string state, FacilityFilterItems facilityFilterItems);
         Task<(List<FacilityCardDto>, int totalCount)> GetFacilityCardsAsync(int pageNumber, int pageSize, string? condition, string? state, string? city);
         Task<(List<FacilityCardDto>, int totalCount)> GetFacilityCardsAsync(int pageNumber, int pageSize, string state,  string searchText, FacilityFilterItems facilityFilter);
-        Task<(List<FacilityCardDto>, int totalCount)> GetFacilityCardsAsync(int pageNumber, int pageSize, string city, FullFacilityFilterItemsDto facilityFilter);
+        Task<(List<FacilityCardDto>, int totalCount)> GetFacilityCardsAsync(int pageNumber, int pageSize, FullFacilityFilterItemsDto facilityFilter);
         BaseDto<FacilityDetailDto> Delete(FacilityDetailDto facility);
         FacilityFieldsDto GetListFacilityFields();
     }
@@ -690,7 +690,7 @@ namespace Rehab.Application.Facilities
         //}
 
 
-        public async Task<(List<FacilityCardDto>, int totalCount)> GetFacilityCardsAsync(int pageNumber, int pageSize, string city, FullFacilityFilterItemsDto facilityFilter)
+        public async Task<(List<FacilityCardDto>, int totalCount)> GetFacilityCardsAsync(int pageNumber, int pageSize, FullFacilityFilterItemsDto facilityFilter)
         {
             //var query = context.Facilities.Where(c => c.Logo != "" && c.FacilitysImages!.Count > 0 && c.State.Contains(state)).AsQueryable();
             var query = context.Facilities
@@ -709,9 +709,14 @@ namespace Rehab.Application.Facilities
                 query = query.Where(f => f.Name.Contains(facilityFilter.SearchText));
             }
             //state filter
-            if (facilityFilter.States.Count > 0)
+            if (facilityFilter.States.Count > 0 && facilityFilter.Cities.Count == 0)
             {
                 query = query.Where(f => facilityFilter.States.Contains(f.State));
+            }
+            //city filter
+            if (facilityFilter.Cities.Count > 0)
+            {
+                query = query.Where(f => facilityFilter.Cities.Contains(f.City));
             }
             //condition filter
             if (facilityFilter.Conditions.Count > 0)
@@ -761,7 +766,7 @@ namespace Rehab.Application.Facilities
                 var accreditationNames = facilityFilter.Accreditations.Select(t => t.Name).ToList();
                 query = query.Where(f => f.Accreditations.Any(t => accreditationNames.Contains(t.Name)));
             }
-            if (!string.IsNullOrEmpty(city)) query = query.Where(c => c.City.Contains(city)).AsQueryable();
+            
             
             var totalCount = await query.CountAsync();
             var facilities = await query
