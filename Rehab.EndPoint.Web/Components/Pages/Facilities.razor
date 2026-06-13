@@ -59,6 +59,44 @@
                         }
                     </ul>
                 </div>
+
+
+
+                <!-- City Dropdown -->
+                <div class="dropdown filter-dropdown">
+                    <button class="btn dropdown-toggle btn-outline-secondary"
+                            type="button"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                        Cities
+                    </button>
+
+                    <ul class="dropdown-menu">
+                        <li>
+                         <div class="input-group filter-search-group mb-3 shadow-sm d-flex">
+                            <input type="text" class="form-control filters-search-input" placeholder="Search..." aria-label="State-Search" aria-describedby="button-addon2">
+                            <button class="btn btn-secondary btn-filter-search" type="button" id="button-addon2">
+                                 <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                        </li>
+                        @if(Cities != null)
+                        {
+                            @foreach (var item in Cities)
+                            {
+                                <li @onmousedown="()=>CityToggleSelectItems(item)">
+                                    <label class="dropdown-item">
+                                        <input type="checkbox" value="@item" id="@item"> @item
+                                    </label>
+                                </li>
+                            }
+                        }
+                    </ul>
+                </div>
+
+
+
+
                 <!-- Conditions Dropdown -->
                 <div class="dropdown filter-dropdown">
                     <button class="btn dropdown-toggle"
@@ -257,6 +295,25 @@
                     </div>
                 }
 
+                @if (FullFacilityFilterItems.Cities.Count > 0)
+                {
+                    <div class="filter-group">
+                        <span class="filter-title">City:</span>
+                        <div class="filter-items">
+                            @foreach (var item in FullFacilityFilterItems.Cities)
+                            {
+                                <span class="filter-tag">
+                                    @item
+                                    <button type="button" class="remove-button" aria-label="Remove filter"
+                                    @onclick="()=>{
+                                        FullFacilityFilterItems.Cities.Remove(item);
+                                        UncheckState(item);}" >×</button>
+                                </span>
+                            }
+                        </div>
+                    </div>
+                }
+
                 @if (FullFacilityFilterItems.Conditions.Count > 0)
                 {
                     <div class="filter-group">
@@ -386,7 +443,7 @@
                 }
 
                 <button class="clear-filters" 
-                        @onclick="() => { FullFacilityFilterItems = new();UnCheckAll(); }">
+                        @onclick="() => { FullFacilityFilterItems = new();UnCheckAll();HandleCities(); }">
                     Clear all
                 </button>
             </div>
@@ -439,6 +496,9 @@
         #region FilterOperation
         if (!string.IsNullOrWhiteSpace(state))
             FullFacilityFilterItems.States.Add(state);
+
+        if (!string.IsNullOrWhiteSpace(city))
+            FullFacilityFilterItems.Cities.Add(city);
 
         if (!string.IsNullOrWhiteSpace(condition)) 
             FullFacilityFilterItems.Conditions.Add(new ConditionViewModel()
@@ -501,7 +561,7 @@
         IsLoading = true;
         StateHasChanged();
 
-        var newItems = await FacilityService.GetFacilityCardsAsync(page, pageSize, city, 
+        var newItems = await FacilityService.GetFacilityCardsAsync(page, pageSize, 
         mapper.Map<FullFacilityFilterItemsDto>(FullFacilityFilterItems));
 
         if (newItems.Item1.Count < pageSize)
@@ -527,6 +587,7 @@
     private FacilityFieldsItem FilterItems { get; set; } = new();
     private FacilityFieldsViewmodel Fields { get; set; } = new();
     private List<string>? States;
+    private List<string>? Cities = new();
     [Parameter, SupplyParameterFromQuery] public string? condition { get; set; }
     [Parameter, SupplyParameterFromQuery] public string? amenity { get; set; }
     [Parameter, SupplyParameterFromQuery] public string? treatment { get; set; }
@@ -602,10 +663,24 @@
     //     return new ItemsProviderResult<FacilityCardViewmodel>(mapper.Map<List<FacilityCardViewmodel>>(result.Item1), result.totalCount);
     // }
 
-    private void StateToggleSelectItems(string selectedItem)
+    private async void StateToggleSelectItems(string selectedItem)
     {
         if (FullFacilityFilterItems.States.Contains(selectedItem)) FullFacilityFilterItems.States.Remove(selectedItem);
         else FullFacilityFilterItems.States.Add(selectedItem);
+
+        HandleCities();
+    }
+
+    private async void HandleCities()
+    {
+        Cities = await InternalLocationService!.GetCitiesByStatesAsync(serverUrl, FullFacilityFilterItems.States!);
+        StateHasChanged();
+    }
+
+    private void CityToggleSelectItems(string selectedItem)
+    {
+        if (FullFacilityFilterItems.Cities.Contains(selectedItem)) FullFacilityFilterItems.Cities.Remove(selectedItem);
+        else FullFacilityFilterItems.Cities.Add(selectedItem);
 
     }
     private async Task ConditionToggleSelectItems(ConditionViewModel selectedItem)
@@ -661,16 +736,17 @@
     {
         HandleCheckbox(id, false);
     }
-    
+
 
     private void HandleCheckbox(string id, bool state)
     {
-         JS.InvokeVoidAsync("setCheckboxState", id, state);
+        JS.InvokeVoidAsync("setCheckboxState", id, state);
     }
 
     private void UncheckState(string id)
     {
         HandleCheckboxState(id, false);
+        HandleCities();
     }
     private void HandleCheckboxState(string id, bool state)
     {

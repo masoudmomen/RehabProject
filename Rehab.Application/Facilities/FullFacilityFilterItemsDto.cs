@@ -18,6 +18,7 @@ namespace Rehab.Application.Facilities
     {
         public string SearchText { get; set; } = string.Empty;
         public List<string> States { get; set; } = new();
+        public List<string> Cities { get; set; } = new();
         public List<ConditionDto> Conditions { get; set; }= new();
         public List<TreatmentDto> Treatments { get; set; } = new();
         public List<WwtDto> Wwts { get; set; } = new();
