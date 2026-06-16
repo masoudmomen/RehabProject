@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using Rehab.EndPoint.AdminPanel.Viewmodels; 
+using Rehab.Infrastructure.Settings; 
 namespace Rehab.EndPoint.AdminPanel.Viewmodels
 {
     public class PaymentLinkViewModel

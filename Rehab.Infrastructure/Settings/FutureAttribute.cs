@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Rehab.EndPoint.AdminPanel.Viewmodels
+namespace Rehab.Infrastructure.Settings
 {
     public class FutureAttribute:ValidationAttribute
     {
