@@ -22,7 +22,7 @@ using Rehab.Domain.LevelsOfCare;
 using Rehab.Domain.SubstancesWeTreat;
 using Rehab.Domain.Treatments;
 using Rehab.Domain.WhoWeTreat;
-using Rehab.EndPoint.AdminPanel.Viewmodels;
+//using Rehab.EndPoint.AdminPanel.Viewmodels;
 using Rehab.EndPoint.Web.ViewModels;
 using AccreditationViewmodel = Rehab.EndPoint.Web.ViewModels.AccreditationViewmodel;
 using AmenityViewmodel = Rehab.EndPoint.Web.ViewModels.AmenityViewmodel;

@@ -1,6 +1,6 @@
-﻿using Rehab.EndPoint.AdminPanel.Viewmodels;
+﻿//using Rehab.EndPoint.AdminPanel.Viewmodels;
 using System.ComponentModel.DataAnnotations;
-
+using Rehab.Infrastructure.Settings;
 namespace Rehab.EndPoint.Web.ViewModels
 {
     public class PaymentLinkViewmodel

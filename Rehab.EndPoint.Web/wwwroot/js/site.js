@@ -134,3 +134,14 @@ window.addEventListener("scroll", function () {
 
 // Hide initially
 scrollBtn.style.display = "none";
+
+//Handle Sidebar on Mobile
+function handleMobile() {
+    const toggle = document.getElementById('sidebarToggle');
+    if (window.innerWidth <= 768) {
+        toggle.checked = true;
+    }
+}
+
+window.addEventListener('load', handleMobile);
+window.addEventListener('resize', handleMobile);

@@ -7,6 +7,7 @@ body {
     line-height: 1.6;
     color: #2c3e50;
     background-color: #fafbfc;
+    overflow-x:hidden;
 }
 .bg-eee{
     background-color: #eee;
@@ -29,7 +30,7 @@ h2.section-title {
     position: relative;
     margin-bottom: 3rem;
 }
-.section-title::after {
+/*.section-title::after {
     content: '';
     position: absolute;
     bottom: -10px;
@@ -39,7 +40,7 @@ h2.section-title {
     height: 4px;
     background: linear-gradient(90deg, #4a90e2, #7fb8d3);
     border-radius: 2px;
-}
+}*/
 
 .card {
     border-radius: 20px;
@@ -112,6 +113,7 @@ h2.section-title {
     .treatment-card {
         padding: 2rem 1.5rem;
     }
+
 }
 
 
@@ -193,7 +195,7 @@ button#scrollToTopBtn {
     box-sizing: border-box;
 }
 
-.sidebar-toggle {
+/*.sidebar-toggle {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -205,37 +207,37 @@ button#scrollToTopBtn {
     font-weight: 500;
     margin-bottom: 20px;
     transition: all .3s ease;
-}
-
+}*/
+/*
     .sidebar-toggle .hamburger {
         display: none;
     }
-
-#sidebarToggle:checked ~ .layout-wrapper .sidebar-toggle {
-    position: fixed;
+*/
+/*#sidebarToggle:checked ~ .layout-wrapper .sidebar-toggle {*/
+  /*  position: fixed;
     right: 18px;
-    top: 95px;
-    width: 48px;
+    top: 95px;*/
+    /*width: 48px;
     height: 48px;
     padding: 0;
     border-radius: 50%;
     z-index: 1000;
     box-shadow: 0 10px 25px rgba(0,0,0,.15);
-}
+}*/
 /* hide text when collapsed */
-#sidebarToggle:checked ~ .layout-wrapper .open-text {
+/*#sidebarToggle:checked ~ .layout-wrapper .open-text {
     display: none;
-}
+}*/
 
 /* show hamburger icon */
-.sidebar-toggle .hamburger {
+/*.sidebar-toggle .hamburger {
     font-size: 22px;
 }
-
-#sidebarToggle:checked ~ .layout-wrapper .sidebar-toggle .hamburger {
+*/
+/*#sidebarToggle:checked ~ .layout-wrapper .sidebar-toggle .hamburger {
     display: block;
 }
-
+*/
 .sidebar-toggle:hover {
     transform: translateY(-2px);
     box-shadow: 0 8px 20px rgba(0,0,0,.18);
@@ -256,10 +258,7 @@ button#scrollToTopBtn {
 }
 
 /* Center icons */
-#sidebarToggle:checked ~ .layout-wrapper .sidebar a {
-    justify-content: center;
-    padding: 12px 0;
-}
+ 
 
 /*@keyframes glow {
     from {
@@ -270,3 +269,17 @@ button#scrollToTopBtn {
         filter: brightness(1.5) drop-shadow(0 0 15px rgba(0, 123, 255, 0.8));
     }
 }*/
+@media (max-width: 768px) {
+    label.sidebar-toggle {
+        display: none;
+    }
+
+    #sidebarToggle:checked ~ .layout-wrapper .content-a {
+        flex: 0 0 85%;
+        max-width: 85%;
+    }
+
+    #sidebarToggle:checked ~ .layout-wrapper .content-b {
+        flex: 0 0 15%;
+        max-width: 15%;
+    }

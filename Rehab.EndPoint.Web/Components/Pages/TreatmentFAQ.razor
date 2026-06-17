@@ -1,0 +1,268 @@
+﻿@page "/Treatment-faq"
+@using Rehab.EndPoint.Web.Components.Common
+<div class="container">
+    <section class="faq-section">
+        <div class="faq-container">
+            <div class="faq-header w-75">
+                <span class="badge-custome">Recovery Resources</span>
+                <h1>Treatment FAQ</h1>
+                <p>
+                    Common questions about substance use, drug and alcohol treatment, detox,
+                    rehab programs, insurance, privacy, work, recovery, and levels of care.
+                </p>
+                <div class="faq-notice" aria-label="Important information">
+                    This FAQ is general information only. For medical or treatment decisions, speak with a licensed healthcare professional or treatment provider. For insurance, legal, or emergency questions, contact the appropriate professional or emergency service.
+                </div>
+            </div>
+
+            <div class="faq-grid">
+
+                <aside class="faq-nav">
+                    <h3>Browse by Topic</h3>
+                    <a href="javascript:void(0)" onclick="scrollToFaq('faq-all')" class="faq-nav-link faq-nav-link-active">
+                        <span>All Questions</span>
+                        <span class="faq-count">35</span>
+                    </a>
+                    <a href="javascript:void(0)" onclick="scrollToFaq('getting-started')" class="faq-nav-link">
+                        <span>Getting Started</span>
+                        <span class="faq-count">5</span>
+                    </a>
+                    <a href="javascript:void(0)" onclick="scrollToFaq('choosing-treatment')" class="faq-nav-link">
+                        <span>Choosing Treatment</span>
+                        <span class="faq-count">6</span>
+                    </a>
+                    <a href="javascript:void(0)" onclick="scrollToFaq('insurance-privacy')" class="faq-nav-link">
+                        <span>Insurance, Cost &amp; Privacy</span>
+                        <span class="faq-count">6</span>
+                    </a>
+                    <a href="javascript:void(0)" onclick="scrollToFaq('work-life')" class="faq-nav-link">
+                        <span>Work &amp; Daily Life</span>
+                        <span class="faq-count">4</span>
+                    </a>
+                    <a href="javascript:void(0)" onclick="scrollToFaq('recovery-relapse')" class="faq-nav-link">
+                        <span>Recovery &amp; Relapse</span>
+                        <span class="faq-count">5</span>
+                    </a>
+                    <a href="javascript:void(0)" onclick="scrollToFaq('levels-care')" class="faq-nav-link">
+                        <span>Levels of Care</span>
+                        <span class="faq-count">6</span>
+                    </a>
+                    <a href="javascript:void(0)" onclick="scrollToFaq('safety-support')" class="faq-nav-link">
+                        <span>Safety &amp; Urgent Support</span>
+                        <span class="faq-count">3</span>
+                    </a>
+                </aside>
+
+                <div class="faq-content" id="faq-all">
+
+                    <div class="faq-category" id="getting-started">
+                        <h2>Getting Started</h2>
+
+                        <details>
+                            <summary>What is drug and alcohol rehab?</summary>
+                            <p>Drug and alcohol rehab is structured treatment for people dealing with substance use, alcohol use, or co-occurring mental health concerns. A rehab program may include assessment, counseling, group therapy, medication when clinically appropriate, recovery education, relapse prevention, and planning for continued support after treatment.</p>
+                        </details>
+
+                        <details>
+                            <summary>What happens during addiction treatment?</summary>
+                            <p>Addiction treatment usually begins with an assessment of substance use history, mental health needs, medical concerns, safety risks, and recovery goals. A treatment plan may include individual counseling, group therapy, family support, medication-assisted treatment when appropriate, peer support, and aftercare planning.</p>
+                        </details>
+
+                        <details>
+                            <summary>Do I need detox before entering a rehab program?</summary>
+                            <p>Some people need detox before starting residential or outpatient rehab, especially when stopping alcohol, opioids, benzodiazepines, or other substances that may cause withdrawal symptoms. Detox is not the same as full addiction treatment; it is often an early medical step that helps a person become stable enough to begin ongoing care.</p>
+                        </details>
+
+                        <details>
+                            <summary>How long do drug and alcohol rehab programs last?</summary>
+                            <p>Treatment length varies by program, level of care, clinical needs, insurance coverage, and progress in recovery. Some programs offer short-term options such as 30 days, while others may continue for 60, 90, or more days. Ongoing outpatient care, recovery support, or aftercare may continue after a formal rehab program ends.</p>
+                        </details>
+
+                        <details>
+                            <summary>How do I know if someone may need substance use disorder treatment?</summary>
+                            <p>A person may need support if drug or alcohol use is affecting health, relationships, work, school, safety, finances, or daily responsibilities. Warning signs can include unsuccessful attempts to cut back, withdrawal symptoms, cravings, risky use, or continued use despite harm. A licensed clinician or qualified treatment provider can help assess the right next step.</p>
+                        </details>
+                    </div>
+
+                    <div class="faq-category" id="choosing-treatment">
+                        <h2>Choosing Treatment</h2>
+
+                        <details>
+                            <summary>How do I choose a rehab center or addiction treatment facility?</summary>
+                            <p>When comparing rehab centers, review the facility’s licensing, level of care, clinical services, staff credentials, treatment approach, accepted insurance, privacy practices, safety protocols, and aftercare planning. Facility information can change, so confirm important details directly with the provider before making a decision.</p>
+                        </details>
+
+                        <details>
+                            <summary>Should I choose treatment close to home or farther away?</summary>
+                            <p>Some people prefer drug and alcohol treatment close to home because it supports family involvement, work planning, and local aftercare. Others may benefit from distance from familiar triggers or unsafe environments. The right choice depends on safety, clinical needs, support systems, transportation, cost, and personal circumstances.</p>
+                        </details>
+
+                        <details>
+                            <summary>Should I choose inpatient rehab or outpatient rehab?</summary>
+                            <p>Inpatient or residential rehab provides structured care in a live-in setting and may be appropriate when someone needs more support, stability, or separation from triggers. Outpatient rehab allows a person to live at home while attending scheduled treatment. The best fit depends on withdrawal risk, relapse history, mental health needs, home environment, and daily responsibilities.</p>
+                        </details>
+
+                        <details>
+                            <summary>What does evidence-based addiction treatment mean?</summary>
+                            <p>Evidence-based addiction treatment uses clinical approaches that have been studied and are supported by research. Examples may include behavioral therapies, counseling, medications for opioid use disorder or alcohol use disorder when appropriate, relapse prevention, and integrated care for co-occurring mental health conditions.</p>
+                        </details>
+
+                        <details>
+                            <summary>What are co-occurring disorders or dual diagnosis treatment?</summary>
+                            <p>Co-occurring disorders means a person has both a substance use disorder and a mental health condition, such as depression, anxiety, PTSD, bipolar disorder, or another behavioral health concern. Dual diagnosis treatment looks at both conditions together instead of treating substance use and mental health separately.</p>
+                        </details>
+
+                        <details>
+                            <summary>What is luxury rehab?</summary>
+                            <p>Luxury rehab generally refers to treatment programs offered in more private or amenity-rich settings. Amenities may include private rooms, wellness services, fitness options, or comfortable environments. Amenities can support comfort, but they should not replace clinical quality, appropriate licensing, qualified staff, and a treatment plan that matches the person’s needs.</p>
+                        </details>
+                    </div>
+
+                    <div class="faq-category" id="insurance-privacy">
+                        <h2>Insurance, Cost & Privacy</h2>
+
+                        <details>
+                            <summary>Does insurance cover drug and alcohol rehab?</summary>
+                            <p>Many health plans include mental health and substance use disorder benefits, but coverage depends on the plan, state, provider network, medical necessity rules, prior authorization requirements, and the level of care. Before starting treatment, ask the facility and your insurer to verify benefits, estimated out-of-pocket costs, and whether the program is in network.</p>
+                        </details>
+
+                        <details>
+                            <summary>What is mental health parity for substance use disorder treatment?</summary>
+                            <p>Mental health parity generally means that when a health plan covers mental health or substance use disorder benefits, financial limits and treatment limits should not be more restrictive than comparable medical or surgical benefits. Parity rules are complex, and they do not mean every service or every rehab facility must be covered.</p>
+                        </details>
+
+                        <details>
+                            <summary>How much does rehab cost?</summary>
+                            <p>Rehab cost depends on the level of care, location, program length, clinical services, medications, amenities, and insurance coverage. Residential treatment is often more expensive than outpatient care because it includes housing and more intensive support. Always ask for a written estimate, what is included, what may be billed separately, and what happens if insurance denies part of the care.</p>
+                        </details>
+
+                        <details>
+                            <summary>What should I ask when verifying insurance for rehab?</summary>
+                            <p>Ask whether the treatment center is in network, whether prior authorization is required, what deductible or coinsurance applies, which levels of care are covered, whether medications are covered, how many days or visits may be authorized at first, and how appeals work if coverage is denied or reduced.</p>
+                        </details>
+
+                        <details>
+                            <summary>Are substance use disorder treatment records confidential?</summary>
+                            <p>Health information is protected by privacy rules, and certain substance use disorder treatment records may have additional federal confidentiality protections. These rules can limit when identifying treatment information may be shared. Privacy protections depend on the type of provider, the record, consent, emergencies, payment operations, and legal exceptions, so ask each facility how your information is handled.</p>
+                        </details>
+
+                        <details>
+                            <summary>Is RehabNavigator a treatment provider or insurance company?</summary>
+                            <p>No. RehabNavigator is a directory and informational resource. We do not diagnose conditions, provide treatment, operate a rehab facility, make insurance decisions, guarantee admission, or guarantee that a listed facility is the right fit. Users should contact providers and insurers directly before choosing care.</p>
+                        </details>
+                    </div>
+
+                    <div class="faq-category" id="work-life">
+                        <h2>Work & Daily Life</h2>
+
+                        <details>
+                            <summary>Can I lose my job for going to rehab?</summary>
+                            <p>Some workplace protections may apply when an employee seeks treatment for a substance use disorder or mental health condition, but the rules depend on eligibility, timing, employer policies, safety-sensitive duties, and the reason for the absence. Employees should review workplace policies and speak with human resources, a qualified benefits professional, or legal counsel when needed.</p>
+                        </details>
+
+                        <details>
+                            <summary>Does FMLA cover substance abuse treatment?</summary>
+                            <p>FMLA may protect eligible employees of covered employers when leave is used for substance abuse treatment provided by a health care provider or by a provider referred by a health care provider. Absence because of substance use itself, rather than treatment, may not qualify. State laws or employer policies may provide additional rules.</p>
+                        </details>
+
+                        <details>
+                            <summary>What is an Employee Assistance Program?</summary>
+                            <p>An Employee Assistance Program, or EAP, is a workplace benefit that may provide confidential assessment, short-term counseling, referrals, or support for personal, mental health, substance use, family, financial, or work-related concerns. Services vary by employer and EAP provider.</p>
+                        </details>
+
+                        <details>
+                            <summary>Can I attend rehab while working?</summary>
+                            <p>Some outpatient treatment programs, including intensive outpatient programs and partial hospitalization programs, may allow people to keep certain work, school, or family responsibilities while receiving structured care. This depends on the treatment schedule, clinical needs, employer flexibility, transportation, and safety considerations.</p>
+                        </details>
+                    </div>
+
+                    <div class="faq-category" id="recovery-relapse">
+                        <h2>Recovery & Relapse</h2>
+
+                        <details>
+                            <summary>Does rehab cure addiction?</summary>
+                            <p>Rehab does not guarantee a permanent cure. Substance use disorder is often managed as an ongoing health condition. Treatment can help people stop or reduce use, build coping skills, address mental health needs, improve daily functioning, and create a long-term recovery plan.</p>
+                        </details>
+
+                        <details>
+                            <summary>What is the difference between rehab and recovery?</summary>
+                            <p>Rehab is a structured period of care, such as detox, residential treatment, PHP, IOP, or outpatient therapy. Recovery is the longer process of maintaining health and wellness, rebuilding routines, using support systems, and continuing care when needed.</p>
+                        </details>
+
+                        <details>
+                            <summary>What happens if I relapse after treatment?</summary>
+                            <p>Relapse should not be viewed as a personal failure. It can be a sign that the recovery plan, level of care, medications, mental health support, or relapse prevention strategies need to be adjusted. A treatment provider can help decide whether outpatient support, a higher level of care, or a different treatment approach is needed.</p>
+                        </details>
+
+                        <details>
+                            <summary>What is aftercare after rehab?</summary>
+                            <p>Aftercare is support that continues after a formal rehab program ends. It may include outpatient therapy, support groups, recovery coaching, sober living, medication management, alumni programs, family support, and relapse prevention planning.</p>
+                        </details>
+
+                        <details>
+                            <summary>Are medications used in addiction treatment?</summary>
+                            <p>Yes. For some people, medications can be part of evidence-based treatment for substance use disorders. Medications may be used for opioid use disorder, alcohol use disorder, withdrawal management, cravings, overdose prevention, or co-occurring mental health needs. Medication decisions should be made with a qualified medical professional.</p>
+                        </details>
+                    </div>
+
+                    <div class="faq-category" id="levels-care">
+                        <h2>Levels of Care</h2>
+
+                        <details>
+                            <summary>What is medical detox?</summary>
+                            <p>Medical detox provides monitoring and support during withdrawal from drugs or alcohol. It may include medications, vital-sign monitoring, symptom management, and transfer planning into ongoing treatment. Detox can help with early stabilization, but continuing treatment is usually important after detox ends.</p>
+                        </details>
+
+                        <details>
+                            <summary>How does inpatient or residential rehab work?</summary>
+                            <p>Inpatient or residential rehab provides structured treatment in a live-in setting. It may be recommended when a person needs more supervision, a safer environment, support for co-occurring conditions, or separation from triggers. Services vary by facility and may include therapy, groups, medication support, and recovery planning.</p>
+                        </details>
+
+                        <details>
+                            <summary>What is a Partial Hospitalization Program?</summary>
+                            <p>A Partial Hospitalization Program, or PHP, is a structured day treatment program that provides more support than standard outpatient care but does not usually require overnight stays. PHP may be used after detox or residential treatment, or when a person needs intensive support while living at home or in supportive housing.</p>
+                        </details>
+
+                        <details>
+                            <summary>What is an Intensive Outpatient Program?</summary>
+                            <p>An Intensive Outpatient Program, or IOP, provides scheduled treatment several hours per week while allowing a person to live at home. IOP may include group therapy, individual counseling, relapse prevention, family education, and care coordination.</p>
+                        </details>
+
+                        <details>
+                            <summary>How does outpatient rehab work?</summary>
+                            <p>Outpatient rehab allows people to attend counseling, therapy, medication appointments, or recovery services while living at home. It may fit people with a stable living environment, lower withdrawal or safety risks, and the ability to attend scheduled sessions consistently.</p>
+                        </details>
+
+                        <details>
+                            <summary>What is sober living?</summary>
+                            <p>Sober living is supportive housing for people working on recovery. It is not always the same as licensed clinical treatment. Rules, costs, services, and oversight vary, so ask whether the home provides clinical services, peer support, drug testing, transportation, or referrals to outpatient care.</p>
+                        </details>
+                    </div>
+
+                    <div class="faq-category" id="safety-support">
+                        <h2>Safety & Urgent Support</h2>
+
+                        <details>
+                            <summary>What should I do if someone may be overdosing?</summary>
+                            <p>If someone may be overdosing, call emergency services immediately. In the U.S., call 911. Naloxone can reverse an opioid overdose and is available over the counter in many places, but emergency medical help is still important even if the person wakes up or appears to improve.</p>
+                        </details>
+
+                        <details>
+                            <summary>What should I do in a mental health or substance use crisis?</summary>
+                            <p>If there is immediate danger, call emergency services. In the U.S., call or text 988 for the Suicide &amp; Crisis Lifeline if you or someone else is experiencing suicidal thoughts, emotional distress, or a mental health or substance use crisis. RehabNavigator cannot provide emergency support or crisis counseling.</p>
+                        </details>
+
+                        <details>
+                            <summary>Can RehabNavigator tell me which rehab facility is best for me?</summary>
+                            <p>No. RehabNavigator can help you compare treatment centers, levels of care, insurance information, amenities, and facility details, but the best clinical fit should be determined with qualified professionals and verified directly with the facility.</p>
+                        </details>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+@code {
+
+}
