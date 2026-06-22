@@ -6,36 +6,7 @@
 <style>
 
 </style>
-
-
-
-@* <div class="container py-4 px-4">
-    <h1 class="hero-title mb-1">List your rehab center</h1>
-    <p class="hero-sub mb-0">Reach patients and families actively searching for treatment. Upgrade anytime.</p> 
-
-</div> *@
-
-<main class="page">
-
-    @* <section class="hero1">
-        <span class="eyebrow">Advertise With Us</span>
-        <h1>Help Treatment Seekers Find Your Facility</h1>
-        <p>Start with a free listing, then choose the visibility level that fits your facility type, bed capacity, location, insurance mix, and admission goals.</p>
-    </section> *@
-
-
-    @* <section class="claim-panel">
-    <h2>It’s <span>free</span> to be listed</h2>
-    <p>Search for your facility below. If it is not listed yet, submit your information and we will help you claim your profile.</p>
-    <div class="search-box"><input type="text" placeholder="Your facility name"><button>Search</button></div>
-</section> *@
-
-
-    @*   <section class="dynamic-strip">
-        <h2>Visibility depends on your <span>facility type and capacity</span></h2>
-        <p>A 6-bed inpatient center does not need the same exposure as a large outpatient provider. Our pricing review estimates the visibility level needed based on real facility inputs.</p>
-    </section>
- *@
+ 
     <section class="billing-toggle-wrap" aria-label="Billing options">
         
         <div class="billing-toggle">
@@ -191,10 +162,7 @@
             <p class="text-center footer-note mt-4 mb-0">All plans include a 14-day free trial. No credit card required. Cancel anytime.</p>
         </div><!-- /container -->
     </section>
-    @*   <section class="fit-section">
-        <div class="fit-box"><h3>Outpatient visibility</h3><p>Lower-cost visibility for PHP, IOP, therapy, and outpatient providers where bed count is not the main pricing driver.</p></div>
-        <div class="fit-box"><h3>Inpatient visibility</h3><p>Higher-value visibility for Detox, RTC, and residential providers where occupancy, bed count, and admissions matter more.</p></div>
-    </section> *@
+  
     <section class="">
         <div class="container">
             <table class="comparison-table">
@@ -215,9 +183,19 @@
             </table>
         </div>
     </section>
+    <section class="claim-panel">
+        <h2>It’s <span>free</span> to be listed</h2>
+        <p>
+            Search for your facility below. If your profile already exists, you can claim it.
+            If it is not listed yet, submit your facility information and we will help you get started.
+        </p>
 
-
-</main>
+        <div class="search-box">
+            <input type="text" placeholder="Enter your facility name" />
+            <button type="button">Search</button>
+        </div>
+    </section>
+ 
 
 
 <PackagesModalComponent Visible="@showModal"
