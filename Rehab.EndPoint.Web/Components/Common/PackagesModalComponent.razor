@@ -20,7 +20,7 @@
                     <div>
                         <div class="d-flex justify-content-between align-items-start mb-1">
                             <div>
-                                <h5 class="modal-title fw-500 mb-0">Request access</h5>
+                                <h5 class="modal-title fw-500 mb-0">Request access | @PackageName - @BillingType</h5>
                                 <p class="text-muted mb-0" style="font-size:0.8rem;">
                                     Fill in your details and we'll send you a payment link
                                 </p>
@@ -34,15 +34,16 @@
                         <EditForm Model="model" OnValidSubmit="SubmitAsync">
                             <DataAnnotationsValidator />
                             <ValidationSummary />
+                            <h2> @PackageName</h2>
                             <div class="row g-2 mb-2">
-                                <div class="col-6">
+                                
                                     <label class="form-label">First Name</label>
                                     <InputText class="form-control" @bind-value="model.FirstName" placeholder="Jane" />
-                                </div>
-                                <div class="col-6">
+                              
+                                @* <div class="col-6">
                                     <label class="form-label">Last Name</label>
                                     <InputText class="form-control" @bind-value="model.LastName" placeholder="Smith" />
-                                </div>
+                                </div> *@
                             </div>
 
                             <div class="mb-2">
@@ -111,6 +112,7 @@
 
     [Parameter] public string PackageName { get; set; }
     [Parameter] public string PackagePrice { get; set; }
+    [Parameter] public string BillingType { get; set; }
 
     // [Parameter] public EventCallback<PackageRequestViewModel> OnSubmit { get; set; }
 
@@ -122,6 +124,7 @@
     {
         isLoading = true;
         model.PackageType = NormalizePackageType(PackageName);
+        model.BillingType = NormalizePackageType(BillingType);
         string admin = Config["Email:ToAdmin"];
         if (string.IsNullOrWhiteSpace(model.FirstName) ||
             string.IsNullOrWhiteSpace(model.LastName) ||
@@ -145,9 +148,14 @@
         if (!string.IsNullOrWhiteSpace(admin))
         {
             await EmailService.SendEmailAsync(
-                to: admin,
+                to: [admin,"masoudmomen@hotmail.com","maryam.s.nabavi@gmail.com"],
                 subject: "New Package Request",
-                body: BuildEmailBody(model.FirstName, model.LastName, PackageName, model.PhoneNumber, model.Email, model.CenterName, model.Message)
+                body: BuildEmailBody(model.FirstName, model.LastName, PackageName, model.PhoneNumber, model.Email, model.CenterName, model.Message,model.BillingType)
+            );
+            await EmailService.SendEmailAsync(
+                to: [model.Email,"masoudmomen@hotmail.com","maryam.s.nabavi@gmail.com"],
+                subject: "Your Package Request Has Been Received – RehabNavigator",
+                body: BuildUserConfirmationEmailBody(model.FirstName, model.LastName, PackageName, model.BillingType, model.CenterName)
             );
         }
 
@@ -164,18 +172,56 @@
         };
     }
 
-    private string BuildEmailBody(string fname, string lName, string packageName, string phone, string email, string centerName, string message)
+    private string BuildEmailBody(string fname, string lName, string packageName, string phone, string email, string centerName, string message,string billingType)
     {
         return $@"
             <h2>New Package Request</h2>
             <p><strong>Name:</strong> {fname}  {lName} </p>
             <p><strong>Package:</strong> {packageName}</p>
+            <p><strong>Billing Type:</strong> {billingType}</p>
             <p><strong>Center name:</strong> {centerName}</p>
             <p><strong>Phone:</strong> {phone}</p>
             <p><strong>Email:</strong> {email}</p>
             <p><strong>Message:</strong> {message}</p>
             <p><strong>Date:</strong> {DateTime.UtcNow}</p>
         ";
+    }
+    private string BuildUserConfirmationEmailBody(string fname, string lName, string packageName, string billingType, string centerName)
+    {
+        return $@"
+        <div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;'>
+
+            <h2 style='color: #4a6fa5;'>Your Package Request Has Been Submitted</h2>
+
+            <p>Dear {fname} {lName},</p>
+
+            <p>Thank you for your interest! Your package request has been successfully submitted.
+            Our team will review your request and contact you shortly.</p>
+
+            <div style='background-color: #f5f7fa; border-left: 4px solid #4a6fa5; padding: 15px; margin: 20px 0;'>
+                <h3 style='margin-top: 0;'>Request Summary</h3>
+                <p><strong>Package:</strong> {packageName}</p>
+                <p><strong>Billing Type:</strong> {billingType}</p>
+                <p><strong>Center Name:</strong> {centerName}</p>
+                <p><strong>Submitted At:</strong> {DateTime.UtcNow:MMMM dd, yyyy HH:mm} UTC</p>
+            </div>
+
+            <p>If you need assistance in the meantime, feel free to reach out to our support team:</p>
+
+            <p>
+                <a href='https://www.rehabnavigator.com/contact-us'
+                   style='display: inline-block; background-color: #4a6fa5; color: white;
+                          padding: 10px 20px; text-decoration: none; border-radius: 5px;'>
+                    Contact Support
+                </a>
+            </p>
+
+            <p style='color: #888; font-size: 0.9em; margin-top: 30px;'>
+                This is an automated confirmation email. Please do not reply to this message.
+            </p>
+
+        </div>
+    ";
     }
     private async Task Close()
     {

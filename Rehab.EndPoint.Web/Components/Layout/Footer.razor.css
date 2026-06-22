@@ -16,7 +16,7 @@
     padding-bottom:100px;
 }
 .footer-bottom {
-    background: linear-gradient(135deg, #74ebd5, #acb6e5);
+    background: linear-gradient(135deg, #74b5eb, #d0ace5);
 }
 .fixed-footer {
     box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
@@ -27,7 +27,7 @@
     z-index: 1000;
 }
 h5.footer-section-title {
-    color: rgb(42 247 254) !important;
+    color: rgb(197 198 225) !important;
 }
 .footer ul {
     margin-top: 30px;

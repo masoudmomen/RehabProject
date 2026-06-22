@@ -13,6 +13,7 @@ namespace Rehab.Application.Packages
         public string Email { get; set; }
         public string? PhoneNumber { get; set; }
         public PackageType PackageType { get; set; }
+        public BillingType BillingType { get; set; }
         public RequestStatus RequestStatus { get; set; }
         public DateTime CreatedDate { get; set; }
 

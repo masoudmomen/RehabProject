@@ -2,6 +2,7 @@
 using Rehab.Application.Email;
 using Rehab.Application.PaymentLinks;
 using Rehab.Application.Packages;
+using Rehab.Application.Common;
 using Rehab.Infrastructure.Settings;
 using Stripe;
 using Stripe.Checkout;
@@ -12,7 +13,7 @@ namespace Rehab.EndPoint.Web.Endpoints
     {
         public static IEndpointRouteBuilder MapStripeWebHook(this IEndpointRouteBuilder app)
         {
-          
+         
             app.MapPost("/api/stripe/webhook/", async (
 
                 HttpRequest req,
@@ -69,10 +70,10 @@ namespace Rehab.EndPoint.Web.Endpoints
                             await paymentLink.UpdateAsync(linkResult.Data);
                             packageRequest.ChangeStatus(linkResult.Data.PackageRequestId, "Paid");
                             await email.SendEmailAsync(
-                                request!.Data!.Email,
+                                [request!.Data!.Email, "maryam.s.nabavi@gmail.com", "masoudmomen@hotmail.com"],
                                 "Payment Confirmation",
-                                $"Your payment for the package request {linkResult.Data.PackageRequestId} was successful. Thank you for your purchase!"
-                            );
+                                Rehab.Application.Common.EmailTemplates.BuildPaymentSuccessEmailBody(request.Data.FirstName, linkResult.Data ,request.Data.PackageType.ToString())
+                             );
                          
                         }
 
@@ -82,6 +83,7 @@ namespace Rehab.EndPoint.Web.Endpoints
 
             return app;
         }
+
     }
 
 }

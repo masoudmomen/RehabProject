@@ -57,11 +57,13 @@ namespace Rehab.Application.PaymentLinks
             paymentLink.CreatedAt = DateTime.UtcNow;
              var entry = await _context.PaymentLinks.AddAsync(_mapper.Map<PaymentLink>(paymentLink));
             await _context.SaveChangesAsync();
-
+            //"masoudmomen@hotmail.com",
             await _email.SendEmailAsync(
-                 to: request.Data!.Email,
+                 to: [request.Data!.Email,"maryam.s.nabavi@gmail.com", "masoudmomen@hotmail.com"],
                  subject: "Your Payment Link is Ready",
-                 body: BuildPaymentEmailBody(request.Data.FirstName, request.Data.PackageType.ToString(), token)
+                 body: BuildPaymentEmailBody(request.Data.FirstName,
+                 request.Data.PackageType.ToString(), request.Data.BillingType.ToString(),
+                 token, paymentLink.Amount.ToString())
              );
 
             _packageRequestService.ChangeStatus(request.Data.Id, "PaymentSent");
@@ -160,47 +162,42 @@ namespace Rehab.Application.PaymentLinks
         }
 
 
-        private string BuildPaymentEmailBody(string firstName, string packageName, string paymentToken)
+        private string BuildPaymentEmailBody(string firstName, string packageName, string billingType ,string paymentToken, string packagePrice)
         {
             string paymentUrl = "http://rehabnavigator.com/packages/pay/" + paymentToken;
 
             return $@"
-                <!DOCTYPE html>
-                <html>
-                <body style='font-family: Arial, sans-serif; color: #333; max-width: 600px; margin: auto; padding: 20px;'>
-
-                    <h2 style='color: #2c7be5;'>RehabNavigator</h2>
-
-                    <p>Hi {firstName},</p>
-
-                    <p>Thank you for your interest in <strong>{packageName}</strong>.</p>
-
-                    <p>Your personalized payment link has been created and is ready for you to complete your purchase.
-                    Simply click the button below to proceed:</p>
-
-                    <div style='text-align: center; margin: 30px 0;'>
-                        <a href='{paymentUrl}'
-                           style='background-color: #2c7be5; color: white; padding: 14px 28px;
-                                  text-decoration: none; border-radius: 6px; font-size: 16px;'>
-                            Complete Your Purchase
-                        </a>
-                    </div>
-
-                    <p>⏳ <strong>Please note:</strong> This link will expire in 48 hours.</p>
-
-                    <hr style='border: none; border-top: 1px solid #eee; margin: 20px 0;' />
-
-                    <p><strong>Order Summary:</strong><br/>
-                    • Product: {packageName}<br/>
-                    </p>
-
-                    <p>If you have any questions or run into any issues, don't hesitate to reach out to our support team.</p>
-
-                    <p>Warm regards,<br/>
-                    <strong>RehabNavigator Support Team</strong></p>
-
-                </body>
-                </html>";
+       <!DOCTYPE html>
+       <html>
+       <body style='font-family: Arial, sans-serif; color: #333; max-width: 600px; margin: auto; padding: 20px;'>
+           <h2 style='color: #2c7be5;'>RehabNavigator</h2>
+           <p>Hi {firstName},</p>
+           <p>Thank you for your interest in <strong>{packageName}</strong>.</p>
+           <p>Your personalized payment link has been created and is ready for you to complete your purchase.
+           Simply click the button below to proceed:</p>
+           <div style='text-align: center; margin: 30px 0;'>
+               <a href='{paymentUrl}'
+                  style='background-color: #2c7be5; color: white; padding: 14px 28px;
+                         text-decoration: none; border-radius: 6px; font-size: 16px;'>
+                   Complete Your Purchase
+               </a>
+           </div>
+           <p>⏳ <strong>Please note:</strong> This link will expire in 48 hours.</p>
+           <hr style='border: none; border-top: 1px solid #eee; margin: 20px 0;' />
+           <p><strong>Package Name:</strong><br/>
+           •   {packageName}<br/>
+           </p>
+           <p><strong>Billing Type:</strong><br/>
+           •   {billingType}<br/>
+           </p>
+           <p><strong>Price:</strong><br/>
+           •   {packagePrice}<br/>
+           </p>
+           <p>If you have any questions or run into any issues, don't hesitate to reach out to our support team.</p>
+           <p>Warm regards,<br/>
+           <strong>RehabNavigator Support Team</strong></p>
+       </body>
+       </html>";
         }
 
     }

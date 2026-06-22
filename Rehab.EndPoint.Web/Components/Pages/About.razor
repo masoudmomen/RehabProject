@@ -1,151 +1,242 @@
-﻿@page "/about-us"
+﻿@page "/about-us/our-story"
 @* @rendermode InteractiveServer *@
 @inject IJSRuntime jSRuntime
 @using Microsoft.AspNetCore.Components.Web
 @using Rehab.EndPoint.Web.Components.Common
- 
+
 <Seo Title="About Us - Rehab Navigator"
-     Description="Learn about Rehab's mission, values, and the team behind our innovative solutions." 
-  CanonicalUrl="https://Rehab.com/about-us"
-  FaviconUrl="favicon.png" />
+     Description="Learn about Rehab's mission, values, and the team behind our innovative solutions."
+     CanonicalUrl="https://Rehabnavigator.com/about-us"
+     FaviconUrl="favicon.png" />
 
-<section class="hero mt-5" id="top">
+<section class="hero ourstory" id="top">
     <div class="container">
-        <h1>About Rehab Navigator</h1>
-        <p class="text-muted">
-            Helping People Navigate Treatment with Greater Clarity and Confidence.
+        <h1>About RehabNavigator</h1>
+        <p>
+            Helping people explore treatment information with greater clarity and confidence.
         </p>
-        <span>
-            RehabNavigator is designed to help individuals, families, and treatment providers connect through organized search, transparent facility information, and accessible recovery resources.
-
-        </span>
+        <p class="small">
+            Search drug and alcohol rehab centers, mental health providers, and recovery resources through organized facility profiles, search tools, and educational content.
+        </p>
     </div>
 </section>
-<section class="section">
+<section class="section" id="why-we-exist">
     <div class="container">
-        <div class="mission-content">
-            <h2> Our Mission</h2>
-            <p>To provide exceptional services and solutions that empower our clients to achieve their goals while maintaining the highest standards of integrity, innovation, and customer satisfaction. We are committed to delivering value through expertise, dedication, and a genuine passion for what we do.</p>
-            <p>Our mission drives every decision we make, every service we provide, and every relationship we build. We believe in creating lasting partnerships based on trust, transparency, and mutual success.</p>
+        <div class="section-text-content  d-flex flex-column align-items-center">
+            <span class="badge-custome">
+                Why We Exist
+            </span>
+            <h2 class=""> A simpler way to explore treatment options.</h2>
+            <p>RehabNavigator helps people discover drug and alcohol rehab centers, mental health providers, and recovery resources through organized search tools and detailed facility profiles.</p>
+            <p>Explore facilities by location, condition, level of care, treatment approach, population served, insurance coverage, and other important facility details.</p>
+
         </div>
     </div>
 </section>
-<section class="section">
-    <div class="container">
-        <h2>What We Do</h2>
-        <p>We specialize in delivering comprehensive solutions tailored to meet the unique needs of our clients. Our approach combines industry expertise with innovative thinking to provide services that not only meet current requirements but also anticipate future challenges and opportunities.</p>
-
-        <div class="services-list">
-            <div class="service-item">
-                <h4>Expert Consultation</h4>
-                <p>Providing strategic guidance and expert advice to help clients make informed decisions and achieve their objectives effectively.</p>
-            </div>
-
-            <div class="service-item">
-                <h4>Custom Solutions</h4>
-                <p>Developing tailored approaches that address specific challenges and leverage unique opportunities in each situation.</p>
-            </div>
-
-            <div class="service-item">
-                <h4>Ongoing Support</h4>
-                <p>Offering continuous assistance and monitoring to ensure long-term success and adaptation to changing needs.</p>
-            </div>
-
-            <div class="service-item">
-                <h4>Quality Assurance</h4>
-                <p>Maintaining rigorous standards and regular reviews to guarantee the highest quality in all our deliverables.</p>
+<section class="section bg-soft-blue" id="What-you-can-do">
+    <div class="container text-center">
+        <div class="section-text-content">
+            <span class="badge-custome">
+                What You Can Do Here
+            </span>
+            <h2>Explore information that matters to your search.</h2>
+            <p>We specialize in delivering comprehensive solutions tailored to meet the unique needs of our clients. Our approach combines industry expertise with innovative thinking to provide services that not only meet current requirements but also anticipate future challenges and opportunities.</p>
+            <div>
+                Use search tools, facility profiles, and recovery resources to explore conditions, levels of care, treatments, age groups and populations, insurance coverage, accreditations, amenities, and other details that can help you compare available options.
             </div>
         </div>
-    </div>
-</section>
-<section class="section">
-    <div class="container">
-        <h2>Our Core Values</h2>
-
         <div class="values-grid">
             <div class="value-card">
-                <div class="value-icon">🎯</div>
-                <h4>Excellence</h4>
-                <p>We strive for excellence in everything we do, continuously improving our processes and outcomes to exceed expectations and deliver outstanding results.</p>
+                <div class="value-icon">
+                    <i class="bi bi-search"></i>
+                </div>
+                <h4>Search Facilities</h4>
+                <p>Find facilities by location, condition, level of care, and more.</p>
             </div>
 
             <div class="value-card">
-                <div class="value-icon">🤝</div>
-                <h4>Integrity</h4>
-                <p>We operate with complete transparency and honesty, building trust through consistent ethical practices and open communication with all stakeholders.</p>
+                <div class="value-icon">
+                    <i class="bi bi-arrow-left-right"></i>
+                </div>
+                <h4>
+                    Compare Profiles
+                </h4>
+                <p>Review services, insurance, accreditations, and facility details.</p>
             </div>
 
             <div class="value-card">
-                <div class="value-icon">💡</div>
-                <h4>Innovation</h4>
-                <p>We embrace creative thinking and cutting-edge approaches to solve complex problems and create value for our clients in new and meaningful ways.</p>
+                <div class="value-icon">
+                    <i class="bi bi-compass"></i>
+                </div>
+                <h4>Explore Resources</h4>
+                <p>Learn about conditions, treatments, and recovery topics.</p>
             </div>
 
             <div class="value-card">
-                <div class="value-icon">🌟</div>
-                <h4>Collaboration</h4>
-                <p>We believe in the power of teamwork and partnership, working closely with clients and colleagues to achieve shared goals and mutual success.</p>
+                <div class="value-icon">
+                    <i class="bi bi-envelope"></i>
+                </div>
+                <h4>
+                    Contact Providers
+                </h4>
+                <p>Use available contact information to reach providers directly.</p>
+            </div>
+        </div>
+    </div>
+
+</section>
+<section class="section" id="Platform-reveiew">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 col-md-5">
+                <span class="badge-custome">
+                    Platform Preview
+                </span>
+                <h2 style="text-align:left">
+                    Built around practical search behavior.
+                </h2>
+                <p>
+                    RehabNavigator organizes information into structured search paths such as location, conditions, levels of care, treatments, insurance coverage, and facility details.
+                </p>
+                <p>
+                    Designed to simplify how treatment information is explored and compared.
+                </p>
+            </div>
+
+            <div class="col-12 col-md-7">
+                <div aria-label="Directory interface preview" class="mockup px-2">
+                    <img src="/images/Ourstory-preview.jpg" alt="centers-preview" />
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="section bg-soft-blue">
+    <div class="container d-flex flex-column align-items-center">
+        <span class="badge-custome">The People Behind RehabNavigator</span>
+        <h2>Supporting a more organized treatment search experience.</h2>
+        <p>RehabNavigator is maintained by people focused on directory quality, recovery resources, platform usability, and ongoing improvements.</p>
+        <div class="team-grid">
+            <div class="team-card">
+                <h3>Directory Quality</h3>
+                <p>Supports facility profiles, listing information, and directory organization.</p>
+            </div>
+            <div class="team-card">
+                <h3>Resources &amp; Content</h3>
+                <p>Develops educational content and recovery-related resources.</p>
+            </div>
+            <div class="team-card">
+                <h3>Search &amp; User Experience</h3>
+                <p>Works to improve navigation, search tools, and usability.</p>
+            </div>
+            <div class="team-card">
+                <h3>Platform Development</h3>
+                <p>Supports site functionality and ongoing enhancements.</p>
+            </div>
+        </div>
+    </div>
+
+</section>
+<section class="section">
+    <div class="container text-center">
+
+        <span class="badge-custome">
+            Our values
+        </span>
+        <h2>Clear. <span class="text-secondary-blue">Respectul. </span> Useful.</h2>
+        <p>Every part of RehabNavigator is designed to make treatment information easier to review, compare, and navigate.</p>
+        <div class="cards-grid">
+            <div class="card"><div class="card-icon icon-1"><i class="bi bi-eye"></i></div><p class="card-title">Clarity</p></div>
+            <div class="card"><div class="card-icon icon-2"><i class="bi bi-shield-check"></i></div><p class="card-title">Transparency</p></div>
+            <div class="card"><div class="card-icon icon-3"><i class="bi bi-universal-access"></i></div><p class="card-title">Accessibility</p></div>
+            <div class="card"><div class="card-icon icon-4"><i class="bi bi-hand-thumbs-up"></i></div><p class="card-title">Responsibility</p></div>
+        </div>
+
+    </div>
+</section>
+<section class="section bg-soft-blue">
+    <div class="container py-5 d-flex justify-content-center">
+        <div class="directory-quality">
+            <div class="row align-items-center g-5">
+
+                <!-- Left column: text -->
+                <div class="col-lg-6">
+                    <span class="badge-custome">Directory Quality</span>
+                    <h1 class="dq-headline mb-3">Organized to make information easier to review.</h1>
+                    <p class="dq-desc mb-0">We use consistent profile structure, search categories, and listing formats so users can browse facility information more easily.</p>
+                </div>
+
+                <!-- Right column: feature list -->
+                <div class="col-lg-6">
+                    <div class="d-flex flex-column gap-2">
+
+                        <div class="dq-feature-card d-flex align-items-center gap-3">
+                            <div class="dq-check-circle d-flex align-items-center justify-content-center">
+                                <i class="bi bi-check-lg"></i>
+                            </div>
+                            <p class="dq-feature-text mb-0">Organized Directory Structure</p>
+                        </div>
+
+                        <div class="dq-feature-card d-flex align-items-center gap-3">
+                            <div class="dq-check-circle d-flex align-items-center justify-content-center">
+                                <i class="bi bi-check-lg"></i>
+                            </div>
+                            <p class="dq-feature-text mb-0">Clear Profile Formatting</p>
+                        </div>
+
+                        <div class="dq-feature-card d-flex align-items-center gap-3">
+                            <div class="dq-check-circle d-flex align-items-center justify-content-center">
+                                <i class="bi bi-check-lg"></i>
+                            </div>
+                            <p class="dq-feature-text mb-0">Search Filters</p>
+                        </div>
+
+                        <div class="dq-feature-card d-flex align-items-center gap-3">
+                            <div class="dq-check-circle d-flex align-items-center justify-content-center">
+                                <i class="bi bi-check-lg"></i>
+                            </div>
+                            <p class="dq-feature-text mb-0">Ongoing Improvements</p>
+                        </div>
+
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
 </section>
 <section class="section">
-    <div class="container">
-        <h2>Our Impact</h2>
-        <div class="stats">
-            <div class="stat-item">
-                <span class="stat-number">500+</span>
-                <span class="stat-label">Projects Completed</span>
+    <div class="container text-center">
+        <span class="badge-custome">
+            Next Steps
+        </span>
+        <h2 id="next-steps-title">Continue with RehabNavigator.</h2>
+        <p>Choose the path that matches what you need.</p>
+        <div class="row">
+            <div class="col-12 col-md-6 pe-3">
+                <div class="next-card">
+                    <div class="value-icon"><i class="bi bi-search"></i></div>
+                    <h3>For Individuals &amp; Families</h3>
+                    <p>Browse facility profiles, treatment information, and recovery resources.</p>
+                    <div class="button-row">
+                        <a class="btn btn-primary-gradient" href="/facilities">Browse Facilities</a>
+                        <a class="btn btn-outline-secondary" href="#">Explore Resources</a>
+                    </div>
+                </div>
             </div>
-
-            <div class="stat-item">
-                <span class="stat-number">98%</span>
-                <span class="stat-label">Client Satisfaction</span>
-            </div>
-
-            <div class="stat-item">
-                <span class="stat-number">15+</span>
-                <span class="stat-label">Years Experience</span>
-            </div>
-
-            <div class="stat-item">
-                <span class="stat-number">50+</span>
-                <span class="stat-label">Expert Team Members</span>
+            <div class="col-12 col-md-6 ps-3">
+                <div class="next-card">
+                    <div class="value-icon"><i class="bi bi-hospital"></i></div>
+                    <h3>For Treatment Providers</h3>
+                    <p>Claim a listing or review visibility options for your facility.</p>
+                    <div class="button-row">
+                        <a class="btn btn-primary-gradient" href="#">Claim or Update a Listing</a>
+                        <a class="btn btn-outline-secondary" href="#">Advertise With Us</a>
+                        <a class="btn btn-outline-secondary" href="/packages">Plans &amp; Pricing</a>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-</section>
-
-<section class="section">
-    <div class="container">
-        <div class="team-intro">
-            <h2>Our Expert Team</h2>
-            <p>Our success is built on the expertise, dedication, and passion of our team members. We bring together professionals from diverse backgrounds, each contributing unique skills and perspectives to deliver exceptional results.</p>
-
-            <p>Our team includes certified professionals, industry veterans, and innovative thinkers who are committed to staying at the forefront of their respective fields. Through continuous learning and professional development, we ensure our team remains equipped with the latest knowledge and best practices.</p>
-
-            <p>Every team member is dedicated to our core values and committed to delivering excellence in every project. We foster a collaborative environment where creativity thrives and where each individual's contributions are valued and recognized.</p>
-        </div>
-    </div>
-</section>
-
-<section class="section">
-    <div class="container">
-        <h2>Quality & Standards</h2>
-        <div>
-            <p>We maintain the highest standards of quality in all our work through rigorous processes, regular reviews, and continuous improvement initiatives. Our commitment to quality is reflected in our systematic approach to project management, quality assurance protocols, and client feedback integration.</p>
-
-            <p>All our work is backed by industry best practices, evidence-based methodologies, and a commitment to staying current with the latest developments in our field. We regularly update our processes and standards to ensure we continue to deliver exceptional value to our clients.</p>
-
-            <p>Our quality assurance process includes regular internal reviews, client feedback sessions, and performance metrics tracking to ensure we consistently meet and exceed expectations. We are committed to transparency in our operations and maintain open communication channels with all stakeholders.</p>
-        </div>
-    </div>
-</section>
-<section class="cta-section">
-    <div class="container">
-        <h2>Ready to Work Together?</h2>
-        <p>Discover how our expertise and commitment to excellence can help you achieve your goals.</p>
-        <a href="#" class="btn">Get Started Today</a>
     </div>
 </section>
 

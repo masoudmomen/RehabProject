@@ -11,7 +11,7 @@ namespace Rehab.Application.Email
 {
     public interface IEmailService
     {
-        Task SendEmailAsync(string to, string subject, string body);
+        Task SendEmailAsync(IEnumerable<string> to, string subject, string body);
 
     }
 
@@ -26,11 +26,16 @@ namespace Rehab.Application.Email
             _config = config;
         }
 
-        public async Task SendEmailAsync(string to, string subject, string body)
+        public async Task SendEmailAsync(IEnumerable<string> to, string subject, string body)
         {
+            var recipients = to?.ToList();
+            if(recipients == null || recipients.Count == 0) 
+                throw  new ArgumentException("At least one recipients is required." , nameof(to));
+                       
             var message = new MimeMessage();
             message.From.Add(MailboxAddress.Parse(_config["Email:From"]));
-            message.To.Add(MailboxAddress.Parse(to));
+            foreach(var address in recipients)
+                   message.To.Add(MailboxAddress.Parse(address));
             message.Subject = subject;
             message.Body = new TextPart("html") { Text = body };
 
@@ -44,7 +49,7 @@ namespace Rehab.Application.Email
             }
             catch (Exception ex)
             {
-                throw new Exception($"Cannot connect to SMTP: _config[\"Email:Host\"], int.Parse(_config[\"Email:Port\"] — {ex.Message}", ex);
+                throw new Exception($"Cannot connect to SMTP: {_config["Email:Host"]}:{_config["Email:Port"]} — {ex.Message}", ex);
             }
 
 
