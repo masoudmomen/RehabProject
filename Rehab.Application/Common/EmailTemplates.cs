@@ -72,5 +72,32 @@ namespace Rehab.Application.Common
         </div>
     ";
         }
+        public static string BuildContactUsEmailBody(AdvertiseContactDto model)
+        {
+
+            return $@"
+            <h2>Contact Us | Advertise With Us</h2>
+            <p><strong>Facility:</strong> {model.FacilityName}</p>
+            <p><strong>Contact:</strong> {model.ContactName}</p>
+            <p><strong>Email:</strong> {model.Email}</p>
+            <p><strong>Topic:</strong> {model.HelpTopic}</p>
+            <p><strong>Message:</strong> {model.Message}</p>
+            ";
+        }
+        public static string BuildAdvertiseContactConfirmationBody(string contactName)
+        {
+            return $@"
+            <div style=""font-family:sans-serif; max-width:600px; margin:auto;"">
+                <h2 style=""color:#2c3e50;"">Thank you, {contactName}!</h2>
+                <p>We've received your request and will get back to you shortly.</p>
+                <p>If you have any urgent questions, feel free to reply to this email.</p>
+                <br/>
+                <p style=""color:#888; font-size:13px;"">— The RehabNavigator Team</p>
+            </div>
+        ";
+
+        }
     }
+
+
 }

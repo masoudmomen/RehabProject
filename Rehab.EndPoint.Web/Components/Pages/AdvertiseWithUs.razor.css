@@ -1,0 +1,133 @@
+﻿:root {
+    --adv-primary: #2c7a9b;
+    --adv-dark: #102b3f;
+    --adv-body: #173247;
+    --adv-muted: #607080;
+    --adv-border: #dce6ef;
+    --adv-bg-soft: #f6f9fc;
+    --adv-accent-bg: #eaf6fb;
+}
+ 
+
+/* ── Eyebrow badge ── */
+.adv-eyebrow {
+    display: inline-block;
+    background: #fff;
+    color: var(--adv-primary);
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    padding: 7px 14px;
+    border-radius: 999px;
+}
+
+/* ── Hero gradient ── */
+.adv-hero {
+ 
+    border: 1px solid #dcebf4;
+}
+
+/* ── Plans link card ── */
+.adv-plans-card {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    font-size: 1.3rem;
+    font-weight: 900;
+    color: var(--adv-body);
+    text-decoration: none;
+    border: 1px solid var(--adv-border);
+    transition: .2s ease;
+}
+
+    .adv-plans-card:hover {
+        border-color: var(--adv-primary);
+        color: var(--adv-primary);
+        transform: translateY(-2px);
+    }
+
+.adv-plans-arrow {
+    width: 34px;
+    height: 34px;
+    display: grid;
+    place-items: center;
+    background: var(--adv-accent-bg);
+    color: var(--adv-primary);
+    font-size: 18px;
+    border-radius: 50%;
+}
+
+/* ── Shared card border color ── */
+.adv-card {
+    border: 1px solid var(--adv-border);
+}
+
+/* ── Icon chip ── */
+.adv-icon {
+    width: 48px;
+    height: 48px;
+    display: grid;
+    place-items: center;
+    background: var(--accent-bg);
+    color: var(--adv-primary);
+    font-size: 22px;
+    border-radius: 16px;
+}
+
+/* ── Placement preview block ── */
+.adv-placement-preview {
+    min-height: 100px;
+    border: 2px solid var(--adv-primary);
+    background: linear-gradient(90deg, rgba(44,122,155,.11), transparent), #f9fcff;
+    display: grid;
+    place-items: center;
+    color: var(--adv-primary);
+    font-weight: 900;
+    text-align: center;
+    border-radius: 18px;
+    padding: 14px;
+}
+
+/* ── Form inputs ── */
+.form-control, .form-select {
+    border-radius: 14px !important;
+    border-color: #cfdce6;
+    padding: 13px 16px;
+}
+
+    .form-control:focus, .form-select:focus {
+        border-color: var(--adv-primary);
+        box-shadow: 0 0 0 3px rgba(44,122,155,.12);
+    }
+
+/* ── Submit button ── */
+.btn-primary {
+  
+    color: #fff;
+    font-weight: 900;
+    border: none;
+    border-radius: 14px;
+    padding: 15px;
+}
+
+    .btn-adv-primary:hover {
+        background: #245f79;
+        color: #fff;
+    }
+
+/* ── Bottom CTA ── */
+.adv-bottom-cta {
+    background-color: var(--color-primary);
+}
+
+    .adv-bottom-cta .btn-outline-light:hover {
+        color: #173247;
+    }
+ 
+
+ 
+ 
+
+     

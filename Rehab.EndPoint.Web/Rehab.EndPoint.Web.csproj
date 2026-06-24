@@ -17,10 +17,12 @@
 
   <ItemGroup>
     <None Remove="Components\Pages\FacilityDetail.razor.css" />
+    <None Remove="Components\Pages\testforcss.razor.css" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include="Components\Pages\FacilityDetail.razor.css" />
+    <Content Include="Components\Pages\testforcss.razor.css" />
   </ItemGroup>
 
   <ItemGroup>
