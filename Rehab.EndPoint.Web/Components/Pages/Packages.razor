@@ -23,21 +23,17 @@
     
     </section>
     <div class="text-center">
-        <span class="badge-custome ">
-            Provider Plans
-        </span>
-        <h2>Plans & Pricing </h2>
-
+       <h2>Plans & Pricing </h2>
         @if (billingType == "Annually")
         {
             <p>
-                annual plans include preferred pricing.
-            </p>
+            Reduced monthly rate with a one-year commitment. All plans are billed monthly.
+        </p>
         }
         else if (billingType == "Monthly")
         {
             <p>
-                Monthly billing is available with monthly renewal.
+            Flexible month-to-month billing. All plans are billed monthly.
 
             </p>
         }
@@ -87,7 +83,7 @@
                                 @basicMonthlyPrice
                             }
                             <span>
-                                /Period
+                                /Month
                             </span>
                         </div>
                         <hr class="my-2" style="border-color:#e8e7e0;opacity:1;">
@@ -120,7 +116,7 @@
                             {
                                 @premiumMonthlyPrice
                             }
-                            <span>/Period</span>
+                            <span>/Month</span>
                         </div>
                         <hr class="my-2" style="border-color:#e8e7e0;opacity:1;">
                         <ul class="feature-list mb-3">
@@ -159,8 +155,8 @@
 
             </div><!-- /row -->
 
-            <p class="text-center footer-note mt-4 mb-0">All plans include a 14-day free trial. No credit card required. Cancel anytime.</p>
-        </div><!-- /container -->
+@*             <p class="text-center footer-note mt-4 mb-0">All plans include a 14-day free trial. No credit card required. Cancel anytime.</p>
+ *@        </div><!-- /container -->
     </section>
   
     <section class="">
