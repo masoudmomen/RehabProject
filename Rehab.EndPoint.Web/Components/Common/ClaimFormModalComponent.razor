@@ -6,7 +6,8 @@
 @using static Rehab.Application.Common.EmailTemplates
 @inject IEmailService EmailService
 @inject IConfiguration Config
-
+@inject IJSRuntime JS
+@implements IDisposable
 <!-- Modal -->
 <div class="modal modal-lg fade" id="ClaimModal" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
     <div class="modal-dialog">
@@ -144,7 +145,18 @@
 
                 <div class="modal-foot">
                     <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" form="claim-form" class="btn btn-primary rounded-2">Submit Facility Information</button>
+@*                     <button type="submit" form="claim-form" class="btn btn-primary rounded-2">Submit Facility Information</button>
+ *@                    <button class="btn btn-primary rounded-2" type="submit" form="claim-form" disabled="@isLoading">
+                        @if (isLoading)
+                        {
+                            <span>Sending...</span>
+                        }
+                        else
+                        {
+                            <span>Submit Facility Information</span>
+                        }
+                    </button>
+                
                 </div>
 
             </div>
@@ -153,12 +165,38 @@
 </div>
 
 @code {
+    private DotNetObjectReference<ClaimFormModalComponent>? _dotNetRef;
     private ClaimFormModel FormModel { get; set; } = new();
     private string? SuccessMessage;
     private string? ErrorMessage;
 
+    private bool isLoading = false;
+    private bool isSuccess = false;
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            _dotNetRef = DotNetObjectReference.Create(this);
+            await JS.InvokeVoidAsync("registerModalResetHandler", "ClaimModal", _dotNetRef);
+        }
+    }
+
+    [JSInvokable]
+    public void ResetForm()
+    {
+        FormModel = new();
+        SuccessMessage = null;
+        ErrorMessage = null;
+        isLoading = false;
+        StateHasChanged();
+    }
+    public void Dispose()
+    {
+        _dotNetRef?.Dispose();
+    }
     private async Task HandleSubmit()
     {
+        isLoading = true;
         try
         {
             var adminEmail = Config["Email:ToAdmin"];
@@ -193,6 +231,7 @@
             SuccessMessage = "Your request has been submitted. We'll be in touch soon!";
             ErrorMessage = null;
             FormModel = new();
+            isLoading = false;
         }
         catch (Exception ex)
         {

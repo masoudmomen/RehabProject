@@ -4,7 +4,7 @@ namespace Rehab.EndPoint.Web.ViewModels
 {
     public class ClaimFormModel
     {
-        [Required(ErrorMessage = "This field is required.")]
+        [Required(ErrorMessage = "The field 'IsFacilityListed' is required.")]
         public string? IsFacilityListed { get; set; }
 
         [Required(ErrorMessage = "Facility name is required.")]
