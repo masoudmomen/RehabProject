@@ -26,4 +26,18 @@
     --shadow: 0 18px 45px rgba(39, 56, 74, 0.10);
     --text-muted: #607080;
     --accent-bg: #eaf6fb;
+    /*FOR STATIC*/
+    --purple: #7c3aed;
+    --purple-dark: #5b21b6;
+    --purple-light: #ede9fe;
+    --blue: #3b82f6;
+    --blue-dark: #1d4ed8;
+    --teal: #0d9488;
+    --teal-light: rgba(212, 249, 255, 1);
+    --navy: #1e1b4b;
+    --text: #1e293b;
+    --muted: #64748b;
+    --border: #e2e8f0;
+    --bg: #f8fafc;
+    --white: #ffffff;
 }

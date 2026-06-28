@@ -97,6 +97,84 @@ namespace Rehab.Application.Common
         ";
 
         }
+
+        public static string BuildClaim(ClaimForModelDto dto)
+        {
+            string Row(string label, string? value) =>
+                string.IsNullOrWhiteSpace(value) ? "" : $@"
+                    <tr>
+                        <td style=""padding:6px 12px; color:#666; font-size:13px; white-space:nowrap;"">{label}</td>
+                        <td style=""padding:6px 12px; font-size:13px;"">{value}</td>
+                    </tr>";
+
+                            return $@"
+                <div style=""font-family:sans-serif; max-width:600px; margin:auto;"">
+                    <h2 style=""color:#2c3e50;"">New Claim Request</h2>
+                    <p>A new facility claim request has been submitted. Review the details below.</p>
+
+                    <table style=""width:100%; border-collapse:collapse; margin:20px 0; background:#f9f9f9; border-radius:8px; overflow:hidden;"">
+                        <thead>
+                            <tr style=""background:#2c3e50;"">
+                                <th colspan=""2"" style=""padding:10px 12px; color:#fff; font-size:14px; text-align:left;"">Facility Information</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {Row("Listed on RehabNavigator?", dto.IsFacilityListed)}
+                            {Row("Facility Name", dto.FacilityName)}
+                            {Row("Facility Address", dto.FacilityAddress)}
+                            {Row("Facility Website", dto.FacilityWebsite)}
+                            {Row("Admissions Phone", dto.AdmissionsPhone)}
+                            {Row("Admissions Email", dto.AdmissionsEmail)}
+                            {Row("Primary Level of Care", dto.PrimaryLevelOfCare)}
+                        </tbody>
+                        <thead>
+                            <tr style=""background:#2c3e50;"">
+                                <th colspan=""2"" style=""padding:10px 12px; color:#fff; font-size:14px; text-align:left;"">Submitted By</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {Row("Name", dto.ContactName)}
+                            {Row("Work Email", dto.WorkEmail)}
+                            {Row("Phone", dto.ContactPhone)}
+                            {Row("Role", dto.RoleOrConnection)}
+                        </tbody>
+                    </table>
+
+                    {(!string.IsNullOrWhiteSpace(dto.AdditionalInformation) ? $@"
+                    <div style=""background:#f0f4f8; border-left:4px solid #2c3e50; padding:12px 16px; margin:20px 0; border-radius:0 6px 6px 0;"">
+                        <p style=""margin:0 0 6px; font-size:13px; color:#666;"">Additional Information</p>
+                        <p style=""margin:0; font-size:13px;"">{dto.AdditionalInformation}</p>
+                    </div>" : "")}
+
+                    <p style=""font-size:13px; color:#666;"">
+                        To respond to this request, reply directly to 
+                        <a href=""mailto:{dto.WorkEmail}"">{dto.WorkEmail}</a>.
+                    </p>
+                </div>";
+        }
+
+        public static string BuildClaimConfirmation(string contactName)
+        {
+            return $@"
+    <div style=""font-family:sans-serif; max-width:600px; margin:auto;"">
+
+        <h2 style=""color:#2c3e50;"">Thank you, {contactName}!</h2>
+        <p>We've received your claim request and our team will review it shortly.</p>
+        <p>Here's what happens next:</p>
+
+        <ol style=""font-size:14px; line-height:2;"">
+            <li>Our team reviews your submission</li>
+            <li>We verify your connection to the facility</li>
+            <li>You'll receive a follow-up email with next steps</li>
+        </ol>
+
+        <p>If you have any urgent questions, feel free to reply to this email.</p>
+        <br/>
+        <p style=""color:#888; font-size:13px;"">— The RehabNavigator Team</p>
+
+    </div>";
+        }
+
     }
 
 

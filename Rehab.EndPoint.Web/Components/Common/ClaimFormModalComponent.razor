@@ -1,0 +1,203 @@
+﻿@* Components/Pages/ClaimFormModal.razor *@
+@rendermode InteractiveServer
+@using Rehab.EndPoint.Web.ViewModels
+@using Rehab.Application.Email
+@using Rehab.Application.Common
+@using static Rehab.Application.Common.EmailTemplates
+@inject IEmailService EmailService
+@inject IConfiguration Config
+
+<!-- Modal -->
+<div class="modal modal-lg fade" id="ClaimModal" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-box">
+
+                <div class="modal-head">
+                    <h2 id="modal-title">Submit a Request</h2>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+
+                    @if (SuccessMessage is not null)
+                    {
+                        <div class="alert alert-success">@SuccessMessage</div>
+                    }
+                    @if (ErrorMessage is not null)
+                    {
+                        <div class="alert alert-danger">@ErrorMessage</div>
+                    }
+
+                    <EditForm id="claim-form" Model="FormModel" OnValidSubmit="HandleSubmit">
+                        <DataAnnotationsValidator />
+                        <ValidationSummary class="validation-errors" />
+                        <div class="form-grid">
+
+                            <div class="field full">
+                                <label for="isListed">Is your facility already listed on RehabNavigator? *</label>
+                                <InputSelect id="isListed" @bind-Value="FormModel.IsFacilityListed" class="form-select">
+                                    <option value="">Select one</option>
+                                    <option value="Yes, my facility is already listed">Yes, my facility is already listed</option>
+                                    <option value="No, my facility is not listed yet">No, my facility is not listed yet</option>
+                                    <option value="I'm not sure">I'm not sure</option>
+                                </InputSelect>
+                                <ValidationMessage For="() => FormModel.IsFacilityListed" />
+                            </div>
+
+                            <div class="field full">
+                                <label for="facilityName">Facility Name *</label>
+                                <InputText id="facilityName" @bind-Value="FormModel.FacilityName" placeholder="Facility name" class="form-control" />
+                                <ValidationMessage For="() => FormModel.FacilityName" />
+                            </div>
+
+                            <div class="field full">
+                                <label for="facilityAddress">Facility Address</label>
+                                <InputText id="facilityAddress" @bind-Value="FormModel.FacilityAddress" placeholder="Street address, city, state" class="form-control" />
+                                <ValidationMessage For="() => FormModel.FacilityAddress" />
+                            </div>
+
+                            <div class="field">
+                                <label for="facilityWebsite">Facility Website</label>
+                                <InputText id="facilityWebsite" @bind-Value="FormModel.FacilityWebsite" placeholder="https://example.com" type="url" class="form-control" />
+                                <ValidationMessage For="() => FormModel.FacilityWebsite" />
+                            </div>
+
+                            <div class="field">
+                                <label for="admissionsPhone">Admissions Phone Number</label>
+                                <InputText id="admissionsPhone" @bind-Value="FormModel.AdmissionsPhone" placeholder="Admissions phone" type="tel" class="form-control" />
+                                <ValidationMessage For="() => FormModel.AdmissionsPhone" />
+                            </div>
+
+                            <div class="field">
+                                <label for="admissionsEmail">Admissions Email Address</label>
+                                <InputText id="admissionsEmail" @bind-Value="FormModel.AdmissionsEmail" placeholder="admissions@example.com" type="email" class="form-control" />
+                                <ValidationMessage For="() => FormModel.AdmissionsEmail" />
+                            </div>
+
+                            <div class="field">
+                                <label for="levelOfCare">Primary Level of Care</label>
+                                <InputSelect id="levelOfCare" @bind-Value="FormModel.PrimaryLevelOfCare" class="form-select">
+                                    <option value="">Select one</option>
+                                    <option value="Detox">Detox</option>
+                                    <option value="Residential">Residential</option>
+                                    <option value="Inpatient">Inpatient</option>
+                                    <option value="PHP">PHP</option>
+                                    <option value="IOP">IOP</option>
+                                    <option value="Outpatient">Outpatient</option>
+                                    <option value="Virtual">Virtual</option>
+                                    <option value="Other">Other</option>
+                                </InputSelect>
+                                <ValidationMessage For="() => FormModel.PrimaryLevelOfCare" />
+                            </div>
+
+                            <div class="field">
+                                <label for="contactName">Your Name *</label>
+                                <InputText id="contactName" @bind-Value="FormModel.ContactName" placeholder="Your full name" class="form-control" />
+                                <ValidationMessage For="() => FormModel.ContactName" />
+                            </div>
+
+                            <div class="field">
+                                <label for="workEmail">Work Email *</label>
+                                <InputText id="workEmail" @bind-Value="FormModel.WorkEmail" placeholder="name@facility.com" type="email" class="form-control" />
+                                <ValidationMessage For="() => FormModel.WorkEmail" />
+                            </div>
+
+                            <div class="field">
+                                <label for="roleOrConnection">Your Role or Connection</label>
+                                <InputSelect id="roleOrConnection" @bind-Value="FormModel.RoleOrConnection" class="form-select">
+                                    <option value="">Select one</option>
+                                    <option value="Owner">Owner</option>
+                                    <option value="Executive Director">Executive Director</option>
+                                    <option value="Admissions">Admissions</option>
+                                    <option value="Marketing">Marketing</option>
+                                    <option value="Clinical Leadership">Clinical Leadership</option>
+                                    <option value="Facility Representative">Facility Representative</option>
+                                    <option value="Other">Other</option>
+                                </InputSelect>
+                                <ValidationMessage For="() => FormModel.RoleOrConnection" />
+                            </div>
+
+                            <div class="field">
+                                <label for="contactPhone">Your Phone Number</label>
+                                <InputText id="contactPhone" @bind-Value="FormModel.ContactPhone" placeholder="Your phone number" type="tel" class="form-control" />
+                                <ValidationMessage For="() => FormModel.ContactPhone" />
+                            </div>
+
+                            <div class="field full">
+                                <label for="additionalInfo">Additional Information</label>
+                                <InputTextArea id="additionalInfo" @bind-Value="FormModel.AdditionalInformation"
+                                               placeholder="Briefly tell us what information you would like our team to review."
+                                               class="form-control" rows="4" />
+                                <ValidationMessage For="() => FormModel.AdditionalInformation" />
+                            </div>
+
+                            <div class="form-note full">
+                                By submitting this form, you agree that RehabNavigator may contact you regarding this request.
+                                Submitting information does not guarantee that a listing will be added or changed.
+                            </div>
+
+                        </div>
+                    </EditForm>
+
+                </div>
+
+                <div class="modal-foot">
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" form="claim-form" class="btn btn-primary rounded-2">Submit Facility Information</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private ClaimFormModel FormModel { get; set; } = new();
+    private string? SuccessMessage;
+    private string? ErrorMessage;
+
+    private async Task HandleSubmit()
+    {
+        try
+        {
+            var adminEmail = Config["Email:ToAdmin"];
+
+            var dto = new ClaimForModelDto(
+                FormModel.IsFacilityListed,
+                FormModel.FacilityName,
+                FormModel.FacilityAddress,
+                FormModel.FacilityWebsite,
+                FormModel.AdmissionsPhone,
+                FormModel.AdmissionsEmail,
+                FormModel.PrimaryLevelOfCare,
+                FormModel.ContactName,
+                FormModel.WorkEmail,
+                FormModel.RoleOrConnection,
+                FormModel.ContactPhone,
+                FormModel.AdditionalInformation
+            );
+
+            await EmailService.SendEmailAsync(
+                to: [adminEmail!],
+                subject: "Advertise With Us | New Claim Request",
+                body: BuildClaim(dto)
+            );
+
+            await EmailService.SendEmailAsync(
+                to: [FormModel.WorkEmail],
+                subject: "We received your claim request – RehabNavigator",
+                body: BuildClaimConfirmation(FormModel.ContactName)
+            );
+
+            SuccessMessage = "Your request has been submitted. We'll be in touch soon!";
+            ErrorMessage = null;
+            FormModel = new();
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = "Something went wrong. Please try again.";
+            SuccessMessage = null;
+        }
+    }
+}
