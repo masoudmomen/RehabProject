@@ -6,200 +6,268 @@
 <style>
 
 </style>
- 
-    <section class="billing-toggle-wrap" aria-label="Billing options">
-        
-        <div class="billing-toggle">
-            <input type="radio" id="billing-annual" name="billing" value="annual" 
-             checked="@(billingType=="Annually")"
-                   @onchange="@(() => OnBillingChanged("Annually"))" />
-            <label for="billing-annual">Pay annually</label>
 
-            <input type="radio" id="billing-monthly" name="billing" value="monthly"
-                   checked="@(billingType == "Monthly")"
-                   @onchange="@(() => OnBillingChanged("Monthly"))" />
-            <label for="billing-monthly">Pay Monthly</label>
-        </div>
-    
-    </section>
-    <div class="text-center">
-       <h2>Plans & Pricing </h2>
-        @if (billingType == "Annually")
-        {
-            <p>
-            Reduced monthly rate with a one-year commitment. All plans are billed monthly.
-        </p>
-        }
-        else if (billingType == "Monthly")
-        {
-            <p>
-            Flexible month-to-month billing. All plans are billed monthly.
+<section class="billing-toggle-wrap" aria-label="Billing options">
 
-            </p>
-        }
+    <div class="billing-toggle">
+        <input type="radio" id="billing-annual" name="billing" value="annual"
+               checked="@(billingType == "Annually")"
+               @onchange="@(() => OnBillingChanged("Annually"))" />
+        <label for="billing-annual">Pay annually</label>
 
+        <input type="radio" id="billing-monthly" name="billing" value="monthly"
+               checked="@(billingType == "Monthly")"
+               @onchange="@(() => OnBillingChanged("Monthly"))" />
+        <label for="billing-monthly">Pay Monthly</label>
     </div>
 
-    <section class="packages mt-5">
-        <!-- Pricing Cards -->
-        <div class="container pb-2 px-4">
-           
-            <div class="row g-4">
-
-                <!-- Free -->
-                <div class="col-12 col-md-3">
-                    <div class="pkg-card p-4">
-                        <p class="pkg-name mb-1">Free</p>
-
-                        <hr class="my-2" style="border-color:#e8e7e0;opacity:1;">
-                        <p class="price-val mb-0">$0</p>
-                        <hr class="my-2" style="border-color:#e8e7e0;opacity:1;">
-
-                        <ul class="feature-list mb-3">
-                            <li><span class="check-dot check-gray"><i class="fa-solid fa-check check-icon" aria-hidden="true"></i></span>Basic Listing</li>
-                            <li><span class="check-dot check-gray"><i class="fa-solid fa-check check-icon" aria-hidden="true"></i></span>Minimal Visibility</li>
-
-                        </ul>
-
-                        <div class="mt-auto">
-                            <button class="btn-pkg" @onclick='@(() => OpenModal("Free", "$0"))'>
-                                Claim Profile
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <!-- Basic -->
-                <div class="col-12 col-md-3">
-                    <div class="pkg-card p-4">
-                        <p class="pkg-name mb-1">Basic</p>
-                        <hr class="my-2" style="border-color:#e8e7e0;opacity:1;">
-                        <div class="price-val mb-0" data-monthly="$399" data-annually="$499">
-                            @if (billingType == "Annually")
-                            {
-                                @basicannuallyPrice
-                            }
-                            else if (billingType == "Monthly")
-                            {
-                                @basicMonthlyPrice
-                            }
-                            <span>
-                                /Month
-                            </span>
-                        </div>
-                        <hr class="my-2" style="border-color:#e8e7e0;opacity:1;">
-                        <ul class="feature-list mb-3">
-                            <li><span class="check-dot check-gray"><i class="fa-solid fa-check check-icon" aria-hidden="true"></i></span>Up to 10 Qualified Profile Views / Day</li>
-                            <li><span class="check-dot check-gray"><i class="fa-solid fa-check check-icon" aria-hidden="true"></i></span>Up to 300 Impressions / Day</li>
-
-                        </ul>
-
-                        <div class="mt-auto">
-                            <button class="btn-pkg" @onclick='@(() => OpenModal("Basic", "?????"))'>
-                                Gest Started
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <!-- Premium -->
-                <div class="col-12 col-md-3">
-                    <div class="pkg-card featured p-4">
-                        <span class="popular-badge">Most popular</span>
-                        <p class="pkg-name mb-1">Premium</p>
-
-                        <hr class="my-2" style="border-color:#e8e7e0;opacity:1;">
-
-                        <div class="price-val mb-0" data-monthly="@basicMonthlyPrice" data-annually="@basicannuallyPrice">
-                            @if (billingType == "Annually")
-                            {
-                                @premiumannuallyPrice
-                             }else if(billingType == "Monthly")
-                            {
-                                @premiumMonthlyPrice
-                            }
-                            <span>/Month</span>
-                        </div>
-                        <hr class="my-2" style="border-color:#e8e7e0;opacity:1;">
-                        <ul class="feature-list mb-3">
-                            <li><span class="check-dot check-teal"><i class="fa-solid fa-check check-icon" aria-hidden="true"></i></span>Up to 25 Qualified Profile Views / Day</li>
-                            <li><span class="check-dot check-teal"><i class="fa-solid fa-check check-icon" aria-hidden="true"></i></span>Up to 750 Impressions / Day</li>
-
-                        </ul>
-
-                        <div class="mt-auto">
-                            <button class="btn-pkg-primary" @onclick='@(() => OpenModal("Premium", "$39 – $79"))'>
-                                Get Started
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <!-- Enterprise -->
-                <div class="col-12 col-md-3">
-                    <div class="pkg-card p-4">
-                        <p class="pkg-name mb-1">Enterprise</p>
-
-                        <hr class="my-2" style="border-color:#e8e7e0;opacity:1;">
-                        <p class="price-val mb-0">Custom Pricing</p>
-                        <hr class="my-2" style="border-color:#e8e7e0;opacity:1;">
-                        <ul class="feature-list mb-3">
-                            <li><span class="check-dot check-purple"><i class="fa-solid fa-check check-icon" aria-hidden="true"></i></span>Custom Qualified Profile Views</li>
-                            <li><span class="check-dot check-purple"><i class="fa-solid fa-check check-icon" aria-hidden="true"></i></span>Custom Impressions </li>
-                        </ul>
-
-                        <div class="mt-auto">
-                            <button class="btn-pkg" @onclick='@(() => OpenModal("Enterprise", ""))'>
-                                Get Started
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-            </div><!-- /row -->
-
-@*             <p class="text-center footer-note mt-4 mb-0">All plans include a 14-day free trial. No credit card required. Cancel anytime.</p>
- *@        </div><!-- /container -->
-    </section>
-  
-    <section class="">
-        <div class="container">
-            <table class="comparison-table">
-                <thead><tr><th>Feature</th><th>Basic</th><th>Premium</th><th>VIP</th></tr></thead>
-                <tbody>
-                    <tr><td>Directory Listing</td><td class="check">✓</td><td class="check">✓</td><td class="check">✓</td></tr>
-                    <tr><td>Advanced Search with Full Filters</td><td class="dash">—</td><td class="check">✓</td><td class="check">✓</td></tr>
-                    <tr><td>State Page Visibility</td><td class="dash">—</td><td class="check">✓</td><td class="check">✓</td></tr>
-                    <tr><td>Category Page Visibility</td><td class="dash">—</td><td class="check">✓</td><td class="check">✓</td></tr>
-                    <tr><td>Condition, Treatment, Insurance, Amenity, Level of Care, Who We Treat Categories</td><td class="dash">—</td><td class="check">✓</td><td class="check">✓</td></tr>
-                    <tr><td>Enhanced Profile Detail &amp; Presentation</td><td class="dash">—</td><td class="check">✓</td><td class="check">✓</td></tr>
-                    <tr><td>Full Profile Detail &amp; Presentation</td><td class="dash">—</td><td class="dash">—</td><td class="check">✓</td></tr>
-                    <tr><td>Homepage / Top Search Placement</td><td class="dash">—</td><td class="dash">—</td><td class="check">✓</td></tr>
-                    <tr><td>Popular Centers Section</td><td class="dash">—</td><td class="dash">—</td><td class="check">✓</td></tr>
-                    <tr><td>Nearby Facilities Modal</td><td class="dash">—</td><td class="dash">—</td><td class="check">✓</td></tr>
-                    <tr><td>Blog / Content Promotion</td><td class="dash">—</td><td class="dash">—</td><td class="check">✓</td></tr>
-                </tbody>
-            </table>
-        </div>
-    </section>
-    <section class="claim-panel">
-        <h2>It’s <span>free</span> to be listed</h2>
+</section>
+<div class="text-center">
+    <h2>Plans & Pricing </h2>
+    @if (billingType == "Annually")
+    {
         <p>
-            Search for your facility below. If your profile already exists, you can claim it.
-            If it is not listed yet, submit your facility information and we will help you get started.
+            Reduced monthly rate with a one-year commitment. All plans are billed monthly.
         </p>
+    }
+    else if (billingType == "Monthly")
+    {
+        <p>
+            Flexible month-to-month billing. All plans are billed monthly.
 
-        <div class="search-box">
-            <input type="text" placeholder="Enter your facility name" />
-            <button type="button">Search</button>
+        </p>
+    }
+
+</div>
+
+<section class="packages mt-5">
+    <!-- Pricing Cards -->
+    <div class="container pb-2 px-4">
+
+        <div class="row g-4">
+
+            <!-- Free -->
+            <div class="col-12 col-md-3">
+                <div class="pkg-card p-4">
+                    <p class="pkg-name mb-1">Free</p>
+
+                    <hr class="my-2" style="border-color:#e8e7e0;opacity:1;">
+                    <p class="price-val mb-0">$0</p>
+                    <hr class="my-2" style="border-color:#e8e7e0;opacity:1;">
+
+                    <ul class="feature-list mb-3">
+                        <li><span class="check-dot check-gray"><i class="fa-solid fa-check check-icon" aria-hidden="true"></i></span>Essential Listing</li>
+                        <li><span class="check-dot check-gray"><i class="fa-solid fa-check check-icon" aria-hidden="true"></i></span>Minimal Visibility</li>
+
+                    </ul>
+
+                    <div class="mt-auto">
+                        <button class="btn-pkg" @onclick='@(() => OpenModal("Free", "$0"))'>
+                            Claim Profile
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <!-- Essential -->
+            <div class="col-12 col-md-3">
+                <div class="pkg-card p-4">
+                    <p class="pkg-name mb-1">Essential</p>
+                    <hr class="my-2" style="border-color:#e8e7e0;opacity:1;">
+                    <div class="price-val mb-0" data-monthly="$399" data-annually="$499">
+                        @if (billingType == "Annually")
+                        {
+                            @basicannuallyPrice
+                        }
+                        else if (billingType == "Monthly")
+                        {
+                            @basicMonthlyPrice
+                        }
+                        <span>
+                            /Month
+                        </span>
+                    </div>
+                    <hr class="my-2" style="border-color:#e8e7e0;opacity:1;">
+                    <ul class="feature-list mb-3">
+                        <li><span class="check-dot check-gray"><i class="fa-solid fa-check check-icon" aria-hidden="true"></i></span>Up to 10 Qualified Profile Views / Day</li>
+                        <li><span class="check-dot check-gray"><i class="fa-solid fa-check check-icon" aria-hidden="true"></i></span>Up to 300 Impressions / Day</li>
+
+                    </ul>
+
+                    <div class="mt-auto">
+                        <button class="btn-pkg" @onclick='@(() => OpenModal("Essential", "?????"))'>
+                            Get Started
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <!-- Premium -->
+            <div class="col-12 col-md-3">
+                <div class="pkg-card featured p-4">
+                    <span class="popular-badge">Most popular</span>
+                    <p class="pkg-name mb-1">Premium</p>
+
+                    <hr class="my-2" style="border-color:#e8e7e0;opacity:1;">
+
+                    <div class="price-val mb-0" data-monthly="@basicMonthlyPrice" data-annually="@basicannuallyPrice">
+                        @if (billingType == "Annually")
+                        {
+                            @premiumannuallyPrice
+                        }
+                        else if (billingType == "Monthly")
+                        {
+                            @premiumMonthlyPrice
+                        }
+                        <span>/Month</span>
+                    </div>
+                    <hr class="my-2" style="border-color:#e8e7e0;opacity:1;">
+                    <ul class="feature-list mb-3">
+                        <li><span class="check-dot check-teal"><i class="fa-solid fa-check check-icon" aria-hidden="true"></i></span>Up to 25 Qualified Profile Views / Day</li>
+                        <li><span class="check-dot check-teal"><i class="fa-solid fa-check check-icon" aria-hidden="true"></i></span>Up to 750 Impressions / Day</li>
+
+                    </ul>
+
+                    <div class="mt-auto">
+                        <button class="btn-pkg-primary" @onclick='@(() => OpenModal("Premium", "$39 – $79"))'>
+                            Get Started
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <!-- Enterprise -->
+            <div class="col-12 col-md-3">
+                <div class="pkg-card p-4">
+                    <p class="pkg-name mb-1">Enterprise</p>
+
+                    <hr class="my-2" style="border-color:#e8e7e0;opacity:1;">
+                    <p class="price-val mb-0">Custom Pricing</p>
+                    <hr class="my-2" style="border-color:#e8e7e0;opacity:1;">
+                    <ul class="feature-list mb-3">
+                        <li><span class="check-dot check-purple"><i class="fa-solid fa-check check-icon" aria-hidden="true"></i></span>Custom Qualified Profile Views</li>
+                        <li><span class="check-dot check-purple"><i class="fa-solid fa-check check-icon" aria-hidden="true"></i></span>Custom Impressions </li>
+                    </ul>
+
+                    <div class="mt-auto">
+                        <button class="btn-pkg" @onclick='@(() => OpenModal("Enterprise", ""))'>
+                            Get Started
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </div><!-- /row -->
+        @*             <p class="text-center footer-note mt-4 mb-0">All plans include a 14-day free trial. No credit card required. Cancel anytime.</p>
+ *@        </div><!-- /container -->
+</section>
+
+
+<section class="container mt-5">
+    <div class="comparison-table mx-2 text-center pt-5">
+        <div class="comparison-header">
+            <h2>Compare Plans</h2>
+            <p>Review the main differences between each plan.</p>
         </div>
-    </section>
- 
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Feature</th>
+                    <th>Free</th>
+                    <th>Essential</th>
+                    <th>Premium</th>
+                    <th>Enterprise</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>Website Link</td>
+                    <td class="check">✓</td>
+                    <td class="check">✓</td>
+                    <td class="check">✓</td>
+                    <td class="check">✓</td>
+                </tr>
+
+                <tr>
+                    <td>Facility Phone Number</td>
+                    <td class="check">✓</td>
+                    <td class="check">✓</td>
+                    <td class="check">✓</td>
+                    <td class="check">✓</td>
+                </tr>
+
+                <tr>
+                    <td>Enhanced Facility Profile</td>
+                    <td class="dash">—</td>
+                    <td class="check">✓</td>
+                    <td class="check">✓</td>
+                    <td class="check">✓</td>
+                </tr>
+
+                <tr>
+                    <td>Photo Gallery</td>
+                    <td class="dash">—</td>
+                    <td>10 Photos</td>
+                    <td>25 Photos</td>
+                    <td>50 Photos</td>
+                </tr>
+
+                <tr>
+                    <td>Facility Highlights</td>
+                    <td class="dash">—</td>
+                    <td class="check">✓</td>
+                    <td class="check">✓</td>
+                    <td class="check">✓</td>
+                </tr>
+
+                <tr>
+                    <td>Appears in Relevant Searches & Filters</td>
+                    <td class="dash">—</td>
+                    <td class="check">✓</td>
+                    <td class="check">✓</td>
+                    <td class="check">✓</td>
+                </tr>
+
+                <tr>
+                    <td>Featured Search Placement</td>
+                    <td class="dash">—</td>
+                    <td class="dash">—</td>
+                    <td class="check">✓</td>
+                    <td class="check">✓</td>
+                </tr>
+
+                <tr>
+                    <td>Featured Blog Article</td>
+                    <td class="dash">—</td>
+                    <td class="dash">—</td>
+                    <td class="dash">—</td>
+                    <td class="check">✓</td>
+                </tr>
+            </tbody>
+
+
+        </table>
+    </div>
+</section>
+<section class="claim-panel">
+    <h2>It’s <span>free</span> to be listed</h2>
+    <p>
+        Search for your facility below. If your profile already exists, you can claim it.
+        If it is not listed yet, submit your facility information and we will help you get started.
+    </p>
+
+    <div class="search-box">
+        <input type="text" placeholder="Enter your facility name" />
+        <button type="button">Search</button>
+    </div>
+</section>
+
 
 
 <PackagesModalComponent Visible="@showModal"
                         VisibleChanged="v => showModal = v"
                         PackageName="@selectedPackage"
-                        PackagePrice="@selectedPrice" 
-                        BillingType="@billingType"
-                        />
+                        PackagePrice="@selectedPrice"
+                        BillingType="@billingType" />
 
 
 @code {
@@ -236,567 +304,5 @@
 
 }
 <style>
-    .hero-title {
-        font-size: 2rem;
-        font-weight: 500;
-        color: #1a1a1a;
-    }
-
-    .hero-sub {
-        font-size: 1rem;
-        color: #6b6b6b;
-    }
-
-    .billing-toggle-wrap {
-        display: flex;
-        justify-content: center;
-        margin: 0 auto 30px;
-    }
-
-    .billing-toggle {
-        display: inline-flex;
-        gap: 6px;
-        background: #ffffff;
-        border: 1px solid #dce6ef;
-        border-radius: 999px;
-        padding: 6px;
-        box-shadow: 0 10px 28px rgba(18, 48, 74, .06);
-    }
-
-        .billing-toggle input {
-            position: absolute;
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        .billing-toggle label {
-            cursor: pointer;
-            border-radius: 999px;
-            padding: 11px 18px;
-            font-size: 14px;
-            font-weight: 900;
-            color: #607080;
-            transition: .2s ease;
-            white-space: nowrap;
-        }
-
-        .billing-toggle input:checked + label {
-            background:var(--color-primary);
-            color: #ffffff;
-            box-shadow: 0 6px 16px rgba(44, 122, 155, .22);
-        }
-    /* ── Cards ── */
-    .pkg-card {
-        background: #ffffff;
-        border: 1px solid #e0dfd8;
-        border-radius: 14px;
-        display: flex;
-        flex-direction: column;
-        height: 100%;
-        position: relative;
-    }
-
-        .pkg-card.featured {
-            border: 2px solid #7F77DD;
-        }
-
-    .pkg-name {
-        font-size: 1.1rem;
-        font-weight: 500;
-    }
-
-    .pkg-sub {
-        font-size: 0.78rem;
-        color: #6b6b6b;
-    }
-
-    .price-from {
-        font-size: 0.65rem;
-        color: #aaa;
-        text-transform: uppercase;
-        letter-spacing: 0.06em;
-    }
-
-    .price-val {
-        font-size: 1.75rem;
-        font-weight: 700;
-        line-height: 1.2;
-    }
-
-        .price-val span {
-            font-size: 1rem;
-            color: #607080;
-            font-weight: 500;
-        }
-
-    .price-range {
-        font-size: 1rem;
-        font-weight: 400;
-        color: #6b6b6b;
-    }
-
-    .price-period {
-        font-size: 0.75rem;
-        color: #6b6b6b;
-    }
-
-    .section-label {
-        font-size: 0.65rem;
-        font-weight: 600;
-        color: #aaa;
-        text-transform: uppercase;
-        letter-spacing: 0.07em;
-    }
-
-    .feature-list {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-        display: flex;
-        flex-direction: column;
-        gap: 7px;
-    }
-
-        .feature-list li {
-            font-size: 0.78rem;
-            color: #555;
-            display: flex;
-            align-items: flex-start;
-            gap: 8px;
-            line-height: 1.4;
-        }
-
-    .check-dot {
-        width: 14px;
-        height: 14px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-shrink: 0;
-        margin-top: 1px;
-    }
-
-    .check-icon {
-        color: #fff;
-        font-size: 7px;
-        line-height: 1;
-    }
-
-    .check-gray {
-        background: #B4B2A9;
-    }
-
-    .check-teal {
-        background: #5DCAA5;
-    }
-
-    .check-purple {
-        background: #7F77DD;
-    }
-
-    /* ── Popular badge ── */
-    .popular-badge {
-        position: absolute;
-        top: -13px;
-        left: 50%;
-        transform: translateX(-50%);
-        white-space: nowrap;
-        background: #EEEDFE;
-        color: #3C3489;
-        font-size: 0.7rem;
-        font-weight: 500;
-        padding: 3px 12px;
-        border-radius: 6px;
-    }
-
-    /* ── CTA buttons ── */
-    .btn-pkg {
-        border: 1px solid #ccc;
-        background: transparent;
-        color: #1a1a1a;
-        border-radius: 8px;
-        font-size: 0.85rem;
-        font-weight: 500;
-        padding: 9px;
-        width: 100%;
-        transition: background 0.15s;
-    }
-
-        .btn-pkg:hover {
-            background: #f3f3f3;
-        }
-
-    .btn-pkg-primary {
-        background: #534AB7;
-        color: #EEEDFE;
-        border: none;
-        border-radius: 8px;
-        font-size: 0.85rem;
-        font-weight: 500;
-        padding: 9px;
-        width: 100%;
-        transition: background 0.15s;
-    }
-
-        .btn-pkg-primary:hover {
-            background: #7F77DD;
-            color: #fff;
-        }
-
-    /* ── Footer note ── */
-    .footer-note {
-        font-size: 0.72rem;
-        color: #bbb;
-    }
-
-    /* ── Modal ── */
-
-
-    /* TEMP CSS */
-
-    * {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-    }
-
-    /*     body {
-                                    font-family: Arial, sans-serif;
-                                    background: #f6f9fc;
-                                    color: #173247;
-                                    line-height: 1.6;
-                                } */
-
-    /*    .page {
-                                    max-width: 1180px;
-                                    margin: 0 auto;
-                                    padding: 64px 20px;
-                                }
-                             */
-    /*   .hero1 {
-                                    text-align: center;
-                                    margin-bottom: 38px;
-                                }
-                             */
-    /*    .eyebrow {
-                                    color: #2c7a9b;
-                                    font-weight: 700;
-                                    font-size: 13px;
-                                    letter-spacing: .08em;
-                                    text-transform: uppercase;
-                                }
-                             */
-    /*   .hero1 h1 {
-                                    font-size: 42px;
-                                    line-height: 1.15;
-                                    margin: 10px 0 14px;
-                                } */
-    /*
-                                .hero1 p {
-                                    max-width: 760px;
-                                    margin: 0 auto;
-                                    color: #607080;
-                                    font-size: 17px;
-                                }
-                             */
-    .claim-panel {
-        background: #fff;
-        border: 1px solid #dce6ef;
-        border-radius: 26px;
-        padding: 34px;
-        box-shadow: 0 12px 34px rgba(18,48,74,.06);
-        margin-bottom: 34px;
-        text-align: center;
-    }
-
-        .claim-panel h2 {
-            font-size: 30px;
-            margin-bottom: 10px;
-        }
-
-            .claim-panel h2 span {
-                color: #2c7a9b;
-            }
-
-        .claim-panel p {
-            color: #607080;
-            margin-bottom: 22px;
-        }
-
-    .search-box {
-        max-width: 560px;
-        margin: 0 auto;
-        display: flex;
-        border: 1px solid #b9d3e2;
-        border-radius: 14px;
-        overflow: hidden;
-        background: #fff;
-    }
-
-        .search-box input {
-            flex: 1;
-            border: none;
-            padding: 16px;
-            font-size: 15px;
-            outline: none;
-        }
-
-        .search-box button {
-            border: none;
-            background: #2c7a9b;
-            color: #fff;
-            padding: 0 22px;
-            font-weight: 700;
-            cursor: pointer;
-        }
-
-    .dynamic-strip {
-        background: #eef3f7;
-        border-radius: 22px;
-        padding: 28px;
-        margin-bottom: 34px;
-        text-align: center;
-        border: 1px solid #dce6ef;
-    }
-
-        .dynamic-strip h2 {
-            font-size: 28px;
-            margin-bottom: 8px;
-        }
-
-            .dynamic-strip h2 span {
-                color: #2c7a9b;
-            }
-
-        .dynamic-strip p {
-            color: #607080;
-            max-width: 740px;
-            margin: 0 auto;
-        }
-
-    .pricing-layout {
-        margin-bottom: 34px;
-    }
-
-    .pricing-cards {
-        display: grid;
-        grid-template-columns: repeat(3,1fr);
-        gap: 24px;
-        align-items: stretch;
-    }
-
-    .card {
-        background: #fff;
-        border: 1px solid #dce6ef;
-        border-radius: 22px;
-        padding: 30px;
-        box-shadow: 0 10px 28px rgba(18,48,74,.06);
-        position: relative;
-        display: flex;
-        flex-direction: column;
-    }
-
-        .card.featured {
-            border: 2px solid #2c7a9b;
-        }
-
-    .badge {
-        position: absolute;
-        top: 18px;
-        right: 18px;
-        background: #eaf6fb;
-        color: #2c7a9b;
-        padding: 6px 10px;
-        border-radius: 999px;
-        font-size: 12px;
-        font-weight: 700;
-    }
-
-    .card h3 {
-        font-size: 26px;
-        margin-bottom: 4px;
-    }
-
-    .card.basic-card h3, .card.basic-card .subtitle, .card.basic-card .price, .card.basic-card .price-note {
-        text-align: center;
-    }
-
-    .subtitle {
-        color: #748494;
-        margin-bottom: 20px;
-    }
-
-    .price {
-        font-size: 30px;
-        font-weight: 800;
-        margin-bottom: 10px;
-    }
-
-    .price-note {
-        color: #607080;
-        font-size: 14px;
-        margin-bottom: 20px;
-    }
-
-    .simple-list {
-        list-style: none;
-        margin-bottom: 24px;
-    }
-
-        .simple-list li {
-            padding: 8px 0;
-            border-bottom: 1px solid #edf1f5;
-            color: #334b5e;
-        }
-
-            .simple-list li:last-child {
-                border-bottom: none;
-            }
-    /* .btn { display:block; width:100%; text-align:center; text-decoration:none; padding:13px 16px; border-radius:12px; font-weight:700; margin-top:auto; }
-                                    .btn-primary { background:#2c7a9b; color:#fff; } */
-    /* .btn-secondary {
-                        background: #eef4f8;
-                        color: #173247;
-                    }
-                 */
-    .fit-section {
-        display: grid;
-        grid-template-columns: repeat(2,1fr);
-        gap: 22px;
-        margin: 34px 0;
-    }
-
-    .fit-box {
-        background: #fff;
-        border: 1px solid #dce6ef;
-        border-radius: 20px;
-        padding: 26px;
-    }
-
-        .fit-box h3 {
-            font-size: 22px;
-            margin-bottom: 10px;
-        }
-
-        .fit-box p {
-            color: #607080;
-        }
-
-    .comparison-table {
-        background: #fff;
-        border-radius: 20px;
-        overflow: hidden;
-        border: 1px solid #dce6ef;
-        margin-bottom: 34px;
-    }
-
-    table {
-        width: 100%;
-        border-collapse: collapse;
-    }
-
-    th, td {
-        padding: 18px 20px;
-        text-align: center;
-        border-bottom: 1px solid #edf1f5;
-    }
-
-    th {
-        background: #eaf1f8;
-        color: #173247;
-    }
-
-        th:first-child, td:first-child {
-            text-align: left;
-        }
-
-    td {
-        color: #334b5e;
-    }
-
-    .check {
-        font-weight: 800;
-        color: #173247;
-    }
-
-    .dash {
-        color: #7d8a94;
-    }
-
-    /*    .contact-section {
-                        background: #173247;
-                        color: #fff;
-                        border-radius: 28px;
-                        padding: 36px;
-                        display: grid;
-                        grid-template-columns: 1fr 1.2fr;
-                        gap: 34px;
-                        align-items: start;
-                    } */
-
-    /*    .contact-copy h2 {
-                        font-size: 30px;
-                        margin-bottom: 12px;
-                    } */
-
-    /*  .contact-copy p, .contact-copy ul {
-                        color: #d8e5ee;
-                    } */
-    /*
-                    .contact-copy ul {
-                        padding-left: 18px;
-                        margin-top: 18px;
-                    }
-                 */
-    /*     .contact-form {
-                        background: #fff;
-                        border-radius: 22px;
-                        padding: 24px;
-                        color: #173247;
-                    }
-                 */
-    /*  .form-grid {
-                        display: grid;
-                        grid-template-columns: repeat(2,1fr);
-                        gap: 14px;
-                    }
-                 */
-    /*  label {
-                        font-size: 13px;
-                        font-weight: 700;
-                        margin-bottom: 5px;
-                        display: block;
-                    } */
-    /*
-                    input, select, textarea {
-                        width: 100%;
-                        border: 1px solid #cfdce6;
-                        border-radius: 10px;
-                        padding: 12px;
-                        font-size: 14px;
-                        font-family: Arial,sans-serif;
-                    }
-                 */
-    /*   textarea {
-                        min-height: 86px;
-                        resize: vertical;
-                    }
-                 */
-    .full {
-        grid-column: 1 / -1;
-    }
-
-    /*     .submit-btn {
-                        margin-top: 16px;
-                        border: none;
-                        background: #2c7a9b;
-                        color: #fff;
-                        padding: 14px;
-                        width: 100%;
-                        border-radius: 12px;
-                        font-weight: 800;
-                        cursor: pointer;
-                        font-size: 15px;
-                    } */
+ 
 </style>

@@ -25,7 +25,7 @@ namespace Rehab.Domain.Packages
     public enum PackageType
     {
         Free,
-        Basic,
+        Essential,
         Premium,
         PremiumPlus
     }
