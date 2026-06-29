@@ -22,3 +22,6 @@
 .text-secondary-blue {
     color: var(--color-blue-secondary);
 }
+.nav-link {
+    color: var(--color-text-primary);
+}

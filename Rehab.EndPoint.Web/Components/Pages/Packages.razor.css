@@ -36,14 +36,14 @@
         border-radius: 999px;
         padding: 11px 18px;
         font-size: 14px;
-        font-weight: 900;
+      /*  font-weight: 900;*/
         color: #607080;
         transition: .2s ease;
         white-space: nowrap;
     }
 
     .billing-toggle input:checked + label {
-        background: var(--color-primary);
+        background: #534AB7;
         color: #ffffff;
         box-shadow: 0 6px 16px rgba(44, 122, 155, .22);
     }
