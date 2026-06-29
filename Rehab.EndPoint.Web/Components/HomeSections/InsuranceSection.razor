@@ -6,9 +6,9 @@
 @inject IInsuranceService InsuranceService
 @inject AutoMapper.IMapper mapper
 
-<section class="my-5 pt-5 container bg-white" id="insurance">
-    <h2 class="section-title text-center">Find Treatment Centers By Insurance</h2>
-    <p class="fs-5 text-center text-dark-subtle"> Explore treatment centers that accept major insurance plans for addiction, mental health, and recovery services.</p>
+<section class="my-5 pt-5 container" id="insurance">
+    <h2 class="section-title text-center mb-1">Filter facilities by the insurance options listed on their profiles.</h2>
+    <p class="fs-5 text-center text-dark-subtle"> Filter facilities by the insurance options listed on their profiles.</p>
     <CardList List="Insurancescards"
               ItemsToShow="6"
               CustomClass="card-gs-2"
@@ -21,7 +21,7 @@
            data-bs-toggle="modal"
            data-bs-target="#modal_all_insurances">
 
-            Brows Insurances
+            Brows Insurance Options
         </a>
     </div>
 

@@ -23,21 +23,45 @@
             </div>
             @if (ShowTags)
             {
-                <div class="d-flex flex-wrap gap-1 mt-3 mb-3">
-                    <a href="#" class="facility-tag">Insurances (@FacilityCard!.InsuranceCount)</a>
-                    <a href="#" class="facility-tag">Accreditations (@FacilityCard!.AccreditationCount)</a>
-                    <a href="#" class="facility-tag">Amenities(@FacilityCard!.AmenityCount)</a>
-                    <a href="#" class="facility-tag">Highlights(@FacilityCard!.HighlightCount)</a>
-                    <a href="#" class="facility-tag">Who We Treat(@FacilityCard!.WwtCount)</a>
-                    <a href="#" class="facility-tag">Treatments(@FacilityCard!.TreatmentCount)</a>
-                    <a href="#" class="facility-tag">Conditions (@FacilityCard!.ConditionCount)</a>
-                    <a href="#" class="facility-tag">Substances We Treat(@FacilityCard!.SwtCount)</a>
-                </div>
+            <div class="d-flex flex-wrap gap-1 mt-3 mb-3">
+                @if (FacilityCard!.InsuranceCount > 0)
+                {
+                    <a href="#" class="facility-tag">Insurances (@FacilityCard.InsuranceCount)</a>
+                }
+                @if (FacilityCard!.AccreditationCount > 0)
+                {
+                    <a href="#" class="facility-tag">Accreditations (@FacilityCard.AccreditationCount)</a>
+                }
+                @if (FacilityCard!.AmenityCount > 0)
+                {
+                    <a href="#" class="facility-tag">Amenities (@FacilityCard.AmenityCount)</a>
+                }
+                @if (FacilityCard!.HighlightCount > 0)
+                {
+                    <a href="#" class="facility-tag">Highlights (@FacilityCard.HighlightCount)</a>
+                }
+                @if (FacilityCard!.WwtCount > 0)
+                {
+                    <a href="#" class="facility-tag">Who We Treat (@FacilityCard.WwtCount)</a>
+                }
+                @if (FacilityCard!.TreatmentCount > 0)
+                {
+                    <a href="#" class="facility-tag">Treatments (@FacilityCard.TreatmentCount)</a>
+                }
+                @if (FacilityCard!.ConditionCount > 0)
+                {
+                    <a href="#" class="facility-tag">Conditions (@FacilityCard.ConditionCount)</a>
+                }
+                @if (FacilityCard!.SwtCount > 0)
+                {
+                    <a href="#" class="facility-tag">Substances We Treat (@FacilityCard.SwtCount)</a>
+                }
+            </div>
             }
 
 
         <a class="btn btn-primary-gradient w-100 d-block mx-auto mb-3 px-4"
-               href="facility/@FacilityCard.Slug" target="_blank" data-enhance-nav="false">Visit</a>
+               href="facility/@FacilityCard.Slug" target="_blank" data-enhance-nav="false">View Center</a>
         </div>
     </div>
  
