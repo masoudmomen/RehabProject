@@ -27,19 +27,17 @@
     @if (billingType == "Annually")
     {
         <p>
-            Reduced monthly rate with a one-year commitment. All plans are billed monthly.
+            Choose the visibility level that fits your facility.
         </p>
     }
     else if (billingType == "Monthly")
     {
         <p>
-            Flexible month-to-month billing. All plans are billed monthly.
-
+            Flexible month-to-month billing. Billed monthly.
         </p>
     }
 
 </div>
-
 <section class="packages mt-5">
     <!-- Pricing Cards -->
     <div class="container pb-2 px-4">
@@ -158,8 +156,6 @@
         @*             <p class="text-center footer-note mt-4 mb-0">All plans include a 14-day free trial. No credit card required. Cancel anytime.</p>
  *@        </div><!-- /container -->
 </section>
-
-
 <section class="container mt-5">
     <div class="comparison-table mx-2 text-center pt-5">
         <div class="comparison-header">
@@ -262,9 +258,6 @@
         </div>
     </div>
 </section>
-
-
-
 <PackagesModalComponent Visible="@showModal"
                         VisibleChanged="v => showModal = v"
                         PackageName="@selectedPackage"
