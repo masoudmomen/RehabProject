@@ -676,6 +676,29 @@ namespace Rehab.Persistence.Migrations
                     b.ToTable("PaymentLinks");
                 });
 
+            modelBuilder.Entity("Rehab.Domain.SeoEntities.MetaContent", b =>
+                {
+                    b.Property<short>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("smallint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<short>("Id"));
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Keywords")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PageName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("MetaContents");
+                });
+
             modelBuilder.Entity("Rehab.Domain.SubstancesWeTreat.Swt", b =>
                 {
                     b.Property<int>("Id")

@@ -9,6 +9,7 @@ using Rehab.Domain.Images;
 using Rehab.Domain.Insurances;
 using Rehab.Domain.LevelsOfCare;
 using Rehab.Domain.Packages;
+using Rehab.Domain.SeoEntities;
 using Rehab.Domain.SubstancesWeTreat;
 using Rehab.Domain.Tags;
 using Rehab.Domain.Treatments;
@@ -43,6 +44,7 @@ namespace Rehab.Application.Contexts
         DbSet<BlogPostTopic> BlogPostTopics { get; set; }
         DbSet<PackageRequest> PackageRequests { get; set; }
         DbSet<PaymentLink> PaymentLinks { get; set; }
+        DbSet<MetaContent> MetaContents { get; set; }
         int SaveChanges();
         int SaveChanges(bool acceptAllChangesOnSuccess);
         Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default);

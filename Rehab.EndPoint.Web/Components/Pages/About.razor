@@ -4,6 +4,15 @@
 @using Microsoft.AspNetCore.Components.Web
 @using Rehab.EndPoint.Web.Components.Common
 
+@using Rehab.Application.Seo
+@inject ISeoService SeoService
+
+
+<HeadContent>
+    <meta name="keywords" content="@Keywords" />
+    <meta name="description" content="@Description" />
+</HeadContent>
+
 <Seo Title="About Us - Rehab Navigator"
      Description="Learn about Rehab's mission, values, and the team behind our innovative solutions."
      CanonicalUrl="https://Rehabnavigator.com/about-us"
@@ -241,6 +250,27 @@
 </section>
 
 @code {
+    private string? Keywords;
+    private string? Description;
+    private void LoadMeta()
+    {
+        var Meta = SeoService.GetMeta("OurStory");
+
+        if (Meta != null)
+        {
+            if (Meta.Keywords != null)
+                Keywords = string.Join(",", Meta.Keywords);
+
+            Description = Meta.Description;
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        LoadMeta();
+    }
+
+
     int count = 0;
 
     private IJSObjectReference? jsModule;

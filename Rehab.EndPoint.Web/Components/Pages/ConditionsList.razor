@@ -5,6 +5,16 @@
 @using Rehab.Application.Conditions
 @inject IConditionService ConditionService
 @inject IMapper mapper;
+
+@using Rehab.Application.Seo
+@inject ISeoService SeoService
+
+
+<HeadContent>
+    <meta name="keywords" content="@Keywords" />
+    <meta name="description" content="@Description" />
+</HeadContent>
+
 <div class="container">
     <input type="checkbox" id="sidebarToggle" hidden />
     <div class="sidebar-overlay"></div>
@@ -61,6 +71,20 @@
     private string? serverUrl;
     [Inject] IConfiguration Config { get; set; } = default!;
 
+    private string? Keywords;
+    private string? Description;
+    private void LoadMeta()
+    {
+        var Meta = SeoService.GetMeta("ConditionsList");
+
+        if (Meta != null)
+        {
+            if (Meta.Keywords != null)
+                Keywords = string.Join(",", Meta.Keywords);
+
+            Description = Meta.Description;
+        }
+    }
     protected override void OnInitialized()
     {
         serverUrl = Config["AppSettings:AdminServerUrl"];

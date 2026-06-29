@@ -10,6 +10,17 @@
 @inject IEmailService EmailService
 @inject IConfiguration Config
 
+
+@using Rehab.Application.Seo
+@inject ISeoService SeoService
+
+
+<HeadContent>
+    <meta name="keywords" content="@Keywords" />
+    <meta name="description" content="@Description" />
+</HeadContent>
+
+
 <Seo Title="Claim Your Profile - Rehab Navigator"
      Description="Submit your rehabilitation facility to RehabNavigator. Whether your center is already listed or not, you can provide basic information for our team to review and include in our directory."
      CanonicalUrl="https://RehabNavigator.com/claim-your-profile"
@@ -98,4 +109,24 @@
 <!-- Modal -->
 <ClaimFormModalComponent />
 
- 
+@code {
+    private string? Keywords;
+    private string? Description;
+    private void LoadMeta()
+    {
+        var Meta = SeoService.GetMeta("ClaimYourProfile");
+
+        if (Meta != null)
+        {
+            if (Meta.Keywords != null)
+                Keywords = string.Join(",", Meta.Keywords);
+
+            Description = Meta.Description;
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        LoadMeta();
+    }
+}

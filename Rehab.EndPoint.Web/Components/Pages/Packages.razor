@@ -3,6 +3,17 @@
 @using Rehab.EndPoint.Web.ViewModels
 @rendermode InteractiveServer
 
+
+@using Rehab.Application.Seo
+@inject ISeoService SeoService
+
+
+<HeadContent>
+    <meta name="keywords" content="@Keywords" />
+    <meta name="description" content="@Description" />
+</HeadContent>
+
+
 <style>
 
 </style>
@@ -296,6 +307,28 @@
     private async Task HandleSubmit(PackageRequestViewModel model)
     {
     }
+
+
+    private string? Keywords;
+    private string? Description;
+    private void LoadMeta()
+    {
+        var Meta = SeoService.GetMeta("Plans&Pricing");
+
+        if (Meta != null)
+        {
+            if (Meta.Keywords != null)
+                Keywords = string.Join(",", Meta.Keywords);
+
+            Description = Meta.Description;
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        LoadMeta();
+    }
+
 
 }
 <style>

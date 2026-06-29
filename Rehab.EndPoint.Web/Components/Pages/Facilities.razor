@@ -10,6 +10,14 @@
 @inject AutoMapper.IMapper mapper
 @inject InternalLocationService InternalLocationService
 @inject IJSRuntime JS
+@using Rehab.Application.Seo
+@inject ISeoService SeoService
+
+
+<HeadContent>
+    <meta name="keywords" content="@Keywords" />
+    <meta name="description" content="@Description" />
+</HeadContent>
 
 <div class="container">
     <input type="checkbox" id="sidebarToggle" hidden />
@@ -484,10 +492,26 @@
     private bool IsLoading = false;
     private bool HasMore = true;
 
+    private string? Keywords;
+    private string? Description;
+    private void LoadMeta()
+    {
+        var Meta = SeoService.GetMeta("Facilities");
+
+        if (Meta != null)
+        {
+            if (Meta.Keywords != null)
+                Keywords = string.Join(",", Meta.Keywords);
+
+            Description = Meta.Description;
+        }
+    }
     private DotNetObjectReference<Facilities>? objRefState;
 
     protected override async Task OnInitializedAsync()
     {
+        LoadMeta();
+
         serverUrl = Config["AppSettings:AdminServerUrl"]!;
         States = await InternalLocationService!.GetStateWithoutHttpAsync(serverUrl)!;
 

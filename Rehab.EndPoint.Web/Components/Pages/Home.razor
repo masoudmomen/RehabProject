@@ -1,8 +1,19 @@
 ﻿@page "/"
 @using Rehab.EndPoint.Web.Components.Facility
 @using Rehab.EndPoint.Web.Components.HomeSections
+
 @inject IJSRuntime jSRuntime
 @implements IAsyncDisposable
+
+@using Rehab.Application.Seo
+@inject ISeoService SeoService
+
+
+<HeadContent>
+    <meta name="keywords" content="@Keywords" />
+    <meta name="description" content="@Description" />
+</HeadContent>
+
 
 <HeroSection />
 <FilterByState />
@@ -29,7 +40,14 @@
 
 @code{
     private IJSObjectReference? jsModule;
-   
+
+
+    private string? Keywords;
+    private string? Description;
+    protected override void OnInitialized()
+    {
+        LoadMeta();
+    }
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
@@ -38,12 +56,26 @@
             await jsModule.InvokeVoidAsync("initialize");
         }       
 
-     }
+    }
     public async ValueTask DisposeAsync()
     {
         if (jsModule != null)
         {
             await jsModule.DisposeAsync();
         }
+    }
+
+
+    private void LoadMeta()
+    {
+        var Meta = SeoService.GetMeta("Home");
+        
+        if (Meta != null)
+        {
+            if (Meta.Keywords != null)
+                Keywords = string.Join(",", Meta.Keywords);
+          
+            Description = Meta.Description;
+        } 
     }
 }

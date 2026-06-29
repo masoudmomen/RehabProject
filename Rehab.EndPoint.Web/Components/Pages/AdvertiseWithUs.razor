@@ -7,6 +7,17 @@
 @inject IEmailService EmailService
 @inject IConfiguration Config
 
+
+@using Rehab.Application.Seo
+@inject ISeoService SeoService
+
+
+<HeadContent>
+    <meta name="keywords" content="@Keywords" />
+    <meta name="description" content="@Description" />
+</HeadContent>
+
+
 <Seo Title="Advertise With Us - Rehab Navigator"
      Description="Advertise your rehabilitation facility on RehabNavigator. Explore provider advertising packages, featured placement options, and directory visibility plans to help more people find your treatment center."
      CanonicalUrl="https://Rehabnavigator.com/advertise-with-us"
@@ -267,6 +278,24 @@
         }
     }
   
+    private string? Keywords;
+    private string? Description;
+    private void LoadMeta()
+    {
+        var Meta = SeoService.GetMeta("AdvertiseWithUs");
 
+        if (Meta != null)
+        {
+            if (Meta.Keywords != null)
+                Keywords = string.Join(",", Meta.Keywords);
+
+            Description = Meta.Description;
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        LoadMeta();
+    }
 }
  

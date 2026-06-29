@@ -10,6 +10,7 @@ using Rehab.Domain.Images;
 using Rehab.Domain.Insurances;
 using Rehab.Domain.LevelsOfCare;
 using Rehab.Domain.Packages;
+using Rehab.Domain.SeoEntities;
 using Rehab.Domain.SubstancesWeTreat;
 using Rehab.Domain.Tags;
 using Rehab.Domain.Treatments;
@@ -54,5 +55,6 @@ namespace Rehab.Persistence.Contexts
         public DbSet<BlogPostTopic> BlogPostTopics { get; set; }
         public DbSet<PackageRequest> PackageRequests { get; set; }
         public DbSet<PaymentLink> PaymentLinks { get; set; }
+        public DbSet<MetaContent> MetaContents { get; set; }
         }
 }

@@ -10,6 +10,15 @@
 @inject AutoMapper.IMapper mapper
 @inject IJSRuntime JS
 
+@using Rehab.Application.Seo
+@inject ISeoService SeoService
+
+
+<HeadContent>
+    <meta name="keywords" content="@Keywords" />
+    <meta name="description" content="@Description" />
+</HeadContent>
+
 <div class="container  rounded-2 py-2">
     <BreadCrumbComponent Items="@breadCrumbItems"></BreadCrumbComponent>
 </div>
@@ -261,8 +270,25 @@
     [Parameter]
     public FullFacilityFilterItemsViewmodel FullFacilityFilterItems { get; set; } = new();
 
+
+    private string? Keywords;
+    private string? Description;
+    private void LoadMeta()
+    {
+        var Meta = SeoService.GetMeta("Facilities");
+
+        if (Meta != null)
+        {
+            if (Meta.Keywords != null)
+                Keywords = string.Join(",", Meta.Keywords);
+
+            Description = Meta.Description;
+        }
+    }
     protected override async Task OnInitializedAsync()
     {
+        LoadMeta();
+
         if (statename.Contains("-")) statename = statename.Replace("-", " ");
         FullFacilityFilterItems.States.Add(statename);
 
