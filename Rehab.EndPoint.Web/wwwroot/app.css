@@ -269,6 +269,7 @@ button#scrollToTopBtn {
         filter: brightness(1.5) drop-shadow(0 0 15px rgba(0, 123, 255, 0.8));
     }
 }*/
+
 @media (max-width: 768px) {
     label.sidebar-toggle {
         display: none;
@@ -283,3 +284,6 @@ button#scrollToTopBtn {
         flex: 0 0 15%;
         max-width: 15%;
     }
+}
+
+

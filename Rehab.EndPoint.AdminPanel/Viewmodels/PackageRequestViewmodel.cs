@@ -17,6 +17,7 @@ namespace Rehab.EndPoint.AdminPanel.Viewmodels
         public string Email { get; set; }
         public string? PhoneNumber { get; set; }
         public string PackageType { get; set; }
+        public string BillingType { get; set; }
         public string RequestStatus { get; set; }
 
         public DateTime CreatedDate { get; set; }

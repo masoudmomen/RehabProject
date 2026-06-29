@@ -43,7 +43,7 @@
     object-fit: contain;
 }
  .facility-location {
-    color: #6c757d;
+    color: var(--color-primary);
     font-size: 0.9rem;
 }
 
@@ -66,11 +66,14 @@
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-.facility-tag:hover {
-    background: #007bff;
-    color: white;
-    text-decoration: none;
-}
+    .facility-tag:hover {
+        background-color: var(--color-soft-purple);
+        border-color: #7c5cbf;
+        color: #5a3fa0;
+        transform: translateY(-1px);
+        box-shadow: 0 2px 6px rgba(124, 92, 191, 0.2);
+        transition: all 0.2s ease;
+    }
 ::deep .btn-primary-custom {
     padding:10px;
 }

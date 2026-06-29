@@ -1,0 +1,277 @@
+﻿
+
+
+.claim-hero {
+    background: linear-gradient(135deg,#e7f7fb,#eef4ff);
+    border: 1px solid #dcebf4;
+    padding: 62px 36px;
+    text-align: center;
+    box-shadow: 0 14px 36px rgba(18,48,74,.06);
+    margin-bottom: 34px
+}
+
+.section-header {
+    text-align: center;
+    max-width: 780px;
+    margin: 0 auto 24px
+}
+
+    .section-header h2 {
+        font-size: 31px;
+        margin-bottom: 8px;
+        color: #102b3f
+    }
+
+    .section-header p {
+        color: #607080;
+        font-size: 16px
+    }
+
+.status-block {
+    background: #fff;
+    border: 1px solid #dce6ef;
+    border-radius: 28px;
+    padding: 34px;
+    box-shadow: 0 12px 34px rgba(18,48,74,.06)
+}
+
+.status-box {
+    max-width: 880px;
+    margin: 0 auto;
+    background: #f8fbfd;
+    border: 1px solid #edf2f6;
+    border-radius: 20px;
+    padding: 24px;
+    text-align: center
+}
+
+    .status-box h3 {
+        font-size: 23px;
+        margin-bottom: 8px;
+        color: #102b3f
+    }
+
+    .status-box p {
+        color: #607080;
+        font-size: 15px;
+        margin-bottom: 18px
+    }
+
+.status-options {
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    gap: 12px;
+    text-align: left
+}
+
+.status-option {
+    background: #fff;
+    border: 1px solid #dce6ef;
+    border-radius: 16px;
+    padding: 14px 16px;
+    color: #40586b;
+    font-size: 14px;
+    font-weight: 800
+}
+
+.claim-visibility-card {
+    background: #fff;
+    /* border: 1px solid #dce6ef;
+    border-radius: 28px;*/
+    padding: 34px;
+    box-shadow: 0 12px 34px rgba(18,48,74,.06);
+    text-align: center
+}
+
+    .claim-visibility-card h2 {
+        font-size: 30px;
+        margin-bottom: 8px;
+        color: #102b3f
+    }
+
+    .claim-visibility-card p {
+        max-width: 760px;
+        margin: 0 auto 20px;
+        color: #607080;
+        font-size: 16px
+    }
+
+.text-links {
+    display: flex;
+    justify-content: center;
+    gap: 18px;
+    flex-wrap: wrap
+}
+
+    .text-links a {
+        color: var(--color-text-primary);
+        font-weight: bold;
+        text-decoration: none
+    }
+
+        .text-links a:hover {
+            text-decoration: underline
+        }
+
+.steps {
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    gap: 22px
+}
+
+.step-card {
+    background: #fff;
+    border: 1px solid #dce6ef;
+    border-radius: 24px;
+    padding: 28px;
+    box-shadow: 0 10px 28px rgba(18,48,74,.06)
+}
+
+.step-number {
+    width: 42px;
+    height: 42px;
+    border-radius: 14px;
+    background: #eaf6fb;
+    color: #2c7a9b;
+    display: grid;
+    place-items: center;
+    font-weight: 900;
+    margin-bottom: 16px
+}
+
+.step-card h3 {
+    font-size: 21px;
+    margin-bottom: 8px;
+    color: #102b3f
+}
+
+.step-card p {
+    color: #607080;
+    font-size: 15px
+}
+
+.claim-feature-block {
+    border: 1px solid #dce6ef;
+    /*border-radius: 28px;*/
+    padding: 34px;
+    box-shadow: 0 12px 34px rgba(18,48,74,.06)
+}
+
+.feature-grid {
+    display: grid;
+    grid-template-columns: repeat(2,1fr);
+    gap: 14px 18px;
+    max-width: 880px;
+    margin: 0 auto
+}
+
+.feature-item {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    background: #f8fbfd;
+    border: 1px solid #edf2f6;
+    border-radius: 16px;
+    padding: 14px 16px;
+    color: #40586b;
+    font-size: 15px;
+    font-weight: 700
+}
+
+.check {
+    color: #2c7a9b;
+    font-weight: 900
+}
+
+.claim-card {
+    background: #173247;
+    color: #fff;
+    border-radius: 28px;
+    padding: 38px;
+    text-align: center;
+    box-shadow: 0 16px 38px rgba(18,48,74,.13)
+}
+
+    .claim-card h2 {
+        font-size: 30px;
+        margin-bottom: 8px;
+        color: #fff
+    }
+
+    .claim-card p {
+        color: #d8e5ee;
+        max-width: 700px;
+        margin: 0 auto 22px;
+        font-size: 16px
+    }
+
+.claim-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap
+}
+
+.note {
+    background: #fff;
+    border: 1px solid #dce6ef;
+    border-radius: 22px;
+    padding: 22px 24px;
+    color: #607080;
+    font-size: 13px;
+    box-shadow: 0 10px 28px rgba(18,48,74,.05)
+}
+
+    .note strong {
+        color: #102b3f
+    }
+
+/*.modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(16,43,63,.48);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    z-index: 50
+}
+
+    .modal:target {
+        display: flex
+    }*/
+@media(max-width:900px) {
+    .steps, .status-options {
+        grid-template-columns: 1fr
+    }
+
+    .feature-grid {
+        grid-template-columns: 1fr
+    }
+}
+
+@media(max-width:720px) {
+    .page {
+        padding: 42px 16px 56px
+    }
+
+    .hero {
+        padding: 38px 22px
+    }
+
+        .hero h1 {
+            font-size: 34px
+        }
+
+    .feature-block, .status-block, .claim-visibility-card {
+        padding: 24px
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr
+    }
+
+    .full, .form-note {
+        grid-column: auto
+    }
+}

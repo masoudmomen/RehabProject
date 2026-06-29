@@ -1,4 +1,5 @@
-﻿.btn-primary{
+﻿
+.btn-primary{
     background:var(--color-primary);
     color:#fff;
     border:none;
@@ -15,3 +16,12 @@
     .btn-secondary:hover {
         background: var(--color-primary);
     }
+.bg-soft-blue {
+    background-color: var(--color-soft-blue);
+}
+.text-secondary-blue {
+    color: var(--color-blue-secondary);
+}
+.nav-link {
+    color: var(--color-text-primary);
+}

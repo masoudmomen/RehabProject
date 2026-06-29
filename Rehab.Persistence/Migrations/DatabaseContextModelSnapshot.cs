@@ -34,7 +34,7 @@ namespace Rehab.Persistence.Migrations
 
                     b.HasIndex("FacilitiesId");
 
-                    b.ToTable("AccreditationFacility", (string)null);
+                    b.ToTable("AccreditationFacility");
                 });
 
             modelBuilder.Entity("AmenityFacility", b =>
@@ -49,7 +49,7 @@ namespace Rehab.Persistence.Migrations
 
                     b.HasIndex("FacilitiesId");
 
-                    b.ToTable("AmenityFacility", (string)null);
+                    b.ToTable("AmenityFacility");
                 });
 
             modelBuilder.Entity("AmenityTag", b =>
@@ -64,7 +64,37 @@ namespace Rehab.Persistence.Migrations
 
                     b.HasIndex("TagsId");
 
-                    b.ToTable("AmenityTag", (string)null);
+                    b.ToTable("AmenityTag");
+                });
+
+            modelBuilder.Entity("BlogPostBlogPostTag", b =>
+                {
+                    b.Property<int>("PostsId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TagsId")
+                        .HasColumnType("int");
+
+                    b.HasKey("PostsId", "TagsId");
+
+                    b.HasIndex("TagsId");
+
+                    b.ToTable("BlogPostBlogPostTag");
+                });
+
+            modelBuilder.Entity("BlogPostBlogPostTopic", b =>
+                {
+                    b.Property<int>("PostsId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TopicsId")
+                        .HasColumnType("int");
+
+                    b.HasKey("PostsId", "TopicsId");
+
+                    b.HasIndex("TopicsId");
+
+                    b.ToTable("BlogPostBlogPostTopic");
                 });
 
             modelBuilder.Entity("ConditionFacility", b =>
@@ -79,7 +109,7 @@ namespace Rehab.Persistence.Migrations
 
                     b.HasIndex("FacilitiesId");
 
-                    b.ToTable("ConditionFacility", (string)null);
+                    b.ToTable("ConditionFacility");
                 });
 
             modelBuilder.Entity("FacilityHighlight", b =>
@@ -94,7 +124,7 @@ namespace Rehab.Persistence.Migrations
 
                     b.HasIndex("HighlightsId");
 
-                    b.ToTable("FacilityHighlight", (string)null);
+                    b.ToTable("FacilityHighlight");
                 });
 
             modelBuilder.Entity("FacilityInsurance", b =>
@@ -109,7 +139,7 @@ namespace Rehab.Persistence.Migrations
 
                     b.HasIndex("InsurancesId");
 
-                    b.ToTable("FacilityInsurance", (string)null);
+                    b.ToTable("FacilityInsurance");
                 });
 
             modelBuilder.Entity("FacilityLoc", b =>
@@ -124,7 +154,7 @@ namespace Rehab.Persistence.Migrations
 
                     b.HasIndex("LocsId");
 
-                    b.ToTable("FacilityLoc", (string)null);
+                    b.ToTable("FacilityLoc");
                 });
 
             modelBuilder.Entity("FacilitySwt", b =>
@@ -139,7 +169,7 @@ namespace Rehab.Persistence.Migrations
 
                     b.HasIndex("SwtsId");
 
-                    b.ToTable("FacilitySwt", (string)null);
+                    b.ToTable("FacilitySwt");
                 });
 
             modelBuilder.Entity("FacilityTreatment", b =>
@@ -154,7 +184,7 @@ namespace Rehab.Persistence.Migrations
 
                     b.HasIndex("TreatmentsId");
 
-                    b.ToTable("FacilityTreatment", (string)null);
+                    b.ToTable("FacilityTreatment");
                 });
 
             modelBuilder.Entity("FacilityWwt", b =>
@@ -169,7 +199,7 @@ namespace Rehab.Persistence.Migrations
 
                     b.HasIndex("WwtsId");
 
-                    b.ToTable("FacilityWwt", (string)null);
+                    b.ToTable("FacilityWwt");
                 });
 
             modelBuilder.Entity("Rehab.Domain.Accreditations.Accreditation", b =>
@@ -194,7 +224,7 @@ namespace Rehab.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Accreditations", (string)null);
+                    b.ToTable("Accreditations");
                 });
 
             modelBuilder.Entity("Rehab.Domain.Amenities.Amenity", b =>
@@ -219,7 +249,138 @@ namespace Rehab.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Amenities", (string)null);
+                    b.ToTable("Amenities");
+                });
+
+            modelBuilder.Entity("Rehab.Domain.Blog.BlogPost", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsFetured")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("PublisheDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("TimeToRead")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("BlogPosts");
+                });
+
+            modelBuilder.Entity("Rehab.Domain.Blog.BlogPostComment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("BlogPostId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Comment")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("Display")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("InsetedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BlogPostId");
+
+                    b.ToTable("BlogPostComments");
+                });
+
+            modelBuilder.Entity("Rehab.Domain.Blog.BlogPostTag", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Logo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("BlogPostTags");
+                });
+
+            modelBuilder.Entity("Rehab.Domain.Blog.BlogPostTopic", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Logo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("BlogPostTopics");
                 });
 
             modelBuilder.Entity("Rehab.Domain.Conditions.Condition", b =>
@@ -244,7 +405,7 @@ namespace Rehab.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Conditions", (string)null);
+                    b.ToTable("Conditions");
                 });
 
             modelBuilder.Entity("Rehab.Domain.Facilities.Facility", b =>
@@ -317,7 +478,7 @@ namespace Rehab.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Facilities", (string)null);
+                    b.ToTable("Facilities");
                 });
 
             modelBuilder.Entity("Rehab.Domain.Highlights.Highlight", b =>
@@ -342,7 +503,7 @@ namespace Rehab.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Highlights", (string)null);
+                    b.ToTable("Highlights");
                 });
 
             modelBuilder.Entity("Rehab.Domain.Images.FacilitysImages", b =>
@@ -368,7 +529,7 @@ namespace Rehab.Persistence.Migrations
 
                     b.HasIndex("FacilityId");
 
-                    b.ToTable("FacilitysImages", (string)null);
+                    b.ToTable("FacilitysImages");
                 });
 
             modelBuilder.Entity("Rehab.Domain.Insurances.Insurance", b =>
@@ -393,7 +554,7 @@ namespace Rehab.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Insurances", (string)null);
+                    b.ToTable("Insurances");
                 });
 
             modelBuilder.Entity("Rehab.Domain.LevelsOfCare.Loc", b =>
@@ -418,7 +579,101 @@ namespace Rehab.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Locs", (string)null);
+                    b.ToTable("Locs");
+                });
+
+            modelBuilder.Entity("Rehab.Domain.Packages.PackageRequest", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("BillingType")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CenterName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Message")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("PackageType")
+                        .HasColumnType("int");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("RequestStatus")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PackageRequests");
+                });
+
+            modelBuilder.Entity("Rehab.Domain.Packages.PaymentLink", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsUsed")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("LinkExpiresAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("PackageRequestId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("PaidAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("PaymentStatus")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("SessionExpiredsAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("StripeSessionId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("StripeSessionUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Token")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PackageRequestId");
+
+                    b.ToTable("PaymentLinks");
                 });
 
             modelBuilder.Entity("Rehab.Domain.SubstancesWeTreat.Swt", b =>
@@ -443,7 +698,7 @@ namespace Rehab.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Swts", (string)null);
+                    b.ToTable("Swts");
                 });
 
             modelBuilder.Entity("Rehab.Domain.Tags.Tag", b =>
@@ -460,7 +715,7 @@ namespace Rehab.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Tags", (string)null);
+                    b.ToTable("Tags");
                 });
 
             modelBuilder.Entity("Rehab.Domain.Treatments.Treatment", b =>
@@ -485,7 +740,7 @@ namespace Rehab.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Treatments", (string)null);
+                    b.ToTable("Treatments");
                 });
 
             modelBuilder.Entity("Rehab.Domain.Users.User", b =>
@@ -502,7 +757,7 @@ namespace Rehab.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("Rehab.Domain.WhoWeTreat.Wwt", b =>
@@ -527,7 +782,7 @@ namespace Rehab.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Wwts", (string)null);
+                    b.ToTable("Wwts");
                 });
 
             modelBuilder.Entity("AccreditationFacility", b =>
@@ -571,6 +826,36 @@ namespace Rehab.Persistence.Migrations
                     b.HasOne("Rehab.Domain.Tags.Tag", null)
                         .WithMany()
                         .HasForeignKey("TagsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("BlogPostBlogPostTag", b =>
+                {
+                    b.HasOne("Rehab.Domain.Blog.BlogPost", null)
+                        .WithMany()
+                        .HasForeignKey("PostsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Rehab.Domain.Blog.BlogPostTag", null)
+                        .WithMany()
+                        .HasForeignKey("TagsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("BlogPostBlogPostTopic", b =>
+                {
+                    b.HasOne("Rehab.Domain.Blog.BlogPost", null)
+                        .WithMany()
+                        .HasForeignKey("PostsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Rehab.Domain.Blog.BlogPostTopic", null)
+                        .WithMany()
+                        .HasForeignKey("TopicsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -680,6 +965,13 @@ namespace Rehab.Persistence.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Rehab.Domain.Blog.BlogPostComment", b =>
+                {
+                    b.HasOne("Rehab.Domain.Blog.BlogPost", null)
+                        .WithMany("Comments")
+                        .HasForeignKey("BlogPostId");
+                });
+
             modelBuilder.Entity("Rehab.Domain.Images.FacilitysImages", b =>
                 {
                     b.HasOne("Rehab.Domain.Facilities.Facility", "Facility")
@@ -687,6 +979,22 @@ namespace Rehab.Persistence.Migrations
                         .HasForeignKey("FacilityId");
 
                     b.Navigation("Facility");
+                });
+
+            modelBuilder.Entity("Rehab.Domain.Packages.PaymentLink", b =>
+                {
+                    b.HasOne("Rehab.Domain.Packages.PackageRequest", "PackageRequest")
+                        .WithMany("PaymentLink")
+                        .HasForeignKey("PackageRequestId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("PackageRequest");
+                });
+
+            modelBuilder.Entity("Rehab.Domain.Blog.BlogPost", b =>
+                {
+                    b.Navigation("Comments");
                 });
 
             modelBuilder.Entity("Rehab.Domain.Facilities.Facility", b =>

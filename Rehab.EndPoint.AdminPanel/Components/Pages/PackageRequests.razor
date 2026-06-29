@@ -38,8 +38,8 @@
                                 <th scope="col">Last Name</th>
                                 <th scope="col">Center Name</th>
                                 <th scope="col">Email</th>
-                                <th scope="col">Phone</th>
                                 <th scope="col">Package</th>
+                                <th scope="col">Billing Type</th>
                                 <th scope="col">Status</th>
                                 <th scope="col">PaymentLink</th>
                                 <th scope="col">Details</th>
@@ -65,8 +65,8 @@
                                     </td>
                                     <td>@item.CenterName</td>
                                     <td>@item.Email</td>
-                                    <td>@item.PhoneNumber</td>
                                     <td>@item.PackageType</td>
+                                    <td>@item.BillingType</td>
                                     <td>
                                        
                                         
@@ -172,6 +172,10 @@
         <div class="row my-3">
             <div class="col-4">Package</div>
             <div class="col-8">@DetailsRequestModal.PackageType</div>
+        </div>
+        <div class="row my-3">
+            <div class="col-4">Billing Type</div>
+            <div class="col-8">@DetailsRequestModal.BillingType</div>
         </div>
         <div class="row my-3">
             <div class="col-4">Status</div>

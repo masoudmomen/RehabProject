@@ -1,14 +1,19 @@
 ﻿:root {
     /* Primary & Secondary */
-    --color-primary: #253b8c;
+    /*   --color-primary: #185fa5;*/
+    --color-primary: #534AB7;
     --color-secondary: #6c34b9;
+    --color-blue-secondary: #185FA5;
     /* Text */
-    --color-text-primary: #212529;
+    /*    --color-text-primary: #185fa5;*/
+    --color-text-primary: #534AB7;
     --color-text-secondary: #495057;
     --color-text-light: #ffffff;
     /* Backgrounds */
     --color-bg: #ffffff;
     --color-surface: #f5f5f5;
+    --color-soft-blue: #EEF7FB;
+    --color-soft-purple: #ede9ff;
     /* Semantic Colors */
     --color-success: #28a745;
     --color-warning: #ffc107;
@@ -21,4 +26,21 @@
     --space-lg: 32px;
     /* Font */
     --font-base: 'Roboto', sans-serif;
+    --shadow: 0 18px 45px rgba(39, 56, 74, 0.10);
+    --text-muted: #607080;
+    --accent-bg: #eaf6fb;
+    /*FOR STATIC*/
+    --purple: #7c3aed;
+    --purple-dark: #5b21b6;
+    --purple-light: #ede9fe;
+    --blue: #3b82f6;
+    --blue-dark: #1d4ed8;
+    --teal: #0d9488;
+    --teal-light: rgba(212, 249, 255, 1);
+    --navy: #1e1b4b;
+    --text: #1e293b;
+    --muted: #64748b;
+    --border: #e2e8f0;
+    --bg: #f8fafc;
+    --white: #ffffff;
 }
