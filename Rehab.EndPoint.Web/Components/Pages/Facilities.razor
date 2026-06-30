@@ -12,16 +12,31 @@
 @inject IJSRuntime JS
 
 <div class="container">
+    <section class="treatment-hero mt-2" >
+        <div class="treatment-hero-content">
+        <h1 class="treatment-hero-title">
+            Browse Treatment Centers and Rehab Facility Profiles
+        </h1>
+        <p class="treatment-hero-subtitle">
+            Search treatment centers by state, city, condition, level of care, insurance, treatment approach, age group, and amenities.
+        </p>
+            <button class="btn treatment-hero-cta"
+                    @onclick="ScrollToSearch">
+                Start Searching
+                  <i class="bi bi-arrow-down ms-1"></i>
+            </button>
+        </div>
+    </section>
     <input type="checkbox" id="sidebarToggle" hidden />
   @*   <input type="checkbox" id="sidebarToggle" hidden /> *@
     <div class="sidebar-overlay"></div>
     <div class="row my-4 layout-wrapper" id="facilitypage">
         <div class="content-a">
-            <div class="search-box">
+            <div class="search-wrapper">
+            <div id="searchbox" class="search-box">
                 <input type="text" @bind-value="FullFacilityFilterItems.SearchText"
                        class="form-control search-input"
-                       placeholder="Search by Facility Name..." />
-
+                       placeholder="Search Treatment Centers by Name..." />
                 <span class="search-icon" @onclick="ApplyFilter">
                     <i class="fa fa-search"></i>
                 </span>
@@ -30,7 +45,7 @@
 
                 <!-- States Dropdown -->
                 <div class="dropdown filter-dropdown">
-                    <button class="btn dropdown-toggle btn-outline-secondary"
+                    <button class="btn dropdown-toggle btn-outline-primary"
                             type="button"
                             data-bs-toggle="dropdown"
                             aria-expanded="false">
@@ -41,7 +56,7 @@
                         <li>
                          <div class="input-group filter-search-group mb-3 shadow-sm d-flex">
                             <input type="text" class="form-control filters-search-input" placeholder="Search..." aria-label="State-Search" aria-describedby="button-addon2">
-                            <button class="btn btn-secondary btn-filter-search" type="button" id="button-addon2">
+                            <button class="btn btn-primary btn-filter-search" type="button" id="button-addon2">
                                  <i class="fas fa-search"></i>
                             </button>
                         </div>
@@ -64,7 +79,7 @@
 
                 <!-- City Dropdown -->
                 <div class="dropdown filter-dropdown">
-                    <button class="btn dropdown-toggle btn-outline-secondary"
+                    <button class="btn dropdown-toggle btn-outline-primary"
                             type="button"
                             data-bs-toggle="dropdown"
                             aria-expanded="false">
@@ -75,7 +90,7 @@
                         <li>
                          <div class="input-group filter-search-group mb-3 shadow-sm d-flex">
                             <input type="text" class="form-control filters-search-input" placeholder="Search..." aria-label="State-Search" aria-describedby="button-addon2">
-                            <button class="btn btn-secondary btn-filter-search" type="button" id="button-addon2">
+                            <button class="btn btn-primary btn-filter-search" type="button" id="button-addon2">
                                  <i class="fas fa-search"></i>
                             </button>
                         </div>
@@ -110,7 +125,7 @@
                           <li>
                          <div class="input-group filter-search-group mb-3 shadow-sm d-flex">
                             <input type="text" class="form-control filters-search-input" placeholder="Search..." aria-label="State-Search" aria-describedby="button-addon2">
-                            <button class="btn btn-secondary btn-filter-search" type="button" id="button-addon2">
+                            <button class="btn btn-primary btn-filter-search" type="button" id="button-addon2">
                                  <i class="fas fa-search"></i>
                             </button>
                         </div>
@@ -139,7 +154,7 @@
                           <li>
                          <div class="input-group filter-search-group mb-3 shadow-sm d-flex">
                             <input type="text" class="form-control filters-search-input" placeholder="Search..." aria-label="State-Search" aria-describedby="button-addon2">
-                            <button class="btn btn-secondary btn-filter-search" type="button" id="button-addon2">
+                            <button class="btn btn-primary btn-filter-search" type="button" id="button-addon2">
                                  <i class="fas fa-search"></i>
                             </button>
                         </div>
@@ -167,7 +182,7 @@
                           <li>
                          <div class="input-group filter-search-group mb-3 shadow-sm d-flex">
                             <input type="text" class="form-control filters-search-input" placeholder="Search..." aria-label="State-Search" aria-describedby="button-addon2">
-                            <button class="btn btn-secondary btn-filter-search" type="button" id="button-addon2">
+                            <button class="btn btn-primary btn-filter-search" type="button" id="button-addon2">
                                  <i class="fas fa-search"></i>
                             </button>
                         </div>
@@ -195,7 +210,7 @@
                           <li>
                          <div class="input-group filter-search-group mb-3 shadow-sm d-flex">
                             <input type="text" class="form-control filters-search-input" placeholder="Search..." aria-label="State-Search" aria-describedby="button-addon2">
-                            <button class="btn btn-secondary btn-filter-search" type="button" id="button-addon2">
+                            <button class="btn btn-primary btn-filter-search" type="button" id="button-addon2">
                                  <i class="fas fa-search"></i>
                             </button>
                         </div>
@@ -223,7 +238,7 @@
                           <li>
                          <div class="input-group filter-search-group mb-3 shadow-sm d-flex">
                             <input type="text" class="form-control filters-search-input" placeholder="Search..." aria-label="State-Search" aria-describedby="button-addon2">
-                            <button class="btn btn-secondary btn-filter-search" type="button" id="button-addon2">
+                            <button class="btn btn-primary btn-filter-search" type="button" id="button-addon2">
                                  <i class="fas fa-search"></i>
                             </button>
                         </div>
@@ -251,7 +266,7 @@
                           <li>
                          <div class="input-group filter-search-group mb-3 shadow-sm d-flex">
                             <input type="text" class="form-control filters-search-input" placeholder="Search..." aria-label="State-Search" aria-describedby="button-addon2">
-                            <button class="btn btn-secondary btn-filter-search" type="button" id="button-addon2">
+                            <button class="btn btn-primary btn-filter-search" type="button" id="button-addon2">
                                  <i class="fas fa-search"></i>
                             </button>
                         </div>
@@ -271,11 +286,14 @@
             <script src="/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 @*                 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
  *@            <div>
-                 <button class="btn btn-secondary btn-group-lg w-100 text-nowrap" @onclick="ApplyFilter">Apply Filters</button>
+                 <button class="btn btn-primary-gradient btn-group-lg w-100 text-nowrap" @onclick="ApplyFilter">Apply Filters</button>
+            </div>
             </div>
             <div class="results-filters">
-                <h3 class="sec-title">Filtered Items:</h3>
-
+                 <h3 class="fs-3 mt-4">Treatment Centers Matching Your Search</h3>
+                <p class="fs-6 text-muted">Explore facility profiles, locations, services, insurance information, and treatment options.</p>
+                <div class="filters-box">
+               
                 @if (FullFacilityFilterItems.States.Count > 0)
                 {
                     <div class="filter-group">
@@ -446,9 +464,8 @@
                         @onclick="() => { FullFacilityFilterItems = new();UnCheckAll();HandleCities(); }">
                     Clear all
                 </button>
+                </div>
             </div>
-            
-        
             <div class="container px-0 mb-5">
                 <div class="row g-4">
                     @foreach (var facility in FacilityCards)
@@ -756,6 +773,10 @@
     private void UnCheckAll()
     {
          JS.InvokeVoidAsync("UnCheckAllCheckbox");
+    }
+      private async Task ScrollToSearch()
+    {
+        await JS.InvokeVoidAsync("scrollToElement", "searchbox");
     }
 
 }

@@ -34,7 +34,7 @@ a.go-to-packages{
     .navbar-nav .nav-link:hover,
     .nav-item-mega:hover > .nav-link,
     .nav-item-mega:focus-within > .nav-link {
-        color: var(--color-secondary);
+        color: var(--color-primary);
         transform: translateY(-1px);
     }
 
@@ -45,7 +45,7 @@ a.go-to-packages{
         left: 0;
         width: 0;
         height: 2px;
-        background: linear-gradient(90deg,var(--color-primary), var(--color-secondary));
+        background: linear-gradient(90deg,var(--color-primary), var(--color-primary));
         transition: width 0.3s ease;
     }
 

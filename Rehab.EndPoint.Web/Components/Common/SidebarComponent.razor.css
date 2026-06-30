@@ -22,7 +22,7 @@ h3.sidebar-header {
         gap: 10px;
         padding: 10px 12px;
         text-decoration: none;
-        color: var(--color-secondary);
+        color: var(--color-primary);
         text-decoration: none;
         font-size: 0.8rem;
         transition: all .25s;
@@ -58,8 +58,7 @@ h3.sidebar-header {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    background: var(--color-secondary);
-    color: white;
+    color: var(--color-primary);
     padding: 10px 16px;
     border-top-right-radius: 10px;
     border-top-left-radius: 10px;
@@ -151,7 +150,7 @@ h3.sidebar-header {
     position: absolute;
     white-space: nowrap;
     left: 40px;
-    background: var(--color-secondary);
+    background: var(--color-primary);
     color: #fff;
     padding: 4px 8px;
     font-size: 12px;
@@ -271,7 +270,7 @@ h3.sidebar-header {
 }
 
 .provider-card .btn-primary,
-.provider-card .btn-secondary {
+.provider-card .btn-primary {
     display: block;
     width: 100%;
     border-radius: 50px;
@@ -297,7 +296,7 @@ h3.sidebar-header {
         box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
     }
 
-.provider-card .btn-secondary {
+.provider-card .btn-primary {
     background: transparent;
     color: #fff;
     border: 1.5px solid rgba(255, 255, 255, 0.5);

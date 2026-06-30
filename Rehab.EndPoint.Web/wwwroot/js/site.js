@@ -145,3 +145,12 @@ function handleMobile() {
 
 window.addEventListener('load', handleMobile);
 window.addEventListener('resize', handleMobile);
+
+
+
+window.scrollToElement = (id) => {
+    const el = document.getElementById(id);
+    if (el) {
+        el.scrollIntoView({ behavior: "smooth" });
+    }
+};

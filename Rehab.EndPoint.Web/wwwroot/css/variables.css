@@ -1,13 +1,13 @@
 ﻿:root {
-    /* Primary & Secondary */
+    /* Primary & primary */
     /*   --color-primary: #185fa5;*/
     --color-primary: #534AB7;
-    --color-secondary: #6c34b9;
-    --color-blue-secondary: #185FA5;
+/*    --color-primary: #6c34b9;*/
+    --color-blue-primary: #185FA5;
     /* Text */
     /*    --color-text-primary: #185fa5;*/
     --color-text-primary: #534AB7;
-    --color-text-secondary: #495057;
+/*    --color-text-primary: #495057;*/
     --color-text-light: #ffffff;
     /* Backgrounds */
     --color-bg: #ffffff;
