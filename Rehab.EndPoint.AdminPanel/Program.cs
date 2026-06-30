@@ -29,6 +29,7 @@ using Rehab.Application.Packages;
 using Rehab.Infrastructure.Settings;
 using Rehab.Application.PaymentLinks;
 using Rehab.Application.Email;
+using Rehab.Application.Seo;
 
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
@@ -106,6 +107,7 @@ builder.Services.AddTransient<ITagService,TagService>();
 builder.Services.AddTransient<IPackageRequestService, PackageRequestService>();
 builder.Services.AddTransient<IPaymentLinkService, PaymentLinkService>();
 builder.Services.AddTransient<IEmailService, EmailService>();
+builder.Services.AddTransient<ISeoService, SeoService>();
 builder.Services.AddHttpClient<InternalLocationService>();
 builder.Services.AddScoped<LocationService>();
 builder.Services.AddScoped<AlertService>();

@@ -1,5 +1,15 @@
 ﻿@page "/Treatment-faq"
 @using Rehab.EndPoint.Web.Components.Common
+
+@using Rehab.Application.Seo
+@inject ISeoService SeoService
+
+
+<HeadContent>
+    <meta name="keywords" content="@Keywords" />
+    <meta name="description" content="@Description" />
+</HeadContent>
+
 <div class="container">
     <section class="faq-section">
         <div class="faq-container">
@@ -264,5 +274,23 @@
     </section>
 </div>
 @code {
+    private string? Keywords;
+    private string? Description;
+    private void LoadMeta()
+    {
+        var Meta = SeoService.GetMeta("TreatmentFAQ");
 
+        if (Meta != null)
+        {
+            if (Meta.Keywords != null)
+                Keywords = string.Join(",", Meta.Keywords);
+
+            Description = Meta.Description;
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        LoadMeta();
+    }
 }

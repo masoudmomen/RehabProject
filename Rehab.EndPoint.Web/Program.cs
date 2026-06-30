@@ -10,17 +10,18 @@ using Rehab.Application.Insurances;
 using Rehab.Application.LevelsOfCare;
 using Rehab.Application.Packages;
 using Rehab.Application.PaymentLinks;
-using Rehab.Application.SubstancesWeTreat;
+using Rehab.Application.Seo;
 using Rehab.Application.Stripe;
+using Rehab.Application.SubstancesWeTreat;
 using Rehab.Application.Tags;
 using Rehab.Application.Treatments;
 using Rehab.Application.WhoWeTreat;
-using Rehab.Infrastructure.Settings;
-using Rehab.Infrastructure.Stripe;
 using Rehab.EndPoint.AdminPanel.CommonService;
 using Rehab.EndPoint.Web.Components;
 using Rehab.EndPoint.Web.Endpoints;
 using Rehab.EndPoint.Web.MappingProfile;
+using Rehab.Infrastructure.Settings;
+using Rehab.Infrastructure.Stripe;
 using Rehab.Persistence.Contexts;
 using System;
 
@@ -64,6 +65,7 @@ builder.Services.Configure<PaymentLinksOptions>(
     builder.Configuration.GetSection(PaymentLinksOptions.SectionName));
 builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("Stripe"));
 builder.Services.AddTransient<IStripeService, StripeService>();
+builder.Services.AddTransient<ISeoService, SeoService>();
 
 #endregion
 

@@ -34,6 +34,8 @@ using System.Threading.Tasks;
 using Rehab.Domain.Packages;
 using Rehab.Application.Packages;
 using Rehab.Application.PaymentLinks;
+using Rehab.Domain.SeoEntities;
+using Rehab.Application.Seo;
 
 namespace Rehab.Infrastructure.MappingProfile
 {
@@ -70,6 +72,7 @@ namespace Rehab.Infrastructure.MappingProfile
                 .ForMember(dest => dest.PaymentCheckoutUrl, opt => opt.Ignore())
                 .ReverseMap();
             CreateMap<PaymentLink, PaymentLinkDto>().ReverseMap();
+            CreateMap<MetaContent, MetaDto>().ReverseMap();
 
         }
     }

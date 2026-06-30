@@ -1,0 +1,153 @@
+﻿@page "/meta-manager"
+@rendermode InteractiveServer
+@using Rehab.Application.Seo
+@inject ISeoService SeoService
+@inject AlertService AlertService
+
+
+<PageTitle>Meta Manager</PageTitle>
+
+<div class="meta-container">
+
+    <h3 class="page-title">SEO Meta Management</h3>
+
+    <!-- Select Page -->
+    <div class="form-group">
+        <label>Select Page</label>
+        <select class="form-select" @bind="SelectedPage" @bind:after="LoadMeta">
+            @foreach (var pageName in Pages)
+            {
+                <option value="@pageName" >@pageName</option>
+            }
+        </select>
+    </div>
+
+    @if (!string.IsNullOrWhiteSpace(SelectedPage))
+    {
+        <!-- ================= KEYWORDS ================= -->
+        <div class="card-section">
+
+            <h5>Keywords</h5>
+
+            <div class="input-inline">
+                <input type="text"
+                       class="form-control"
+                       placeholder="Enter keyword..."
+                       @bind="NewKeyword" />
+
+                <button class="btn btn-primary"
+                        @onclick="AddKeyword">
+                    Add
+                </button>
+            </div>
+
+            @if (Keywords != null &&  Keywords.Any())
+            {
+                <ul class="keyword-list">
+                    @foreach (var keyword in Keywords)
+                    {
+                        <li class="d-inline">
+                            <span>@keyword</span>
+                            <button class="btn-delete"
+                                    @onclick="() => RemoveKeyword(keyword)">
+                                ✕
+                            </button>
+                        </li>
+                    }
+                </ul>
+            }
+        </div>
+
+        <!-- ================= DESCRIPTION ================= -->
+        <div class="card-section">
+
+            <h5>Description</h5>
+
+            <textarea class="form-control textarea-large"
+                      placeholder="Enter meta description..."
+                      @bind="Description">
+            </textarea>
+
+            <button class="btn btn-primary mt-2"
+                    @onclick="SaveDescription">
+                Save Description
+            </button>
+
+        </div>
+    }
+</div>
+
+@code {
+
+    private List<string> Pages = new()
+    {
+        "Home",
+        "Facilities",
+        "States",
+        "ConditionsList",
+        "TreatmentsList",
+        "TreatmentFAQ",
+        "OurStory",
+        "ContactUs",
+        "PrivacyPolicy",
+        "ClaimYourProfile",
+        "AdvertiseWithUs",
+        "Plans&Pricing"
+    };
+
+    private string SelectedPage = "Home";
+
+    private List<string>? Keywords;
+
+    private string? NewKeyword;
+
+    private string? Description;
+
+    public MetaDto? Meta { get; set; } = new();
+
+    protected override void OnInitialized()
+    {
+        LoadMeta();
+    }
+
+    private void AddKeyword()
+    {
+        if (!string.IsNullOrWhiteSpace(NewKeyword))
+        {
+            Keywords.Add(NewKeyword.Trim());
+            NewKeyword = string.Empty;
+        }
+    }
+
+    private void RemoveKeyword(string keyword)
+    {
+        Keywords.Remove(keyword);
+    }
+
+    private void SaveDescription()
+    {
+        var result = SeoService.Add(new MetaDto()
+        {
+            PageName = SelectedPage,
+            Keywords = Keywords,
+            Description = Description
+        });
+        AlertService.ShowAsync(result.Message, result.Status);
+    }
+
+    private void LoadMeta()
+    {
+        Meta = SeoService.GetMeta(SelectedPage);
+        if(Meta != null)
+        {
+            Keywords = (Meta.Keywords != null) ? Meta.Keywords : null;
+            Description = Meta.Description;
+        }
+        else
+        {
+            Keywords = null;
+            Description = "";
+        }
+
+    }
+}
