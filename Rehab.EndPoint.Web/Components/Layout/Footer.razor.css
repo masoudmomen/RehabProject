@@ -72,8 +72,8 @@ a.footer-tell {
     align-items: center;
     gap: 6px;
     padding: 7px 12px;
-    background: rgba(167, 139, 250, 0.1);
-    border: 0.5px solid rgba(167, 139, 250, 0.25);
+    /*background: rgba(167, 139, 250, 0.1);
+    border: 0.5px solid rgba(167, 139, 250, 0.25);*/
     border-radius: 8px;
 }
 
@@ -122,7 +122,7 @@ a.footer-tell {
     line-height: 32px;
     font-size: 0.8rem;
     width: 90%;
-    color: #9ca3af;
+    color: #fff;
     margin-bottom: 20px;
 }
 
@@ -144,7 +144,7 @@ a.footer-tell {
 
 .copywrite {
     margin-top: 15px;
-    margin-left: 100px;
+   /* margin-left: 100px;*/
     font-size: 0.8rem;
     color: #b0b7b7;
     border-top: solid 1px #6a7d7d;
