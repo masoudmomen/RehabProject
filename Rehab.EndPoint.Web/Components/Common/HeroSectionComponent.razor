@@ -1,0 +1,22 @@
+﻿<section class="innerpage-hero mt-2">
+    <div class="innerpage-hero-content">
+        <h1 class="innerpage-hero-title">
+            @SectionTitle
+        </h1>
+        <p class="innerpage-hero-subtitle">
+            @SectionSubtitle
+        </p>
+        @*      <button class="btn innerpage-hero-cta"
+                    onclick="scrollToElement('searchbox')">
+                Start Searching
+                <i class="bi bi-arrow-down ms-1"></i>
+            </button> *@
+    </div>
+</section>
+@code {
+    [Parameter]
+    public string SectionTitle { get; set; } = string.Empty;
+    [Parameter]
+    public string SectionSubtitle { get; set; } = string.Empty;
+
+}

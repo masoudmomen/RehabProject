@@ -16,18 +16,33 @@
 </HeadContent>
 
 <div class="container">
-    <input type="checkbox" id="sidebarToggle" hidden />
+    <HeroSectionComponent 
+        SectionTitle="Explore Rehab and Mental Health Treatment Approaches"
+        SectionSubtitle="Explore therapy models, counseling methods, medication-supported care, and wellness approaches used in behavioral health and addiction treatment."
+        />
+ 
+     <input type="checkbox" id="sidebarToggle" hidden />
     <div class="sidebar-overlay"></div>
     <div class="row my-4 layout-wrapper">
+        <h2 class="page-title">Treatment Approaches</h2>
         <div class="content-a">
-            <h2 class="page-title">Treatment Approaches</h2>
-            <div class="">
-                <input class="search-input rounded-3 p-2 bg-white w-100 fs-7" placeholder="Treatment Approaches Name" />
-            </div>
+             <div class="input-group search-conditions-box" id="searchbox">
+                    <input type="text"
+                           class="form-control border-0 p-2 fs-7"
+                       placeholder="Search Treatment Approaches by Name..." />
+                    <button class="btn search-btn" type="button" id="btnSearch">
+                        <i class="bi bi-search"></i>
+                    </button>
+                </div>
+ 
+           
             <div class="top-treatments mt-4">
                 <h3 class="section-title">
                     Popular Treatment Approaches
                 </h3>
+                <p class="fs-6 text-muted">
+                    Use these quick links to find common approaches, or search the full list below.
+                </p>
                 <div class="row mb-3 px-0 align-items-stretch">
                     @foreach (var card in SpecialTreatment)
                     {
@@ -45,6 +60,9 @@
                 <h3 class="section-title">
                     All Treatment Approaches
                 </h3>
+                <p class="fs-6 text-muted">
+                    Read a simple explanation, then choose View Centers to browse treatment center profiles filtered by that approach.
+                </p>
                 <div class="row mb-3 px-0 align-items-stretch">
                     @foreach (var card in AllTreatment)
                     {
@@ -57,6 +75,7 @@
                 </div>
 
             </div>
+              <BrowsTreatmentCentersComponent />
         </div>
         <div class="content-b">
          <SidebarComponent />

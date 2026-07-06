@@ -1,0 +1,6 @@
+﻿
+.bottom-cta {
+    background-color: var(--color-soft-blue);
+    border: solid 1px var(--color-gray);
+    border-radius: 15px;
+}

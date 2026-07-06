@@ -20,21 +20,11 @@
 </HeadContent>
 
 <div class="container">
-    <section class="innerpage-hero mt-2" >
-        <div class="innerpage-hero-content">
-        <h1 class="innerpage-hero-title">
-            Browse Treatment Centers and Rehab Facility Profiles
-        </h1>
-        <p class="innerpage-hero-subtitle">
-            Search treatment centers by state, city, condition, level of care, insurance, treatment approach, age group, and amenities.
-        </p>
-        @*     <button class="btn innerpage-hero-cta"
-             onclick="scrollToElement('searchbox')">          
-                Start Searching
-                <i class="bi bi-arrow-down ms-1"></i>
-            </button> *@
-        </div>
-    </section>
+      <HeroSectionComponent 
+        SectionTitle="Browse Treatment Centers and Rehab Facility Profiles"
+        SectionSubtitle="Search treatment centers by state, city, condition, level of care, insurance, treatment approach, age group, and amenities."
+        />
+    
     <input type="checkbox" id="sidebarToggle" hidden />
   @*   <input type="checkbox" id="sidebarToggle" hidden /> *@
     <div class="sidebar-overlay"></div>
