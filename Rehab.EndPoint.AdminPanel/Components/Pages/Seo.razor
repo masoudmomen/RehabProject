@@ -70,7 +70,7 @@
 
             <button class="btn btn-primary mt-2"
                     @onclick="SaveDescription">
-                Save Description
+                Save All
             </button>
 
         </div>
@@ -97,7 +97,7 @@
 
     private string SelectedPage = "Home";
 
-    private List<string>? Keywords;
+    private List<string> Keywords = new();
 
     private string? NewKeyword;
 
@@ -140,12 +140,13 @@
         Meta = SeoService.GetMeta(SelectedPage);
         if(Meta != null)
         {
-            Keywords = (Meta.Keywords != null) ? Meta.Keywords : null;
+            if(Meta.Keywords != null && Meta.Keywords.Count>0)
+                Keywords = Meta.Keywords;
             Description = Meta.Description;
         }
         else
         {
-            Keywords = null;
+            Keywords.Clear();
             Description = "";
         }
 
