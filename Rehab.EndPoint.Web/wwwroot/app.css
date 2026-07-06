@@ -194,6 +194,71 @@ button#scrollToTopBtn {
     max-width: 25%;
     box-sizing: border-box;
 }
+.innerpage-hero {
+    position: relative;
+    overflow: hidden;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #7F77DD 0%, #534AB7 55%, #378ADD 100%);
+    padding: 56px 48px;
+    text-align: center;
+}
+
+    .innerpage-hero::before {
+        content: "";
+        position: absolute;
+        top: -40px;
+        right: -40px;
+        width: 180px;
+        height: 180px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.08);
+    }
+
+    .innerpage-hero::after {
+        content: "";
+        position: absolute;
+        bottom: -60px;
+        left: -30px;
+        width: 160px;
+        height: 160px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.06);
+    }
+
+.innerpage-hero-content {
+    position: relative;
+    max-width: 560px;
+    margin: 0 auto;
+}
+
+.innerpage-hero-title {
+    color: #fff;
+    font-size: 32px;
+    font-weight: 600;
+    margin: 0 0 12px;
+}
+
+.innerpage-hero-subtitle {
+    color: rgba(255, 255, 255, 0.88);
+    font-size: 15px;
+    margin: 0 0 24px;
+    line-height: 1.6;
+}
+
+.innerpage-hero-cta {
+    background: #fff;
+    color: #3C3489;
+    border: none;
+    padding: 11px 24px;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 999px;
+    cursor: pointer;
+}
+
+    .innerpage-hero-cta:hover {
+        background: #f3f2ff;
+    }
 
 /*.sidebar-toggle {
     display: inline-flex;

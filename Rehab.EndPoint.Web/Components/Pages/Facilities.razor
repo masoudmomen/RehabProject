@@ -20,19 +20,19 @@
 </HeadContent>
 
 <div class="container">
-    <section class="treatment-hero mt-2" >
-        <div class="treatment-hero-content">
-        <h1 class="treatment-hero-title">
+    <section class="innerpage-hero mt-2" >
+        <div class="innerpage-hero-content">
+        <h1 class="innerpage-hero-title">
             Browse Treatment Centers and Rehab Facility Profiles
         </h1>
-        <p class="treatment-hero-subtitle">
+        <p class="innerpage-hero-subtitle">
             Search treatment centers by state, city, condition, level of care, insurance, treatment approach, age group, and amenities.
         </p>
-            <button class="btn treatment-hero-cta"
-                    @onclick="ScrollToSearch">
+        @*     <button class="btn innerpage-hero-cta"
+             onclick="scrollToElement('searchbox')">          
                 Start Searching
-                  <i class="bi bi-arrow-down ms-1"></i>
-            </button>
+                <i class="bi bi-arrow-down ms-1"></i>
+            </button> *@
         </div>
     </section>
     <input type="checkbox" id="sidebarToggle" hidden />
@@ -798,10 +798,7 @@
     {
          JS.InvokeVoidAsync("UnCheckAllCheckbox");
     }
-      private async Task ScrollToSearch()
-    {
-        await JS.InvokeVoidAsync("scrollToElement", "searchbox");
-    }
+   
 
 }
 

@@ -148,9 +148,15 @@ window.addEventListener('resize', handleMobile);
 
 
 
-window.scrollToElement = (id) => {
-    const el = document.getElementById(id);
+//window.scrollToElement = (id) => {
+//    const el = document.getElementById(id);
+//    if (el) {
+//        el.scrollIntoView({ behavior: "smooth" });
+//    }
+//};
+function scrollToElement(elementId) {
+    const el = document.getElementById(elementId);
     if (el) {
-        el.scrollIntoView({ behavior: "smooth" });
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
-};
+}

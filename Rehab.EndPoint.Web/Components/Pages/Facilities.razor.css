@@ -293,7 +293,7 @@ h3.sidebar-header {
         font-size: 26px;
     }
 }
-.treatment-hero {
+/*.treatment-hero {
     position: relative;
     overflow: hidden;
     border-radius: 12px;
@@ -352,4 +352,4 @@ h3.sidebar-header {
 
     .treatment-hero-cta:hover {
         background: #f3f2ff;
-    }
+    }*/
