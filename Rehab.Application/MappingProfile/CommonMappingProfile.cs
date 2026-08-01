@@ -1,17 +1,21 @@
 ﻿using AutoMapper;
 using Rehab.Application.Accreditations;
 using Rehab.Application.Amenities;
+using Rehab.Application.Blog;
 using Rehab.Application.Conditions;
 using Rehab.Application.Facilities;
 using Rehab.Application.Highlights;
 using Rehab.Application.Insurances;
 using Rehab.Application.LevelsOfCare;
+using Rehab.Application.Packages;
+using Rehab.Application.PaymentLinks;
+using Rehab.Application.Seo;
+using Rehab.Application.Subscriptions;
 using Rehab.Application.SubstancesWeTreat;
 using Rehab.Application.Tags;
 using Rehab.Application.Treatments;
 using Rehab.Application.Users;
 using Rehab.Application.WhoWeTreat;
-using Rehab.Application.Blog;
 using Rehab.Domain.Accreditations;
 using Rehab.Domain.Amenities;
 using Rehab.Domain.Blog;
@@ -20,6 +24,8 @@ using Rehab.Domain.Facilities;
 using Rehab.Domain.Highlights;
 using Rehab.Domain.Insurances;
 using Rehab.Domain.LevelsOfCare;
+using Rehab.Domain.Packages;
+using Rehab.Domain.SeoEntities;
 using Rehab.Domain.SubstancesWeTreat;
 using Rehab.Domain.Tags;
 using Rehab.Domain.Treatments;
@@ -31,11 +37,6 @@ using System.Linq;
 using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
-using Rehab.Domain.Packages;
-using Rehab.Application.Packages;
-using Rehab.Application.PaymentLinks;
-using Rehab.Domain.SeoEntities;
-using Rehab.Application.Seo;
 
 namespace Rehab.Infrastructure.MappingProfile
 {
@@ -73,6 +74,7 @@ namespace Rehab.Infrastructure.MappingProfile
                 .ReverseMap();
             CreateMap<PaymentLink, PaymentLinkDto>().ReverseMap();
             CreateMap<MetaContent, MetaDto>().ReverseMap();
+            CreateMap<Subscription, SubscriptionDto>();
 
         }
     }

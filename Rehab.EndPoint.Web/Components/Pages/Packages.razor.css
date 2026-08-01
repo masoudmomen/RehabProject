@@ -1,4 +1,20 @@
-﻿.hero-title {
+﻿.adv-eyebrow {
+    display: inline-block;
+    background: #fff;
+    color: var(--adv-primary);
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    padding: 7px 14px;
+    border-radius: 999px;
+}
+
+/* ── Hero gradient ── */
+.adv-hero {
+    border: 1px solid #dcebf4;
+}
+.hero-title {
     font-size: 2rem;
     font-weight: 500;
     color: var(--color-text-primary);

@@ -1,50 +1,55 @@
 ﻿@page "/packages"
+@rendermode InteractiveServer
 @using Rehab.EndPoint.Web.Components.Common
 @using Rehab.EndPoint.Web.ViewModels
-@rendermode InteractiveServer
-
-
+@using Rehab.Domain.Packages.Enums
+@using Rehab.Application.Packages
 @using Rehab.Application.Seo
 @inject ISeoService SeoService
-
+@inject IPackagePricingService PackagePricingService
 
 <HeadContent>
     <meta name="keywords" content="@Keywords" />
     <meta name="description" content="@Description" />
 </HeadContent>
+<div class="container">
+    <HeroSectionComponent SectionTitle="Advertise With Us"
+                          SectionSubtitle="RehabNavigator helps treatment providers increase visibility in a directory where individuals, families, and loved ones compare rehab centers, detox services, addiction treatment programs, mental health providers, and behavioral health facilities" />
+</div>
+<div class="container text-center">
+    <h2 class="mt-3">Plans & Pricing </h2>
+    <p>    Choose the visibility level that fits your facility.</p>
+</div>
 
-
-<style>
-
-</style>
-
-<section class="billing-toggle-wrap" aria-label="Billing options">
-
+<section class="billing-toggle-wrap mt-3" aria-label="Billing options">
+  
+    <br/>
     <div class="billing-toggle">
         <input type="radio" id="billing-annual" name="billing" value="annual"
-               checked="@(billingType == "Annually")"
-               @onchange="@(() => OnBillingChanged("Annually"))" />
-        <label for="billing-annual">Pay annually</label>
+               checked="@(selectedBillingtype == BillingType.Annually)"
+               @onchange="() => selectedBillingtype = BillingType.Annually" />
+        <label for="billing-annual">Annual Plan</label>
 
         <input type="radio" id="billing-monthly" name="billing" value="monthly"
-               checked="@(billingType == "Monthly")"
-               @onchange="@(() => OnBillingChanged("Monthly"))" />
-        <label for="billing-monthly">Pay Monthly</label>
+               checked="@(selectedBillingtype == BillingType.Monthly)"
+               @onchange="() => selectedBillingtype = BillingType.Monthly" />
+        <label for="billing-monthly">Monthly Plan</label>
     </div>
 
 </section>
 <div class="text-center">
-    <h2>Plans & Pricing </h2>
-    @if (billingType == "Annually")
+  
+
+    @if (selectedBillingtype == BillingType.Annually)
     {
         <p>
-            Choose the visibility level that fits your facility.
+            Reduced monthly rate with a 12-month commitment.Payments are made monthly.
         </p>
     }
-    else if (billingType == "Monthly")
+    else if (selectedBillingtype == BillingType.Monthly)
     {
         <p>
-            Flexible month-to-month billing. Billed monthly.
+            Flexible month-to-month billing. Billing monthly.
         </p>
     }
 
@@ -58,7 +63,7 @@
             <!-- Free -->
             <div class="col-12 col-md-3">
                 <div class="pkg-card p-4">
-                    <p class="pkg-name mb-1">Free</p>
+                    <p class="pkg-name mb-1"> Claim Profile For Free</p>
 
                     <hr class="my-2" style="border-color:#e8e7e0;opacity:1;">
                     <p class="price-val mb-0">$0</p>
@@ -71,9 +76,12 @@
                     </ul>
 
                     <div class="mt-auto">
-                        <button class="btn-pkg" @onclick='@(() => OpenModal("Free", "$0"))'>
+                        <button type="button" class="btn-pkg"
+                                data-bs-toggle="modal"
+                                data-bs-target="#ClaimModal">
                             Claim Profile
                         </button>
+
                     </div>
                 </div>
             </div>
@@ -82,14 +90,14 @@
                 <div class="pkg-card p-4">
                     <p class="pkg-name mb-1">Essential</p>
                     <hr class="my-2" style="border-color:#e8e7e0;opacity:1;">
-                    <div class="price-val mb-0" data-monthly="$399" data-annually="$499">
-                        @if (billingType == "Annually")
+                    <div class="price-val mb-0" data-monthly="@essentialPrice!.MonthlyPrice" data-annually="@essentialPrice!.AnnualPrice">
+                        @if (selectedBillingtype == BillingType.Annually)
                         {
-                            @basicannuallyPrice
+                            @essentialPrice!.AnnualPrice
                         }
-                        else if (billingType == "Monthly")
+                        else if (selectedBillingtype == BillingType.Monthly)
                         {
-                            @basicMonthlyPrice
+                            @essentialPrice!.MonthlyPrice
                         }
                         <span>
                             /Month
@@ -103,7 +111,7 @@
                     </ul>
 
                     <div class="mt-auto">
-                        <button class="btn-pkg" @onclick='@(() => OpenModal("Essential", "?????"))'>
+                        <button class="btn-pkg" @onclick='@(() => OpenModal(PackageType.Essential))'>
                             Get Started
                         </button>
                     </div>
@@ -117,14 +125,14 @@
 
                     <hr class="my-2" style="border-color:#e8e7e0;opacity:1;">
 
-                    <div class="price-val mb-0" data-monthly="@basicMonthlyPrice" data-annually="@basicannuallyPrice">
-                        @if (billingType == "Annually")
+                    <div class="price-val mb-0" data-monthly="@premiumPrice!.MonthlyPrice" data-annually="@premiumPrice!.AnnualPrice">
+                        @if (selectedBillingtype == BillingType.Annually)
                         {
-                            @premiumannuallyPrice
+                            @premiumPrice!.AnnualPrice
                         }
-                        else if (billingType == "Monthly")
+                        else if (selectedBillingtype == BillingType.Monthly)
                         {
-                            @premiumMonthlyPrice
+                            @premiumPrice!.MonthlyPrice
                         }
                         <span>/Month</span>
                     </div>
@@ -136,7 +144,7 @@
                     </ul>
 
                     <div class="mt-auto">
-                        <button class="btn-pkg-primary" @onclick='@(() => OpenModal("Premium", "$39 – $79"))'>
+                        <button class="btn-pkg-primary" @onclick='@(() => OpenModal(PackageType.Premium))'>
                             Get Started
                         </button>
                     </div>
@@ -156,7 +164,7 @@
                     </ul>
 
                     <div class="mt-auto">
-                        <button class="btn-pkg" @onclick='@(() => OpenModal("Enterprise", ""))'>
+                        <button class="btn-pkg" @onclick='@(() => OpenModal(PackageType.Enterprise))'>
                             Get Started
                         </button>
                     </div>
@@ -271,36 +279,32 @@
 </section>
 <PackagesModalComponent Visible="@showModal"
                         VisibleChanged="v => showModal = v"
-                        PackageName="@selectedPackage"
-                        PackagePrice="@selectedPrice"
-                        BillingType="@billingType" />
+                        PackageType="@selectedPackage"
+                        BillingType="@selectedBillingtype" />
 
-
+<ClaimFormModalComponent />
 @code {
     private bool showModal = false;
-    private string selectedPackage;
-    private string selectedPrice;
-    private string paymentPeriod;
+    private PackageType selectedPackage;
 
-    private string billingType = "Annually";
+    private BillingType selectedBillingtype = BillingType.Monthly;
+    private IEnumerable<PackagePriceDto>? packagePrices;
 
-    private string basicMonthlyPrice = "499";
-    private string basicannuallyPrice = "399";
+    private PackagePriceDto? essentialPrice;
+    private PackagePriceDto? premiumPrice;
 
-    private string premiumMonthlyPrice = "1,099";
-    private string premiumannuallyPrice = "999";
+    // private string basicMonthlyPrice = "499";
+    // private string basicannuallyPrice = "399";
+
+    // private string premiumMonthlyPrice = "1,099";
+    // private string premiumannuallyPrice = "999";
 
     private string billingDescription = "Aannual plans include preferred pricing";
 
-    private void OnBillingChanged(string value)
-    {
-        billingType = value;
-    }
 
-    void OpenModal(string package, string price)
+    void OpenModal(PackageType package)
     {
         selectedPackage = package;
-        selectedPrice = price;
         showModal = true;
     }
 
@@ -327,10 +331,10 @@
     protected override async Task OnInitializedAsync()
     {
         LoadMeta();
+        packagePrices = await PackagePricingService.GetAllPricesAsync();
+        essentialPrice = packagePrices.FirstOrDefault(p => p.packageType == PackageType.Essential);
+        premiumPrice = packagePrices.FirstOrDefault(p => p.packageType == PackageType.Premium);
     }
 
 
 }
-<style>
-
-</style>

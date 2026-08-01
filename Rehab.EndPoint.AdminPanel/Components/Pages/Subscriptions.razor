@@ -1,0 +1,168 @@
+﻿@page "/PackageRequests/{PackageRequestId:int}/subscription"
+<PageTitle>Subscription Details</PageTitle>
+@rendermode InteractiveServer
+@using Rehab.Application.Subscriptions
+@using Rehab.Application.Packages
+@using Rehab.Domain.Packages
+@using Rehab.Domain.Packages.Enums
+@inject ISubscriptionService SubscriptionService
+@inject IPackageRequestService PackageRequestService
+@if (_isLoading)
+{
+    <p>Loading...</p>
+}
+else if (!_subscriptionFound)
+{
+    <div class="alert alert-warning">
+        Subscription record not found for this package request.
+        This might indicate the payment webhook hasn't been processed yet, or an error occurred.
+    </div>
+}
+else
+{
+    <h3>Subscription for @_packageRequest?.FirstName @_packageRequest?.LastName</h3>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Status</th>
+                <td>@_subscription!.Status</td>
+            </tr>
+            <tr>
+                <th>Billing Type</th>
+                <td>@_subscription.BillingType</td>
+            </tr>
+            <tr>
+                <th>Current Period Start</th>
+                <td>@_subscription.CurrentPeriodStart.ToString("yyyy-MM-dd")</td>
+            </tr>
+            <tr>
+                <th>Current Period End</th>
+                <td>@_subscription.CurrentPeriodEnd.ToString("yyyy-MM-dd")</td>
+            </tr>
+            @if (_subscription.CommitmentEndDate.HasValue)
+            {
+                <tr>
+                    <th>Commitment End Date</th>
+                    <td>@_subscription.CommitmentEndDate.Value.ToString("yyyy-MM-dd")</td>
+                </tr>
+            }
+            <tr>
+                <th>Stripe Subscription ID</th>
+                <td>@_subscription.StripeSubscriptionId</td>
+            </tr>
+        </tbody>
+    </table>
+   <h1> @_subscription.Status </h1>
+    @if (_subscription!.Status != SubscriptionStatus.Canceled)
+    {
+        <button class="btn btn-danger" @onclick="ShowConfirmModal">Cancel Subscription</button>
+
+        @if (_subscription.BillingType == BillingType.Annually
+                 && _subscription.CommitmentEndDate.HasValue
+                 && _subscription.CommitmentEndDate.Value > DateTime.UtcNow)
+        {
+            <div class="form-check mt-2">
+                <input type="checkbox" class="form-check-input" @bind="_isAdminOverride" id="overrideCheck" />
+                <label class="form-check-label" for="overrideCheck">
+                    Override commitment lock (Admin only)
+                </label>
+            </div>
+        }
+    }
+
+    @if (!string.IsNullOrEmpty(_cancelMessage))
+    {
+        <div class="alert @(_cancelSuccess ? "alert-success" : "alert-danger") mt-2">
+            @_cancelMessage
+        </div>
+    }
+    @if (_showConfirmModal)
+    {
+        <div class="modal d-block" style="background-color: rgba(0,0,0,0.5);" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Confirm Cancellation</h5>
+                        <button type="button" class="btn-close" @onclick="CloseConfirmModal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Are you sure you want to cancel this subscription?</p>
+                        @if (_isAdminOverride)
+                        {
+                            <p class="text-danger">
+                                <strong>Warning:</strong> This will override the commitment lock and cancel an AnnualCommit subscription before its commitment period ends.
+                            </p>
+                        }
+                        <p class="text-muted">This action will notify Stripe and the customer will receive a cancellation email.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" @onclick="CloseConfirmModal">No, keep it</button>
+                        <button class="btn btn-danger" @onclick="ConfirmCancel">Yes, cancel subscription</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        }
+}
+
+@code {
+    [Parameter] public int PackageRequestId { get; set; }
+
+    private bool _isLoading = true;
+    private bool _subscriptionFound;
+    private SubscriptionDto? _subscription;
+    private PackageRequestDto? _packageRequest;
+
+    private bool _isAdminOverride = false;
+    private string? _cancelMessage;
+    private bool _cancelSuccess;
+
+    private bool _showConfirmModal = false;
+
+    private void ShowConfirmModal() => _showConfirmModal = true;
+    private void CloseConfirmModal() => _showConfirmModal = false;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        var subscriptionResult = await SubscriptionService.GetByPackageRequestIdAsync(PackageRequestId);
+        var packageRequestResult = await PackageRequestService.GetByIdAsync(PackageRequestId);
+
+        _subscriptionFound = subscriptionResult.Success;
+        _subscription = subscriptionResult.Data;
+        _packageRequest = packageRequestResult.Data;
+
+        _isLoading = false;
+    }
+    private async Task HandleCancel()
+    {
+ 
+        var result = await SubscriptionService.CancelAsync(_subscription!.Id, _isAdminOverride);
+        _cancelSuccess = result.Success;
+        _cancelMessage = result.Message;
+
+        if (result.Success)
+        {
+            Console.WriteLine("Result success");
+            var refreshed = await SubscriptionService.GetByPackageRequestIdAsync(PackageRequestId);
+            if (refreshed.Success)
+                _subscription = refreshed.Data;
+        }
+    }
+    private async Task ConfirmCancel()
+    {
+        _showConfirmModal = false;
+
+        var result = await SubscriptionService.CancelAsync(_subscription!.Id, _isAdminOverride);
+        _cancelSuccess = result.Success;
+        _cancelMessage = result.Message;
+
+        if (result.Success)
+        {
+            var refreshed = await SubscriptionService.GetByPackageRequestIdAsync(PackageRequestId);
+            if (refreshed.Success)
+                _subscription = refreshed.Data;
+        }
+    }
+}

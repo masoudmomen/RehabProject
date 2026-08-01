@@ -660,6 +660,9 @@ namespace Rehab.Persistence.Migrations
                     b.Property<DateTime?>("SessionExpiredsAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("StripeCustomerId")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("StripeSessionId")
                         .HasColumnType("nvarchar(max)");
 
@@ -674,6 +677,57 @@ namespace Rehab.Persistence.Migrations
                     b.HasIndex("PackageRequestId");
 
                     b.ToTable("PaymentLinks");
+                });
+
+            modelBuilder.Entity("Rehab.Domain.Packages.Subscription", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("BillingType")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("CanceledAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("CommitmentEndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("CurrentPeriodEnd")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("CurrentPeriodStart")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("PackageRequestId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<string>("StripeCustomerId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("StripeSubscriptionId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PackageRequestId")
+                        .IsUnique();
+
+                    b.HasIndex("StripeSubscriptionId")
+                        .IsUnique();
+
+                    b.ToTable("Subscriptions");
                 });
 
             modelBuilder.Entity("Rehab.Domain.SeoEntities.MetaContent", b =>
@@ -1015,6 +1069,17 @@ namespace Rehab.Persistence.Migrations
                     b.Navigation("PackageRequest");
                 });
 
+            modelBuilder.Entity("Rehab.Domain.Packages.Subscription", b =>
+                {
+                    b.HasOne("Rehab.Domain.Packages.PackageRequest", "PackageRequest")
+                        .WithOne("Subscription")
+                        .HasForeignKey("Rehab.Domain.Packages.Subscription", "PackageRequestId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("PackageRequest");
+                });
+
             modelBuilder.Entity("Rehab.Domain.Blog.BlogPost", b =>
                 {
                     b.Navigation("Comments");
@@ -1028,6 +1093,8 @@ namespace Rehab.Persistence.Migrations
             modelBuilder.Entity("Rehab.Domain.Packages.PackageRequest", b =>
                 {
                     b.Navigation("PaymentLink");
+
+                    b.Navigation("Subscription");
                 });
 #pragma warning restore 612, 618
         }

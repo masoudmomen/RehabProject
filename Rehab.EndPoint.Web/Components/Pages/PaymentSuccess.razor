@@ -1,14 +1,18 @@
 @page "/Packages/payment/success"
 @using Rehab.Application.PaymentLinks
+@using Rehab.Application.Packages
 @using Rehab.EndPoint.Web.ViewModels
+@using Rehab.Domain.Packages.Enums
 @using AutoMapper
+
 @inject IPaymentLinkService PaymentLinkService
 @inject IMapper _mapper;
+@inject IPackageRequestService packageRequestService;
 <div class="container py-5">
     <div class="mx-auto" style="max-width: 28rem;">
         <div class="">
             <p>
-                Package:<strong> Basic </strong>
+                Package:<strong> @PackageName </strong>
 
             </p>
             <div class="alert alert-success p-3">
@@ -23,8 +27,10 @@
                 Your payment was received successfully.<br/>
                 Your package is now active.
             </div>
-         
-        </div>
+            <hr/>
+            <h5>Your Order Id Is : </h5>
+                @packageRequestId
+             </div>
     </div>
 </div>
 @code {
@@ -33,7 +39,8 @@
     private PaymentLinkViewmodel PaymentLink = new();
     private bool IsLoading = true;
     private string? ErrorMessage;
-
+    private PackageType PackageName;
+    private int packageRequestId;
     // private PaymentSuccessDto? PaymentInfo;
 
     protected override async Task OnInitializedAsync()
@@ -44,10 +51,16 @@
             IsLoading = false;
             return;
         }
-        var paymentLink = PaymentLinkService.GetByStripeSessionId(SessionId);
+        var paymentLink =await PaymentLinkService.GetByStripeSessionIdAsync(SessionId);
         if (paymentLink.Success && paymentLink.Data is not null)
         {
             PaymentLink = _mapper.Map<PaymentLinkViewmodel>(paymentLink.Data);
+            packageRequestId = paymentLink.Data.PackageRequestId;
+            var packageRequest = await packageRequestService.GetByIdAsync(packageRequestId);
+            if (packageRequest.Success && packageRequest.Data is not null)
+            {
+                PackageName = packageRequest.Data.PackageType;
+            }
         }
         else
         {

@@ -14,6 +14,7 @@ namespace Rehab.Domain.Packages
         public string? Token { get; set; }
         public string? StripeSessionId { get; set; }
         public string? StripeSessionUrl { get; set; }
+        public string? StripeCustomerId { get; set; }
         public DateTime? SessionExpiredsAt { get; set; }
         public decimal Amount { get; set; }
         public bool IsUsed { get; set; }

@@ -33,6 +33,7 @@ namespace Rehab.Persistence.Contexts
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(DatabaseContext).Assembly);
         }
 
         //DbSets : 
@@ -56,5 +57,6 @@ namespace Rehab.Persistence.Contexts
         public DbSet<PackageRequest> PackageRequests { get; set; }
         public DbSet<PaymentLink> PaymentLinks { get; set; }
         public DbSet<MetaContent> MetaContents { get; set; }
+        public DbSet<Subscription> Subscriptions { get; set; }
         }
 }

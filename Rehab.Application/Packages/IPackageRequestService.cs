@@ -10,6 +10,7 @@ using Rehab.Application.Dtos;
 using Rehab.Application.PaymentLinks;
 using Rehab.Application.Tags;
 using Rehab.Domain.Packages;
+using Rehab.Domain.Packages.Enums;
 using Rehab.Domain.Tags;
 using System;
 using System.Collections.Generic;
@@ -44,15 +45,33 @@ namespace Rehab.Application.Packages
             _mapper = mapper;
             _paymentLinksOptions = paymentLinksOptions;
         }
+        //public BaseDto<PackageRequestDto> Add(PackageRequestDto requestDto)
+        //{
+        //    if (requestDto == null) return BaseDto<PackageRequestDto>.FailureResult("The package request is null!");
+
+        //    requestDto.CreatedDate = DateTime.Now;
+
+        //    _context.PackageRequests.Add(_mapper.Map<PackageRequest>(requestDto));
+        //    if (_context.SaveChanges() > 0)
+        //        return BaseDto<PackageRequestDto>.SuccessResult(requestDto, "Package request created successfully!");
+
+        //    return BaseDto<PackageRequestDto>.FailureResult("Operation Faild! please try another time!");
+        //}
         public BaseDto<PackageRequestDto> Add(PackageRequestDto requestDto)
         {
-            if (requestDto == null) return BaseDto<PackageRequestDto>.FailureResult("The package request is null!");
+            if (requestDto == null)
+                return BaseDto<PackageRequestDto>.FailureResult("The package request is null!");
 
             requestDto.CreatedDate = DateTime.Now;
 
-            _context.PackageRequests.Add(_mapper.Map<PackageRequest>(requestDto));
+            var entity = _mapper.Map<PackageRequest>(requestDto); 
+            _context.PackageRequests.Add(entity);
+
             if (_context.SaveChanges() > 0)
+            {
+                requestDto.Id = entity.Id;
                 return BaseDto<PackageRequestDto>.SuccessResult(requestDto, "Package request created successfully!");
+            }
 
             return BaseDto<PackageRequestDto>.FailureResult("Operation Faild! please try another time!");
         }

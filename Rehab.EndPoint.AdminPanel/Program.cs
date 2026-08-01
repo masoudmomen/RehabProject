@@ -30,6 +30,10 @@ using Rehab.Infrastructure.Settings;
 using Rehab.Application.PaymentLinks;
 using Rehab.Application.Email;
 using Rehab.Application.Seo;
+using Rehab.Application.Subscriptions;
+using Rehab.Application.Stripe;
+using Rehab.Infrastructure.Stripe;
+using Rehab.Infrastructure.Subscriptions;
 
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
@@ -105,6 +109,7 @@ builder.Services.AddTransient<IConditionService, ConditionService>();
 builder.Services.AddTransient<ISubstancesWeTreatService, SwtService>();
 builder.Services.AddTransient<ITagService,TagService>();
 builder.Services.AddTransient<IPackageRequestService, PackageRequestService>();
+builder.Services.AddTransient<ISubscriptionService, SubscriptionService>();
 builder.Services.AddTransient<IPaymentLinkService, PaymentLinkService>();
 builder.Services.AddTransient<IEmailService, EmailService>();
 builder.Services.AddTransient<ISeoService, SeoService>();
@@ -120,7 +125,7 @@ builder.Services.Configure<PaymentLinksOptions>(
 builder.Services.Configure<StripeSettings>(
     builder.Configuration.GetSection("Stripe"));
 //    StripeConfiguration.ApiKey = builder.Configuration["Stripe:SecretKey"];
-//builder.Services.AddScoped<IStripeService, StripeService>();
+builder.Services.AddScoped<IStripeService, StripeService>();
 #endregion
 
 builder.Services.AddSingleton<HeadOutlet>();

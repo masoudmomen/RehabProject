@@ -45,6 +45,7 @@ namespace Rehab.Application.Contexts
         DbSet<PackageRequest> PackageRequests { get; set; }
         DbSet<PaymentLink> PaymentLinks { get; set; }
         DbSet<MetaContent> MetaContents { get; set; }
+        DbSet<Subscription> Subscriptions { get; set; }
         int SaveChanges();
         int SaveChanges(bool acceptAllChangesOnSuccess);
         Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default);

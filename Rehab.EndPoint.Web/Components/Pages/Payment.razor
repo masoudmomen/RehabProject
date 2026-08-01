@@ -4,10 +4,13 @@
 @using Rehab.Application.PaymentLinks
 @using Rehab.Application.Stripe
 @using Rehab.Application.Packages
+@using Rehab.Domain.Extensions
 @inject IPaymentLinkService PaymentLinkService
 @inject IStripeService StripeService
 @inject IPackageRequestService PackageRequestService
+@inject IPackagePricingService PackagePricingService
 @inject NavigationManager Navigation
+@inject IConfiguration Config
 @inject ILogger<Payment> logger
 <div class="container py-5">
 
@@ -191,7 +194,46 @@
                 CreateSessionResult session;
                 try
                 {
-                    session = await StripeService.CreateCheckoutSessionAsync(new CreateSessionRequest(
+                    var isSubscription = link.PackageRequest.PackageType.IsSubscription();
+                    if (isSubscription)
+                    {
+                        var customerOptions = new Stripe.CustomerCreateOptions
+                        {
+                            Email = _requestEmail,
+                            Name = $"{link.PackageRequest.FirstName} {link.PackageRequest.LastName}",
+                            Metadata = new Dictionary<string, string>
+                            {
+                                {
+                                    "packageRequestId", link.PackageRequest.Id.ToString() }
+                            }
+                        };
+                        // var testClockId = Config["Stripe:TestClockId"];
+                        // if (!string.IsNullOrEmpty(testClockId))
+                        // {
+                        //     customerOptions.TestClock = testClockId;
+                        // }
+                        var customerService = new Stripe.CustomerService();
+                        var customer = await customerService.CreateAsync(customerOptions);
+                        var pricing = StripeService.GetPriceId(
+                            link.PackageRequest.PackageType,
+                            link.PackageRequest.BillingType
+                        );
+
+                        link.StripeCustomerId = customer.Id;
+
+                        session = await StripeService.CreateSubscriptionSessionAsync(
+                            new CreateSubscriptionSessionRequest(
+                             StripePriceId: pricing,
+                             BillingType: link.PackageRequest.BillingType,
+                             StripeCustomerId: link.StripeCustomerId,
+                             SuccessUrl: successUrl,
+                             CancelUrl: cancelUrl,
+                             Metadata: metadata)
+                        );
+                    }
+                    else
+                    {
+                        session = await StripeService.CreateCheckoutSessionAsync(new CreateSessionRequest(
                         Amount: link.Amount,
                         Currency: "usd",
                         Description: _checkoutDescription,
@@ -199,6 +241,7 @@
                         SuccessUrl: successUrl,
                         CancelUrl: cancelUrl,
                         Metadata: metadata));
+                    }
                 }
                 catch (Stripe.StripeException ex)
                 {
@@ -221,7 +264,7 @@
                 link.StripeSessionId = session.SessionId;
                 link.StripeSessionUrl = session.SessionUrl;
                 link.SessionExpiredsAt = DateTime.UtcNow.AddMinutes(28);
-
+              
                 var updateResult = await PaymentLinkService.UpdateAsync(link);
                 if (!updateResult.Success || updateResult.Data is null)
                 {

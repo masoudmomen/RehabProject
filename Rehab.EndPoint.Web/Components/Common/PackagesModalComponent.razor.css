@@ -112,3 +112,50 @@
     list-style: none;
     color: #dc3545
 }
+.plan-summary {
+    background: #F5F4F0;
+    border-radius: 8px;
+    padding: 14px 16px;
+}
+
+.plan-summary__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 10px;
+}
+
+.plan-summary__name {
+    font-size: 15px;
+    font-weight: 500;
+    color: #1F2420;
+    margin: 0;
+}
+
+.plan-summary__badge {
+    font-size: 11px;
+    font-weight: 500;
+    color: #185FA5;
+    background: #E6F1FB;
+    padding: 3px 10px;
+    border-radius: 6px;
+    white-space: nowrap;
+}
+
+.plan-summary__price {
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+}
+
+.plan-summary__amount {
+    font-size: 28px;
+    font-weight: 500;
+    color: #1F2420;
+}
+
+.plan-summary__period {
+    font-size: 13px;
+    color: #5F5E5A;
+}

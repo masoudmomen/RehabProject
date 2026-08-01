@@ -31,13 +31,13 @@
 
 .innerpage-hero-content {
     position: relative;
-    max-width: 560px;
+    max-width: 680px;
     margin: 0 auto;
 }
 
 .innerpage-hero-title {
     color: #fff;
-    font-size: 32px;
+    font-size: 2.5rem;
     font-weight: 600;
     margin: 0 0 12px;
 }

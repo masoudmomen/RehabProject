@@ -1,5 +1,6 @@
 ﻿using Rehab.Application.PaymentLinks;
 using Rehab.Domain.Packages;
+using Rehab.Domain.Packages.Enums;
 
 namespace Rehab.Application.Packages
 {

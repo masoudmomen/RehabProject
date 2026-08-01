@@ -2,13 +2,14 @@
 @using Rehab.Application.PaymentLinks
 @using Microsoft.Extensions.Options
 @using AutoMapper
+@using PackageType =Rehab.Domain.Packages.Enums.PackageType
 @inject IPaymentLinkService PaymentLinkService
 @inject IMapper mapper
 @inject IOptions<PaymentLinksOptions> PaymentLinksOptions
 @inject IJSRuntime JSRuntime
 @inject AlertService AlertService
 <div class="btn btn-close position-absolute top-0 end-0 m-2" @onclick="Close"></div>
-
+ 
 <div class="alert @GetStatusClass()" role="alert">
     <div class="d-flex">
         <i class="@Status.IconClass pt-1"></i>
@@ -17,7 +18,7 @@
             <p>@Status.Description</p>
         </div>
     </div>
-    @if (PaymentLink?.PaymentStatus == 3)
+    @if (PaymentLink?.PaymentStatus == 3 && RequestedPackage.PackageType == PackageType.Enterprise.ToString())
     {
         <button class="btn btn-warning w-100 @(showPaymentForm ? "d-none" : "d-block")"
                 @onclick="() => { showPaymentForm = true; showPaymentInfo = false; }">
@@ -66,7 +67,7 @@
             </div>
 
         </EditForm>
-
+        
     }
     else
     {
@@ -84,15 +85,24 @@
     <hr />
     @if (showPaymentInfo)
     {
-        <div class="input-group">
-            <input class="form-control"
-                   value="@displayPaymentUrl" readonly />
-            <button type="button" class="btn btn-outline-secondary"
-                    @onclick="CopyPaymentLinkAsync">
-                <i class="fa-regular fa-copy"></i>
-                Copy
-            </button>
+        <div class="d-flex">
+            <h3 class="w-50"> @RequestedPackage.PackageType</h3>
+            <h3 class="w-50"> @RequestedPackage.BillingType</h3>
         </div>
+ 
+        @if(RequestedPackage.PackageType == PackageType.Enterprise.ToString())
+        {
+            <div class="input-group">
+                <input class="form-control"
+                       value="@displayPaymentUrl" readonly />
+                <button type="button" class="btn btn-outline-secondary"
+                        @onclick="CopyPaymentLinkAsync">
+                    <i class="fa-regular fa-copy"></i>
+                    Copy
+                </button>
+            </div>
+        }
+      
         <div class="payment-detial mt-3 ">
 
             <div class="payment-detial-item">
@@ -127,7 +137,20 @@
     </div>
 
 }
+ 
+@if (RequestedPackage?.PackageType == PackageType.Essential.ToString() ||
+                          RequestedPackage?.PackageType == PackageType.Premium
+                          .ToString())
+{
 
+    @if (PaymentLink?.PaymentStatus == 1)
+    {
+        <a href="/PackageRequests/@RequestedPackage.Id/subscription" class="btn btn-outline-primary">
+            View Subscription
+        </a>
+    }
+
+}
 <ModalComponent @rendermode="InteractiveServer"
                 TModel="PaymentLinkViewModel"
                 Title="Delete Request"

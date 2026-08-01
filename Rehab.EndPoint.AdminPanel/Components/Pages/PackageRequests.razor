@@ -68,9 +68,7 @@
                                     <td>@item.PackageType</td>
                                     <td>@item.BillingType</td>
                                     <td>
-                                       
-                                        
-                                         <span class="badge @(_paymentStatuses.GetValueOrDefault(item.Id, "new") switch {
+                                        <span class="badge @(_paymentStatuses.GetValueOrDefault(item.Id, "new") switch {
                                             "New*" => "bg-warning text-dark",
                                             "Pending" => "bg-info text-light",
                                             "Paid" => "bg-success text-light",
@@ -78,14 +76,12 @@
                                             "Expired" => "bg-dark text-light",
                                             _ => "bg-secondary"
                                         })">@_paymentStatuses.GetValueOrDefault(item.Id, "new")</span>
-                                        
-                      
                                     </td>
                                     <td>
                                         <button type="button"
                                                 class="btn btn-sm btn-outline-success" 
                                                 @onclick="() => OpenPaymentLinkModal(item)">
-                                                Payment Link
+                                                Payment Detials
                                          </button>
                                     </td>
                                     <td>

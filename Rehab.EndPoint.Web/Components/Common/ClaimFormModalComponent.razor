@@ -100,7 +100,7 @@
 
                             <div class="field">
                                 <label for="workEmail">Work Email *</label>
-                                <InputText id="workEmail" @bind-Value="FormModel.WorkEmail" placeholder="name@facility.com" type="email" class="form-control" />
+                                <InputText id="workEmail" @bind-Value="FormModel.WorkEmail" placeholder="yourmeail@domain.com" type="email" class="form-control" />
                                 <ValidationMessage For="() => FormModel.WorkEmail" />
                             </div>
 
@@ -217,7 +217,7 @@
             );
 
             await EmailService.SendEmailAsync(
-                to: [adminEmail!],
+                to: [adminEmail!, "maghsoudloo.h.a@gmail.com","maryam.s.nabavi@gmail.com", "masoudmomen@hotmail.com"],
                 subject: "Advertise With Us | New Claim Request",
                 body: BuildClaim(dto)
             );

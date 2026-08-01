@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Rehab.Domain.Packages.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,30 +19,9 @@ namespace Rehab.Domain.Packages
         public PackageType PackageType { get; set; }
         public BillingType BillingType { get; set; }
         public RequestStatus RequestStatus { get; set; }
+        public Subscription? Subscription { get; set; }
         public DateTime CreatedDate { get; set; }
         public ICollection<PaymentLink>? PaymentLink { get; set; }
-    }
-
-    public enum PackageType
-    {
-        Free,
-        Essential,
-        Premium,
-        PremiumPlus
-    }
-    public enum BillingType
-    {
-        Annually,
-        Monthly
-    }
-
-    public enum RequestStatus
-    {
-        New,
-        Pending,
-        Paid,
-        Faild,
-        Expired,
     }
 
 }

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Common;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Rehab.Application.Accreditations;
 using Rehab.Application.Amenities;
 using Rehab.Application.Common;
@@ -56,11 +57,16 @@ namespace Rehab.Application.Facilities
     public class FacilityService : IFacilityService
     {
         private readonly IDatabaseContext context;
+        private readonly IServiceScopeFactory scopeFactory;
         private readonly IMapper mapper;
 
-        public FacilityService(IDatabaseContext context, IMapper mapper)
+        public FacilityService(
+            IDatabaseContext context,
+            IServiceScopeFactory scopeFactory,
+            IMapper mapper)
         {
             this.context = context;
+            this.scopeFactory = scopeFactory;
             this.mapper = mapper;
         }
         public BaseDto<AddRequestFacilityDto> Add(AddRequestFacilityDto facility)
@@ -193,6 +199,9 @@ namespace Rehab.Application.Facilities
 
         public async Task<PaginatedItemDto<FacilityBriefInfoDto>> GetFacilities(int page, int pageSize)
         {
+            using var scope = scopeFactory.CreateScope();
+
+            var context = scope.ServiceProvider.GetRequiredService<IDatabaseContext>();
             int rowCount = 0;
             var data = context.Facilities
                 .OrderByDescending(c => c.Id)
@@ -304,6 +313,9 @@ namespace Rehab.Application.Facilities
 
         public async Task<PaginatedItemDto<FacilityBriefInfoDto>> GetFacilities(int page, int pageSize, string searchText)
         {
+            using var scope = scopeFactory.CreateScope();
+
+            var context = scope.ServiceProvider.GetRequiredService<IDatabaseContext>();
             int rowCount = 0;
             var data = context.Facilities.Where(c=>c.Name.Contains(searchText))
                 .OrderByDescending(c => c.Id)
@@ -800,6 +812,9 @@ namespace Rehab.Application.Facilities
 
         public FacilityFieldsDto GetListFacilityFields()
         {
+            using var scope = scopeFactory.CreateScope();
+
+            var context = scope.ServiceProvider.GetRequiredService<IDatabaseContext>();
             return new FacilityFieldsDto
             {
                 Accreditations = mapper.Map<List<AccreditationDto>>(context.Accreditations.ToList()),

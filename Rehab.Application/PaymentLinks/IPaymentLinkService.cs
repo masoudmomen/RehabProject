@@ -17,7 +17,7 @@ namespace Rehab.Application.PaymentLinks
     {
         Task<BaseDto<PaymentLinkDto>> CreateAsync(PaymentLinkDto paymentLink);
         Task<BaseDto<PaymentLinkDto>> GetByTokenAsync(string token);
-        BaseDto<PaymentLinkDto> GetByStripeSessionId(string sessionId);
+        Task<BaseDto<PaymentLinkDto>> GetByStripeSessionIdAsync(string sessionId);
         Task<BaseDto<PaymentLinkDto>> GetPaymentLinkByRequestIdAsync(int requestId);
         Task<BaseDto<PaymentLinkDto>> UpdateAsync(PaymentLinkDto paymentLink);
         Task<BaseDto<bool>> DeleteLinksByRequestId(int requestId);
@@ -55,16 +55,16 @@ namespace Rehab.Application.PaymentLinks
             var token = Guid.NewGuid().ToString("N");
             paymentLink.Token = token;
             paymentLink.CreatedAt = DateTime.UtcNow;
-             var entry = await _context.PaymentLinks.AddAsync(_mapper.Map<PaymentLink>(paymentLink));
+            var entry = await _context.PaymentLinks.AddAsync(_mapper.Map<PaymentLink>(paymentLink));
             await _context.SaveChangesAsync();
             //"masoudmomen@hotmail.com",
             await _email.SendEmailAsync(
-                 to: [request.Data!.Email,"maryam.s.nabavi@gmail.com", "masoudmomen@hotmail.com"],
+                 to: [request.Data!.Email,"maryam.s.nabavi@gmail.com", "masoudmomen@hotmail.com", "maghsoudloo.h.a@gmail.com"],
                  subject: "Your Payment Link is Ready",
                  body: BuildPaymentEmailBody(request.Data.FirstName,
                  request.Data.PackageType.ToString(), request.Data.BillingType.ToString(),
                  token, paymentLink.Amount.ToString())
-             );
+            );
 
             _packageRequestService.ChangeStatus(request.Data.Id, "PaymentSent");
 
@@ -72,12 +72,13 @@ namespace Rehab.Application.PaymentLinks
             return BaseDto<PaymentLinkDto>.SuccessResult(resultDto, "The Payment Link was added succssfully!");
 
         }
-        public async  Task<BaseDto<PaymentLinkDto>> GetByTokenAsync(string token)
+        public async Task<BaseDto<PaymentLinkDto>> GetByTokenAsync(string token)
         {
             if (string.IsNullOrWhiteSpace(token))
                 return BaseDto<PaymentLinkDto>.FailureResult("Invalid Token");
 
             var paymentLink =await _context.PaymentLinks
+                .Include(p => p.PackageRequest)
                 .FirstOrDefaultAsync(p => p.Token == token);
 
             if (paymentLink == null)
@@ -86,15 +87,16 @@ namespace Rehab.Application.PaymentLinks
             var resultDto = _mapper.Map<PaymentLinkDto>(paymentLink);
             return BaseDto<PaymentLinkDto>.SuccessResult(resultDto, "Successfull");
         }
-        public BaseDto<PaymentLinkDto> GetByStripeSessionId(string sessionId)
+        public async Task<BaseDto<PaymentLinkDto>> GetByStripeSessionIdAsync(string sessionId)
         {
             if (string.IsNullOrWhiteSpace(sessionId))
                 return BaseDto<PaymentLinkDto>.FailureResult("Invalid Session ID");
 
-            var paymentLink =  _context.PaymentLinks
-                .FirstOrDefault(p => p.StripeSessionId == sessionId);
+            var paymentLink = await _context.PaymentLinks
+                .FirstOrDefaultAsync(p => p.StripeSessionId == sessionId);
+
             if (paymentLink == null)
-                return null;
+                return BaseDto<PaymentLinkDto>.FailureResult("Payment link not found");
 
             var paymentLinkDto = _mapper.Map<PaymentLinkDto>(paymentLink);
             return BaseDto<PaymentLinkDto>.SuccessResult(paymentLinkDto, "Successfull");
@@ -182,7 +184,7 @@ namespace Rehab.Application.PaymentLinks
                    Complete Your Purchase
                </a>
            </div>
-           <p>⏳ <strong>Please note:</strong> This link will expire in 48 hours.</p>
+ 
            <hr style='border: none; border-top: 1px solid #eee; margin: 20px 0;' />
            <p><strong>Package Name:</strong><br/>
            •   {packageName}<br/>
@@ -208,6 +210,8 @@ namespace Rehab.Application.PaymentLinks
         public string Token { get; set; }
         public string? StripeSessionId { get; set; }
         public string? StripeSessionUrl { get; set; }
+        public string? StripeCustomerId { get; set; }
+
         public DateTime? SessionExpiredsAt { get; set; }
         public decimal Amount { get; set; }
         public bool IsUsed { get; set; }
