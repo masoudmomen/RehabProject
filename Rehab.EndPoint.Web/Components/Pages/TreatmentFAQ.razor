@@ -14,14 +14,14 @@
     <section class="faq-section">
         <div class="faq-container">
             <div class="faq-header w-75">
-                <span class="badge-custome">Recovery Resources</span>
+              @*   <span class="badge-custome">Recovery Resources</span> *@
                 <h1>Treatment FAQ</h1>
                 <p>
                     Common questions about substance use, drug and alcohol treatment, detox,
                     rehab programs, insurance, privacy, work, recovery, and levels of care.
                 </p>
                 <div class="faq-notice" aria-label="Important information">
-                    This FAQ is general information only. For medical or treatment decisions, speak with a licensed healthcare professional or treatment provider. For insurance, legal, or emergency questions, contact the appropriate professional or emergency service.
+                    Treatment options, insurance coverage, program details, and availability can vary by provider. Confirm important details directly with the treatment center, insurer, or appropriate professional before making a decision.
                 </div>
             </div>
 
@@ -36,6 +36,10 @@
                     <a href="javascript:void(0)" onclick="scrollToFaq('getting-started')" class="faq-nav-link">
                         <span>Getting Started</span>
                         <span class="faq-count">5</span>
+                    </a>
+                    <a href="javascript:void(0)" onclick="scrollToFaq('levels-care')" class="faq-nav-link">
+                        <span>Levels of Care</span>
+                        <span class="faq-count">6</span>
                     </a>
                     <a href="javascript:void(0)" onclick="scrollToFaq('choosing-treatment')" class="faq-nav-link">
                         <span>Choosing Treatment</span>
@@ -53,12 +57,8 @@
                         <span>Recovery &amp; Relapse</span>
                         <span class="faq-count">5</span>
                     </a>
-                    <a href="javascript:void(0)" onclick="scrollToFaq('levels-care')" class="faq-nav-link">
-                        <span>Levels of Care</span>
-                        <span class="faq-count">6</span>
-                    </a>
-                    <a href="javascript:void(0)" onclick="scrollToFaq('safety-support')" class="faq-nav-link">
-                        <span>Safety &amp; Urgent Support</span>
+                                    <a href="javascript:void(0)" onclick="scrollToFaq('safety-support')" class="faq-nav-link">
+                        <span>Safety &amp;  Support</span>
                         <span class="faq-count">3</span>
                     </a>
                 </aside>
@@ -85,7 +85,7 @@
 
                         <details>
                             <summary>How long do drug and alcohol rehab programs last?</summary>
-                            <p>Treatment length varies by program, level of care, clinical needs, insurance coverage, and progress in recovery. Some programs offer short-term options such as 30 days, while others may continue for 60, 90, or more days. Ongoing outpatient care, recovery support, or aftercare may continue after a formal rehab program ends.</p>
+                            <p>Treatment length varies by program, level of care, clinical needs, insurance coverage, and progress in recovery. Some programs offer short-term options, while others may continue for longer periods. Ongoing outpatient care, recovery support, or aftercare may continue after a formal rehab program ends.</p>
                         </details>
 
                         <details>
@@ -254,12 +254,12 @@
 
                         <details>
                             <summary>What should I do if someone may be overdosing?</summary>
-                            <p>If someone may be overdosing, call emergency services immediately. In the U.S., call 911. Naloxone can reverse an opioid overdose and is available over the counter in many places, but emergency medical help is still important even if the person wakes up or appears to improve.</p>
+                            <p>If someone may be overdosing, contact local emergency services immediately. Emergency medical help is still important even if the person wakes up or appears to improve.</p>
                         </details>
 
                         <details>
                             <summary>What should I do in a mental health or substance use crisis?</summary>
-                            <p>If there is immediate danger, call emergency services. In the U.S., call or text 988 for the Suicide &amp; Crisis Lifeline if you or someone else is experiencing suicidal thoughts, emotional distress, or a mental health or substance use crisis. RehabNavigator cannot provide emergency support or crisis counseling.</p>
+                            <p>If there is immediate danger, contact local emergency services or a qualified crisis support service in your area. RehabNavigator cannot provide emergency support or crisis counseling.</p>
                         </details>
 
                         <details>
@@ -267,11 +267,20 @@
                             <p>No. RehabNavigator can help you compare treatment centers, levels of care, insurance information, amenities, and facility details, but the best clinical fit should be determined with qualified professionals and verified directly with the facility.</p>
                         </details>
                     </div>
-
+                    <div aria-label="Browse treatment centers" class="brows-treatment-center rounded-4">
+                        <div>
+                            <h2>Ready to browse treatment centers?</h2>
+                            <p>Compare treatment center profiles, levels of care, insurance information, amenities, and facility details.</p>
+                        </div>
+                        <a href="/treatmentsList" target="_blank">Browse Treatment Centers</a>
+                    </div>
                 </div>
+             
             </div>
         </div>
+    
     </section>
+  
 </div>
 @code {
     private string? Keywords;
