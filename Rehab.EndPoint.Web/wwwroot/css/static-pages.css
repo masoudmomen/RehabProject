@@ -10,7 +10,7 @@
     text-align: center;
 }*/
 
-.hero.ourstory {
+/*.hero.ourstory {
     background: linear-gradient(135deg, rgba(39, 56, 74, 0.78), rgba(82, 116, 222, 0.72), rgba(102, 224, 207, 0.58)), url('/images/Aboutus-ourstory.jpg' );
     background-size: cover;
     background-position: center;
@@ -19,7 +19,7 @@
     align-items: center;
     text-align: center;
     color: #fff;
-}
+}*/
 .hero .small {
     max-width: 700px;
     margin-top: 22px;
@@ -65,12 +65,14 @@
         border-bottom: 3px solid;
         border-image: linear-gradient(45deg, rgb(116, 235, 213), rgb(172, 182, 229)) 1;
     }
+.section h2 {
 
-    .section-1 h3 {
-        font-size: 1.3rem;
-        color: #34495e;
-        margin: 20px 0 10px 0;
-    }
+}
+.section-1 h3 {
+    font-size: 1.3rem;
+    color: #34495e;
+    margin: 20px 0 10px 0;
+}
 
     .section-1 p {
         margin-bottom: 15px;
@@ -94,7 +96,7 @@
         background: #ffffff;
     }*/
 .section h2 {
-    font-size: 2.5rem;
+    font-size: 1.5rem;
     margin-bottom: 30px;
     text-align: center;
     color: #2c3e50;
@@ -130,64 +132,7 @@
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
     border-left: 4px solid rgb(116, 235, 213);
 }*/
-.values-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 40px;
-    margin-top: 50px;
-}
 
-.value-card {
-    background: white;
-    padding: 40px 30px;
-    border-radius: 15px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    position: relative;
-    overflow: hidden;
-}
-
-    .value-card::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 4px;
-        background: linear-gradient(45deg, #87ccfd, rgb(187 136 253));
-    }
-
-    .value-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-    }
-
-
-
-.value-card h4 {
-    font-size: 1.5rem;
-    margin-bottom: 15px;
-    color: #2c3e50;
-}
-.value-icon {
-    width: 80px;
-    height: 80px;
-    background: linear-gradient(45deg, #87ccfd, rgb(187 136 253));
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto 20px;
-    font-size: 2rem;
-    color: white;
-}
-
-.value-card p {
-    color: #666;
-    line-height: 1.6;
-}
-        
     .service-item h4 {
         font-size: 1.3rem;
         margin-bottom: 15px;

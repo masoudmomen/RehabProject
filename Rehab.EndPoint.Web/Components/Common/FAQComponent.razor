@@ -1,0 +1,135 @@
+﻿<section class="section section-white" id="faq">
+    <div class="container">
+        <div class="section-head">
+            <h2>
+                <button aria-controls="faqPanel" aria-expanded="false" class="faq-toggle" id="faqToggle" type="button">
+                    <span class="faq-toggle-text">@Title</span>
+                    <span aria-hidden="true" class="faq-toggle-icon">+</span>
+                </button>
+            </h2>
+            <p class="text-center">@Description</p>
+        </div>
+
+        <div class="faq-panel" id="faqPanel">
+            <div class="faq-layout">
+                <aside aria-label="FAQ categories" class="faq-nav">
+                    <h3>Browse by Topic</h3>
+                    <nav>
+                        <button class="active" data-filter="all" type="button">
+                            All Questions <span>@TotalQuestionCount</span>
+                        </button>
+                        @foreach (var category in Categories)
+                        {
+                            <button data-filter="@category.Key" type="button">
+                                @category.NavLabel <span>@category.Items.Count</span>
+                            </button>
+                        }
+                    </nav>
+                </aside>
+
+                <div class="faq-content">
+                    @foreach (var category in Categories)
+                    {
+                        <div class="faq-group" data-group="@category.Key">
+                            <h3>@category.GroupTitle</h3>
+                            @foreach (var item in category.Items)
+                            {
+                                <details class="faq-item" data-category="@category.Key">
+                                    <summary>@item.Question</summary>
+                                    <p>@item.Answer</p>
+                                </details>
+                            }
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script src="/js/faq-section.js"></script>
+
+@code {
+ 
+    [Parameter] public string Title { get; set; } = "Frequently asked questions";
+
+ 
+    [Parameter]
+    public string Description { get; set; } =
+        "Answers to common questions about RehabNavigator, facility profiles, provider participation, and how the directory works.";
+
+     [Parameter] public List<FaqCategory> Categories { get; set; } = DefaultCategories();
+
+    private int TotalQuestionCount => Categories.Sum(c => c.Items.Count);
+
+    /// <summary>مدل یک دسته‌بندی FAQ.</summary>
+    public class FaqCategory
+    {
+        /// <summary>کلید فیلتر (data-filter / data-category / data-group) — باید یکتا و بدون فاصله باشد.</summary>
+        public string Key { get; set; } = "";
+        /// <summary>برچسبی که در سایدبار نمایش داده می‌شود (مثلاً "About").</summary>
+        public string NavLabel { get; set; } = "";
+        /// <summary>عنوان گروه در ستون محتوا (مثلاً "About RehabNavigator").</summary>
+        public string GroupTitle { get; set; } = "";
+        public List<FaqItem> Items { get; set; } = new();
+    }
+
+    /// <summary>مدل یک سوال/جواب.</summary>
+    public class FaqItem
+    {
+        public string Question { get; set; } = "";
+        public string Answer { get; set; } = "";
+    }
+
+    private static List<FaqCategory> DefaultCategories() => new()
+    {
+        new FaqCategory
+        {
+            Key = "about",
+            NavLabel = "About",
+            GroupTitle = "About RehabNavigator",
+            Items = new()
+            {
+                new FaqItem { Question = "What is RehabNavigator?", Answer = "RehabNavigator is an online directory that helps people explore drug and alcohol rehab centers, mental health providers, behavioral health facilities, and recovery resources through organized search tools and facility profiles." },
+                new FaqItem { Question = "Is RehabNavigator free to use?", Answer = "Yes. Visitors can browse treatment center profiles and recovery resources without paying RehabNavigator." },
+                new FaqItem { Question = "Is RehabNavigator a treatment provider?", Answer = "No. RehabNavigator is a directory and informational platform. We do not provide treatment, diagnose conditions, operate facilities, make insurance decisions, or recommend specific providers." },
+                new FaqItem { Question = "Why does RehabNavigator exist?", Answer = "RehabNavigator exists to make treatment information easier to find, organize, and compare so individuals and families can explore available options with greater confidence." },
+            }
+        },
+        new FaqCategory
+        {
+            Key = "search",
+            NavLabel = "Search",
+            GroupTitle = "Finding Treatment Information",
+            Items = new()
+            {
+                new FaqItem { Question = "How can I search for treatment centers?", Answer = "You can browse treatment centers by location, condition, level of care, insurance, treatment approach, age group, population, amenities, and facility details when those filters are available." },
+                new FaqItem { Question = "Can I explore conditions before viewing centers?", Answer = "Yes. The Conditions & Concerns section provides simple explanations of common mental health, substance use, and behavioral health concerns. Each condition can connect to treatment center profiles related to that concern." },
+                new FaqItem { Question = "Can I compare different levels of care?", Answer = "Yes. The Levels of Care section explains detox, residential treatment, PHP, IOP, outpatient care, virtual care, sober living, and other support options." },
+                new FaqItem { Question = "Can I search by treatment approach?", Answer = "Yes. The Treatment Approaches section explains therapy models and support methods such as CBT, DBT, EMDR, MAT, counseling, family therapy, mindfulness, and relapse prevention." },
+            }
+        },
+        new FaqCategory
+        {
+            Key = "providers",
+            NavLabel = "Providers",
+            GroupTitle = "Providers & Listings",
+            Items = new()
+            {
+                new FaqItem { Question = "Can treatment providers list or claim their facility?", Answer = "Yes. Treatment providers or facility representatives may request a new listing, claim an existing facility profile, or submit updates to facility information." },
+                new FaqItem { Question = "Can providers update their facility information?", Answer = "Yes. Providers may request updates so facility profiles can better reflect current services, levels of care, treatment approaches, insurance information, amenities, and contact details." },
+                new FaqItem { Question = "Are advertising options available for providers?", Answer = "Yes. RehabNavigator may offer advertising, featured placement, enhanced profiles, and visibility options for treatment providers. RehabNavigator does not provide clinical recommendations, rank providers by clinical quality, or suggest that paid providers are clinically better than other providers." },
+            }
+        },
+        new FaqCategory
+        {
+            Key = "trust",
+            NavLabel = "Trust",
+            GroupTitle = "Trust & Transparency",
+            Items = new()
+            {
+                new FaqItem { Question = "Does RehabNavigator rank providers by clinical quality?", Answer = "No. RehabNavigator does not rank providers by clinical quality and does not recommend one facility as the best fit for a specific person. The directory helps visitors browse and compare available provider information, but users should verify important details directly with providers and qualified professionals." },
+            }
+        },
+    };
+}

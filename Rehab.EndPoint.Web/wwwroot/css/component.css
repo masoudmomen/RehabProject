@@ -22,6 +22,7 @@
 a.text-blue-dark {
     color: var(--color-secondary);
 }
+ 
 .border-gradient {
     position: relative;
     display: inline-block;
@@ -59,3 +60,12 @@ a.text-blue-dark {
         .border-gradient:hover::before {
             filter: brightness(1.1);
         }
+.top-border-gradient::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(45deg, #87ccfd, rgb(187 136 253));
+}
