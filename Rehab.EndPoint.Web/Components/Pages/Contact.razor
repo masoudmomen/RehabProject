@@ -1,10 +1,15 @@
-﻿ 
-@page "/contact-us"
+﻿@page "/contact-us"
 @inject IJSRuntime jSRuntime
 @using Microsoft.AspNetCore.Components.Web
 @using Rehab.EndPoint.Web.Components.Common
-
+@using Rehab.EndPoint.Web.ViewModels
 @using Rehab.Application.Seo
+@using Rehab.Application.Email
+@using Rehab.Application.Common
+@using static Rehab.Application.Common.EmailTemplates
+
+@inject IConfiguration Config
+@inject IEmailService EmailService
 @inject ISeoService SeoService
 
 
@@ -17,267 +22,132 @@
      Description="Learn about Rehab's mission, values, and the team behind our innovative solutions."
      CanonicalUrl="https://Rehabnavigator.com/about-us"
      FaviconUrl="favicon.png" />
-<section class="hero">
-    <div class="container">
-        <h1>Contact Us</h1>
-        <p>We'd love to hear from you. Get in touch and let us know how we can help you achieve your goals.</p>
-    </div>
-</section>
-<section class="contact-emails">
-    <div class="email-grid">
-
-        <div class="email-card">
-            <h3>General</h3>
-            <p>For general questions, feedback, or information about our company.</p>
-            <a href="mailto:info@rehabnavigator.com">info@rehabnavigator.com</a>
-        </div>
-
-        <div class="email-card">
-            <h3>Sales</h3>
-            <p>Contact our sales team for pricing, quotes, and product inquiries.</p>
-            <a href="mailto:sales@rehabnavigator.com">sales@rehabnavigator.com</a>
-        </div>
-
-        <div class="email-card">
-            <h3>Ads</h3>
-            <p>Reach out for advertising opportunities and partnership promotions.</p>
-            <a href="mailto:ads@rehabnavigator.com">ads@rehabnavigator.com</a>
-        </div>
-
-        <div class="email-card">
-            <h3>HR</h3>
-            <p>For job applications, careers, and human resources inquiries.</p>
-            <a href="mailto:hr@rehabnavigator.com">hr@rehabnavigator.com</a>
-        </div>
-        <div class="email-card">
-            <h3>Marketing</h3>
-            <p>Contact us for marketing collaborations, branding, and campaigns.</p>
-            <a href="mailto:marketing@rehabnavigator.com">marketing@rehabnavigator.com</a>
-        </div>
-        <div class="email-card">
-            <h3>Support</h3>
-            <p>Get technical help and customer support for our products and services.</p>
-            <a href="mailto:support@rehabnavigator.com">support@rehabnavigator.com</a>
-        </div>
-
-    </div>
-</section>
-@* <section class="section">
-    <div class="container">
-        <h2>Get In Touch</h2>
-
-        <div class="contact-grid">
-            <div class="contact-form">
-                <form id="contactForm">
-                    <div class="form-group">
-                        <label for="name" class="form-label">Full Name *</label>
-                        <input type="text" class="form-control" id="name" name="name" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="email">Email Address *</label>
-                        <input type="email" class="form-control" id="email" name="email" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="phone">Phone Number</label>
-                        <input type="tel" class="form-control" id="phone" name="phone">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="subject">Subject *</label>
-                        <select id="subject" name="subject" required class="form-select">
-                            <option value="">Select a subject</option>
-                            <option value="general">General Inquiry</option>
-                            <option value="consultation">Request Consultation</option>
-                            <option value="support">Customer Support</option>
-                            <option value="partnership">Partnership Opportunity</option>
-                            <option value="other">Other</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="message">Message *</label>
-                        <textarea id="message" class="form-control" name="message" placeholder="Tell us about your project or inquiry..." required></textarea>
-                    </div>
-
-                    <button type="submit" class="mt-4 submit-btn">Send Message</button>
-                </form>
-            </div>
-
-            <div class="contact-info">
-                <div class="info-card">
-                    <div class="info-icon">📍</div>
-                    <h3>Office Location</h3>
-                    <p>
-                        123 Business Avenue<br>
-                        Suite 456<br>
-                        City, State 12345<br>
-                        United States
-                    </p>
-                </div>
-
-                <div class="info-card">
-                    <div class="info-icon">📞</div>
-                    <h3>Phone & Email</h3>
-                    <p><strong>Main:</strong> <a href="tel:+1234567890">(123) 456-7890</a></p>
-                    <p><strong>Support:</strong> <a href="tel:+1234567891">(123) 456-7891</a></p>
-                    <p><strong>Email:</strong> <a href="mailto:info@company.com">info@company.com</a></p>
-                </div>
-
-                <div class="info-card">
-                    <div class="info-icon">🕒</div>
-                    <h3>Response Time</h3>
-                    <p>We typically respond to all inquiries within <strong>24 hours</strong> during business days.</p>
-                    <p>For urgent matters, please call our main number during business hours.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
- *@
-@* <section class="map-section bg-white px-5">
-    <div class="container">
-        <h2>Visit Our Office</h2>
-        <div class="map-container">
-            <p>
-                🗺️ Interactive Map Coming Soon<br>
-                <small>Meanwhile, you can find us at 123 Business Avenue, Suite 456</small>
-            </p>
-        </div>
-    </div>
-</section>
-<section class="section">
-    <div class="container">
-        <h2>Business Hours</h2>
-
-        <div class="office-hours">
-            <div class="hours-card">
-                <h3>Office Hours</h3>
-                <ul class="hours-list">
-                    <li><span class="day">Monday</span> <span class="time">9:00 AM - 6:00 PM</span></li>
-                    <li><span class="day">Tuesday</span> <span class="time">9:00 AM - 6:00 PM</span></li>
-                    <li><span class="day">Wednesday</span> <span class="time">9:00 AM - 6:00 PM</span></li>
-                    <li><span class="day">Thursday</span> <span class="time">9:00 AM - 6:00 PM</span></li>
-                    <li><span class="day">Friday</span> <span class="time">9:00 AM - 5:00 PM</span></li>
-                    <li><span class="day">Saturday</span> <span class="time">10:00 AM - 2:00 PM</span></li>
-                    <li><span class="day">Sunday</span> <span class="time">Closed</span></li>
-                </ul>
-            </div>
-
-            <div class="hours-card">
-                <h3>Support Hours</h3>
-                <ul class="hours-list">
-                    <li><span class="day">Monday - Friday</span> <span class="time">8:00 AM - 8:00 PM</span></li>
-                    <li><span class="day">Saturday</span> <span class="time">9:00 AM - 5:00 PM</span></li>
-                    <li><span class="day">Sunday</span> <span class="time">Emergency Only</span></li>
-                </ul>
-                <p style="margin-top: 20px; color: #666; font-size: 0.9rem;">
-                    *Emergency support available 24/7 for existing clients
-                </p>
-            </div>
-        </div>
-    </div>
-</section>
-<section class="faq-section section">
-    <div class="container">
-        <h2>Frequently Asked Questions</h2>
-        <Accordion>
-
-            <AccordionItem Title="What is your typical response time for inquiries?">
-                <Description>
-                    strive to respond to all inquiries within 24 hours during business days.
-                </Description>
-            </AccordionItem>
-
-            <AccordionItem Title="Do you offer free consultations?">
-                <Description>
-                    Yes, we offer complimentary initial consultations to discuss your needs and how we can help. This allows us to understand your requirements and provide you with the best possible solution.
-                </Description>
-            </AccordionItem>
-
-            <AccordionItem Title="What information should I include in my inquiry?">
-                 <Description>Please include as much detail as possible about your project or needs, timeline, budget range (if applicable), and any specific requirements you have. This helps us provide you with the most accurate and helpful response.</Description>
-            </AccordionItem>
-            <AccordionItem Title="Do you work with clients outside your local area?">
-                <Description>
-                Absolutely! We work with clients nationwide and internationally. Many of our services can be delivered remotely, and we're happy to discuss travel arrangements for on-site work when necessary.
-                </Description>
-            </AccordionItem>
-        </Accordion>
-    </div>
-</section> *@
-@* <section class="cta-section">
-    <div class="container">
-        <h2>Ready to Work Together?</h2>
-        <p>Discover how our expertise and commitment to excellence can help you achieve your goals.</p>
-        <a href="#" class="btn">Get Started Today</a>
-    </div>
-</section> *@
-<style>
-    /* Section */
-    .contact-emails {
-        max-width: 1100px;
-        margin: 60px auto;
-        padding: 20px;
-        text-align: center;
-        font-family: Arial, sans-serif;
-    }
-
-        .contact-emails h2 {
-            font-size: 32px;
-            margin-bottom: 40px;
-        }
- 
-    .email-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 25px;
-    }
-
+<div class="container py-3">
+    <HeroSectionComponent SectionTitle="Contact Us"
+                          SectionSubtitle="Contact the RehabNavigator team with questions about our website, provider listings, profile updates, advertising, or technical issues. We'll do our best to respond as soon as possible." />
+</div>
+<main class="contact-page-wrap">
+    <EditForm Model="FormModel" id="general-contact-form" OnValidSubmit="HandleSubmit" method="post" Enhance FormName="general-contact-form">
+        <DataAnnotationsValidator />
     
-    .email-card {
-        background: #ffffff;
-        padding: 25px;
-        border-radius: 14px;
-        box-shadow: 0 8px 25px rgba(0,0,0,0.08);
-        transition: 0.3s;
-    }
+        <div class="container my-5">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="card shadow-sm">
+                        <div class="card-body p-4 p-md-5">
+                            <div class="row g-3">
 
-        .email-card:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 12px 35px rgba(0,0,0,0.12);
+                                <!-- Inquiry Type -->
+                                <div class="col-12">
+                                    <label for="contact-inquiry-type" class="form-label">What can we help you with? *</label>
+                                    <InputSelect id="contact-inquiry-type" class="form-select" @bind-Value="FormModel.InquiryType">
+                                        <option value="">Select an option</option>
+                                        <optgroup label="General Inquiries">
+                                            <option value="General Question">General Question</option>
+                                            <option value="Website Feedback">Website Feedback</option>
+                                            <option value="Technical Issue">Technical Issue</option>
+                                            <option value="Report Incorrect Information">Report Incorrect Information</option>
+                                        </optgroup>
+                                        <optgroup label="Listings &amp; Profiles">
+                                            <option value="Claim or Submit Your Facility">Claim or Submit Your Facility</option>
+                                            <option value="Request a Listing Update">Request a Listing Update</option>
+                                            <option value="General Listing Question">General Listing Question</option>
+                                        </optgroup>
+                                        <optgroup label="Provider Services">
+                                            <option value="Advertising Inquiry">Advertising Inquiry</option>
+                                            <option value="Plans &amp; Pricing Question">Plans &amp; Pricing Question</option>
+                                        </optgroup>
+                                        <optgroup label="Other">
+                                            <option value="Other">Other</option>
+                                        </optgroup>
+                                    </InputSelect>
+                                    <ValidationMessage For="() => FormModel.InquiryType" class="text-danger small" />
+                                </div>
+
+                                <!-- Name -->
+                                <div class="col-md-6">
+                                    <label for="contact-name" class="form-label">Name *</label>
+                                    <InputText id="contact-name" class="form-control" @bind-Value="FormModel.Name" placeholder="Your name" />
+                                    <ValidationMessage For="() => FormModel.Name" class="text-danger small" />
+                                </div>
+
+                                <!-- Email -->
+                                <div class="col-md-6">
+                                    <label for="contact-email" class="form-label">Email Address *</label>
+                                    <InputText id="contact-email" class="form-control" type="email" @bind-Value="FormModel.Email" placeholder="Email address" />
+                                    <ValidationMessage For="() => FormModel.Email" class="text-danger small" />
+                                </div>
+
+                                <!-- Phone -->
+                                <div class="col-md-6">
+                                    <label for="contact-phone" class="form-label">Phone Number (Optional)</label>
+                                    <InputText id="contact-phone" class="form-control" type="tel" @bind-Value="FormModel.Phone" placeholder="Phone number" />
+                                </div>
+
+                                <!-- Facility Name -->
+                                <div class="col-md-6">
+                                    <label for="contact-facility" class="form-label">Facility Name (Optional)</label>
+                                    <InputText id="contact-facility" class="form-control" @bind-Value="FormModel.FacilityName" placeholder="Facility name" />
+                                    <div class="form-text">Only if your inquiry relates to a treatment provider or facility.</div>
+                                </div>
+
+                                <!-- Message -->
+                                <div class="col-12">
+                                    <label for="contact-message" class="form-label">Message *</label>
+                                    <InputTextArea id="contact-message" class="form-control" rows="5" @bind-Value="FormModel.Message" placeholder="Briefly tell us how we can help." />
+                                    <ValidationMessage For="() => FormModel.Message" class="text-danger small" />
+                                </div>
+                                <div class="container">
+                                    <div class="col-12">
+                                        @if (SuccessMessage is not null)
+                                        {
+                                            <div class="alert alert-success">@SuccessMessage</div>
+                                        }
+                                        @if (ErrorMessage is not null)
+                                        {
+                                            <div class="alert alert-danger">@ErrorMessage</div>
+                                        }
+                                    </div>
+                                </div>
+                                <!-- Submit -->
+                                <div class="col-12">
+                                    <button type="submit" class="btn btn-primary-gradient w-100 w-md-auto">Send Message</button>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </EditForm>
+</main>
+<script>
+    (function () {
+        console.log("AAAAAAAAAAAAAA");
+        const form = document.getElementById('general-contact-form');
+        const btn = document.getElementById('general-contact-submit-btn');
+        const text = document.getElementById('general-contact-submit-text');
+
+        if (form && !form.dataset.sendingHandlerAttached) {
+            form.dataset.sendingHandlerAttached = 'true';
+            form.addEventListener('submit', function () {
+                if (btn) btn.disabled = true;
+                if (text) text.textContent = 'Sending...';
+            });
         }
-
-        .email-card h3 {
-            margin-bottom: 10px;
-            font-size: 22px;
-        }
-
-        .email-card p {
-            color: #666;
-            margin-bottom: 15px;
-            font-size: 15px;
-        }
-
-     
-        .email-card a {
-            text-decoration: none;
-            font-weight: bold;
-            color: #0077ff;
-            font-size: 16px;
-        }
-
-            .email-card a:hover {
-                text-decoration: underline;
-            }
-
-  
-  
-</style>
+    })();
+</script>
 @code {
+    private string? SuccessMessage;
+    private string? ErrorMessage;
+    [SupplyParameterFromForm]
+    public ContactFormModel FormModel { get; set; } = new();
+
     private string? Keywords;
     private string? Description;
+
     private void LoadMeta()
     {
         var Meta = SeoService.GetMeta("ContactUs");
@@ -294,5 +164,40 @@
     protected override async Task OnInitializedAsync()
     {
         LoadMeta();
+    }
+    private async Task HandleSubmit()
+    {
+        try
+        {
+            var adminEmail = Config["Email:ToAdmin"];
+            var dto = new ContactFormDto(
+            FormModel.InquiryType,
+            FormModel.Name,
+            FormModel.Email,
+            FormModel.Phone,
+            FormModel.FacilityName,
+            FormModel.Message
+            );
+
+            await EmailService.SendEmailAsync(
+                to: [adminEmail!, "maghsoudloo.h.a@gmail.com"],
+                subject: "Contact Us | Advertise With Us",
+                body: BuildGeneralContactEmailBody(dto)
+                );
+            await EmailService.SendEmailAsync(
+                to: [FormModel.Email],
+                subject: "We received your message – RehabNavigator",
+                body: BuildAdvertiseContactConfirmationBody(FormModel.Name)
+                );
+
+            SuccessMessage = "Your message has been sent. We'll be in touch soon!";
+            ErrorMessage = null;
+            FormModel = new(); // reset
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = "Something went wrong. Please try again.";
+            SuccessMessage = null;
+        }
     }
 }

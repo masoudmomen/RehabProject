@@ -2,7 +2,7 @@
 using Rehab.Application.PaymentLinks;
 using Rehab.Domain.Packages.Enums;
 using System;
-using System.Collections.Generic;   
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -320,7 +320,7 @@ namespace Rehab.Application.Common
                         <td style=""padding:6px 12px; font-size:13px;"">{value}</td>
                     </tr>";
 
-                            return $@"
+            return $@"
                 <div style=""font-family:sans-serif; max-width:600px; margin:auto;"">
                     <h2 style=""color:#2c3e50;"">New Claim Request</h2>
                     <p>A new facility claim request has been submitted. Review the details below.</p>
@@ -449,7 +449,29 @@ namespace Rehab.Application.Common
 </div>
 ";
         }
-      
+        public static string BuildGeneralContactEmailBody(ContactFormDto model)
+        {
+            var phoneRow = string.IsNullOrWhiteSpace(model.Phone)
+                ? string.Empty
+                : $"<p><strong>Phone:</strong> {model.Phone}</p>";
+
+            var facilityRow = string.IsNullOrWhiteSpace(model.FacilityName)
+                ? string.Empty
+                : $"<p><strong>Facility:</strong> {model.FacilityName}</p>";
+
+            return $@"
+    <h2>Contact Us | General Inquiry</h2>
+    <p><strong>Inquiry Type:</strong> {model.InquiryType}</p>
+    <p><strong>Name:</strong> {model.Name}</p>
+    <p><strong>Email:</strong> {model.Email}</p>
+    {phoneRow}
+    {facilityRow}
+    <p><strong>Message:</strong> {model.Message}</p>
+    ";
+        }
+
+
+
     }
 
 
