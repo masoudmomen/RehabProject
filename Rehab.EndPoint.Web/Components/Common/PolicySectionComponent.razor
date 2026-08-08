@@ -1,0 +1,68 @@
+﻿ 
+
+<section class="policy-wrap">
+    <div class="container">
+       
+
+        <div class="policy-layout">
+            <aside class="policy-sidebar" aria-label="@Title navigation">
+                <h3>On This Page</h3>
+                @foreach (var item in Sections)
+                {
+                    <a href="#@item.Id">@item.NavLabel</a>
+                }
+            </aside>
+
+            <div class="policy-content">
+                @foreach (var item in Sections)
+                {
+                    <details class="policy-item" id="@item.Id" data-policy-item>
+                        <summary>@item.Title</summary>
+                        <div class="policy-body">@((MarkupString)item.Body)</div>
+                    </details>
+                }
+
+                @if (ShowCta)
+                {
+                    <section class="policy-cta" aria-label="@CtaTitle">
+                        <div>
+                            <h2>@CtaTitle</h2>
+                            <p>@CtaDescription</p>
+                        </div>
+                        <div class="policy-cta-actions">
+                            <a class="btn" href="@CtaButtonHref">@CtaButtonText</a>
+                        </div>
+                    </section>
+                }
+            </div>
+        </div>
+    </div>
+</section>
+
+<button aria-label="Scroll to top" class="to-top" id="toTop" type="button">↑</button>
+
+ <script src="js/page-interactions.js"></script>
+
+@code {
+ 
+ 
+  
+    [Parameter] public string Title { get; set; } = "";
+    [Parameter] public List<PolicySectionItem> Sections { get; set; } = new();
+
+    [Parameter] public bool ShowCta { get; set; } = true;
+    [Parameter] public string CtaTitle { get; set; } = "Ready to explore treatment centers?";
+    [Parameter]
+    public string CtaDescription { get; set; } =
+        "Browse provider profiles, review levels of care, compare treatment approaches, and explore facility information.";
+    [Parameter] public string CtaButtonText { get; set; } = "Browse Treatment Centers";
+    [Parameter] public string CtaButtonHref { get; set; } = "/facilities";
+
+     public class PolicySectionItem
+    {
+         public string Id { get; set; } = "";
+         public string NavLabel { get; set; } = "";
+         public string Title { get; set; } = "";
+         public string Body { get; set; } = "";
+    }
+}

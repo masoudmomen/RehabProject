@@ -21,7 +21,7 @@
                     Treatment options, insurance coverage, program details, and availability can vary by provider. Confirm important details directly with the treatment center, insurer, or appropriate professional before making a decision.
                 </div>
             </div>
-         @*    <div class="faq-header w-75">
+            @*    <div class="faq-header w-75">
               
                
             </div> *@
@@ -58,7 +58,7 @@
                         <span>Recovery &amp; Relapse</span>
                         <span class="faq-count">5</span>
                     </a>
-                                    <a href="javascript:void(0)" onclick="scrollToFaq('safety-support')" class="faq-nav-link">
+                    <a href="javascript:void(0)" onclick="scrollToFaq('safety-support')" class="faq-nav-link">
                         <span>Safety &amp;  Support</span>
                         <span class="faq-count">3</span>
                     </a>
@@ -92,6 +92,39 @@
                         <details>
                             <summary>How do I know if someone may need substance use disorder treatment?</summary>
                             <p>A person may need support if drug or alcohol use is affecting health, relationships, work, school, safety, finances, or daily responsibilities. Warning signs can include unsuccessful attempts to cut back, withdrawal symptoms, cravings, risky use, or continued use despite harm. A licensed clinician or qualified treatment provider can help assess the right next step.</p>
+                        </details>
+                    </div>
+                    <div class="faq-category" id="levels-care">
+                        <h2>Levels of Care</h2>
+
+                        <details>
+                            <summary>What is medical detox?</summary>
+                            <p>Medical detox provides monitoring and support during withdrawal from drugs or alcohol. It may include medications, vital-sign monitoring, symptom management, and transfer planning into ongoing treatment. Detox can help with early stabilization, but continuing treatment is usually important after detox ends.</p>
+                        </details>
+
+                        <details>
+                            <summary>How does inpatient or residential rehab work?</summary>
+                            <p>Inpatient or residential rehab provides structured treatment in a live-in setting. It may be recommended when a person needs more supervision, a safer environment, support for co-occurring conditions, or separation from triggers. Services vary by facility and may include therapy, groups, medication support, and recovery planning.</p>
+                        </details>
+
+                        <details>
+                            <summary>What is a Partial Hospitalization Program?</summary>
+                            <p>A Partial Hospitalization Program, or PHP, is a structured day treatment program that provides more support than standard outpatient care but does not usually require overnight stays. PHP may be used after detox or residential treatment, or when a person needs intensive support while living at home or in supportive housing.</p>
+                        </details>
+
+                        <details>
+                            <summary>What is an Intensive Outpatient Program?</summary>
+                            <p>An Intensive Outpatient Program, or IOP, provides scheduled treatment several hours per week while allowing a person to live at home. IOP may include group therapy, individual counseling, relapse prevention, family education, and care coordination.</p>
+                        </details>
+
+                        <details>
+                            <summary>How does outpatient rehab work?</summary>
+                            <p>Outpatient rehab allows people to attend counseling, therapy, medication appointments, or recovery services while living at home. It may fit people with a stable living environment, lower withdrawal or safety risks, and the ability to attend scheduled sessions consistently.</p>
+                        </details>
+
+                        <details>
+                            <summary>What is sober living?</summary>
+                            <p>Sober living is supportive housing for people working on recovery. It is not always the same as licensed clinical treatment. Rules, costs, services, and oversight vary, so ask whether the home provides clinical services, peer support, drug testing, transportation, or referrals to outpatient care.</p>
                         </details>
                     </div>
 
@@ -216,39 +249,6 @@
                         </details>
                     </div>
 
-                    <div class="faq-category" id="levels-care">
-                        <h2>Levels of Care</h2>
-
-                        <details>
-                            <summary>What is medical detox?</summary>
-                            <p>Medical detox provides monitoring and support during withdrawal from drugs or alcohol. It may include medications, vital-sign monitoring, symptom management, and transfer planning into ongoing treatment. Detox can help with early stabilization, but continuing treatment is usually important after detox ends.</p>
-                        </details>
-
-                        <details>
-                            <summary>How does inpatient or residential rehab work?</summary>
-                            <p>Inpatient or residential rehab provides structured treatment in a live-in setting. It may be recommended when a person needs more supervision, a safer environment, support for co-occurring conditions, or separation from triggers. Services vary by facility and may include therapy, groups, medication support, and recovery planning.</p>
-                        </details>
-
-                        <details>
-                            <summary>What is a Partial Hospitalization Program?</summary>
-                            <p>A Partial Hospitalization Program, or PHP, is a structured day treatment program that provides more support than standard outpatient care but does not usually require overnight stays. PHP may be used after detox or residential treatment, or when a person needs intensive support while living at home or in supportive housing.</p>
-                        </details>
-
-                        <details>
-                            <summary>What is an Intensive Outpatient Program?</summary>
-                            <p>An Intensive Outpatient Program, or IOP, provides scheduled treatment several hours per week while allowing a person to live at home. IOP may include group therapy, individual counseling, relapse prevention, family education, and care coordination.</p>
-                        </details>
-
-                        <details>
-                            <summary>How does outpatient rehab work?</summary>
-                            <p>Outpatient rehab allows people to attend counseling, therapy, medication appointments, or recovery services while living at home. It may fit people with a stable living environment, lower withdrawal or safety risks, and the ability to attend scheduled sessions consistently.</p>
-                        </details>
-
-                        <details>
-                            <summary>What is sober living?</summary>
-                            <p>Sober living is supportive housing for people working on recovery. It is not always the same as licensed clinical treatment. Rules, costs, services, and oversight vary, so ask whether the home provides clinical services, peer support, drug testing, transportation, or referrals to outpatient care.</p>
-                        </details>
-                    </div>
 
                     <div class="faq-category" id="safety-support">
                         <h2>Safety & Urgent Support</h2>
@@ -276,12 +276,12 @@
                         <a href="/facilities" target="_blank">Browse Treatment Centers</a>
                     </div>
                 </div>
-             
+
             </div>
         </div>
-    
+
     </section>
-  
+
 </div>
 @code {
     private string? Keywords;

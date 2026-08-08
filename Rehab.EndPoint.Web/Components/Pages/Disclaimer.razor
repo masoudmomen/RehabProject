@@ -1,0 +1,117 @@
+﻿@page "/disclaimer"
+@using Rehab.Application.Seo
+@inject ISeoService SeoService
+
+@using Rehab.EndPoint.Web.Components.Common
+<HeadContent>
+    <meta name="keywords" content="@Keywords" />
+    <meta name="description" content="@Description" />
+</HeadContent>
+<Seo Title="Disclaimer - Rehab Navigator"
+     Description="Learn about Rehab's commitment to providing accurate information and the limitations of our directory and resources."
+     CanonicalUrl="https://www.rehabnavigator.com/disclaimer"
+     FaviconUrl="favicon.png" />
+<div class="container">
+    <HeroSectionComponent SectionTitle="Disclaimer"
+                          SectionSubtitle="This Disclaimer explains the purpose of RehabNavigator, the information available on the website, and important limitations when using our directory and information resources.">
+    </HeroSectionComponent>
+    <div class="bg-white mt-3 rounded-2 p-3 border-1 border-light shadow">
+        <p><strong>Important: </strong> RehabNavigator is an online directory and information platform. We do not provide medical care, clinical advice, treatment recommendations, insurance advice, legal advice, admissions services, referral services, or emergency services.</p>
+    </div>
+</div>
+<PolicySectionComponent Title="Disclaimer" Sections="@_sections" />
+@code {
+    private string? Keywords;
+    private string? Description;
+    private void LoadMeta()
+    {
+        var Meta = SeoService.GetMeta("OurStory");
+
+        if (Meta != null)
+        {
+            if (Meta.Keywords != null)
+                Keywords = string.Join(",", Meta.Keywords);
+
+            Description = Meta.Description;
+        }
+
+    }
+    private readonly List<PolicySectionComponent.PolicySectionItem> _sections = new()
+    {
+        new()
+        {
+            Id = "directory",
+            NavLabel = "Directory Information Only",
+            Title = "Directory Information Only",
+            Body = "<p>RehabNavigator organizes facility profiles, search categories, and information resources so visitors can review available provider information in one place.</p>" +
+                   "<p>Facility information may include location, services, levels of care, treatment approaches, insurance information, amenities, accreditations, and other details when available.</p>"
+        },
+        new()
+        {
+            Id = "advice",
+            NavLabel = "Not Professional Advice",
+            Title = "Not Medical, Clinical, Legal, or Insurance Advice",
+            Body = "<p>RehabNavigator does not diagnose conditions, provide treatment, prescribe medication, verify insurance benefits, provide legal advice, or recommend a specific provider, facility, treatment plan, or level of care.</p>" +
+                   "<p>Users are responsible for confirming information and determining whether a provider, service, or resource is appropriate for their individual circumstances.</p>" +
+                   "<div class=\"soft-box\">Using RehabNavigator does not create a doctor-patient, therapist-patient, counselor-client, provider-patient, or professional advisory relationship with RehabNavigator.</div>"
+        },
+        new()
+        {
+            Id = "urgent",
+            NavLabel = "Urgent Situations",
+            Title = "Urgent Situations",
+            Body = "<p>RehabNavigator is not designed for urgent, emergency, or time-sensitive situations.</p>" +
+                   "<p>Users seeking immediate assistance should use appropriate local emergency or healthcare services. RehabNavigator does not provide emergency support or crisis response.</p>"
+        },
+        new()
+        {
+            Id = "facility",
+            NavLabel = "Facility Information",
+            Title = "Facility Information May Change",
+            Body = "<p>Facility profiles may include location, contact information, services, levels of care, treatments offered, insurance information, accreditations, amenities, photos, and other provider-related details.</p>" +
+                   "<p>Facility information may be provided by treatment providers, facility representatives, public sources, or other available sources. Details can change without notice.</p>" +
+                   "<p>Users should confirm important information directly with the facility, including availability, licensing, accreditation, services, insurance participation, pricing, payment policies, and program details.</p>"
+        },
+        new()
+        {
+            Id = "sponsored",
+            NavLabel = "Sponsored Listings",
+            Title = "Sponsored Listings and Featured Placement",
+            Body = "<p>Some facilities or providers may pay for advertising, enhanced visibility, featured placement, sponsored listings, or other visibility options on RehabNavigator.</p>" +
+                   "<p>Sponsored, paid, or featured visibility may affect where or how a provider appears on certain pages, search results, profile areas, or featured sections. Sponsored or featured placement is not a clinical endorsement, quality ranking, treatment recommendation, guarantee of suitability, or guarantee of results.</p>"
+        },
+        new()
+        {
+            Id = "external",
+            NavLabel = "External Links & Contact Options",
+            Title = "External Links and Provider Contact Options",
+            Body = "<p>RehabNavigator may display facility contact information, website links, and other provider contact options.</p>" +
+                   "<p>When users contact a provider, visit a provider website, or interact with a provider outside RehabNavigator, they are interacting directly with that provider or third party.</p>" +
+                   "<p>RehabNavigator is not responsible for the content, privacy practices, services, admissions processes, insurance practices, or policies of external providers or third-party websites.</p>"
+        },
+        new()
+        {
+            Id = "guarantees",
+            NavLabel = "No Guarantees or Warranties",
+            Title = "No Guarantees or Warranties",
+            Body = "<p>RehabNavigator does not guarantee admission, availability, insurance approval, treatment results, provider response time, listing accuracy, or that any facility will be appropriate for a particular person.</p>" +
+                   "<p>Provider availability, coverage, eligibility, and treatment experience may vary by person, facility, and circumstance.</p>"
+        },
+        new()
+        {
+            Id = "privacy",
+            NavLabel = "Privacy Policy",
+            Title = "Privacy Policy",
+            Body = "<p>RehabNavigator encourages users to avoid submitting unnecessary sensitive information through general website forms.</p>" +
+                   "<p>For information about how RehabNavigator may collect, use, share, store, and protect information, please review our <a href=\"/privacy-policy\">Privacy Policy</a>.</p>"
+        },
+        new()
+        {
+            Id = "contact",
+            NavLabel = "Questions About This Disclaimer",
+            Title = "Questions About This Disclaimer",
+            Body = "<p>If you have questions about this Disclaimer, directory information, sponsored placements, or website content, please contact RehabNavigator through the official <a href=\"/contact-us\">Contact Us</a> page.</p>" +
+                   "<p>Last updated: June 2026</p>"
+        },
+    };
+}

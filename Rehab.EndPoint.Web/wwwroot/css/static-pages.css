@@ -630,13 +630,13 @@ details[open] summary::after {
     content: "−";
 }
 
-details p {
+/*details p {
     margin: 14px 0 0;
     color: #4b5563;
     line-height: 1.75;
     font-size: 16px;
 }
-
+*/
 .faq-source-note {
     background: #ffffff;
     border: 1px solid #e5e7eb;

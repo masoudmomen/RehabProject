@@ -1,15 +1,4 @@
-// wwwroot/js/faq-section.js
-//
-// رفتار تعاملی بخش FAQ: باز/بسته کردن پنل و فیلتر سوالات بر اساس دسته‌بندی.
-// جاوااسکریپت خالص است و به IJSRuntime/InteractiveServer نیازی ندارد،
-// چون صفحه‌ای که این کامپوننت در آن استفاده می‌شود Static/SSR است.
-//
-// initFaqSection idempotent است (چند بار صدا زدنش مشکلی ایجاد نمی‌کند) و
-// هم روی 'DOMContentLoaded' و هم بعد از Blazor enhanced navigation
-// ('enhanced navigation' رویداد 'enhancedload' را روی document فایر می‌کند)
-// اجرا می‌شود، تا اگر کاربر بین صفحات با enhanced nav جابه‌جا شد،
-// بایندینگ‌ها دوباره برقرار شوند.
-
+ 
 (function () {
     function initFaqSection() {
         const faqToggle = document.getElementById('faqToggle');
