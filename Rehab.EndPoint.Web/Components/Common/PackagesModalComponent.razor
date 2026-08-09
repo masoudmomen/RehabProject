@@ -212,7 +212,7 @@
             
                 PaymentLinkDto paymentLink = new PaymentLinkDto();
                 paymentLink.PackageRequestId = packageRequest.Id;
-                paymentLink.LinkExpiresAt = DateTime.Now.AddMinutes(30);
+                paymentLink.LinkExpiresAt = DateTime.Now.AddDays(3);
                 paymentLink.Amount = amount;
                 // paymentLink.StripeCustomerId = customer.Id;
                 var result = await PaymentLinkService.CreateAsync(paymentLink);
