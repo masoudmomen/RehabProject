@@ -1,19 +1,28 @@
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
+using Microsoft.Extensions.DependencyInjection;
 using Rehab.Application.Common;
 using Rehab.Application.Contexts;
 using Rehab.Application.Dtos;
 using Rehab.Domain.Blog;
+using System;
+using static Rehab.Application.Blog.BlogService;
 namespace Rehab.Application.Blog
 {
     public interface IBlogPostService
     {
         Task<BaseDto<BlogPostDto>> AddPost(BlogPostDto blog);
-        Task<PaginatedItemDto<BlogPostDto>> GetPostsAsync(int page,int pageSize);
+        Task<PaginatedItemDto<BlogPostDto>> GetPostsAsync(int page, int pageSize);
         Task<BaseDto<BlogPostDto>> GetPostByIdAsync(int id);
         Task<BaseDto<BlogPostDto>> UpdatePostAsync(BlogPostDto postDto);
         Task<BaseDto<bool>> DeletePostAsync(int id);
+        Task<BaseDto<FeaturedBlogPostDto>> GetLatestFeaturedPostAsync();
+        //Task<string> GenerateUniqueSlugAsync(string title, int? excludedId = null);
+        Task<BaseDto<List<BlogPostCardDto>>> GetRecentPostsAsync(int count = 3);
+        Task<BaseDto<BlogPostDetailDto>> GetPostDetailBySlugAsync(string slug);
+        Task<BaseDto<List<BlogPostCardDto>>> GetRelatedPostsAsync(int postId, int take = 4);
     }
 
 
@@ -21,11 +30,14 @@ namespace Rehab.Application.Blog
     {
         private readonly IDatabaseContext _context;
         private readonly IMapper _mapper;
+        private readonly IServiceScopeFactory _scopeFactory;
 
-        public BlogService(IDatabaseContext context, IMapper mapper)
+        public BlogService(IDatabaseContext context,
+            IMapper mapper, IServiceScopeFactory scopeFactory)
         {
             _context = context;
             _mapper = mapper;
+            _scopeFactory = scopeFactory;
         }
 
         public async Task<BaseDto<BlogPostDto>> AddPost(BlogPostDto postDto)
@@ -65,7 +77,7 @@ namespace Rehab.Application.Blog
 
             return BaseDto<BlogPostDto>.FailureResult("Operation Failed! Please try another time!");
         }
-       
+
         // Handle Tags : If Tags exist returns and if they don't exist create them
         private async Task<List<BlogPostTag>> GetOrCreateTags(List<string> tagNames)
         {
@@ -85,7 +97,7 @@ namespace Rehab.Application.Blog
             _context.BlogPostTags.AddRange(newTags);
             return existingTags.Concat(newTags).ToList();
         }
-       
+
         //Get Posts List
         public async Task<PaginatedItemDto<BlogPostDto>> GetPostsAsync(int page, int pageSize)
         {
@@ -117,13 +129,10 @@ namespace Rehab.Application.Blog
                 .Where(p => !p.IsDeleted && p.Id == id)
                 .ProjectTo<BlogPostDto>(_mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync();
-
             if (post == null)
                 return BaseDto<BlogPostDto>.FailureResult("Post not found.");
-
             return BaseDto<BlogPostDto>.SuccessResult(post, "OK");
         }
-
         public async Task<BaseDto<BlogPostDto>> UpdatePostAsync(BlogPostDto postDto)
         {
             if (postDto == null) return BaseDto<BlogPostDto>.FailureResult("Post data is null!");
@@ -173,7 +182,6 @@ namespace Rehab.Application.Blog
             var resultDto = _mapper.Map<BlogPostDto>(post);
             return BaseDto<BlogPostDto>.SuccessResult(resultDto, "Post Updated Successfully.");
         }
-
         public async Task<BaseDto<bool>> DeletePostAsync(int id)
         {
             if (id <= 0)
@@ -188,6 +196,89 @@ namespace Rehab.Application.Blog
             await _context.SaveChangesAsync();
 
             return BaseDto<bool>.SuccessResult(true, "Post deleted successfully.");
+        }
+        public async Task<BaseDto<FeaturedBlogPostDto>> GetLatestFeaturedPostAsync()
+        {
+            using var scope = _scopeFactory.CreateScope();
+            var context = scope.ServiceProvider.GetRequiredService<IDatabaseContext>();
+
+            var post = await context.BlogPosts
+        .AsNoTracking()
+        .Where(p => !p.IsDeleted && p.IsActive && p.IsFeatured)
+        .OrderByDescending(p => p.PublisheDate)
+        .ProjectTo<FeaturedBlogPostDto>(_mapper.ConfigurationProvider)
+        .FirstOrDefaultAsync();
+
+            if (post == null)
+                return BaseDto<FeaturedBlogPostDto>.FailureResult("No featured article found.");
+            var resultDto = _mapper.Map<FeaturedBlogPostDto>(post);
+            return BaseDto<FeaturedBlogPostDto>.SuccessResult(resultDto, "OK");
+        }
+        public async Task<BaseDto<List<BlogPostCardDto>>> GetRecentPostsAsync(int count = 3)
+        {
+            using var scope = _scopeFactory.CreateScope();
+            var context = scope.ServiceProvider.GetRequiredService<IDatabaseContext>();
+
+            var posts = await context.BlogPosts
+                .AsNoTracking()
+                .Where(p => !p.IsDeleted && p.IsActive && !p.IsFeatured)
+                .OrderByDescending(p => p.PublisheDate)
+                .Take(count)
+                .ProjectTo<BlogPostCardDto>(_mapper.ConfigurationProvider)
+                .ToListAsync();
+
+            if (posts == null || posts.Count == 0)
+                return BaseDto<List<BlogPostCardDto>>.FailureResult("No recent posts found.");
+
+            return BaseDto<List<BlogPostCardDto>>.SuccessResult(posts, "OK");
+        }
+        public async Task<BaseDto<BlogPostDetailDto>> GetPostDetailBySlugAsync(string slug)
+        {
+            if (string.IsNullOrWhiteSpace(slug))
+                return null;
+
+            var post = await _context.BlogPosts
+                .AsNoTracking()
+                .Where(p => !p.IsDeleted && p.Slug == slug)
+                .ProjectTo<BlogPostDetailDto>(_mapper.ConfigurationProvider)
+                .FirstOrDefaultAsync();
+           
+            if (post == null)
+                return BaseDto<BlogPostDetailDto>.FailureResult("Post not found.");
+            return BaseDto<BlogPostDetailDto>.SuccessResult(post, "OK");
+
+        }
+        public async Task<BaseDto<List<BlogPostCardDto>>> GetRelatedPostsAsync(int postId, int take = 4)
+        {
+            using var scope = _scopeFactory.CreateScope();
+            var context = scope.ServiceProvider.GetRequiredService<IDatabaseContext>();
+            
+            var topicIds = await context.BlogPosts
+                .AsNoTracking()
+                .Where(p => p.Id == postId)
+                .SelectMany(p => p.Topics.Select(t => t.Id))
+                .ToListAsync();
+
+            if (topicIds.Count == 0)
+                return new BaseDto<List<BlogPostCardDto>>();
+
+            var posts= await _context.BlogPosts
+                .AsNoTracking()
+                .Where(p => p.Id != postId
+                            && !p.IsDeleted
+                            && p.Topics.Any(t => topicIds.Contains(t.Id)))
+                // rank by number of shared topics, then recency
+                .OrderByDescending(p => p.Topics.Count(t => topicIds.Contains(t.Id)))
+                .ThenByDescending(p => p.PublisheDate)
+                .Take(take)
+                .ProjectTo<BlogPostCardDto>(_mapper.ConfigurationProvider)
+                .ToListAsync();
+
+            if (posts == null || posts.Count == 0)
+                return BaseDto<List<BlogPostCardDto>>.FailureResult("No recent posts found.");
+
+            return BaseDto<List<BlogPostCardDto>>.SuccessResult(posts, "OK");
+
         }
     }
 }

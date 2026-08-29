@@ -1,0 +1,30 @@
+﻿@using Rehab.EndPoint.Web.ViewModels
+@if (HasLink == true)
+{
+    <a href="/Topics/@ContentTopic.Slug">
+        <span class="badge topic-badge @GetTopicBadgeClass(ContentTopic.TopicSlug)">@ContentTopic.Name.ToUpper()</span>
+    </a>
+}
+else
+{
+    <span class="badge topic-badge @GetTopicBadgeClass(ContentTopic.TopicSlug)">@ContentTopic.Name.ToUpper()</span>
+
+}
+@code {
+    [Parameter]
+    public TopicViewModel ContentTopic { get; set; } = new TopicViewModel();
+    [Parameter]
+    public bool HasLink { get; set; } = false;
+    [Parameter]
+    public string ParentType { get; set; } = "blog";
+    private string GetTopicBadgeClass(string topicName)
+    {
+        return topicName.ToLower() switch
+        {
+            "mental health" => "topic-mental-health",
+            "success stories" => "topic-success-stories",
+            "wellness" => "topic-wellness",
+            _ => "topic-default"
+        };
+    }
+}

@@ -1,0 +1,115 @@
+﻿@using Rehab.Application.Blog
+@using Rehab.EndPoint.Web.ViewModels
+@using AutoMapper
+@* @rendermode InteractiveServer *@
+@inject IMapper mapper
+@inject IBlogPostService BlogPostService
+
+<div class="featured-section container px-4 py-4">
+
+    <div class="d-flex align-items-center mb-3">
+        <h6 class="featured-label mb-0">FEATURED ARTICLE</h6>
+        <hr class="featured-line flex-grow-1 ms-3">
+    </div>
+
+    @if (_isLoading)
+    {
+        <div class="featured-card d-flex align-items-center justify-content-center" style="min-height:420px;">
+            <div class="spinner-border text-primary" role="status"></div>
+        </div>
+    }
+    else if (_featuredArticle is not null)
+    {
+        <div class="featured-card row g-0">
+
+            <!-- Image -->
+            <div class="col-md-5 position-relative">
+                <img src="@(serverUrl + _featuredArticle.ImageUrl ?? "https://placehold.co/700x600")"
+                     class="featured-img" alt="@_featuredArticle.Title">
+                <button class="expand-btn" type="button"
+                        data-bs-toggle="modal"
+                        data-bs-target="#featuredImageModal">
+                    <i class="bi bi-arrows-angle-expand"></i>
+                </button>
+            </div>
+
+            <!-- Content -->
+            <div class="col-md-7 d-flex flex-column justify-content-center p-4 p-lg-5">
+
+                <div class="d-flex align-items-center gap-2 mb-3">
+                    @if (!string.IsNullOrWhiteSpace(_primaryTopic))
+                    {
+                        <span class="badge category-badge">@_primaryTopic</span>
+                    }
+                    <span class="text-muted small">@_featuredArticle.PublishedDate</span>
+                </div>
+
+                <h2 class="featured-title mb-3">
+                    <a href="/blog/@_featuredArticle.Slug" target="_blank"> @_featuredArticle.Title </a>
+                </h2>
+
+                <p class="featured-desc text-muted mb-4">
+                    @_featuredArticle.Description
+                </p>
+
+                <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+                    <div class="d-flex align-items-center gap-2">
+                        <div class="author-avatar">@_authorInitials</div>
+                        <div>
+                            <div class="author-name">@_authorName</div>
+                            <div class="author-role text-muted small">@_authorRole</div>
+                        </div>
+                    </div>
+
+                    <a href="/blog/@_featuredArticle.Slug" class="read-article-link">
+                        READ ARTICLE <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+
+            </div>
+
+            <div class="modal fade" id="featuredImageModal" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-lg">
+                    <div class="modal-content image-modal-content">
+                        <button type="button" class="image-modal-close" data-bs-dismiss="modal" aria-label="Close">
+                            <i class="bi bi-x-lg"></i>
+                        </button>
+                        <img src="@(serverUrl + _featuredArticle.ImageUrl ?? "https://placehold.co/700x600")" alt="@_featuredArticle.Title" class="image-modal-img">
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="featured-card p-4 text-muted">
+            No featured article available.
+        </div>
+    }
+</div>
+ 
+  
+ 
+@code {
+    private BlogFeaturedArticleViewModel? _featuredArticle;
+    private bool _isLoading = true;
+    private string? _primaryTopic;
+ 
+    private string _authorName = "John Doe";
+    private string _authorRole = "Rehab Navigator Copy writer";
+    private string _authorInitials = "JD";
+    [Inject] IConfiguration Config { get; set; } = default!;
+    private string? serverUrl;
+
+    protected override async Task OnInitializedAsync()
+    {
+        serverUrl = Config["AppSettings:AdminServerUrl"];
+        var result = await BlogPostService.GetLatestFeaturedPostAsync();
+        if (result.Success)
+        {
+            _featuredArticle = mapper.Map<BlogFeaturedArticleViewModel>(result.Data);
+        }
+        _isLoading = false;
+    }
+   
+}

@@ -10,6 +10,7 @@ namespace Rehab.Domain.Blog
     {
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
+        public string Slug { get; set; } = string.Empty;
         public string Logo { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         public virtual ICollection<BlogPost>? Posts { get; set; } = new List<BlogPost>();

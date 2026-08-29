@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Rehab.Application.Accreditations;
 using Rehab.Application.Amenities;
+using Rehab.Application.Blog;
 using Rehab.Application.Conditions;
 using Rehab.Application.Contexts;
 using Rehab.Application.Email;
@@ -46,6 +47,7 @@ builder.Services.AddDbContext<DatabaseContext>(options =>
 
 #region IOC
 builder.Services.AddAutoMapper(typeof(CommonMappingProfile)); //Mapper
+builder.Services.AddAutoMapper(typeof(BlogMappingProfile)); //Mapper
 builder.Services.AddAutoMapper(typeof(Rehab.Infrastructure.MappingProfile.CommonMappingProfile)); //Mapper
 
 builder.Services.AddTransient<IFacilityService, FacilityService>();
@@ -70,6 +72,8 @@ builder.Services.AddTransient<IStripeService, StripeService>();
 builder.Services.AddTransient<ISeoService, SeoService>();
 builder.Services.AddTransient<IPackagePricingService, PackagePricingService>();
 builder.Services.AddTransient<ISubscriptionService,SubscriptionService>();
+builder.Services.AddTransient<IBlogPostService, BlogService>();
+
 #endregion
 
 

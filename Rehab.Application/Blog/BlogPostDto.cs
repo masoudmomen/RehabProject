@@ -13,12 +13,13 @@ namespace Rehab.Application.Blog
         public int Id { get; set; }
         [Required]
         public string Title { get; set; } = string.Empty;
+        public string Slug { get; set; } = string.Empty;
         public string? Description { get; set; }
         [Required]
         public string Content { get; set; } = string.Empty;
         public string? ImageUrl { get; set; }
         public int TimeToRead { get; set; }
-        public bool IsFetured { get; set; } = false;
+        public bool IsFeatured { get; set; } = false;
         public bool IsActive { get; set; } = true;
         public DateTime PublisheDate { get; set; } = DateTime.UtcNow;
         public DateTime CreatedDate { get; set; } = DateTime.UtcNow;

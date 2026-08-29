@@ -1,0 +1,61 @@
+﻿ @using Rehab.EndPoint.Web.ViewModels
+
+<a class="blog-mini-card d-block text-decoration-none rounded-4 overflow-hidden position-relative mb-3"
+   href="/blog/@Article.Slug">
+
+    <img src="@(serverUrl + @Article.ImageUrl)"
+         alt="Article.Title"
+         class="w-100 h-100 object-fit-cover position-absolute top-0 start-0" />
+
+    <div class="blog-mini-card-overlay position-absolute top-0 start-0 w-100 h-100"></div>
+
+    <div class="position-relative d-flex justify-content-between align-items-start p-2">
+        <span class="badge bg-dark bg-opacity-75 text-white fw-normal rounded-pill px-2 py-1">
+            @Article.PublishedDisplay
+        </span>
+
+        @foreach (var topic in Article.Topics)
+        {
+            <Topic ContentTopic="topic" ></Topic>
+        }
+    </div>
+
+    <div class="position-relative d-flex align-items-end h-75 p-2 pb-2">
+        <h6 class="post-title">
+            @Article.Title
+        </h6>
+    </div>
+</a>
+
+@code {
+    [Parameter, EditorRequired]
+    public BlogPostCardViewModel Article { get; set; }
+    [Inject] IConfiguration Config { get; set; } = default!;
+    private string? serverUrl;
+    protected override Task OnInitializedAsync()
+    {
+        serverUrl = Config["AppSettings:AdminServerUrl"];
+        return base.OnInitializedAsync();
+    }
+    private string GetTopicBadgeClass(string topicName)
+    {
+        return topicName.ToLower() switch
+        {
+            "mental health" => "topic-mental-health",
+            "success stories" => "topic-success-stories",
+            "wellness" => "topic-wellness",
+            _ => "topic-default"
+        };
+    }
+}
+<style>
+    h6.post-title{
+        color:#fff;
+        font-size:0.8rem;
+        font-weight:normal;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+</style>

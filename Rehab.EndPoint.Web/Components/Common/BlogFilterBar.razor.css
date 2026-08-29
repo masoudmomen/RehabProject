@@ -1,0 +1,60 @@
+﻿.filter-section {
+    background-color: #f8f7fc;
+}
+
+/* Search bar */
+.search-wrapper {
+    max-width: 620px;
+}
+
+.search-input {
+    border-radius: 30px;
+    padding: 0.75rem 1.25rem;
+    border: 1px solid #e2e0eb;
+    background-color: #fff;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+
+    .search-input:focus {
+        box-shadow: 0 0 0 3px rgba(124, 92, 255, 0.15);
+        border-color: #a78bfa;
+    }
+
+.search-btn {
+    border-radius: 30px;
+    padding: 0.75rem 1.75rem;
+    color: #fff;
+    font-weight: 500;
+    white-space: nowrap;
+    background: linear-gradient(90deg, #6c8cff, #a56cff);
+    border: none;
+}
+
+    .search-btn:hover {
+        opacity: 0.92;
+        color: #fff;
+    }
+
+/* Filter pills */
+.filter-pill {
+    border-radius: 30px;
+    padding: 0.45rem 1.1rem;
+    font-size: 0.9rem;
+    border: 1px solid #e2e0eb;
+    background-color: #fff;
+    color: #444;
+    transition: all 0.15s ease;
+}
+
+    .filter-pill:hover {
+        border-color: #a78bfa;
+        color: #6c8cff;
+    }
+
+    .filter-pill.active {
+        /*        background: linear-gradient(90deg, #6c8cff, #a56cff);
+*/
+        background: var(--bg-primary-gradient);
+        color: #fff;
+        border: none;
+    }

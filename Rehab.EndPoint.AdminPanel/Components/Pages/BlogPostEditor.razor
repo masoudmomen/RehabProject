@@ -38,8 +38,22 @@
             <div class="row g-3">
                 <div class="col-12">
                     <label for="Title">Title </label>
-                    <InputText @bind-Value="@BlogPost.Title" placeholder="Enter title..." id="name" class="form-control" />
+                        <InputText Value="@BlogPost!.Title"
+                                   ValueChanged="OnTitleChanged"
+                                   ValueExpression="() => BlogPost.Title"
+                                   id="title"
+                                   class="form-control"
+                                   placeholder="Enter title..." />
                 </div>
+             
+            </div>
+            <div class="row g-3">
+                    <div class="col-12">
+                        <label for="Slugan">Slugan </label>
+                        <InputText @bind-Value="@BlogPost.Slug"
+                                   id="slug"
+                                   class="form-control" />
+                    </div>
             </div>
             <div class="row g-3">
                 <div class="col-12">
@@ -357,8 +371,18 @@
         }
 
     }
-
- 
+    private void OnTitleChanged(string value)
+    {
+        BlogPost.Title = value;
+        BlogPost.Slug = GenerateSlug(value);
+    }
+    private static string GenerateSlug(string title)
+    {
+        return title
+            .Trim()
+            .ToLowerInvariant()
+            .Replace(" ", "-");
+    }
 }
 <style>
     .section-card {
