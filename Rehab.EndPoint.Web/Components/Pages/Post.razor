@@ -1,0 +1,77 @@
+﻿@page "/blog/{Slug}"
+@using Rehab.EndPoint.Web.Components.Common
+@using Rehab.EndPoint.Web.ViewModels
+@using Rehab.Application.Blog
+@using AutoMapper
+@inject IBlogPostService PostService
+@inject IMapper Mapper
+<div class="container">
+ 
+    <div class="row">
+        <div class="col-12 col-md-9 pt-4">
+            <BlogPostDetail article="_article"></BlogPostDetail>
+        </div>
+        <div class="col-12 col-md-3 mt-4">
+            <a href="#" class="back-link">
+                <span class="icon-wrap">
+                    <svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6" /></svg>
+                </span>
+                Back to Blog
+            </a>
+            <div class="related-head">
+            <h6 class="text-uppercase  mb-3">Related Articles</h6>
+            </div>
+            @if (RelatedPosts != null && RelatedPosts.Count > 0)
+            {
+                @foreach (var post in RelatedPosts)
+                {
+                    <BlogPostSmallCard Article="post" />
+                }
+            }
+
+        </div>
+    </div>
+</div>
+
+<BlogSubscribe></BlogSubscribe>
+@code {
+    [Parameter]
+    public string Slug { get; set; } = string.Empty;
+    private BlogPostDetailViewModel? _article;
+    private int articleId = 0;
+    private bool _notFound;
+    private List<BlogPostCardViewModel> RelatedPosts = new();
+    [Inject] IConfiguration Config { get; set; } = default!;
+    private string? serverUrl;
+    protected override Task OnInitializedAsync()
+    {
+        serverUrl = Config["AppSettings:AdminServerUrl"];
+
+        return base.OnInitializedAsync();
+    }
+    protected override async Task OnParametersSetAsync()
+    {
+        _article = null;
+        _notFound = false;
+        var result = await PostService.GetPostDetailBySlugAsync(Slug);
+
+        if (result is null)
+        {
+            _notFound = true;
+            return;
+        }
+        var dto = result.Data;
+        _article = Mapper.Map<BlogPostDetailViewModel>(dto);
+        articleId = _article.Id;
+
+        var relatedResult = await PostService.GetRelatedPostsAsync(articleId);
+        if (relatedResult is null)
+            return;
+
+        RelatedPosts = Mapper.Map<List<BlogPostCardViewModel>>(relatedResult.Data);
+    }
+
+}
+<style>
+    
+</style>

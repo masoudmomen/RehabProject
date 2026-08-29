@@ -1,6 +1,6 @@
 ﻿:root {
     /* Primary & primary */
-    --bs-primary: #534AB7; 
+    --bs-primary: #534AB7;
     --bs-secondary: #185fa5;
     --color-secondary: #185fa5;
     --color-primary: #534AB7;
@@ -44,4 +44,5 @@
     --border: #e2e8f0;
     --bg: #f8fafc;
     --white: #ffffff;
+    --bg-primary-gradient: linear-gradient(135deg, #a157fc, #84c8fd);
 }

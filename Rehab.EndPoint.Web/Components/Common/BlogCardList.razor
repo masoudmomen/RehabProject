@@ -1,0 +1,54 @@
+﻿@using Rehab.Application.Blog
+@using AutoMapper
+@using Rehab.EndPoint.Web.ViewModels
+@inject IBlogPostService BlogPostService
+@inject IMapper mapper
+
+<div class="articles-grid-section container px-4 py-4">
+
+    @if (_isLoading)
+    {
+        <div class="d-flex justify-content-center py-5">
+            <div class="spinner-border text-primary" role="status"></div>
+        </div>
+    }
+    else if (_articles.Count > 0)
+    {
+        <div class="row g-4">
+            @foreach (var article in _articles)
+            {
+                <div class="col-md-4">
+                    <BlogPostCard Article="article" />
+                </div>
+            }
+        </div>
+
+        <div class="text-end mt-4">
+            <a href="/blog/archive" class="read-all-link">
+                READ ALL <i class="bi bi-arrow-right"></i>
+            </a>
+        </div>
+    }
+    else
+    {
+        <div class="text-muted text-center py-5">No articles found.</div>
+    }
+
+</div>
+
+@code {
+    private List<BlogPostCardViewModel> _articles = new();
+    private bool _isLoading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var result = await BlogPostService.GetRecentPostsAsync(3);
+
+        if (result.Success && result.Data is not null)
+        {
+            _articles = mapper.Map<List<BlogPostCardViewModel>>(result.Data);
+        }
+
+        _isLoading = false;
+    }
+}

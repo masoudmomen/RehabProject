@@ -66,7 +66,7 @@ namespace Rehab.Infrastructure.MappingProfile
                 .ForMember(dest => dest.Tags, opt => opt.Ignore())
                 .ForMember(dest => dest.Topics, opt => opt.Ignore())
                 .ForMember(dest => dest.Comments, opt => opt.Ignore());
-
+            CreateMap<BlogPost, FeaturedBlogPostDto>();
             CreateMap<BlogPostTopic, BlogTopicDto>().ReverseMap();
             CreateMap<BlogPostTag, BlogTagDto>().ReverseMap();
             CreateMap<PackageRequest, PackageRequestDto>()
@@ -75,6 +75,16 @@ namespace Rehab.Infrastructure.MappingProfile
             CreateMap<PaymentLink, PaymentLinkDto>().ReverseMap();
             CreateMap<MetaContent, MetaDto>().ReverseMap();
             CreateMap<Subscription, SubscriptionDto>();
+            CreateMap<BlogPost, FeaturedBlogPostDto>()
+                .ForMember(dest => dest.Topics,
+                opt => opt.MapFrom(src => src.Topics.Select(t => t.Name).ToList())); ;
+            CreateMap<BlogPost, BlogPostCardDto>();
+                //.ForMember(dest => dest.Topics,
+                //opt => opt.MapFrom(src => src.Topics.Select(t => t.Name).ToList())); ;
+
+            CreateMap<BlogPost, BlogPostDetailDto>()
+           .ForMember(d => d.Tags, o => o.MapFrom(s => s.Tags .Select(pt => pt)))
+           .ForMember(d => d.Topics, o => o.MapFrom(s => s.Topics.Select(pt => pt)));
 
         }
     }

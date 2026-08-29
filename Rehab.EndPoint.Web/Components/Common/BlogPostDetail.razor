@@ -1,0 +1,89 @@
+﻿
+@using Rehab.EndPoint.Web.ViewModels
+@using Rehab.EndPoint.Web.Components
+<article class="article-detail bg-white rounded-4 shadow-sm p-2 p-md-5 mb-5">
+    @if (article is null)
+    {
+        <div class="placeholder-glow">
+            <span class="placeholder col-3 mb-3 d-block"></span>
+            <span class="placeholder col-8 mb-2 d-block"></span>
+            <span class="placeholder col-12" style="height:300px;"></span>
+        </div>
+    }
+    else
+    {
+        <div class="d-flex align-items-center gap-2 mb-3 flex-wrap">
+            @foreach (var topic in article.Topics)
+            {
+                <Topic ContentTopic="topic" ></Topic>
+                @* <a href="@($"/topics/{article.TopicSlug(topic)}")"
+                   class="badge rounded-pill text-decoration-none article-badge-topic px-3 py-2">
+                    @topic.Name.ToUpper()
+                </a> *@
+            }
+            <span class="text-muted small">@article.PublishedDisplay</span>
+            <span class="text-muted small">&bull;</span>
+            <span class="text-muted small">@article.ReadTimeDisplay</span>
+        </div>
+
+        <h1 class="article-title fw-normal mb-3">@article.Title</h1>
+
+        @if (!string.IsNullOrWhiteSpace(article.AuthorName))
+        {
+            <div class="d-flex align-items-center gap-2 mb-4">
+                @if (!string.IsNullOrWhiteSpace(article.AuthorAvatarUrl))
+                {
+                    <img src="@article.AuthorAvatarUrl" alt="@article.AuthorName"
+                         class="rounded-circle author-avatar-img" />
+                }
+                else
+                {
+                    <span class="author-avatar-initials rounded-circle d-flex align-items-center justify-content-center">
+                        @article.AuthorName
+                    </span>
+                }
+                <span class="fw-medium">@article.AuthorName</span>
+            </div>
+        }
+
+        @if (!string.IsNullOrWhiteSpace(article.Description))
+        {
+            <p class="article-description text-secondary mb-4">@article.Description</p>
+        }
+
+        @if (!string.IsNullOrWhiteSpace(article.ImageUrl))
+        {
+            <div class="article-cover mb-4 rounded-4 overflow-hidden">
+                <img src="@(serverUrl + article.ImageUrl)" alt="@article.Title" class="w-100 h-100 object-fit-cover" />
+            </div>
+        }
+
+        <div class="article-body">
+            @((MarkupString)article.Content)
+        </div>
+
+        @if (article.Tags.Any())
+        {
+            <div class="d-flex align-items-center gap-2 mt-4 pt-4 border-top flex-wrap">
+                @foreach (var tag in article.Tags)
+                {
+                    <a href="@($"/tags/{article.TagSlug(tag)}")"
+                       class="badge rounded-pill text-decoration-none article-badge-tag px-3 py-2">
+                        #@tag.Name
+                    </a>
+                }
+            </div>
+        }
+    }
+</article>
+@code{
+    [Parameter, EditorRequired]
+    public BlogPostDetailViewModel? article { get; set; }
+    [Inject] IConfiguration Config { get; set; } = default!;
+    private string? serverUrl;
+       protected override Task OnInitializedAsync()
+    {
+        serverUrl = Config["AppSettings:AdminServerUrl"];
+        return base.OnInitializedAsync();
+    }   
+}
