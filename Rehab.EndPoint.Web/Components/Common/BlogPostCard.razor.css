@@ -48,9 +48,21 @@
     padding: 1.1rem 1.25rem 1.25rem;
     display: flex;
     flex-direction: column;
-    flex-grow: 1;
+    flex: 1 1 auto;
+    min-height: 0;
 }
 
+.article-card-footer {
+    margin-top: auto;
+    padding-top: 0.25rem;
+}
+
+.article-divider {
+    border: 0;
+    border-top: 1px solid #eee;
+    margin: 0.5rem 0 0.75rem;
+    opacity: 1;
+}
 
 /* Author */
 .author-avatar-sm {

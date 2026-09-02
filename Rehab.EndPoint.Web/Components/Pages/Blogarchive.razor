@@ -1,24 +1,238 @@
-﻿@page "/blogarchive"
-<div class="container mt-4">
-    <div class="d-flex gap-1">
-        <h3 class="fs-5  fw-normal text-uppercase blog-page-title">Article Archive</h3>
-        <hr class="flex-grow-1 blog-title-line ms-5" />
+﻿@page "/blog/archive"
+@using Rehab.EndPoint.Web.Components.Common
+@using Rehab.EndPoint.Web.ViewModels
+@using Rehab.Application.Blog
+@using Rehab.Application.Dtos
+@using AutoMapper
+@inject IMapper mapper
+@inject IBlogPostService BlogPostService
+@inject NavigationManager Navigation
+
+<PageTitle>@_metaTitle</PageTitle>
+
+<HeadContent>
+    <meta name="description" content="@_metaDescription" />
+    <link rel="canonical" href="@_canonicalUrl" />
+
+    @if (Articles is not null && Articles.HasPerviousPage)
+    {
+        <link rel="prev" href="@BuildPageUrl(CurrentPage - 1)" />
+    }
+    @if (Articles is not null && Articles.HasNextPage)
+    {
+        <link rel="next" href="@BuildPageUrl(CurrentPage + 1)" />
+    }
+
+    <meta property="og:title" content="@_metaTitle" />
+    <meta property="og:description" content="@_metaDescription" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="@_canonicalUrl" />
+
+    @* If the category filter is enabled or the page is larger than 1, we tell the crawler not to index
+to prevent duplicate content between filtered pages *@
+    @if (!string.IsNullOrWhiteSpace(Topic) || CurrentPage > 1)
+    {
+        <meta name="robots" content="noindex, follow" />
+    }
+</HeadContent>
+<BlogFilterBar />
+<div class="container mb-5">
+  
+    <div class="mb-3 page-head">
+        <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/blog">Blog</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Archive</li>
+            </ol>
+        </nav>
+        <h1>Article archive</h1>
+        <p>Every guide, story and reflection we've published — searchable and filterable, so you can find exactly what your recovery needs right now.</p>
     </div>
-    <div class="input-group mb-3">
-        <input type="text" class="form-control" placeholder="Recipient's username" aria-label="Recipient's username" aria-describedby="basic-addon2">
-        <div class="input-group-append">
-            <button class="btn btn-outline-secondary" type="button">Button</button>
-        </div>
+    <hr />
+    <div class="archive-grid @(ViewMode == "list" ? "view-list" : "")">
+        @if (_isLoading)
+        {
+            @for (int i = 0; i < PageSize; i++)
+            {
+                <div class="card-skeleton"></div>
+            }
+        }
+        else if (Articles is not null && Articles.Data.Any())
+        {
+            @foreach (var item in Articles.Data)
+            {
+                <BlogPostCard Article="item" />
+            }
+        }
+        else
+        {
+            <div class="empty-state">
+                <p>No articles were found with this filter.</p>
+            </div>
+        }
     </div>
+
+    @if (!_isLoading && Articles is not null && Articles.Pager.TotalPages > 1)
+    {
+        var pages = Articles.Pager.Pages.ToList();
+        var totalPages = Articles.Pager.TotalPages;
+
+        <nav class="pager" aria-label="Article archive pagination">
+            <ul class="pager-list">
+                <li>
+                    @if (Articles.HasPerviousPage)
+                    {
+                        <a href="@BuildPageUrl(CurrentPage - 1)" class="pager-btn pager-nav" rel="prev" aria-label="Previous page">
+                            <span aria-hidden="true">&larr;</span> Prev
+                        </a>
+                    }
+                    else
+                    {
+                        <span class="pager-btn pager-nav disabled" aria-disabled="true">
+                            <span aria-hidden="true">&larr;</span> Prev
+                        </span>
+                    }
+                </li>
+
+                @if (pages.First() > 1)
+                {
+                    <li><a href="@BuildPageUrl(1)" class="pager-btn">1</a></li>
+                    if (pages.First() > 2)
+                    {
+                        <li><span class="pager-ellipsis" aria-hidden="true">&hellip;</span></li>
+                    }
+                }
+
+                @foreach (var p in pages)
+                {
+                    <li>
+                        @if (p == CurrentPage)
+                        {
+                            <span class="pager-btn active" aria-current="page">@p</span>
+                        }
+                        else
+                        {
+                            <a href="@BuildPageUrl(p)" class="pager-btn">@p</a>
+                        }
+                    </li>
+                }
+
+                @if (pages.Last() < totalPages)
+                {
+                    if (pages.Last() < totalPages - 1)
+                    {
+                        <li><span class="pager-ellipsis" aria-hidden="true">&hellip;</span></li>
+                    }
+                    <li><a href="@BuildPageUrl(totalPages)" class="pager-btn">@totalPages</a></li>
+                }
+
+                <li>
+                    @if (Articles.HasNextPage)
+                    {
+                        <a href="@BuildPageUrl(CurrentPage + 1)" class="pager-btn pager-nav" rel="next" aria-label="Next page">
+                            Next <span aria-hidden="true">&rarr;</span>
+                        </a>
+                    }
+                    else
+                    {
+                        <span class="pager-btn pager-nav disabled" aria-disabled="true">
+                            Next <span aria-hidden="true">&rarr;</span>
+                        </span>
+                    }
+                </li>
+            </ul>
+        </nav>
+    }
 
 </div>
 
 @code {
+    private const string BaseUrl = "/blog/archive";
 
-}
-<style>
-    .blog-page-title{
-        color: var(--color-secondary);
+    [SupplyParameterFromQuery(Name = "page")]
+    public int CurrentPage { get; set; } = 1;
+
+    [SupplyParameterFromQuery(Name = "topic")]
+    public string? Topic { get; set; }
+
+    [SupplyParameterFromQuery(Name = "view")]
+    public string ViewMode { get; set; } = "grid";
+
+    public PaginatedItemDto<BlogPostCardViewModel>? Articles { get; set; }
+
+    private int PageSize = 10;
+    private bool _isLoading = true;
+    private string _metaTitle = "Article archive";
+    private string _metaDescription = "Every guide, story and reflection we've published — searchable and filterable, so you can find exactly what your recovery needs right now.";
+    private string _canonicalUrl = string.Empty;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        var requestedPage = CurrentPage < 1 ? 1 : CurrentPage;
+        await LoadPageAsync(requestedPage);
     }
-</style>
 
+    private async Task LoadPageAsync(int page)
+    {
+        _isLoading = true;
+
+        var filter = string.IsNullOrWhiteSpace(Topic)
+            ? null
+            : new BlogPostFilter { TopicSlug = Topic };
+
+        var result = await BlogPostService.GetPostsAsync(page, PageSize, filter);
+        var mapped = mapper.Map<IEnumerable<BlogPostCardViewModel>>(result.Data);
+        Articles = new PaginatedItemDto<BlogPostCardViewModel>(result.PageIndex, result.PageSize, result.Count, mapped);
+//Outside URL
+        if (Articles.Pager.TotalPages > 0 && page > Articles.Pager.TotalPages)
+        {
+            _isLoading = false;
+            Navigation.NavigateTo(BuildPageUrl(Articles.Pager.TotalPages), forceLoad: false);
+            return;
+        }
+
+        CurrentPage = Articles.PageIndex;
+        _isLoading = false;
+
+        BuildSeoMetadata();
+    }
+
+    private void BuildSeoMetadata()
+    {
+        var topicSuffix = string.IsNullOrWhiteSpace(Topic) ? string.Empty : $" — {Topic}";
+        _metaTitle = CurrentPage <= 1
+            ? $"Article archive{topicSuffix}"
+            : $"Article archive{topicSuffix} — Page {CurrentPage}";
+
+        _metaDescription = CurrentPage <= 1
+            ? "Every guide, story and reflection we've published — searchable and filterable, so you can find exactly what your recovery needs right now."
+            : $"Page {CurrentPage} of our article archive{topicSuffix}.";
+
+        var origin = Navigation.BaseUri.TrimEnd('/');
+        _canonicalUrl = $"{origin}{BuildPageUrl(CurrentPage)}";
+    }
+
+    private string BuildPageUrl(int page)
+    {
+        var parts = new List<string>();
+
+        if (page > 1)
+        {
+            parts.Add($"page={page}");
+        }
+
+        if (!string.IsNullOrWhiteSpace(Topic))
+        {
+            parts.Add($"category={Uri.EscapeDataString(Topic)}");
+        }
+
+        if (!string.IsNullOrWhiteSpace(ViewMode) && ViewMode != "grid")
+        {
+            parts.Add($"view={Uri.EscapeDataString(ViewMode)}");
+        }
+
+        return parts.Count == 0
+            ? BaseUrl
+            : $"{BaseUrl}?{string.Join("&", parts)}";
+    }
+}

@@ -1,4 +1,4 @@
-using AutoMapper;
+﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
@@ -6,8 +6,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Rehab.Application.Common;
 using Rehab.Application.Contexts;
 using Rehab.Application.Dtos;
+using Rehab.Application.Tags;
 using Rehab.Domain.Blog;
 using System;
+using static Microsoft.AspNetCore.Hosting.Internal.HostingApplication;
 using static Rehab.Application.Blog.BlogService;
 namespace Rehab.Application.Blog
 {
@@ -23,6 +25,7 @@ namespace Rehab.Application.Blog
         Task<BaseDto<List<BlogPostCardDto>>> GetRecentPostsAsync(int count = 3);
         Task<BaseDto<BlogPostDetailDto>> GetPostDetailBySlugAsync(string slug);
         Task<BaseDto<List<BlogPostCardDto>>> GetRelatedPostsAsync(int postId, int take = 4);
+        Task<PaginatedItemDto<BlogPostCardDto>> GetPostsAsync(int page, int pageSize, BlogPostFilter? filter);
     }
 
 
@@ -242,7 +245,7 @@ namespace Rehab.Application.Blog
                 .Where(p => !p.IsDeleted && p.Slug == slug)
                 .ProjectTo<BlogPostDetailDto>(_mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync();
-           
+
             if (post == null)
                 return BaseDto<BlogPostDetailDto>.FailureResult("Post not found.");
             return BaseDto<BlogPostDetailDto>.SuccessResult(post, "OK");
@@ -252,7 +255,7 @@ namespace Rehab.Application.Blog
         {
             using var scope = _scopeFactory.CreateScope();
             var context = scope.ServiceProvider.GetRequiredService<IDatabaseContext>();
-            
+
             var topicIds = await context.BlogPosts
                 .AsNoTracking()
                 .Where(p => p.Id == postId)
@@ -262,7 +265,7 @@ namespace Rehab.Application.Blog
             if (topicIds.Count == 0)
                 return new BaseDto<List<BlogPostCardDto>>();
 
-            var posts= await _context.BlogPosts
+            var posts = await _context.BlogPosts
                 .AsNoTracking()
                 .Where(p => p.Id != postId
                             && !p.IsDeleted
@@ -280,5 +283,50 @@ namespace Rehab.Application.Blog
             return BaseDto<List<BlogPostCardDto>>.SuccessResult(posts, "OK");
 
         }
+
+        public async Task<PaginatedItemDto<BlogPostCardDto>> GetPostsAsync(int page, int pageSize, BlogPostFilter? filter)
+        {
+            using var scope = _scopeFactory.CreateScope();
+            var context = scope.ServiceProvider.GetRequiredService<IDatabaseContext>();
+
+            var query = context.BlogPosts
+                .AsNoTracking()
+                .Where(p => !p.IsDeleted && p.IsActive && !p.IsFeatured);
+
+            if (filter is not null)
+            {
+                if (!string.IsNullOrWhiteSpace(filter.TagSlug))
+                {
+                    query = query.Where(p => p.Tags.Any(pt => pt.Slug == filter.TagSlug));
+                }
+                if (!string.IsNullOrWhiteSpace(filter.TopicSlug))
+                {
+                    query = query.Where(p => p.Topics.Any(pt => pt.Slug == filter.TopicSlug));
+                }
+                if (!string.IsNullOrWhiteSpace(filter.SearchTerm))
+                {
+                    var term = filter.SearchTerm.Trim();
+                    query = query.Where(p => p.Title.Contains(term) || p.Description!.Contains(term));
+                }
+            }
+
+            query = query.OrderByDescending(p => p.PublisheDate);
+
+            var count = await query.LongCountAsync();
+
+            var data = await query
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ProjectTo<BlogPostCardDto>(_mapper.ConfigurationProvider)
+                .ToListAsync();
+
+            return new PaginatedItemDto<BlogPostCardDto>(page, pageSize, count, data);
+        }
+
+
+
+
+
+
     }
 }

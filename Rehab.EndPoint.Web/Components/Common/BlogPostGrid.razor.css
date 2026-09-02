@@ -1,0 +1,166 @@
+﻿ 
+
+.archive-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.75rem;
+    margin: 1.5rem 0;
+}
+
+    .archive-grid.view-list {
+        grid-template-columns: 1fr;
+        gap: 1.25rem;
+    }
+
+    
+        .archive-grid.view-list ::deep > * {
+            display: flex;
+            gap: 1.25rem;
+            align-items: flex-start;
+        }
+
+/* ==========================================================
+   Skeleton loading state
+   ========================================================== */
+
+.card-skeleton {
+    height: 320px;
+    border-radius: 14px;
+    background: linear-gradient(90deg, #eceaf6 25%, #f5f4fb 37%, #eceaf6 63%);
+    background-size: 400% 100%;
+    animation: skeleton-shimmer 1.4s ease infinite;
+}
+
+.archive-grid.view-list .card-skeleton {
+    height: 140px;
+}
+
+@keyframes skeleton-shimmer {
+    0% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0 50%;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .card-skeleton {
+        animation: none;
+    }
+}
+
+/* ==========================================================
+   Empty state
+   ========================================================== */
+
+.empty-state {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3.5rem 1rem;
+    text-align: center;
+    color: #6b6b7d;
+}
+
+    .empty-state h1 {
+        font-size: 1.25rem;
+        margin-bottom: 0.5rem;
+        color: #35354a;
+    }
+
+    .empty-state p {
+        font-size: 0.95rem;
+        max-width: 32rem;
+    }
+
+/* ==========================================================
+   Pager
+   ========================================================== */
+
+.pager {
+    display: flex;
+    justify-content: center;
+    margin: 2.5rem 0 1rem;
+}
+
+.pager-list {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    list-style: none;
+    margin: 0;
+    padding: 0.4rem;
+    background-color: #f2f0fb;
+    border-radius: 999px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.pager-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    min-width: 2.25rem;
+    height: 2.25rem;
+    padding: 0 0.9rem;
+    border-radius: 999px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-decoration: none;
+    color: #4b4b63;
+    background-color: #fff;
+    border: none;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+    transition: background-color 0.15s ease, color 0.15s ease;
+    cursor: pointer;
+}
+
+    .pager-btn:hover {
+        background-color: #ece9fb;
+        color: #5b3df0;
+    }
+
+    .pager-btn.active {
+        background: linear-gradient(135deg, #7c5cf0, #5b3df0);
+        color: #fff;
+        box-shadow: 0 2px 6px rgba(91, 61, 240, 0.35);
+        cursor: default;
+    }
+
+.pager-nav {
+    padding: 0 1rem;
+    font-weight: 500;
+}
+
+    .pager-nav.disabled {
+        color: #b9b9c7;
+        box-shadow: none;
+        cursor: not-allowed;
+    }
+
+.pager-ellipsis {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 1.5rem;
+    height: 2.25rem;
+    color: #a9a9bd;
+    font-weight: 600;
+}
+
+@media (max-width: 480px) {
+    .archive-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .pager-btn {
+        min-width: 2rem;
+        height: 2rem;
+        padding: 0 0.65rem;
+        font-size: 0.85rem;
+    }
+}

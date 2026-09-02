@@ -1,0 +1,169 @@
+﻿@page "/blog/tag/{TagSlug}"
+@using Rehab.EndPoint.Web.Components.Common
+@using Rehab.EndPoint.Web.ViewModels
+@using Rehab.Application.Blog
+@using Rehab.Application.Dtos
+@using AutoMapper
+@using Microsoft.AspNetCore.Http
+@inject IMapper mapper
+@inject IBlogPostService BlogPostService
+@inject IBlogTagService BlogTagService
+@inject NavigationManager Navigation
+@inject IHttpContextAccessor HttpContextAccessor
+
+<PageTitle>@_metaTitle</PageTitle>
+
+<HeadContent>
+    @if (!_tagNotFound)
+    {
+        <meta name="description" content="@_metaDescription" />
+        <link rel="canonical" href="@_canonicalUrl" />
+
+        @if (Articles is not null && Articles.HasPerviousPage)
+        {
+            <link rel="prev" href="@BuildPageUrl(CurrentPage - 1)" />
+        }
+        @if (Articles is not null && Articles.HasNextPage)
+        {
+            <link rel="next" href="@BuildPageUrl(CurrentPage + 1)" />
+        }
+
+        <meta property="og:title" content="@_metaTitle" />
+        <meta property="og:description" content="@_metaDescription" />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="@_canonicalUrl" />
+
+        @if (CurrentPage > 1)
+        {
+            <meta name="robots" content="noindex, follow" />
+        }
+    }
+</HeadContent>
+
+@if (_tagNotFound)
+  {
+    <div class="container">
+        <div class="empty-state">
+            <h1>Page not found</h1>
+            <p>We couldn't find a tag matching "@TagSlug".</p>
+        </div>
+    </div>
+}
+else
+{
+    <div class="container">
+        <BlogFilterBar />
+        <div class="mb-3 page-head">
+            <div class="crumbs"><b>Home</b> &nbsp;/&nbsp; Archive &nbsp;/&nbsp; Tag: @_tagName</div>
+            <h1>Articles tagged "@TagSlug"</h1>
+        </div>
+        <hr />
+
+        <BlogPostGrid Articles="Articles"
+                      IsLoading="_isLoading"
+                      ViewMode="ViewMode"
+                      CurrentPage="CurrentPage"
+                      PageUrlBuilder="BuildPageUrl"
+                      SkeletonCount="PageSize"
+                      PagerAriaLabel="Tag archive pagination" />
+    </div>
+}
+
+@code {
+    [Parameter]
+    public string TagSlug { get; set; } = string.Empty;
+
+    [SupplyParameterFromQuery(Name = "page")]
+    public int CurrentPage { get; set; } = 1;
+
+    [SupplyParameterFromQuery(Name = "view")]
+    public string ViewMode { get; set; } = "grid";
+
+    public PaginatedItemDto<BlogPostCardViewModel>? Articles { get; set; }
+
+    private int PageSize = 10;
+    private bool _isLoading = true;
+    private bool _tagNotFound;
+    private string _tagName = string.Empty;
+    private string _metaTitle = string.Empty;
+    private string _metaDescription = string.Empty;
+    private string _canonicalUrl = string.Empty;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        var tag = await BlogTagService.GetTagBySlugAsync(TagSlug);
+        if (tag is null)
+        {
+            _tagNotFound = true;
+            _metaTitle = "Page not found";
+
+
+            if (HttpContextAccessor.HttpContext is not null)
+            {
+                HttpContextAccessor.HttpContext.Response.StatusCode = 404;
+            }
+
+            _isLoading = false;
+            return;
+        }
+        if(tag.Data is not null)
+        {
+            _tagName = tag.Data!.Name.ToString();
+        }
+
+        var requestedPage = CurrentPage < 1 ? 1 : CurrentPage;
+        await LoadPageAsync(requestedPage);
+    }
+
+    private async Task LoadPageAsync(int page)
+    {
+        _isLoading = true;
+
+        var filter = new BlogPostFilter { TagSlug = TagSlug };
+        var result = await BlogPostService.GetPostsAsync(page, PageSize, filter);
+        var mapped = mapper.Map<IEnumerable<BlogPostCardViewModel>>(result.Data);
+        Articles = new PaginatedItemDto<BlogPostCardViewModel>(result.PageIndex, result.PageSize, result.Count, mapped);
+
+        if (Articles.Pager.TotalPages > 0 && page > Articles.Pager.TotalPages)
+        {
+            _isLoading = false;
+            Navigation.NavigateTo(BuildPageUrl(Articles.Pager.TotalPages), forceLoad: false);
+            return;
+        }
+
+        CurrentPage = Articles.PageIndex;
+        _isLoading = false;
+
+        BuildSeoMetadata();
+    }
+
+    private void BuildSeoMetadata()
+    {
+        _metaTitle = CurrentPage <= 1
+            ? $"Articles tagged \"{_tagName}\""
+            : $"Articles tagged \"{_tagName}\" — Page {CurrentPage}";
+
+        _metaDescription = $"Browse all articles about {_tagName}.";
+
+        var origin = Navigation.BaseUri.TrimEnd('/');
+        _canonicalUrl = $"{origin}{BuildPageUrl(CurrentPage)}";
+    }
+
+    private string BuildPageUrl(int page)
+    {
+        var baseUrl = $"/blog/tag/{TagSlug}";
+        var parts = new List<string>();
+
+        if (page > 1)
+        {
+            parts.Add($"page={page}");
+        }
+
+        if (!string.IsNullOrWhiteSpace(ViewMode) && ViewMode != "grid")
+        {
+            parts.Add($"view={Uri.EscapeDataString(ViewMode)}");
+        }
+
+        return parts.Count == 0 ? baseUrl : $"{baseUrl}?{string.Join("&", parts)}";
+    }
+}

@@ -15,13 +15,15 @@
             <a href="/blog/@Article.Slug" target="_blank">  @Article.Title </a>
         </h5>
         <p class="article-desc text-muted">@Article.Description</p>
-        <hr class="article-divider">
-        <div class="d-flex align-items-center justify-content-between">
-            <div class="d-flex align-items-center gap-2">
-                <div class="author-avatar-sm">@Article.AuthorInitials</div>
-                <span class="author-name-sm">@Article.AuthorName</span>
+        <div class="article-card-footer">
+            <hr class="article-divider">
+            <div class="d-flex align-items-center justify-content-between">
+                <div class="d-flex align-items-center gap-2">
+                    <div class="author-avatar-sm">@Article.AuthorInitials</div>
+                    <span class="author-name-sm">@Article.AuthorName</span>
+                </div>
+                <span class="text-muted small">@Article.ReadTimeDisplay</span>
             </div>
-            <span class="text-muted small">@Article.TimeToRead min read</span>
         </div>
     </div>
 </div>

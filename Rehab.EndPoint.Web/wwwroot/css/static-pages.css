@@ -513,7 +513,7 @@
         margin: 0 0 18px;
         font-size: 18px;
         color: #111827;
-        text-transform: uppercase;
+       /* text-transform: uppercase;*/
         letter-spacing: 0.04em;
     }
 

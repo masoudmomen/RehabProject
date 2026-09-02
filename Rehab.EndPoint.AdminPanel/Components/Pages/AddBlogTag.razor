@@ -8,7 +8,7 @@
 @inject AlertService AlertService
 @inject IWebHostEnvironment Env
 @inject IImageUploaderService Uploader
- 
+
 
 <div class="w-75 mx-auto p-4">
     <h3>Add BlogTag</h3>
@@ -17,7 +17,14 @@
         <DataAnnotationsValidator></DataAnnotationsValidator>
         <ValidationSummary class="text-danger" />
         <label>Name</label>
-        <InputText @bind-Value="BlogTag.Name" class="form-control my-2"></InputText>
+
+        <InputText Value="@BlogTag.Name"
+                   ValueChanged="OnTitleChanged"
+                   ValueExpression="() => BlogTag.Name"
+                   class="form-control my-2">
+        </InputText>
+        <label>Name</label>
+        <InputText @bind-Value="BlogTag.Slug" id="slug" class="form-control my-2"></InputText>
         <label>Icon</label>
         <InputFile OnChange="HandleSelected" class="form-control my-2" accept="image/*" />
         <label>Description</label>
@@ -78,5 +85,17 @@
         {
             isAddBtnActive = true;
         }
+    }
+    private void OnTitleChanged(string value)
+    {
+        BlogTag.Name = value;
+        BlogTag.Slug = GenerateSlug(value);
+    }
+    private static string GenerateSlug(string title)
+    {
+        return title
+            .Trim()
+            .ToLowerInvariant()
+            .Replace(" ", "-");
     }
 }

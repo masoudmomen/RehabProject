@@ -13,9 +13,11 @@ namespace Rehab.Application.Blog
         BaseDto<BlogTagDto> Update(BlogTagDto BlogTagDto);
         BaseDto<BlogTagDto> Delete(BlogTagDto BlogTagDto);
         Task<List<BlogTagDto>> GetSuggestedTagsAsync(string name);
+        Task<BaseDto<BlogTagDto>> GetTagBySlugAsync(string slug);
+
     }
 
-    public class BlogTagService:IBlogTagService
+    public class BlogTagService : IBlogTagService
     {
         private readonly IDatabaseContext _context;
         private readonly IMapper _mapper;
@@ -68,7 +70,7 @@ namespace Rehab.Application.Blog
 
             return BaseDto<BlogTagDto>.FailureResult("Operation Failed! Please try another time!");
         }
-      
+
         //Show Suggested Tag when user is typing...
         public async Task<List<BlogTagDto>> GetSuggestedTagsAsync(string name)
         {
@@ -77,12 +79,22 @@ namespace Rehab.Application.Blog
             var tags = await _context.BlogPostTags.Where(t => t.Name.Contains(name)).ToListAsync();
             return _mapper.Map<List<BlogTagDto>>(tags);
         }
+        public async Task<BaseDto<BlogTagDto>> GetTagBySlugAsync(string tagSlug)
+        {
+           
+            var result = await _context.BlogPostTags
+                .AsNoTracking()
+                .FirstOrDefaultAsync(t => t.Slug == tagSlug);
+            var resultDto = _mapper.Map<BlogTagDto>(result);
+            if (result == null) return BaseDto<BlogTagDto>.FailureResult("The Tag not find!");
+            return BaseDto<BlogTagDto>.SuccessResult(resultDto, "OK");
+        }
 
 
 
     }
 
-    
+
     public class BlogTagDto
     {
         public int Id { get; set; }

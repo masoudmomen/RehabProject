@@ -1,0 +1,120 @@
+﻿@using Rehab.EndPoint.Web.ViewModels
+@using Rehab.Application.Dtos
+
+<div class="archive-grid @(ViewMode == "list" ? "view-list" : "")">
+    @if (IsLoading)
+    {
+        @for (int i = 0; i < SkeletonCount; i++)
+        {
+            <div class="card-skeleton"></div>
+        }
+    }
+    else if (Articles is not null && Articles.Data.Any())
+    {
+        @foreach (var item in Articles.Data)
+        {
+            <BlogPostCard Article="item" />
+        }
+    }
+    else
+    {
+        <div class="empty-state">
+            <p>No articles were found with this filter.</p>
+        </div>
+    }
+</div>
+
+@if (!IsLoading && Articles is not null && Articles.Pager.TotalPages > 1)
+{
+    var pages = Articles.Pager.Pages.ToList();
+    var totalPages = Articles.Pager.TotalPages;
+
+    <nav class="pager" aria-label="@PagerAriaLabel">
+        <ul class="pager-list">
+            <li>
+                @if (Articles.HasPerviousPage)
+                {
+                    <a href="@PageUrlBuilder(CurrentPage - 1)" class="pager-btn pager-nav" rel="prev" aria-label="Previous page">
+                        <span aria-hidden="true">&larr;</span> Prev
+                    </a>
+                }
+                else
+                {
+                    <span class="pager-btn pager-nav disabled" aria-disabled="true">
+                        <span aria-hidden="true">&larr;</span> Prev
+                    </span>
+                }
+            </li>
+
+            @if (pages.First() > 1)
+            {
+                <li><a href="@PageUrlBuilder(1)" class="pager-btn">1</a></li>
+                if (pages.First() > 2)
+                {
+                    <li><span class="pager-ellipsis" aria-hidden="true">&hellip;</span></li>
+                }
+            }
+
+            @foreach (var p in pages)
+            {
+                <li>
+                    @if (p == CurrentPage)
+                    {
+                        <span class="pager-btn active" aria-current="page">@p</span>
+                    }
+                    else
+                    {
+                        <a href="@PageUrlBuilder(p)" class="pager-btn">@p</a>
+                    }
+                </li>
+            }
+
+            @if (pages.Last() < totalPages)
+            {
+                if (pages.Last() < totalPages - 1)
+                {
+                    <li><span class="pager-ellipsis" aria-hidden="true">&hellip;</span></li>
+                }
+                <li><a href="@PageUrlBuilder(totalPages)" class="pager-btn">@totalPages</a></li>
+            }
+
+            <li>
+                @if (Articles.HasNextPage)
+                {
+                    <a href="@PageUrlBuilder(CurrentPage + 1)" class="pager-btn pager-nav" rel="next" aria-label="Next page">
+                        Next <span aria-hidden="true">&rarr;</span>
+                    </a>
+                }
+                else
+                {
+                    <span class="pager-btn pager-nav disabled" aria-disabled="true">
+                        Next <span aria-hidden="true">&rarr;</span>
+                    </span>
+                }
+            </li>
+        </ul>
+    </nav>
+}
+
+@code {
+    [Parameter, EditorRequired]
+    public PaginatedItemDto<BlogPostCardViewModel>? Articles { get; set; }
+
+    [Parameter]
+    public bool IsLoading { get; set; }
+
+    [Parameter]
+    public string ViewMode { get; set; } = "grid";
+
+    [Parameter]
+    public int CurrentPage { get; set; } = 1;
+
+    [Parameter, EditorRequired]
+    public Func<int, string> PageUrlBuilder { get; set; } = _ => "#";
+
+    [Parameter]
+    public int SkeletonCount { get; set; } = 10;
+
+    [Parameter]
+    public string PagerAriaLabel { get; set; } = "Pagination";
+}

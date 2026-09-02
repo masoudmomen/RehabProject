@@ -11,7 +11,7 @@
 @inject IBlogPostService BlogPostService;
 @inject IBlogTopicService BlogTopicService;
 @inject IBlogTagService BlogTagService;
-<div class="container w-80 mx-auto my-5 ">
+<div class="container w-100 mx-auto my-5 ">
 
     <h3>
        Blog Post
@@ -77,8 +77,8 @@
                 </div>
             </div>
 
-            <div class="row g-3 px-1">
-                <div class="col-4 px-1">
+            <div class="row g-4 px-1">
+                <div class="col-3 px-1">
                     <div class="d-flex bg-light rounded-1 h-100 p-1">
                         <div class="w-50">
                             <label for="TimeToRead">Time to read</label>
@@ -89,17 +89,24 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-4 px-1">
+                <div class="col-3 px-1">
                     <div class="bg-light rounded-1 h-100 p-1">
                         <label for="Publiseddate">Published date</label>
                         <InputDate class="form-control" @bind-Value="@BlogPost.PublisheDate"></InputDate>
                     </div>
                 </div>
-                <div class="col-4 px-1">
+                <div class="col-3 px-1">
                     <div class="bg-light rounded-1 h-100 p-1">
                         <span>Show article</span><br />
                         <InputCheckbox @bind-Value="@BlogPost.IsActive"></InputCheckbox>
                         <label for="active">Active</label>
+                    </div>
+                </div>
+                <div class="col-3 px-1">
+                    <div class="bg-light rounded-1 h-100 p-1">
+                        <span>Show article</span><br />
+                        <InputCheckbox @bind-Value="@BlogPost.IsFeatured"></InputCheckbox>
+                        <label for="active">Is Featured</label>
                     </div>
                 </div>
             </div>

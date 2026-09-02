@@ -16,6 +16,7 @@ namespace Rehab.Application.Blog
         public string PublisheDate { get; set; } = string.Empty;
         public int TimeToRead { get; set; }
         public List<BlogTopicDto> Topics { get; set; } = new();
+        public List<BlogTagDto> Tags { get; set; } = new();
         public string AuthorName { get; set; } = string.Empty;
         public string AuthorRole { get; set; } = string.Empty;
         public string AuthorInitials { get; set; } = string.Empty;

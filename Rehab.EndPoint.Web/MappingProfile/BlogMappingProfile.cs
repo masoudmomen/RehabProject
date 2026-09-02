@@ -31,6 +31,7 @@ namespace Rehab.EndPoint.Web.MappingProfile
             .ForMember(dest => dest.AuthorRole, opt => opt.MapFrom(_ => "Rehab Navigator Copy writer"))
             .ForMember(dest => dest.AuthorInitials, opt => opt.MapFrom(_ => "RN"));
 
+            CreateMap<BlogPostDto, BlogPostCardViewModel>();
             CreateMap<BlogPostDetailDto, BlogPostDetailViewModel>();
             CreateMap<BlogTopicDto, TopicViewModel>();
            //.ForMember(d => d.ReadTimeDisplay, o => o.MapFrom(s => $"{s.TimeToRead} min read"))
