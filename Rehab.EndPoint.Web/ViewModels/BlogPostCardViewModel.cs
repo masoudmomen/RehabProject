@@ -12,7 +12,7 @@ namespace Rehab.EndPoint.Web.ViewModels
         public DateTime PublisheDate { get; set; }
         public int TimeToRead { get; set; }
         public List<TopicViewModel> Topics { get; set; } = new();
-        public string AuthorName { get; set; } = string.Empty;
+        public string AuthorName { get; set; } = "RehabNavigator";
         public string AuthorRole { get; set; } = string.Empty;
         public string AuthorInitials { get; set; } = string.Empty;
         // computed, no mapping needed

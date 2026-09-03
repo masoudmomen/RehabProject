@@ -18,7 +18,7 @@ namespace Rehab.EndPoint.Web.ViewModels
 
         public int TimeToRead { get; init; }
         public DateTime PublisheDate { get; init; }
-        public string? AuthorName { get; init; } = "Rehab Navigator";
+        public string? AuthorName { get; init; } = "RehabNavigator";
         public string? AuthorAvatarUrl { get; init; }
 
         public List<BlogTagDto> Tags { get; init; } = new();
