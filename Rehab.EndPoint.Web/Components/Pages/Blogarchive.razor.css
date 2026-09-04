@@ -12,7 +12,9 @@
         color: #6b6a80;
         font-weight: 600;
     }
-
+.breadcrumb a {
+    text-decoration: none;
+}
 .page-head h1 {
     font-size: 42px;
 }

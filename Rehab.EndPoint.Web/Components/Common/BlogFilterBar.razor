@@ -15,7 +15,7 @@
         </div>
         <!-- Filter Pills -->
         <div class="d-flex flex-wrap gap-2">
-            <a class="btn filter-pill @(string.IsNullOrEmpty(CurrentTopicSlug) ? "active" : null)" href="/blog">All Articles</a>
+            <a class="btn filter-pill @(string.IsNullOrEmpty(CurrentTopicSlug) ? "active" : null)" href="/blog/archive">All Articles</a>
             @foreach (var topic in Topics)
             {
                 var isActive = string.Equals(topic.Slug, CurrentTopicSlug, StringComparison.OrdinalIgnoreCase);

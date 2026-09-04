@@ -43,21 +43,29 @@
     <div class="container">
         <div class="empty-state">
             <h1>Page not found</h1>
-            <p>We couldn't find a topic matching "@topicSlug".</p>
+            <p>We couldn't find a topic matching "@_topicName".</p>
         </div>
     </div>
 }
 else
 {
+
+    <BlogFilterBar />
+
     <div class="container">
-        <BlogFilterBar />
         <div class="mb-3 page-head">
-            <div class="crumbs"><a href="/blog">Home</a> &nbsp;/&nbsp; Archive &nbsp;/&nbsp; topic: @_topicName</div>
-            <h1>Articles Related to "@topicSlug"</h1>
+            <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/blog">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page"><a href="/blog/archive">Archive</a></li>
+                    <li class="breadcrumb-item active" aria-current="page"> topic: @_topicName</li>
+                </ol>
+            </nav>
+@*             <div class="crumbs"><a href="/blog"></a> &nbsp;/&nbsp; Archive &nbsp;/&nbsp;</div>
+ *@            <h1 class="fs-3 mt-5">Articles Related to "@_topicName"</h1>
             <p></p>
         </div>
         <hr />
-
         <BlogPostGrid Articles="Articles"
                       IsLoading="_isLoading"
                       ViewMode="ViewMode"
@@ -166,3 +174,8 @@ else
         return parts.Count == 0 ? baseUrl : $"{baseUrl}?{string.Join("&", parts)}";
     }
 }
+<style>
+    .breadcrumb a{
+        text-decoration:none;
+    }
+</style>
