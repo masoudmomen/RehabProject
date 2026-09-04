@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using Rehab.Application.Common;
 using Rehab.Application.Contexts;
 using Rehab.Domain.Blog;
@@ -11,6 +12,7 @@ namespace Rehab.Application.Blog
         List<BlogTopicDto> GetList();
         BaseDto<BlogTopicDto> Update(BlogTopicDto blogTopicDto);
         BaseDto<BlogTopicDto> Delete(BlogTopicDto blogTopicDto);
+        Task<BaseDto<BlogTopicDto>> GetTopicBySlugAsync(string tagSlug);
     }
 
     public class BlogTopicService:IBlogTopicService
@@ -65,6 +67,15 @@ namespace Rehab.Application.Blog
             if (_context.SaveChanges() > 0) return BaseDto<BlogTopicDto>.SuccessResult(blogTopic, "The Topic Deleted successfully.");
 
             return BaseDto<BlogTopicDto>.FailureResult("Operation Failed! Please try another time!");
+        }
+        public async Task<BaseDto<BlogTopicDto>> GetTopicBySlugAsync(string tagSlug)
+        {
+            var result = await _context.BlogPostTopics
+                .AsNoTracking()
+                .FirstOrDefaultAsync(t => t.Slug == tagSlug);
+            var resultDto = _mapper.Map<BlogTopicDto>(result);
+            if (result == null) return BaseDto<BlogTopicDto>.FailureResult("The Topic not find!");
+            return BaseDto<BlogTopicDto>.SuccessResult(resultDto, "OK");
         }
     }
    

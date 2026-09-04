@@ -15,7 +15,13 @@
         <DataAnnotationsValidator></DataAnnotationsValidator>
         <ValidationSummary class="text-danger" />
         <label>Name</label>
-        <InputText @bind-Value="BlogTopic.Name" class="form-control my-2"></InputText>
+        <InputText Value="@BlogTopic.Name"
+                   ValueChanged="OnTitleChanged"
+                   ValueExpression="() => BlogTopic.Name"
+                   class="form-control my-2">
+        </InputText>
+        <label>Name</label>
+        <InputText @bind-Value="BlogTopic.Slug" id="slug" class="form-control my-2"></InputText>
         <label>Icon</label>
         <InputFile OnChange="HandleSelected" class="form-control my-2" accept="image/*" />
         <label>Description</label>
@@ -76,5 +82,17 @@
         {
             isAddBtnActive = true;
         }
+    }
+    private void OnTitleChanged(string value)
+    {
+        BlogTopic.Name = value;
+        BlogTopic.Slug = GenerateSlug(value);
+    }
+    private static string GenerateSlug(string title)
+    {
+        return title
+            .Trim()
+            .ToLowerInvariant()
+            .Replace(" ", "-");
     }
 }

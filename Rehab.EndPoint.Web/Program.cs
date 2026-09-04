@@ -74,6 +74,7 @@ builder.Services.AddTransient<IPackagePricingService, PackagePricingService>();
 builder.Services.AddTransient<ISubscriptionService,SubscriptionService>();
 builder.Services.AddTransient<IBlogPostService, BlogService>();
 builder.Services.AddTransient<IBlogTagService,BlogTagService>();
+builder.Services.AddTransient<IBlogTopicService,BlogTopicService>();
 builder.Services.AddHttpContextAccessor();
 #endregion
 

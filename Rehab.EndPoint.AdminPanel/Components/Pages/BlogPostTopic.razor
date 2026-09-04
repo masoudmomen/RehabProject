@@ -80,7 +80,11 @@
                 @ref="EditModal">
     <div class="form-group">
         <label>Name</label>
-        <InputText class="form-control" @bind-Value="tempBlogTopic.Name" />
+        <InputText class="form-control"
+                   Value="@tempBlogTopic.Name"
+                   ValueChanged="OnTitleChanged"
+                   ValueExpression="() => tempBlogTopic.Name" />        <label>Slug</label>
+        <InputText class="form-control" @bind-Value="tempBlogTopic.Slug" />
         <label>Icon</label>
         <div class="row">
             <div class="col-10">
@@ -211,5 +215,16 @@
             BlogTopicList = mapper.Map<List<BlogPostTopicViewModel>>(BlogTopicService.GetList());
         AlertService.ShowAsync(Result.Message, Result.Status);
     }
-
+    private void OnTitleChanged(string value)
+    {
+        tempBlogTopic.Name = value;
+        tempBlogTopic.Slug = GenerateSlug(value);
+    }
+    private static string GenerateSlug(string title)
+    {
+        return title
+            .Trim()
+            .ToLowerInvariant()
+            .Replace(" ", "-");
+    }
 }

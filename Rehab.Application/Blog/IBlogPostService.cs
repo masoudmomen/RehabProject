@@ -95,7 +95,11 @@ namespace Rehab.Application.Blog
 
             var existingTagNames = existingTags.Select(t => t.Name).ToHashSet();
             var newTagNames = normalizedTagNames.Where(t => !existingTagNames.Contains(t.ToLower())).ToList();
-            var newTags = newTagNames.Select(name => new BlogPostTag { Name = name }).ToList();
+            var newTags = newTagNames.Select(name => new BlogPostTag
+            {
+                Name = name,
+                Slug = name.Trim().ToLowerInvariant().Replace(" " ,"-")
+            }).ToList();
 
             _context.BlogPostTags.AddRange(newTags);
             return existingTags.Concat(newTags).ToList();

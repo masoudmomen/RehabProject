@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Rehab.EndPoint.Web.Helpers;
+using System.ComponentModel.DataAnnotations;
 
 namespace Rehab.EndPoint.AdminPanel.Viewmodels
 {
@@ -12,5 +13,14 @@ namespace Rehab.EndPoint.AdminPanel.Viewmodels
         public string Slug { get; set; } = string.Empty;
         public string Logo { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
+
+        public static BlogPostTagViewModel Create(string name)
+        {
+            return new BlogPostTagViewModel
+            {
+                Name = name,
+                Slug = SlugHelper.ToSlug(name)
+            };
+        }
     }
 }

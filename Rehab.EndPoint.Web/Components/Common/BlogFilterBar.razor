@@ -1,4 +1,8 @@
-﻿<div class="filter-section  px-4 py-3">
+﻿@using Rehab.Application.Blog
+@inject IBlogTopicService BlogTopicService
+@inject NavigationManager Navigation
+
+<div class="filter-section  px-4 py-3">
     <div class="container">
         <!-- Search Bar -->
         <div class="search-wrapper d-flex align-items-center mb-3">
@@ -9,17 +13,43 @@
                 Search
             </button>
         </div>
-
         <!-- Filter Pills -->
         <div class="d-flex flex-wrap gap-2">
-            <button class="btn filter-pill active">All Articles</button>
-            <button class="btn filter-pill">Recovery</button>
-            <button class="btn filter-pill">Mental Health</button>
-            <button class="btn filter-pill">Wellness</button>
-            <button class="btn filter-pill">Nutrition</button>
-            <button class="btn filter-pill">Family Support</button>
-            <button class="btn filter-pill">Success Stories</button>
+            <a class="btn filter-pill @(string.IsNullOrEmpty(CurrentTopicSlug) ? "active" : null)" href="/blog">All Articles</a>
+            @foreach (var topic in Topics)
+            {
+                var isActive = string.Equals(topic.Slug, CurrentTopicSlug, StringComparison.OrdinalIgnoreCase);
+                <a class="btn filter-pill @(isActive ? "active" : null)" href="/blog/topic/@topic.Slug">@topic.Name</a>
+            }
         </div>
     </div>
 </div>
 
+@code {
+    private List<BlogTopicDto> Topics { get; set; } = new();
+    private string? CurrentTopicSlug { get; set; }
+
+    protected override void OnInitialized()
+    {
+        Topics = BlogTopicService.GetList();
+    }
+
+    protected override void OnParametersSet()
+    {
+        CurrentTopicSlug = GetTopicSlugFromUri();
+    }
+
+    private string? GetTopicSlugFromUri()
+    {
+        var path = new Uri(Navigation.Uri).AbsolutePath.Trim('/');
+        const string prefix = "blog/topic/";
+        if (!path.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
+        {
+            return null;
+        }
+
+        var slug = path[prefix.Length..];
+        var slashIndex = slug.IndexOf('/');
+        return slashIndex >= 0 ? slug[..slashIndex] : slug;
+    }
+}
