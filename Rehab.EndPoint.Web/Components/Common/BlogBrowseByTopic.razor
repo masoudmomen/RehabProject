@@ -1,0 +1,46 @@
+﻿@using Rehab.EndPoint.Web.ViewModels
+
+<section class="browse-by-topic py-5 px-3 px-md-5">
+    <div class="container-fluid">
+        <div class="row align-items-center gy-4">
+            <div class="col-12 col-lg-3">
+                <h2 class="fw-light text-white mb-0 lh-sm">Browse</h2>
+                <h2 class="fst-italic fw-bold text-white mb-0 lh-sm">by topic</h2>
+            </div>
+
+            <div class="col-12 col-lg-9">
+                <div class="d-flex flex-wrap gap-3">
+                    @foreach (var topic in Topics)
+                    {
+                        <a type="button"
+                           class="btn topic-pill rounded-pill text-white px-4 py-2 d-inline-flex align-items-center gap-2"
+                           href="/blog/topic/@topic.Slug">
+                            <img src="@(serverUrl + (string.IsNullOrWhiteSpace(topic.Logo) ? DefaultLogo : topic.Logo))"
+                                 alt=""
+                                 width="20"
+                                 height="20"
+                                 aria-hidden="true" />
+                           @topic.Name
+                        </a>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@code {
+
+
+    [Parameter]
+    public List<TopicViewModel> Topics { get; set; } = new();
+    private const string DefaultLogo = "/uploads/blogtopics/default.png";
+    [Inject] IConfiguration Config { get; set; } = default!;
+    private string? serverUrl;
+     protected override Task OnInitializedAsync()
+    {
+        serverUrl = Config["AppSettings:AdminServerUrl"];
+        return base.OnInitializedAsync();
+    }
+
+ }

@@ -1,13 +1,27 @@
 ﻿@page "/blog"
+@using Rehab.EndPoint.Web.ViewModels
 @using Rehab.EndPoint.Web.Components.Common
+@using Rehab.Application.Blog
+@using AutoMapper
+@inject IMapper mapper
+@inject IBlogTopicService BlogTopicService
  
     <BlogFilterBar />
 
     <BlogFeaturedArticle />
     <BlogCardList />
     <BlogSubscribe />
+    <BlogBrowseByTopic Topics="Topics" />
  
 @code {
-   
+    public List<TopicViewModel> Topics { get; set; } = new();
+    protected override void OnInitialized()
+    {
+        var result = BlogTopicService.GetList();
+        if(result != null)
+        {
+            Topics = mapper.Map<List<TopicViewModel>>(result);
+        }
+    }
 
 }

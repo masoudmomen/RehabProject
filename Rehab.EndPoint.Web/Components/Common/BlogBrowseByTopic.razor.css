@@ -1,0 +1,17 @@
+﻿ 
+.browse-by-topic {
+    background: linear-gradient(90deg, #c8c3f0 0%, #f2d7f5 100%);
+}
+
+.topic-pill {
+    background: linear-gradient(90deg, #6c5ce7 0%, #9b59d0 100%);
+    border: none;
+    transition: transform 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+    .topic-pill:hover,
+    .topic-pill:focus {
+        color: #fff;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 14px rgba(108, 92, 231, 0.35);
+    }
