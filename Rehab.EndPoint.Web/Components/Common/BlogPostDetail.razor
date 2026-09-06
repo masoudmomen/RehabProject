@@ -67,7 +67,7 @@
             <div class="d-flex align-items-center gap-2 mt-4 pt-4 border-top flex-wrap">
                 @foreach (var tag in article.Tags)
                 {
-                    <a href="@($"/tags/{article.TagSlug(tag)}")"
+                    <a href="@($"/blog/tag/{article.TagSlug(tag)}")"
                        class="badge rounded-pill text-decoration-none article-badge-tag px-3 py-2">
                         #@tag.Name
                     </a>

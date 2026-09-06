@@ -54,8 +54,13 @@ else
     <div class="container">
         <BlogFilterBar />
         <div class="mb-3 page-head">
-            <div class="crumbs"><b>Home</b> &nbsp;/&nbsp; Archive &nbsp;/&nbsp; Tag: @_tagName</div>
-            <h1>Articles tagged "@TagSlug"</h1>
+            <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/blog">Blog</a></li>
+                    <li class="breadcrumb-item active" aria-current="page"><a href="/blog/archive">Archive</a></li>
+                    <li class="breadcrumb-item active" aria-current="page"> topic: @_tagName</li>
+                </ol>
+            </nav>            <h1>Articles tagged "@TagSlug"</h1>
         </div>
         <hr />
 
