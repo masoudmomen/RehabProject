@@ -10,7 +10,7 @@
 @inject IBlogTagService BlogTagService
 @inject NavigationManager Navigation
 @inject IHttpContextAccessor HttpContextAccessor
-
+@rendermode InteractiveServer
 <PageTitle>@_metaTitle</PageTitle>
 
 <HeadContent>
@@ -41,7 +41,7 @@
 </HeadContent>
 
 @if (_tagNotFound)
-  {
+{
     <div class="container">
         <div class="empty-state">
             <h1>Page not found</h1>
@@ -51,7 +51,12 @@
 }
 else
 {
+
+    <div class="container mt-5">
+        <BlogSearch InitialValue="@SearchTerm" OnSearch="HandleSearch" />
+    </div>
     <div class="container">
+     
         <BlogFilterBar />
         <div class="mb-3 page-head">
             <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
@@ -70,7 +75,8 @@ else
                       CurrentPage="CurrentPage"
                       PageUrlBuilder="BuildPageUrl"
                       SkeletonCount="PageSize"
-                      PagerAriaLabel="Tag archive pagination" />
+                      PagerAriaLabel="Tag archive pagination"
+                      HighlightTerm="@SearchTerm" />
     </div>
 }
 
@@ -83,6 +89,8 @@ else
 
     [SupplyParameterFromQuery(Name = "view")]
     public string ViewMode { get; set; } = "grid";
+    [SupplyParameterFromQuery(Name = "search")]
+    public string? SearchTerm { get; set; }
 
     public PaginatedItemDto<BlogPostCardViewModel>? Articles { get; set; }
 
@@ -111,7 +119,7 @@ else
             _isLoading = false;
             return;
         }
-        if(tag.Data is not null)
+        if (tag.Data is not null)
         {
             _tagName = tag.Data!.Name.ToString();
         }
@@ -124,7 +132,7 @@ else
     {
         _isLoading = true;
 
-        var filter = new BlogPostFilter { TagSlug = TagSlug };
+        var filter = new BlogPostFilter { TagSlug = TagSlug ,SearchTerm =SearchTerm};
         var result = await BlogPostService.GetPostsAsync(page, PageSize, filter);
         var mapped = mapper.Map<IEnumerable<BlogPostCardViewModel>>(result.Data);
         Articles = new PaginatedItemDto<BlogPostCardViewModel>(result.PageIndex, result.PageSize, result.Count, mapped);
@@ -170,5 +178,10 @@ else
         }
 
         return parts.Count == 0 ? baseUrl : $"{baseUrl}?{string.Join("&", parts)}";
+    }
+    private void HandleSearch(string searchTerm)
+    {
+        Navigation.NavigateTo(
+              $"/blog/tag/{TagSlug}?search={Uri.EscapeDataString(searchTerm)}");
     }
 }

@@ -1,4 +1,5 @@
 ﻿@using Rehab.EndPoint.Web.ViewModels
+@using Rehab.EndPoint.Web.Helpers
 <div class="article-card">
     <div class="article-img-wrapper">
         <img src="@(serverUrl + @Article.ImageUrl)" class="article-img" alt="@Article.Title">
@@ -12,9 +13,10 @@
             <span class="text-muted small">@Article.PublishedDisplay</span>
         </div>
         <h5 class="article-title">
-            <a href="/blog/@Article.Slug" target="_blank">  @Article.Title </a>
-        </h5>
-        <p class="article-desc text-muted">@Article.Description</p>
+            <a href="/blog/@Article.Slug" target="_blank">@TextHighlighter.Highlight(Article.Title, HighlightTerm)</a>
+
+         </h5>
+        <p class="article-desc text-muted">@TextHighlighter.Highlight(Article.Description, HighlightTerm)</p>
         <div class="article-card-footer">
             <hr class="article-divider">
             <div class="d-flex align-items-center justify-content-between">
@@ -32,6 +34,8 @@
     [Parameter, EditorRequired]
     public BlogPostCardViewModel Article { get; set; } = default!;
     [Inject] IConfiguration Config { get; set; } = default!;
+    [Parameter]
+    public string? HighlightTerm { get; set; }
     private string? serverUrl;
     protected override Task OnInitializedAsync()
     {

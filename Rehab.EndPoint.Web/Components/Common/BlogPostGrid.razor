@@ -13,7 +13,7 @@
     {
         @foreach (var item in Articles.Data)
         {
-            <BlogPostCard Article="item" />
+            <BlogPostCard Article="item" HighlightTerm="@HighlightTerm" />
         }
     }
     else
@@ -117,4 +117,8 @@
 
     [Parameter]
     public string PagerAriaLabel { get; set; } = "Pagination";
+    
+    [Parameter]
+    public string? HighlightTerm { get; set; }
+
 }

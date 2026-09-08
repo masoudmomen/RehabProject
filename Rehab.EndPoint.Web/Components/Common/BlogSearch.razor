@@ -1,0 +1,96 @@
+﻿@rendermode InteractiveServer
+<div class="search-wrapper d-flex align-items-center mb-3">
+    <input type="search"
+           class="form-control search-input"
+           placeholder="@Placeholder"
+           value="@SearchTerm"
+           @oninput="HandleInput"
+           @onkeydown="HandleKeyDown"
+           aria-label="Search" />
+    <button class="btn search-btn ms-2"
+            type="button"
+            @onclick="HandleSearch"
+            disabled="@string.IsNullOrWhiteSpace(SearchTerm)">
+        Search
+    </button>
+</div>
+@code {
+    [Parameter]
+    public string? InitialValue { get; set; }
+
+    [Parameter]
+    public string Placeholder { get; set; }
+        = "Search articles, topics, guides...";
+
+    [Parameter]
+    public EventCallback<string> OnSearch { get; set; }
+
+    private string SearchTerm { get; set; } = string.Empty;
+
+    protected override void OnParametersSet()
+    {
+        SearchTerm = InitialValue ?? string.Empty;
+    }
+
+    private void HandleInput(ChangeEventArgs e)
+    {
+        SearchTerm = e.Value?.ToString() ?? string.Empty;
+    }
+
+    private async Task HandleKeyDown(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+        {
+            await HandleSearch();
+        }
+    }
+
+    private async Task HandleSearch()
+    {
+        var searchTerm = SearchTerm.Trim();
+
+        if (string.IsNullOrWhiteSpace(searchTerm))
+            return;
+
+        await OnSearch.InvokeAsync(searchTerm);
+    }
+}
+
+<style>
+    .search-wrapper {
+        max-width: 620px;
+    }
+
+    .search-input {
+        border-radius: 30px;
+        padding: 0.75rem 1.25rem;
+        border: 1px solid #e2e0eb;
+        background-color: #fff;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    }
+
+        .search-input:focus {
+            box-shadow: 0 0 0 3px rgba(124, 92, 255, 0.15);
+            border-color: #a78bfa;
+        }
+
+    .search-btn {
+        border-radius: 30px;
+        padding: 0.75rem 1.75rem;
+        color: #fff;
+        font-weight: 500;
+        white-space: nowrap;
+        background: linear-gradient(90deg, #6c8cff, #a56cff);
+        border: none;
+    }
+
+        .search-btn:hover:not(:disabled) {
+            opacity: 0.92;
+            color: #fff;
+        }
+
+        .search-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+</style>

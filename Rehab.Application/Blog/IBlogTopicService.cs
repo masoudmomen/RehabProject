@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Rehab.Application.Common;
 using Rehab.Application.Contexts;
 using Rehab.Domain.Blog;
@@ -19,12 +20,14 @@ namespace Rehab.Application.Blog
     {
         private readonly IDatabaseContext _context;
         private readonly IMapper _mapper;
-
-        public BlogTopicService(IDatabaseContext context,IMapper mapper )
+        private readonly IServiceScopeFactory _scopeFactory;
+        public BlogTopicService(IDatabaseContext context,IMapper mapper,IServiceScopeFactory scopeFactory )
         {
            _context = context;
             _mapper = mapper;
+            _scopeFactory = scopeFactory;
         }
+
      
         public BaseDto<BlogTopicDto> Add(BlogTopicDto blogTopic)
         {
@@ -38,8 +41,11 @@ namespace Rehab.Application.Blog
         }
         public List<BlogTopicDto> GetList()
         {
+            using var scope = _scopeFactory.CreateScope();
+            var context = scope.ServiceProvider.GetRequiredService<IDatabaseContext>();
+
             return _mapper
-                .Map<List<BlogTopicDto>>(_context
+                .Map<List<BlogTopicDto>>(context
                     .BlogPostTopics
                     .OrderBy(t => t.Name)
                     .ToList());
