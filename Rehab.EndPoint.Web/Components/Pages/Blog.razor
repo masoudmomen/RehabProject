@@ -5,8 +5,10 @@
 @using AutoMapper
 @inject IMapper mapper
 @inject IBlogTopicService BlogTopicService
-<div class="container">
-    <BlogSearch />
+@inject NavigationManager Navigation
+@rendermode InteractiveServer
+<div class="container mt-5">
+    <BlogSearch InitialValue="@SearchTerm" OnSearch="HandleSearch" />
 </div>
 <BlogFilterBar />
 <BlogFeaturedArticle />
@@ -16,6 +18,8 @@
 
 @code {
     public List<TopicViewModel> Topics { get; set; } = new();
+    [SupplyParameterFromQuery(Name = "search")]
+    public string? SearchTerm { get; set; }
     protected override void OnInitialized()
     {
         var result = BlogTopicService.GetList();
@@ -24,5 +28,9 @@
             Topics = mapper.Map<List<TopicViewModel>>(result);
         }
     }
-
+    private void HandleSearch(string searchTerm)
+    {
+        Navigation.NavigateTo(
+              $"/blog/archive?search={Uri.EscapeDataString(searchTerm)}");
+    }
 }
