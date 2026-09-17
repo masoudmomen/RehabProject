@@ -24,7 +24,11 @@
                     <div class="author-avatar-sm">@Article.AuthorInitials</div>
                     <span class="author-name-sm">RehabNavigator</span>
                 </div>
-                <span class="text-muted small">@Article.ReadTimeDisplay</span>
+                <span class="article-meta text-muted small">
+@*                     <span class="view-count"><i class="bi bi-eye"></i> @Article.ViewCountDisplay</span>
+ *@                    <span class="meta-sep">&middot;</span>
+                    @Article.ReadTimeDisplay
+                </span>
             </div>
         </div>
     </div>

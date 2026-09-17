@@ -17,6 +17,7 @@ namespace Rehab.EndPoint.Web.ViewModels
         public string? ImageUrl { get; init; }
 
         public int TimeToRead { get; init; }
+        public int ViewCount { get; init; }
         public DateTime PublisheDate { get; init; }
         public string? AuthorName { get; init; } = "RehabNavigator";
         public string? AuthorAvatarUrl { get; init; }
@@ -27,6 +28,7 @@ namespace Rehab.EndPoint.Web.ViewModels
         // computed, no mapping needed
         public string ReadTimeDisplay => $"{TimeToRead} min read";
         public string PublishedDisplay => PublisheDate.ToString("MMM d");
+        public string ViewCountDisplay => $"{ViewCount:N0} views";
 
         public string TagSlug(BlogTagDto tag) => SlugHelper.ToSlug(tag.Name);
  

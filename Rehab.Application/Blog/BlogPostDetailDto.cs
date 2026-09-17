@@ -18,6 +18,7 @@ namespace Rehab.Application.Blog
         public string Content { get; set; } = string.Empty;
         public string? ImageUrl { get; set; }
         public int TimeToRead { get; set; }
+        public int ViewCount { get; set; }
         public DateTime PublisheDate { get; set; }
 
         public string? AuthorName { get; set; }

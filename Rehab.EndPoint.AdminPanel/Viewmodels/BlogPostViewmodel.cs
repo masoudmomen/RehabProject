@@ -16,6 +16,7 @@ namespace Rehab.EndPoint.AdminPanel.Viewmodels
         public string Content { get; set; } = string.Empty;
         public string? ImageUrl { get; set; }
         public int TimeToRead { get; set; }
+        public int ViewCount { get; set; } = 0;
         public bool IsFeatured { get; set; } = false;
         public bool IsActive { get; set; } = true;
         public DateTime PublisheDate { get; set; } = DateTime.UtcNow;

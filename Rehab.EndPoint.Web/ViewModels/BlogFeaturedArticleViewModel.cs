@@ -7,6 +7,7 @@
         public string? Description { get; set; }
         public string ImageUrl { get; set; } = string.Empty;
         public string PublishedDate { get; set; } = string.Empty; public List<string> Topics { get; set; } = new();
+        public int ViewCount { get; set; }
 
         public string AuthorName { get; set; } = string.Empty;
         public string AuthorRole { get; set; } = string.Empty;

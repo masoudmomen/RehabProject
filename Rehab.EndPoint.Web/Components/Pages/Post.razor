@@ -1,10 +1,12 @@
 ﻿@page "/blog/{Slug}"
+@using Microsoft.AspNetCore.Http
 @using Rehab.EndPoint.Web.Components.Common
 @using Rehab.EndPoint.Web.ViewModels
 @using Rehab.Application.Blog
 @using AutoMapper
 @inject IBlogPostService PostService
 @inject IMapper Mapper
+@inject IHttpContextAccessor HttpContextAccessor
 <div class="container">
   
     <div class="row">
@@ -64,11 +66,46 @@
         _article = Mapper.Map<BlogPostDetailViewModel>(dto);
         articleId = _article.Id;
 
+        await TryCountViewAsync();
+
         var relatedResult = await PostService.GetRelatedPostsAsync(articleId);
         if (relatedResult is null)
             return;
 
         RelatedPosts = Mapper.Map<List<BlogPostCardViewModel>>(relatedResult.Data);
+    }
+
+   
+    private async Task TryCountViewAsync()
+    {
+        if (articleId <= 0)
+            return;
+
+        var http = HttpContextAccessor.HttpContext;
+        if (http is null)
+            return;
+
+        var cookieName = $"bv{articleId}";
+
+        var counted = await PostService.TryRecordViewAsync(new BlogViewRequest
+        {
+            PostId = articleId,
+            UserAgent = http.Request.Headers.UserAgent.ToString(),
+            IsPreview = http.Request.Query.ContainsKey("preview"),
+            AlreadyCounted = http.Request.Cookies.ContainsKey(cookieName)
+        });
+
+        if (counted && !http.Response.HasStarted)
+        {
+            http.Response.Cookies.Append(cookieName, "1", new CookieOptions
+            {
+                HttpOnly = true,
+                IsEssential = true, // functional, non-tracking -> exempt from consent gating
+                Secure = http.Request.IsHttps,
+                SameSite = SameSiteMode.Lax,
+                MaxAge = TimeSpan.FromHours(12)
+            });
+        }
     }
 
 }

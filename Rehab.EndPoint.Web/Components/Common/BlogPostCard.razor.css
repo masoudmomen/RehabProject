@@ -84,6 +84,24 @@
     color: #333;
 }
 
+/* Card meta (views / read time) */
+.article-meta {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+}
+
+.view-count {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.meta-sep {
+    opacity: 0.6;
+}
+
 /* Read all link */
 .read-all-link {
     color: #6c5ce7;

@@ -21,87 +21,114 @@
 </HeadContent>
 
 
-<Seo Title="Claim Your Profile - Rehab Navigator"
-     Description="Submit your rehabilitation facility to RehabNavigator. Whether your center is already listed or not, you can provide basic information for our team to review and include in our directory."
+<Seo Title="Claim or Submit Your Facility - Rehab Navigator"
+     Description="Claim your RehabNavigator provider profile or submit facility information for directory review. Request listing updates, submit a new facility, or manage your treatment center profile."
      CanonicalUrl="https://RehabNavigator.com/claim-your-profile"
      FaviconUrl="favicon.png" />
 
-<main class="page">
+<div class="container py-3">
+    <HeroSectionComponent SectionTitle="Claim or Submit Your Facility"
+                          SectionSubtitle="Whether your facility is already listed on RehabNavigator or not yet included in our directory, you may submit basic facility information for our team to review." />
+</div>
 
-    <section class="claim-hero bg-soft-blue" aria-labelledby="claim-title">
-        <div class="container section-text-content">
-            <span class="badge-custome">Provider Listings</span>
-            <h2 class="">Claim Your Profile</h2>
-            <p>
-                Whether your facility is already listed on RehabNavigator or not yet included in our directory,
-                you may submit basic facility information for our team to review.
-            </p>
-            <button type="button" class="btn btn-primary"
-                    data-bs-toggle="modal"
-                    data-bs-target="#ClaimModal">
-                Submit Facility Information
-            </button>
-        </div>
-    </section>
+<main class="claim-page-wrap">
 
-    <section class="section" aria-labelledby="how-title">
-        <div class="container">
-            <div class="section-header text-center">
-                <h2 id="how-title">How It Works</h2>
-                <p>Our team reviews submitted information to help maintain accurate directory listings.</p>
-            </div>
-            <div class="steps">
-                <article class="step-card">
-                    <div class="step-number">1</div>
-                    <h3>Submit Facility Information</h3>
-                    <p>Provide basic details about your facility and the listing request you would like our team to review.</p>
-                </article>
-                <article class="step-card">
-                    <div class="step-number">2</div>
-                    <h3>Directory Review</h3>
-                    <p>RehabNavigator may review submitted information for accuracy, relevance, and directory use.</p>
-                </article>
-                <article class="step-card">
-                    <div class="step-number">3</div>
-                    <h3>Follow-Up if Needed</h3>
-                    <p>Our team may contact you if additional information is needed regarding your request.</p>
-                </article>
+    <section class="container my-5">
+        <div class="card shadow-sm">
+            <div class="card-body p-4 p-md-5 text-center">
+                <h2 class="h3">Submit Facility Information</h2>
+                <p class="text-muted">Use this page to request a new listing, claim an existing profile, or submit basic facility information for directory review.</p>
+                <button type="button" class="btn btn-primary-gradient w-25 w-md-auto"
+                        data-bs-toggle="modal"
+                        data-bs-target="#ClaimModal">
+                    Submit Facility Information
+                </button>
             </div>
         </div>
     </section>
 
-    <section class="section claim-feature-block bg-soft-blue" aria-labelledby="info-title">
-        <div class="section-header text-center">
-            <h2 id="info-title">Information You May Submit</h2>
-            <p>Claim requests and listing submissions should focus on basic facility information.</p>
+    <!-- How It Works -->
+    <section class="container my-5" aria-labelledby="how-title">
+        <div class="text-center mb-4">
+            <h2 id="how-title" class="h3">How it works</h2>
+            <p class="text-muted">Our team reviews submitted information to help maintain organized directory listings.</p>
         </div>
-        <div class="feature-grid">
-            <div class="feature-item"><span class="check">✓</span> Facility name</div>
-            <div class="feature-item"><span class="check">✓</span> Facility address</div>
-            <div class="feature-item"><span class="check">✓</span> Facility website</div>
-            <div class="feature-item"><span class="check">✓</span> Admissions phone number</div>
-            <div class="feature-item"><span class="check">✓</span> Admissions email address</div>
-            <div class="feature-item"><span class="check">✓</span> General facility information</div>
-            <div class="feature-item"><span class="check">✓</span> Primary levels of care</div>
-            <div class="feature-item"><span class="check">✓</span> Contact information for follow-up</div>
+        <div class="row g-3">
+            <div class="col-md-4">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body p-4 step-card-body">
+                        <div class="step-number">1</div>
+                        <h3 class="h5">Submit Facility Information</h3>
+                        <p class="text-muted small mb-0">Provide basic details about your facility and the listing request you would like our team to review.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body p-4 step-card-body">
+                        <div class="step-number">2</div>
+                        <h3 class="h5">Directory Review</h3>
+                        <p class="text-muted small mb-0">RehabNavigator may review submitted information for accuracy, relevance, and directory use.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body p-4 step-card-body">
+                        <div class="step-number">3</div>
+                        <h3 class="h5">Follow-Up if Needed</h3>
+                        <p class="text-muted small mb-0">Our team may contact you if additional information is needed regarding your request.</p>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 
-    <section class="section claim-visibility-card" aria-labelledby="visibility-title">
-        <h2 id="visibility-title">Interested in More Visibility?</h2>
-        <p>
-            Submitting facility information helps our team review basic listing details. If your facility wants additional visibility,
-            featured placement, or expanded provider options, you can also explore advertising and package information.
-        </p>
-        <div class="text-links">
-            <a href="/advertise-with-us" target="_blank">Advertise With Us</a>
-            <a href="/packages" target="_blank">View Plans &amp; Pricing</a>
+    <!-- Information You May Submit -->
+    <section class="container my-5" aria-labelledby="info-title">
+        <div class="card shadow-sm">
+            <div class="card-body p-4 p-md-5">
+                <div class="text-center mb-4">
+                    <h2 id="info-title" class="h3">Information You May Submit</h2>
+                    <p class="text-muted">Claim requests and listing submissions should focus on basic facility information.</p>
+                </div>
+                <div class="row g-3">
+                    <div class="col-md-6"><div class="info-item"><span class="check">✓</span> Facility name</div></div>
+                    <div class="col-md-6"><div class="info-item"><span class="check">✓</span> Facility address</div></div>
+                    <div class="col-md-6"><div class="info-item"><span class="check">✓</span> Facility website</div></div>
+                    <div class="col-md-6"><div class="info-item"><span class="check">✓</span> Facility phone number</div></div>
+                    <div class="col-md-6"><div class="info-item"><span class="check">✓</span> Facility email address</div></div>
+                    <div class="col-md-6"><div class="info-item"><span class="check">✓</span> General facility information</div></div>
+                    <div class="col-md-6"><div class="info-item"><span class="check">✓</span> Primary levels of care</div></div>
+                    <div class="col-md-6"><div class="info-item"><span class="check">✓</span> Contact information for follow-up</div></div>
+                </div>
+            </div>
         </div>
     </section>
 
-    <section class="note" aria-label="Listing request note">
-        <strong>Important:</strong> Submission of information does not guarantee inclusion in the directory or changes to an existing listing.
-        RehabNavigator may review submitted information and determine whether updates are appropriate for directory purposes.
+    <!-- Interested in More Visibility -->
+    <section class="container my-5" aria-labelledby="visibility-title">
+        <div class="card shadow-sm">
+            <div class="card-body p-4 p-md-5 text-center">
+                <h2 id="visibility-title" class="h3">Interested in more visibility?</h2>
+                <p class="text-muted">
+                    Submitting facility information helps our team review basic listing details. If your facility wants additional visibility,
+                    featured placement, or expanded provider options, you can also explore advertising and package information.
+                </p>
+                <div class="text-links">
+                    <a href="/packages" target="_blank">Advertise With Us</a>
+@*                     <a href="/packages" target="_blank">View Plans &amp; Pricing</a> *@
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Note -->
+    <section class="container my-5" aria-label="Listing request note">
+        <div class="alert alert-light border small text-muted mb-0">
+            <strong class="text-dark">Important:</strong> Submission of information does not guarantee inclusion in the directory or changes to an existing listing.
+            RehabNavigator may review submitted information and determine whether updates are appropriate for directory purposes.
+        </div>
     </section>
 
 </main>

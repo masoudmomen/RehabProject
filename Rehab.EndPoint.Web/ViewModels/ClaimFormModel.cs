@@ -14,17 +14,19 @@ namespace Rehab.EndPoint.Web.ViewModels
         [MaxLength(500)]
         public string? FacilityAddress { get; set; }
 
+        [Required(ErrorMessage = "Facility website is required.")]
         [Url(ErrorMessage = "Please enter a valid URL.")]
         [MaxLength(300)]
         public string? FacilityWebsite { get; set; }
 
+        [Required(ErrorMessage = "Facility phone number is required.")]
         [Phone(ErrorMessage = "Please enter a valid phone number.")]
         [MaxLength(50)]
-        public string? AdmissionsPhone { get; set; }
+        public string? FacilityPhone { get; set; }
 
         [EmailAddress(ErrorMessage = "Please enter a valid email address.")]
         [MaxLength(200)]
-        public string? AdmissionsEmail { get; set; }
+        public string? FacilityEmail { get; set; }
 
         public string? PrimaryLevelOfCare { get; set; }
 

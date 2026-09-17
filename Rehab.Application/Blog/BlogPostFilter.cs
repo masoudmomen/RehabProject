@@ -13,6 +13,7 @@ namespace Rehab.Application.Blog
         public string? TopicSlug { get; set; }
         public string? SearchTerm { get; set; }
 
+        public bool ExcludeFeatured { get; set; }
         public bool IsEmpty =>
           
             string.IsNullOrWhiteSpace(TagSlug) &&

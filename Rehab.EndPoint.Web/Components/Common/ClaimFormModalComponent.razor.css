@@ -88,6 +88,17 @@ textarea {
     line-height: 1.5
 }
 
+.required-note {
+    grid-column: 1/-1;
+    background: #f8fbfd;
+    border: 1px solid #edf2f6;
+    border-radius: 14px;
+    padding: 12px 14px;
+    color: #607080;
+    font-size: 13px;
+    font-weight: 700
+}
+
 .modal-foot {
     padding: 0 28px 28px;
     display: flex;

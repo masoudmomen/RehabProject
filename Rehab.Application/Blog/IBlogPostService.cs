@@ -17,6 +17,7 @@ namespace Rehab.Application.Blog
     {
         Task<BaseDto<BlogPostDto>> AddPost(BlogPostDto blog);
         Task<PaginatedItemDto<BlogPostDto>> GetPostsAsync(int page, int pageSize);
+
         Task<BaseDto<BlogPostDto>> GetPostByIdAsync(int id);
         Task<BaseDto<BlogPostDto>> UpdatePostAsync(BlogPostDto postDto);
         Task<BaseDto<bool>> DeletePostAsync(int id);
@@ -24,8 +25,9 @@ namespace Rehab.Application.Blog
         //Task<string> GenerateUniqueSlugAsync(string title, int? excludedId = null);
         Task<BaseDto<List<BlogPostCardDto>>> GetRecentPostsAsync(int count = 3);
         Task<BaseDto<BlogPostDetailDto>> GetPostDetailBySlugAsync(string slug);
+        Task<bool> TryRecordViewAsync(BlogViewRequest request);
         Task<BaseDto<List<BlogPostCardDto>>> GetRelatedPostsAsync(int postId, int take = 4);
-        Task<PaginatedItemDto<BlogPostCardDto>> GetPostsAsync(int page, int pageSize, BlogPostFilter? filter);
+        Task<PaginatedItemDto<BlogPostCardDto>> GetPostCardsAsync(int page, int pageSize, BlogPostFilter? filter);
     }
 
 
@@ -211,7 +213,7 @@ namespace Rehab.Application.Blog
 
             var post = await context.BlogPosts
         .AsNoTracking()
-        .Where(p => !p.IsDeleted && p.IsActive && p.IsFeatured)
+        .Where(p => !p.IsDeleted && p.IsActive && p.IsFeatured && p.PublisheDate <= DateTime.UtcNow)
         .OrderByDescending(p => p.PublisheDate)
         .ProjectTo<FeaturedBlogPostDto>(_mapper.ConfigurationProvider)
         .FirstOrDefaultAsync();
@@ -228,7 +230,7 @@ namespace Rehab.Application.Blog
 
             var posts = await context.BlogPosts
                 .AsNoTracking()
-                .Where(p => !p.IsDeleted && p.IsActive && !p.IsFeatured)
+                .Where(p => !p.IsDeleted && p.IsActive && !p.IsFeatured && p.PublisheDate <= DateTime.UtcNow)
                 .OrderByDescending(p => p.PublisheDate)
                 .Take(count)
                 .ProjectTo<BlogPostCardDto>(_mapper.ConfigurationProvider)
@@ -246,7 +248,7 @@ namespace Rehab.Application.Blog
 
             var post = await _context.BlogPosts
                 .AsNoTracking()
-                .Where(p => !p.IsDeleted && p.Slug == slug)
+                .Where(p => !p.IsDeleted && p.Slug == slug && p.PublisheDate <= DateTime.UtcNow)
                 .ProjectTo<BlogPostDetailDto>(_mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync();
 
@@ -254,6 +256,25 @@ namespace Rehab.Application.Blog
                 return BaseDto<BlogPostDetailDto>.FailureResult("Post not found.");
             return BaseDto<BlogPostDetailDto>.SuccessResult(post, "OK");
 
+        }
+
+         
+        public async Task<bool> TryRecordViewAsync(BlogViewRequest request)
+        {
+            if (request is null || request.PostId <= 0)
+                return false;
+
+            if (request.IsPreview || request.AlreadyCounted)
+                return false;
+
+            if (BotUserAgentDetector.IsBot(request.UserAgent))
+                return false;
+                         
+            var affected = await _context.BlogPosts
+                .Where(p => p.Id == request.PostId && !p.IsDeleted)
+                .ExecuteUpdateAsync(s => s.SetProperty(p => p.ViewCount, p => p.ViewCount + 1));
+
+            return affected > 0;
         }
         public async Task<BaseDto<List<BlogPostCardDto>>> GetRelatedPostsAsync(int postId, int take = 4)
         {
@@ -273,6 +294,7 @@ namespace Rehab.Application.Blog
                 .AsNoTracking()
                 .Where(p => p.Id != postId
                             && !p.IsDeleted
+                            && p.PublisheDate <= DateTime.UtcNow
                             && p.Topics.Any(t => topicIds.Contains(t.Id)))
                 // rank by number of shared topics, then recency
                 .OrderByDescending(p => p.Topics.Count(t => topicIds.Contains(t.Id)))
@@ -288,14 +310,14 @@ namespace Rehab.Application.Blog
 
         }
 
-        public async Task<PaginatedItemDto<BlogPostCardDto>> GetPostsAsync(int page, int pageSize, BlogPostFilter? filter)
+        public async Task<PaginatedItemDto<BlogPostCardDto>> GetPostCardsAsync(int page, int pageSize, BlogPostFilter? filter)
         {
             using var scope = _scopeFactory.CreateScope();
             var context = scope.ServiceProvider.GetRequiredService<IDatabaseContext>();
 
             var query = context.BlogPosts
                 .AsNoTracking()
-                .Where(p => !p.IsDeleted && p.IsActive && !p.IsFeatured);
+                .Where(p => !p.IsDeleted && p.IsActive && p.PublisheDate <= DateTime.UtcNow);
 
             if (filter is not null)
             {
@@ -311,6 +333,10 @@ namespace Rehab.Application.Blog
                 {
                     var term = filter.SearchTerm.Trim();
                     query = query.Where(p => p.Title.Contains(term) || p.Description!.Contains(term));
+                }
+                if (filter.ExcludeFeatured)
+                {
+                    query = query.Where(p => !p.IsFeatured);
                 }
             }
 

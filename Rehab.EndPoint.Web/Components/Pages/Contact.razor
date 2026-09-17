@@ -6,11 +6,13 @@
 @using Rehab.Application.Seo
 @using Rehab.Application.Email
 @using Rehab.Application.Common
+@using Microsoft.Extensions.Logging
 @using static Rehab.Application.Common.EmailTemplates
 
 @inject IConfiguration Config
 @inject IEmailService EmailService
 @inject ISeoService SeoService
+@inject ILogger<Contact> Logger
 
 
 <HeadContent>
@@ -179,16 +181,17 @@
             FormModel.Message
             );
 
-            await EmailService.SendEmailAsync(
+            var adminEmailTask = EmailService.SendEmailAsync(
                 to: [adminEmail!, "maghsoudloo.h.a@gmail.com"],
                 subject: "Contact Us | Advertise With Us",
                 body: BuildGeneralContactEmailBody(dto)
                 );
-            await EmailService.SendEmailAsync(
+            var confirmationEmailTask = EmailService.SendEmailAsync(
                 to: [FormModel.Email],
                 subject: "We received your message – RehabNavigator",
                 body: BuildAdvertiseContactConfirmationBody(FormModel.Name)
                 );
+            await Task.WhenAll(adminEmailTask, confirmationEmailTask);
 
             SuccessMessage = "Your message has been sent. We'll be in touch soon!";
             ErrorMessage = null;
@@ -196,6 +199,7 @@
         }
         catch (Exception ex)
         {
+            Logger.LogError(ex, "Failed to send contact form email for {Email}", FormModel.Email);
             ErrorMessage = "Something went wrong. Please try again.";
             SuccessMessage = null;
         }

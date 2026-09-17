@@ -397,3 +397,5 @@ FodyWeavers.xsd
 /Rehab.EndPoint.AdminPanel/appsettings.Development.json
 /Rehab.EndPoint.Web/appsettings.Development.json
 /Rehab.Persistence/Migrations/DatabaseContextModelSnapshot.cs
+/CLAUDE.md
+/color-guide.html

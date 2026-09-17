@@ -336,8 +336,8 @@ namespace Rehab.Application.Common
                             {Row("Facility Name", dto.FacilityName)}
                             {Row("Facility Address", dto.FacilityAddress)}
                             {Row("Facility Website", dto.FacilityWebsite)}
-                            {Row("Admissions Phone", dto.AdmissionsPhone)}
-                            {Row("Admissions Email", dto.AdmissionsEmail)}
+                            {Row("Facility Phone Number", dto.FacilityPhone)}
+                            {Row("Facility Email Address", dto.FacilityEmail)}
                             {Row("Primary Level of Care", dto.PrimaryLevelOfCare)}
                         </tbody>
                         <thead>
