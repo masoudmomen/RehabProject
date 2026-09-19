@@ -17,7 +17,7 @@
         {
             Name = i.Name,
             Image = i.Icon,
-            Link = "/facilities?insurance=" + @Uri.EscapeDataString(i.Name)
+            Link = "/treatment-centers?insurance=" + @Uri.EscapeDataString(i.Name)
         }).ToList();
     }
 }

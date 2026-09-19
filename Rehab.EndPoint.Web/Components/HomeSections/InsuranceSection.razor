@@ -61,12 +61,12 @@
         Insurancescards = mapper.Map<List<CardViewModel>>(InsuranceService.GetList());
         foreach (var card in Insurancescards)
         {
-            card.Link = $"facilities?insurances={Uri.EscapeDataString(card.Name ?? "")}";
+            card.Link = $"treatment-centers?insurances={Uri.EscapeDataString(card.Name ?? "")}";
         }
         InsurancescardsAll = mapper.Map<List<CardViewModel>>(InsuranceService.GetList());
         foreach (var card in InsurancescardsAll)
         {
-            card.Link = $"facilities?insurances={Uri.EscapeDataString(card.Name ?? "")}";
+            card.Link = $"treatment-centers?insurances={Uri.EscapeDataString(card.Name ?? "")}";
         }
     }
 }

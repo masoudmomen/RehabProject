@@ -2,7 +2,7 @@
 @using Rehab.EndPoint.Web.ViewModels
 
 
-    <a class="wwt-card" target="_blank" href="/facilities?wwt=@Uri.EscapeDataString(@Card.Name)">
+    <a class="wwt-card" target="_blank" href="/treatment-centers?wwt=@Uri.EscapeDataString(@Card.Name)">
             <div class="wwt-image-container">
         <img src="@((string.IsNullOrWhiteSpace(Card.Image) ? "/images/nopic.jpg" : $"{@PrefixImageURL}/{Card.Image}"))" alt="@Card.Name" class="wwt-image"
              onerror="this.onerror=null; this.src='/images/nopic.jpg';" />

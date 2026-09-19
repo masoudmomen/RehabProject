@@ -1,4 +1,4 @@
-﻿@page "/Facilities"
+﻿@page "/treatment-centers"
 @rendermode InteractiveServer
 @using Rehab.Application.Facilities
 @using Rehab.EndPoint.AdminPanel.CommonService
@@ -513,7 +513,7 @@
             Description = Meta.Description;
         }
     }
-    private DotNetObjectReference<Facilities>? objRefState;
+    private DotNetObjectReference<TreatmentCenters>? objRefState;
 
     protected override async Task OnInitializedAsync()
     {

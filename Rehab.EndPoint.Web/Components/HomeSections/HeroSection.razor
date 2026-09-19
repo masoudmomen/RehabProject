@@ -87,7 +87,7 @@
     // private string? state { get; set; } = string.Empty;
     // private string? city { get; set; } = string.Empty;
     // private string? condition { get; set; } = string.Empty;
-    // private string url = "/facilities";
+    // private string url = "/treatment-centers";
     // private List<string> query = new List<string>();
 
     // private void GoToFacilitiesPage()
@@ -106,7 +106,7 @@
         private string? condition = string.Empty;
 
         private List<string> query = new();
-        private string url = "/facilities";
+        private string url = "/treatment-centers";
 
         // نمونه داده‌ها - در عمل می‌تواند از API/DB بیاید
         private List<string> States = new()
@@ -124,7 +124,7 @@
         private void GoToFacilitiesPage()
         {
             query.Clear();
-            url = "/facilities";
+            url = "/treatment-centers";
 
             if (!string.IsNullOrWhiteSpace(state))
                 query.Add($"state={Uri.EscapeDataString(state.Trim())}");
