@@ -15,6 +15,7 @@
 document.addEventListener("DOMContentLoaded", function () {
 
     const sections = document.querySelectorAll(".faq-category");
+    const sentinel = document.getElementById("faq-all-sentinel");
     const links = document.querySelectorAll(".faq-nav-link");
 
     function setActive(id) {
@@ -30,7 +31,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
-                setActive(entry.target.id);
+                const id = entry.target.id === "faq-all-sentinel" ? "faq-all" : entry.target.id;
+                setActive(id);
             }
         });
     }, {
@@ -40,4 +42,5 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     sections.forEach(sec => observer.observe(sec));
+    if (sentinel) observer.observe(sentinel);
 });

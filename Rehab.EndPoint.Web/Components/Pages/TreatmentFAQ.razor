@@ -11,22 +11,18 @@
 </HeadContent>
 
 <div class="container">
-    <section class="faq-section">
-        <div class="faq-container">
-            <div class="container">
-                <HeroSectionComponent SectionTitle="Treatment FAQ"
-                                      SectionSubtitle=" Common questions about substance use, drug and alcohol treatment, detox,
-                    rehab programs, insurance, privacy, work, recovery, and levels of care." />
-                <div class="faq-notice mt-2" aria-label="Important information">
-                    Treatment options, insurance coverage, program details, and availability can vary by provider. Confirm important details directly with the treatment center, insurer, or appropriate professional before making a decision.
-                </div>
-            </div>
-            @*    <div class="faq-header w-75">
-              
-               
-            </div> *@
+    <HeroSectionComponent SectionTitle="Treatment FAQ"
+                          SectionSubtitle=" Common questions about substance use, drug and alcohol treatment, detox,
+        rehab programs, insurance, privacy, work, recovery, and levels of care." />
+    <div class="bg-white mt-3 rounded-2 p-3 border-1 border-light shadow" aria-label="Important information">
+        Treatment options, insurance coverage, program details, and availability can vary by provider. Confirm important details directly with the treatment center, insurer, or appropriate professional before making a decision.
+    </div>
+</div>
 
-            <div class="faq-grid">
+<section class="faq-section">
+    <div class="container">
+
+            <div class="faq-grid ">
 
                 <aside class="faq-nav">
                     <h3>Browse by Topic</h3>
@@ -65,6 +61,7 @@
                 </aside>
 
                 <div class="faq-content" id="faq-all">
+                    <div id="faq-all-sentinel"></div>
 
                     <div class="faq-category" id="getting-started">
                         <h2>Getting Started</h2>
@@ -182,7 +179,7 @@
 
                         <details>
                             <summary>What should I ask when verifying insurance for rehab?</summary>
-                            <p>Ask whether the treatment center is in network, whether prior authorization is required, what deductible or coinsurance applies, which levels of care are covered, whether medications are covered, how many days or visits may be authorized at first, and how appeals work if coverage is denied or reduced.</p>
+                            <p>Ask whether the treatment center is in network, whether prior authorization is required, what deductible or coinsurance applies, which levels of care are covered, whether medications are covered, how visits may be authorized, and how appeals work if coverage is denied or reduced.</p>
                         </details>
 
                         <details>
@@ -251,7 +248,7 @@
 
 
                     <div class="faq-category" id="safety-support">
-                        <h2>Safety & Urgent Support</h2>
+                        <h2>Safety & Support</h2>
 
                         <details>
                             <summary>What should I do if someone may be overdosing?</summary>
@@ -281,8 +278,6 @@
         </div>
 
     </section>
-
-</div>
 @code {
     private string? Keywords;
     private string? Description;
