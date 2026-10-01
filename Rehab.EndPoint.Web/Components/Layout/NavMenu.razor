@@ -1,30 +1,38 @@
-﻿
+
 <nav class="navbar navbar-expand-lg navbar-custom fixed-top p-0">
     <div class="container">
         <a class="navbar-brand" href="/">
-           <img src="/images/Logo2.svg" width="256" alt="Rehab Navigator"/> 
+           <img src="/images/Logo2.svg" width="256" alt="Rehab Navigator"/>
         </a>
 
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="fa-solid fa-bars"></i>
         </button>
 
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="/">Home</a>
+                    <NavLink class="nav-link main-link" href="/" Match="NavLinkMatch.All">
+                        <i class="fa-solid fa-house nav-icon" aria-hidden="true"></i>Home
+                    </NavLink>
                 </li>
                 <li class="nav-item nav-item-mega">
-                    <a class="nav-link" href="/treatment-centers">Treatment Centers</a>
+                    <NavLink class="nav-link main-link" href="/treatment-centers">
+                        <i class="fa-solid fa-magnifying-glass nav-icon" aria-hidden="true"></i>Treatment Centers
+                    </NavLink>
                     @* <MegaMenu /> *@
                 </li>
                 <li class="nav-item nav-item-mega d-flex align-items-center px-1 treatment-item" id="treatment-by-nav-item">
-                    <a class="btn btn-advertise " href="#">Find Treatment By</a>
+                    <a class="btn btn-advertise treatment-by-link" href="#">
+                        <i class="fa-solid fa-magnifying-glass nav-icon" aria-hidden="true"></i>Find Treatment By
+                    </a>
                     <MegaMenuTreatmentBy />
                 </li>
-             
+
                 <li class="d-flex align-items-center">
-                    <a href="/packages" class="btn btn-find-treatment">Advertise With Us</a>
+                    <a href="/advertise-with-us/plans" class="btn btn-find-treatment">
+                        <i class="fa-solid fa-bullhorn nav-icon" aria-hidden="true"></i>Advertise With Us
+                    </a>
                 </li>
             </ul>
         </div>

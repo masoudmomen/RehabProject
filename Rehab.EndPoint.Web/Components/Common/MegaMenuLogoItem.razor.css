@@ -1,0 +1,68 @@
+/* Logo card in a <MegaMenuPanel> list. Colours come from the --mm-* tokens
+   set on .mm-panel. */
+.mm-logo-item {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    height: 100%;
+    min-height: 88px;
+    padding: 0.65rem 0.6rem 0.65rem 0.8rem;
+    color: var(--mm-ink);
+    text-decoration: none !important;
+    background-color: #fff;
+    border: 1px solid var(--mm-line);
+    border-radius: 12px;
+    box-shadow: 0 2px 6px -4px rgba(31, 42, 77, 0.12);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+    .mm-logo-item:hover,
+    .mm-logo-item:focus-visible {
+        border-color: #d4d0fb;
+        box-shadow: 0 10px 22px -12px rgba(91, 79, 224, 0.4);
+        transform: translateY(-2px);
+        outline: none;
+    }
+
+.mm-logo-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 0.45rem;
+    flex: 1 1 auto;
+    min-width: 0;
+    align-self: stretch;
+}
+
+/* Fixed-height slot so logos of different shapes line up across a row */
+.mm-logo {
+    display: flex;
+    align-items: center;
+    height: 36px;
+}
+
+    .mm-logo img {
+        display: block;
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+        object-position: left center;
+    }
+
+.mm-logo-name {
+    font-size: 0.72rem !important;
+    font-weight: 500;
+    line-height: 1.3;
+    color: var(--mm-accent-2);
+}
+
+.mm-logo-item ::deep .mm-logo-chevron {
+    flex: 0 0 auto;
+    color: var(--mm-accent-2);
+    transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.mm-logo-item:hover ::deep .mm-logo-chevron {
+    color: var(--mm-accent);
+    transform: translateX(2px);
+}

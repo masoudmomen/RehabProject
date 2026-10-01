@@ -6,7 +6,6 @@ using Rehab.Application.Amenities;
 using Rehab.Application.Blog;
 using Rehab.Application.Common;
 using Rehab.Application.Contexts;
-using Rehab.Application.Dtos;
 using Rehab.Application.PaymentLinks;
 using Rehab.Application.Tags;
 using Rehab.Domain.Packages;

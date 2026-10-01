@@ -7,45 +7,34 @@
         public string Icon { get; set; }
 
         public string? Description { get; set; }
+        public int Order { get; set; }
     }
 
     public class Treatments
     {
         public static readonly List<Treatment> All = new List<Treatment>()
         {
-            new Treatment { 
+            new Treatment { Name = "Medication-Assisted Treatment (MAT)", Order = 1, Icon = "", Image = "" },
+            new Treatment { Name = "Contingency Management (CM)", Order = 2, Icon = "", Image = "" },
+            new Treatment { Name = "Cognitive Behavioral Therapy (CBT)", Order = 3, Icon = "", Image = "" },
+            new Treatment { Name = "Motivational Interviewing (MI)", Order = 4, Icon = "", Image = "" },
+            new Treatment {
                 Name = "1-on-1 Counseling",
-                Icon = "therapy.png" ,
-                Image="one-to-one.jpg" ,
+                Order = 5,
+                Icon = "" ,
+                Image = "" ,
                 Description="A private, one-to-one therapy session focused on understanding personal challenges, improving emotional well-being, and developing healthy coping strategies."},
-            new Treatment { 
-                Name = "Acceptance and Commitment Therapy (ACT)",
-                Icon = "ACT.png", 
-                Image="Act.jpg" ,
-                Description="A mindfulness-based therapy that helps individuals accept difficult thoughts and feelings while committing to actions aligned with their values." },
-            new Treatment { 
-                Name = "Acupuncture",
-                Icon = "acupuncture.png",
-                Image="Acupuncture.jpg" ,
-                Description="A traditional healing practice that involves inserting fine needles into specific points on the body to promote balance, relieve pain, and support overall wellness."},
-            new Treatment { 
-                Name = "Adult-Child Therapy", 
-                Icon = "adult-child.png", 
-                Image="Adult-Child-Therapy.jpg" ,
-                Description="A therapeutic approach that helps adults heal unresolved childhood experiences by strengthening self-awareness, emotional regulation, and inner-child connection."},
-            new Treatment { Name = "Adventure Therapy", Icon = "adventure.png", Image="" },
-            new Treatment { Name = "Art Therapy", Icon = "art-therapy.png", Image="" },
-            new Treatment { Name = "Cognitive Behavioral Therapy", Icon = "CBT.png", Image="" },
-            new Treatment { Name = "Couples Counseling", Icon = "couple-counseling.png", Image="" },
-      
-            new Treatment { Name = "Massage Therapy", Icon = "massage.png" },
-           
-            new Treatment { Name = "Medication-Assisted Treatment", Icon = "med.png" },
-            new Treatment { Name = "Meditation & Mindfulness", Icon = "yoga.png" },
-            
-            new Treatment { Name = "Motivational Interviewing", Icon = "support.png" },
-            new Treatment { Name = "Reiki", Icon = "energy.png" }
- 
+            new Treatment { Name = "Group Therapy", Order = 6, Icon = "", Image = "" },
+            new Treatment { Name = "Family Therapy", Order = 7, Icon = "", Image = "" },
+            new Treatment { Name = "Relapse Prevention Counseling", Order = 8, Icon = "", Image = "" },
+            new Treatment { Name = "Trauma-Specific Therapy", Order = 9, Icon = "", Image = "" },
+            new Treatment { Name = "Dialectical Behavior Therapy (DBT)", Order = 10, Icon = "", Image = "" },
+            new Treatment { Name = "EMDR Therapy", Order = 11, Icon = "", Image = "" },
+            new Treatment { Name = "Twelve Step Facilitation (TSF)", Order = 12, Icon = "", Image = "" },
+            new Treatment { Name = "Psychoeducation / Didactic Group Therapy", Order = 13, Icon = "", Image = "" },
+            new Treatment { Name = "Meditation & Mindfulness", Order = 14, Icon = "", Image = "" },
+            new Treatment { Name = "Life Skills", Order = 15, Icon = "", Image = "" }
+
         };
     }
 }

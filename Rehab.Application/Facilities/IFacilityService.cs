@@ -7,7 +7,6 @@ using Rehab.Application.Amenities;
 using Rehab.Application.Common;
 using Rehab.Application.Conditions;
 using Rehab.Application.Contexts;
-using Rehab.Application.Dtos;
 using Rehab.Application.Insurances;
 using Rehab.Application.LevelsOfCare;
 using Rehab.Application.SubstancesWeTreat;

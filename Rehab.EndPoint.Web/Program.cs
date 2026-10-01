@@ -46,9 +46,9 @@ builder.Services.AddDbContext<DatabaseContext>(options =>
 #endregion
 
 #region IOC
-builder.Services.AddAutoMapper(typeof(CommonMappingProfile)); //Mapper
+builder.Services.AddAutoMapper(typeof(Rehab.EndPoint.Web.MappingProfile.CommonMappingProfile)); //Mapper
 builder.Services.AddAutoMapper(typeof(BlogMappingProfile)); //Mapper
-builder.Services.AddAutoMapper(typeof(Rehab.Infrastructure.MappingProfile.CommonMappingProfile)); //Mapper
+builder.Services.AddAutoMapper(typeof(Rehab.Application.MappingProfile.CommonMappingProfile)); //Mapper
 
 builder.Services.AddTransient<IFacilityService, FacilityService>();
 builder.Services.AddTransient<IInsuranceService, InsuranceService>();

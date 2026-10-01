@@ -1,16 +1,60 @@
 @using Web.Data
-<div class="treatments-container">
-    @for (int i = 0; i < Treatments.All.Count; i++)
+@using Rehab.EndPoint.Web.ViewModels
+@* Treatment Approaches tab of the "Find Treatment By" mega menu. *@
+<MegaMenuPanel Title="Treatment Approaches"
+               Subtitle="Explore evidence-based treatment options and approaches for lasting recovery."
+               HeaderIcon="sprout"
+               ListId="mm-treatments-list"
+               SearchPlaceholder="Search treatment approaches..."
+               EmptyText="No treatment approaches match your search."
+               Columns="2"
+               ViewAllText="View all treatment approaches"
+               ViewAllHref="/TreatmentsList"
+               AsideIcon="flower"
+               AsideTitle="Evidence-based care. Lasting recovery."
+               AsideText="Explore treatment approaches that work for you.">
+    @foreach (var card in TreatmentCards)
     {
-        <a class="treatment-card" target="_blank" href="/treatment-centers?treatment=@Uri.EscapeDataString(Treatments.All[i].Name)">
-            <div class="treatment-image-container">
-                <img src="/images/TreatmentIcons/@Treatments.All[i].Icon" alt="@Treatments.All[i].Name" class="treatment-image" />
-            </div>
-            <div class="treatment-title">@Treatments.All[i].Name</div>
-        </a>
+        <MegaMenuItem Name="@card.Name"
+                      Href="@card.Link"
+                      Target="_blank"
+                      Icon="@IconFor(card.Name)" />
     }
-</div>
+</MegaMenuPanel>
 
 @code {
+    private List<CardViewModel> TreatmentCards = new();
+    protected override void OnInitialized()
+    {
+        TreatmentCards = Treatments.All.OrderBy(i => i.Order).Select(i => new CardViewModel
+            {
+                Name = i.Name,
+                Image = i.Image,
+                Link = "/treatment-centers?treatment=" + @Uri.EscapeDataString(i.Name)
 
+            }).ToList();
+    }
+
+    // Presentation only: which Lucide icon represents each treatment approach.
+    private static readonly Dictionary<string, string> Icons = new(StringComparer.OrdinalIgnoreCase)
+    {
+        ["Medication-Assisted Treatment (MAT)"] = "pill",
+        ["Contingency Management (CM)"] = "award",
+        ["Cognitive Behavioral Therapy (CBT)"] = "brain",
+        ["Motivational Interviewing (MI)"] = "message-circle-heart",
+        ["1-on-1 Counseling"] = "user-round",
+        ["Group Therapy"] = "users",
+        ["Family Therapy"] = "users-round",
+        ["Relapse Prevention Counseling"] = "shield-check",
+        ["Trauma-Specific Therapy"] = "shield-plus",
+        ["Dialectical Behavior Therapy (DBT)"] = "scale",
+        ["EMDR Therapy"] = "eye",
+        ["Twelve Step Facilitation (TSF)"] = "footprints",
+        ["Psychoeducation / Didactic Group Therapy"] = "book-open",
+        ["Meditation & Mindfulness"] = "leaf",
+        ["Life Skills"] = "wrench",
+    };
+
+    private static string IconFor(string name) =>
+        Icons.TryGetValue(name, out var icon) ? icon : "circle-help";
 }

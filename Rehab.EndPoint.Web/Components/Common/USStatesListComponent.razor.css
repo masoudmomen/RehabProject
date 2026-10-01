@@ -1,33 +1,257 @@
-﻿
-a.state-link {
-    display: block;
-    width: 100%;
-    padding: 8px 16px;
-    margin: 4px 0;
-    border-radius: 8px;
-    color: var(--color-primary);
- /*   background: linear-gradient(180deg, #eefcfc, #e2fafa);*/
-    border: 1px solid #9fb2c5;
-    font-weight: 500;
-    letter-spacing: 0.3px;
-    text-decoration: none;
-    transition: background 0.25s ease, color 0.25s ease, transform 0.15s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+/* United States tab. Header, search, sidebar shell and --mm-* colour tokens
+   come from MegaMenuPanel; this file styles the body and sidebar buttons.
+   Elements toggled with the `hidden` attribute get display:none explicitly,
+   because the display values set below would otherwise override it. */
+.st-item[hidden],
+.st-group[hidden],
+.st-locate-status[hidden] {
+    display: none !important;
 }
 
-    a.state-link:hover {
-     /*   color: #fff;
-        background: linear-gradient(180deg, #1e8fff,var(--color-primary));*/
-        border-color: var(--color-primary);
-        transform: translateY(-2px);
-        box-shadow: 0 6px 14px rgba(0,123,255,0.25);
+/* ---- Popular states ---- */
+.st-popular {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    padding: 0.65rem 0.9rem;
+    background-color: #f8f8fe;
+    border: 1px dashed #d9d6f5;
+    border-radius: 14px;
+}
+
+.st-popular-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    margin-right: 0.25rem;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--mm-accent);
+}
+
+.st-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.25rem 0.8rem 0.25rem 0.3rem;
+    font-size: 0.76rem !important;
+    font-weight: 500;
+    color: var(--mm-ink) !important;
+    background-color: #fff;
+    border: 1px solid var(--mm-line);
+    border-radius: 999px;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, color 0.2s ease;
+}
+
+    .st-chip:hover {
+        color: var(--mm-accent) !important;
+        border-color: #d4d0fb;
+        box-shadow: 0 4px 12px -6px rgba(91, 79, 224, 0.4);
     }
 
-    a.state-link:active {
-        transform: translateY(0px) scale(0.98);
-        box-shadow: 0 2px 6px rgba(0,123,255,0.2);
+.st-abbr {
+    padding: 0.1rem 0.4rem;
+    font-size: 0.62rem;
+    font-weight: 700;
+    color: var(--mm-accent);
+    background-color: var(--mm-badge);
+    border-radius: 999px;
+}
+
+/* ---- Region filter + count ---- */
+.st-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-bottom: 0.9rem;
+}
+
+.st-regions {
+    display: inline-flex;
+    gap: 0.2rem;
+    padding: 0.25rem;
+    background-color: #f3f3fb;
+    border: 1px solid var(--mm-line);
+    border-radius: 999px;
+}
+
+.st-region {
+    padding: 0.35rem 0.85rem;
+    font-size: 0.76rem;
+    font-weight: 500;
+    color: #56607e;
+    background: transparent;
+    border: none;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+}
+
+    .st-region:hover {
+        color: var(--mm-accent);
     }
 
-    a.state-link:focus-visible {
+    .st-region.active {
+        font-weight: 700;
+        color: var(--mm-accent);
+        background-color: #fff;
+        box-shadow: 0 2px 8px -4px rgba(31, 42, 77, 0.25);
+    }
+
+    .st-region:focus-visible {
+        outline: 2px solid #c9c4fb;
+        outline-offset: 1px;
+    }
+
+.st-count {
+    font-size: 0.74rem;
+    color: var(--mm-muted);
+}
+
+    .st-count strong {
+        color: var(--mm-ink);
+    }
+
+/* ---- A-Z list: letter groups flow down 5 columns ---- */
+.st-groups {
+    column-count: 5;
+    column-gap: 1.5rem;
+}
+
+.st-group {
+    break-inside: avoid;
+    margin-bottom: 0.6rem;
+}
+
+.st-letter {
+    padding-bottom: 0.25rem;
+    margin-bottom: 0.3rem;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--mm-accent);
+    border-bottom: 1px solid var(--mm-line);
+}
+
+.st-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.state-link {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    padding: 0.28rem 0.4rem;
+    font-size: 0.8rem !important;
+    color: var(--mm-ink) !important;
+    border-radius: 8px;
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+    .state-link:hover,
+    .state-link:focus-visible {
+        color: var(--mm-accent) !important;
+        background-color: #f5f4ff;
         outline: none;
-        box-shadow: 0 0 0 3px rgba(0,123,255,0.35);
     }
+
+.st-item-abbr {
+    flex: 0 0 1.6rem;
+    font-size: 0.64rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    color: #8a94ae;
+}
+
+/* ---- Sidebar buttons ---- */
+.st-aside-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.6rem;
+    margin-bottom: 1.25rem;
+}
+
+.st-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.55rem 1.05rem;
+    font-size: 0.76rem !important;
+    font-weight: 600;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: filter 0.2s ease, transform 0.2s ease, background-color 0.2s ease;
+}
+
+.st-btn-primary {
+    color: #fff;
+    background: linear-gradient(90deg, var(--mm-accent), #7b6cf6);
+    border: none;
+    box-shadow: 0 8px 18px -8px rgba(91, 79, 224, 0.6);
+}
+
+    .st-btn-primary:hover {
+        filter: brightness(1.07);
+        transform: translateY(-1px);
+    }
+
+    .st-btn-primary:disabled {
+        cursor: progress;
+        filter: saturate(0.6);
+        transform: none;
+    }
+
+.st-btn-outline {
+    color: var(--mm-accent) !important;
+    background-color: #fff;
+    border: 1px solid #d4d0fb;
+}
+
+    .st-btn-outline:hover {
+        background-color: #f5f4ff;
+    }
+
+.st-locate-status {
+    margin: 0;
+    font-size: 0.7rem;
+    line-height: 1.4;
+    color: var(--mm-muted);
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 1399.98px) {
+    .st-groups {
+        column-count: 4;
+    }
+}
+
+@media (max-width: 1199.98px) {
+    .st-groups {
+        column-count: 3;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .st-groups {
+        column-count: 2;
+    }
+
+    .st-regions {
+        overflow-x: auto;
+        max-width: 100%;
+        scrollbar-width: none;
+    }
+
+    .st-region {
+        flex: 0 0 auto;
+        white-space: nowrap;
+    }
+}

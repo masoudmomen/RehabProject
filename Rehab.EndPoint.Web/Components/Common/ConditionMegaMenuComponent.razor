@@ -1,0 +1,66 @@
+@using Rehab.EndPoint.Web.Data
+ 
+<MegaMenuPanel Title="Conditions"
+               Subtitle="Explore conditions, disorders and concerns to find the right support and resources."
+               HeaderIcon="heart-handshake"
+               ListId="mm-conditions-list"
+               SearchPlaceholder="Search conditions..."
+               EmptyText="No conditions match your search."
+               Columns="3"
+               ViewAllText="View all conditions"
+               ViewAllHref="/conditionslist"
+               AsideIcon="heart"
+               AsideTitle="Find the right help, faster."
+               AsideText="Explore condition-specific treatment options and resources to support your recovery journey.">
+    @foreach (var condition in OrderedConditions)
+    {
+        <MegaMenuItem Name="@condition.Name"
+                      Href="@($"/treatment-centers?condition={Uri.EscapeDataString(condition.Name)}")"
+                      Target="_blank"
+                      Icon="@IconFor(condition.Name)" />
+    }
+</MegaMenuPanel>
+
+@code {
+    // Items without an Order (0 = unset) are left out; the rest follow their Order.
+    private static readonly List<Condition> OrderedConditions = Conditions.All
+        .Where(c => c.Order > 0)
+        .OrderBy(c => c.Order)
+        .ToList();
+
+    // Presentation only: which Lucide icon represents each condition.
+    private static readonly Dictionary<string, string> Icons = new(StringComparer.OrdinalIgnoreCase)
+    {
+        ["Anxiety"] = "brain",
+        ["Depression"] = "cloud-rain",
+        ["Trauma"] = "shield-alert",
+        ["Post-Traumatic Stress Disorder (PTSD)"] = "zap",
+        ["Co-Occurring Disorders"] = "git-merge",
+        ["Bipolar Disorder"] = "arrow-up-down",
+        ["ADHD / ADD"] = "sparkles",
+        ["Obsessive Compulsive Disorder (OCD)"] = "repeat",
+        ["Eating Disorders"] = "utensils",
+        ["Self-Harm"] = "bandage",
+        ["Suicidality"] = "life-buoy",
+        ["Schizophrenia"] = "puzzle",
+        ["Personality Disorders"] = "drama",
+        ["Chronic Pain Management"] = "activity",
+        ["Gambling"] = "dices",
+        ["Anger"] = "flame",
+        ["Burnout"] = "battery-low",
+        ["Codependency"] = "link",
+        ["Gaming"] = "gamepad-2",
+        ["Internet Addiction"] = "wifi",
+        ["Narcissism"] = "scan-face",
+        ["Neurodiversity"] = "infinity",
+        ["Perinatal Mental Health"] = "baby",
+        ["Pornography Addiction"] = "eye-off",
+        ["Sex Addiction"] = "heart-crack",
+        ["Shopping Addiction"] = "shopping-bag",
+        ["Stress"] = "gauge",
+        ["Grief and Loss"] = "flower-2",
+    };
+
+    private static string IconFor(string name) =>
+        Icons.TryGetValue(name, out var icon) ? icon : "circle-help";
+}

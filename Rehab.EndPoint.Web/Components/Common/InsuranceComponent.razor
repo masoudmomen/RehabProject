@@ -1,19 +1,32 @@
-﻿@using Web.Data
+@using Web.Data
 @using Rehab.EndPoint.Web.ViewModels
-@using Rehab.EndPoint.Web.Components.Common
-<div class="insurances-container">
-    <CardList List="Insurancescards"
-              CustomClass="card-gs-2" 
-              ImageURL="insurances"
-              HrefTarget="_blank"
-              />
-</div>
+@* Insurance tab of the "Find Treatment By" mega menu: logo cards + help card. *@
+<MegaMenuPanel Title="Insurance"
+               Subtitle="Find treatment centers that accept your insurance and fit your budget. Explore coverage from top providers."
+               HeaderIcon="shield"
+               ListId="mm-insurance-list"
+               SearchPlaceholder="Search insurance providers..."
+               EmptyText="No insurance providers match your search."
+               Columns="4"
+               ListMaxHeight="none"
+               AsideIcon="shield-check"
+               AsideTitle="More coverage. More options."
+               AsideText="Find treatment centers that accept your insurance plan.">
+    @foreach (var card in Insurancescards)
+    {
+        <MegaMenuLogoItem Name="@card.Name"
+                          Href="@card.Link"
+                          Target="_blank"
+                          Image="@(string.IsNullOrWhiteSpace(card.Image) ? "/images/nopic.jpg" : $"/images/Insurances/{card.Image}")" />
+    }
+</MegaMenuPanel>
+
 @code {
     private List<CardViewModel> Insurancescards = new();
 
     protected override void OnInitialized()
     {
-        Insurancescards = Insurances.All.Select(i => new CardViewModel
+        Insurancescards = Insurances.All.OrderBy(i => i.Order).Select(i => new CardViewModel
         {
             Name = i.Name,
             Image = i.Icon,

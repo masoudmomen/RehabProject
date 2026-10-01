@@ -4,6 +4,7 @@
     <CardList List="ConditionsCards" 
         CustomClass="card-gs-3" 
         ImageURL="Conditions"
+        prefixImageURL="/images"
         HrefTarget="_blank"
     >
     </CardList>
@@ -24,7 +25,7 @@
         ConditionsCards = Conditions.All.Select(i => new CardViewModel
             {
                 Name = i.Name,
-                Image = i.Icon,
+                Image = i.Image,
                 Link = "/treatment-centers?condition="+@Uri.EscapeDataString(i.Name)
                 
             }).ToList();

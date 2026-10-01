@@ -1,0 +1,47 @@
+@using Rehab.EndPoint.Web.Data
+<MegaMenuPanel Title="Age Groups & Populations"
+               Subtitle="Find specialized care for different age groups and populations."
+               HeaderIcon="users"
+               ListId="mm-age-groups-list"
+               SearchPlaceholder="Search age groups & populations..."
+               EmptyText="No age groups or populations match your search."
+               Columns="3"
+               Rows="@Rows"
+               AsideIcon="users-round"
+               AsideTitle="Inclusive care for every stage."
+               AsideText="Find treatment tailored to your age, identity and life experience.">
+    @foreach (var group in OrderedGroups)
+    {
+        <MegaMenuItem Name="@group.Name"
+                      Href="@($"/treatment-centers?wwt={Uri.EscapeDataString(group.Name)}")"
+                      Target="_blank"
+                      Icon="@IconFor(group.Name)" />
+    }
+</MegaMenuPanel>
+
+@code {
+    private static readonly List<AgeGroup> OrderedGroups = AgeGroupList.All
+        .OrderBy(g => g.Order)
+        .ToList();
+
+    private static readonly int Rows = (int)Math.Ceiling(OrderedGroups.Count / 3.0);
+
+    private static readonly Dictionary<string, string> Icons = new(StringComparer.OrdinalIgnoreCase)
+    {
+        ["Adolescents / Teens"] = "users",
+        ["Young Adults"] = "user",
+        ["Adults"] = "user-round",
+        ["Older Adults"] = "accessibility",
+        ["Women"] = "venus",
+        ["Men"] = "mars",
+        ["LGBTQ+"] = "heart",
+        ["Veterans"] = "medal",
+        ["Pregnant & Parenting Women"] = "baby",
+        ["Professionals & Executives"] = "briefcase",
+        ["Couples"] = "heart-handshake",
+        ["Neurodivergent"] = "brain",
+    };
+
+    private static string IconFor(string name) =>
+        Icons.TryGetValue(name, out var icon) ? icon : "circle-help";
+}

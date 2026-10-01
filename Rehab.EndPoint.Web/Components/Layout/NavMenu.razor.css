@@ -16,10 +16,8 @@ a.go-to-packages{
     font-size: 1.5rem;
     font-weight: 700;
 }
-.nav-link {
-    color: var(--color-primary);
-}
-.navbar-nav .nav-link {
+/* NavLink renders its <a> outside this component's CSS scope, hence ::deep */
+.navbar-nav ::deep .main-link {
     font-weight: normal;
     font-size: 0.8rem;
     position: relative;
@@ -29,16 +27,17 @@ a.go-to-packages{
     align-items: center;
     height: var(--nav-height);
     color: var(--color-primary);
+    cursor: pointer;
 }
 
-    .navbar-nav .nav-link:hover,
-    .nav-item-mega:hover > .nav-link,
-    .nav-item-mega:focus-within > .nav-link {
+    .navbar-nav ::deep .main-link:hover,
+    .nav-item-mega:hover > ::deep .main-link,
+    .nav-item-mega:focus-within > ::deep .main-link {
         color: var(--color-primary);
         transform: translateY(-1px);
     }
 
-    .navbar-nav .nav-link::after {
+    .navbar-nav ::deep .main-link::after {
         content: '';
         position: absolute;
         bottom: 0;
@@ -49,10 +48,28 @@ a.go-to-packages{
         transition: width 0.3s ease;
     }
 
-    .navbar-nav .nav-link:hover::after,
-    .nav-item-mega:hover > .nav-link::after,
-    .nav-item-mega:focus-within > .nav-link::after {
+    .navbar-nav ::deep .main-link:hover::after,
+    .nav-item-mega:hover > ::deep .main-link::after,
+    .nav-item-mega:focus-within > ::deep .main-link::after {
         width: 100%;
+    }
+
+/* Icons are only shown in the mobile menu */
+.nav-icon {
+    display: none;
+}
+
+.navbar-toggler {
+    border: 2px solid var(--color-primary);
+    border-radius: 12px;
+    padding: 0.45rem 0.75rem;
+    color: var(--color-primary);
+    font-size: 1.35rem;
+    line-height: 1;
+}
+
+    .navbar-toggler:focus {
+        box-shadow: 0 0 0 3px rgba(83, 74, 183, 0.2);
     }
 
  .nav-item-mega {
@@ -79,9 +96,6 @@ a.go-to-packages{
     visibility: visible;
     opacity: 1;
     transform: translateY(0);
-}
-a.nav-link{
-    cursor:pointer;
 }
 .mega-title {
     font-weight: 700;
@@ -121,7 +135,6 @@ a.nav-link{
         transform: none;
         box-shadow: none;
         border: 0;
-        padding-left: 1rem;
     }
     .nav-item-mega:hover ::deep .mega-menu,
     .nav-item-mega.mobile-mega-open ::deep .mega-menu {
@@ -162,3 +175,107 @@ a.nav-link{
         border-bottom: solid 5px #a2a3de;
     }
     
+/* ---------- Mobile menu ---------- */
+@media (max-width: 991.98px) {
+    .navbar-brand img {
+        width: 210px;
+        max-width: 60vw;
+        height: auto;
+    }
+
+    .navbar-collapse {
+        border-top: 1px solid #ecebf7;
+        margin: 0 calc(var(--bs-gutter-x, 1.5rem) * -0.5);
+        padding: 1rem 1rem 1.5rem;
+        max-height: calc(100vh - var(--nav-height));
+        overflow-y: auto;
+    }
+
+    .navbar-nav {
+        gap: 0;
+    }
+
+        .navbar-nav > .nav-item:not(.treatment-item) {
+            border-bottom: 1px solid #ecebf7;
+            padding: 0.5rem 0;
+        }
+
+        .navbar-nav ::deep .main-link {
+            height: auto;
+            margin: 0;
+            padding: 1.1rem 1.5rem;
+            font-size: 1.05rem;
+            font-weight: 500;
+            color: #2a2878;
+            border-radius: 999px;
+        }
+
+            .navbar-nav ::deep .main-link::after {
+                display: none;
+            }
+
+            .navbar-nav ::deep .main-link:hover,
+            .nav-item-mega:hover > ::deep .main-link {
+                transform: none;
+                background: #f7f6ff;
+            }
+
+            .navbar-nav ::deep .main-link.active {
+                background: #f3f1ff;
+            }
+
+    .nav-icon {
+        display: inline-block;
+        width: 1.5rem;
+        margin-right: 1rem;
+        text-align: center;
+        font-size: 1.2rem;
+        color: #8a86c4;
+    }
+
+    .navbar-nav ::deep .main-link.active .nav-icon {
+        color: #6c5ce7;
+    }
+
+    .nav-item.treatment-item,
+    .navbar-nav > li:last-child {
+        flex-wrap: wrap;
+        padding-top: 0.75rem;
+        padding-bottom: 0.25rem;
+        padding-left: 0.25rem;
+        padding-right: 0.25rem;
+    }
+
+        .nav-item.treatment-item:hover {
+            border-bottom: none;
+        }
+
+    .btn-advertise,
+    .btn-find-treatment {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        text-align: left;
+        padding: 1rem 1.5rem;
+        font-size: 1.05rem;
+        font-weight: 500;
+    }
+
+        .btn-advertise .nav-icon,
+        .btn-find-treatment .nav-icon {
+            color: #fff;
+        }
+
+    .btn-advertise {
+        background: linear-gradient(90deg, #6a5fb8, #9b8fd8);
+    }
+
+    .btn-find-treatment {
+        background: linear-gradient(90deg, #3ec3c9, #a38fd9);
+    }
+
+    .nav-item-mega ::deep .mega-menu {
+        width: 100%;
+        margin-top: 0.75rem;
+    }
+}

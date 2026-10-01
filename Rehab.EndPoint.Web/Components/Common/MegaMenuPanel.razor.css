@@ -1,0 +1,271 @@
+/* Mega-menu tab layout: list on the left, help card on the right.
+   Row styles live in MegaMenuItem.razor.css (they read the --mm-* tokens
+   defined here). Icons come from <LucideIcon>, hence ::deep on .lucide. */
+.mm-panel {
+    --mm-ink: #1f2a4d;
+    --mm-muted: #6b7a99;
+    --mm-accent: #5b4fe0;
+    --mm-accent-2: #3d8bfd;
+    --mm-line: #e9ecf6;
+    --mm-badge: #eef2ff;
+
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 260px;
+    gap: 1.5rem;
+    align-items: stretch;
+}
+
+.mm-panel--no-aside {
+    grid-template-columns: minmax(0, 1fr);
+}
+
+/* ---- Header: title + search ---- */
+.mm-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1.25rem;
+    margin-bottom: 1.25rem;
+}
+
+.mm-heading {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+}
+
+.mm-heading-icon {
+    display: grid;
+    place-items: center;
+    flex: 0 0 auto;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    color: var(--mm-accent);
+    background: linear-gradient(135deg, #eeeaff, #e3efff);
+}
+
+.mm-title {
+    margin: 0 0 0.2rem;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--mm-ink);
+}
+
+.mm-subtitle {
+    margin: 0;
+    max-width: 340px;
+    font-size: 0.75rem;
+    line-height: 1.45;
+    color: var(--mm-muted);
+}
+
+.mm-search {
+    position: relative;
+    flex: 0 1 280px;
+    margin: 0.25rem 0 0;
+}
+
+.mm-search input {
+    width: 100%;
+    height: 40px;
+    padding: 0 0.9rem 0 2.3rem;
+    font-size: 0.78rem;
+    color: var(--mm-ink);
+    background-color: #fff;
+    border: 1px solid var(--mm-line);
+    border-radius: 10px;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+    .mm-search input::placeholder {
+        color: #a3aec6;
+    }
+
+    .mm-search input:focus {
+        border-color: #c9c4fb;
+        box-shadow: 0 0 0 3px rgba(91, 79, 224, 0.12);
+    }
+
+.mm-search ::deep .mm-search-icon {
+    position: absolute;
+    top: 50%;
+    left: 0.8rem;
+    transform: translateY(-50%);
+    color: var(--mm-accent);
+    pointer-events: none;
+}
+
+/* ---- Item list (column count comes from the Columns parameter) ---- */
+.mm-list {
+    display: grid;
+    grid-template-columns: repeat(var(--mm-cols, 3), minmax(0, 1fr));
+    gap: 0.6rem 0.85rem;
+    margin: 0;
+    padding: 0.15rem 0.35rem 0.15rem 0;
+    list-style: none;
+    max-height: var(--mm-list-max-h, 262px);
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #d6d9ee transparent;
+}
+
+/* Column-first order (Rows parameter) */
+.mm-list--by-column {
+    grid-auto-flow: column;
+    grid-template-rows: repeat(var(--mm-rows), auto);
+}
+
+.mm-empty {
+    margin: 0.75rem 0 0;
+    font-size: 0.78rem;
+    color: var(--mm-muted);
+}
+
+.mm-view-all {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-top: 1rem;
+    font-size: 0.78rem !important;
+    font-weight: 600;
+    color: var(--mm-accent) !important;
+}
+
+    .mm-view-all ::deep .lucide {
+        transition: transform 0.2s ease;
+    }
+
+    .mm-view-all:hover ::deep .lucide {
+        transform: translateX(3px);
+    }
+
+/* ---- Right help card ---- */
+.mm-aside {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 1.4rem 1.25rem;
+    border-radius: 16px;
+    background: linear-gradient(160deg, #e9f0ff 0%, #e4f4ff 55%, #eef0ff 100%);
+    border: 1px solid #dfe8fb;
+}
+
+.mm-aside-icon {
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    margin-bottom: 1rem;
+    border-radius: 50%;
+    color: var(--mm-accent-2);
+    background-color: #fff;
+    box-shadow: 0 6px 16px -8px rgba(61, 139, 253, 0.5);
+}
+
+.mm-aside-title {
+    margin: 0 0 0.5rem;
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1.3;
+    color: var(--mm-ink);
+}
+
+.mm-aside-text {
+    margin: 0 0 1.1rem;
+    font-size: 0.74rem;
+    line-height: 1.5;
+    color: var(--mm-muted);
+}
+
+.mm-aside-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    margin-bottom: 1.25rem; /* keeps a gap above the help block when the card is short */
+    padding: 0.6rem 1.05rem;
+    font-size: 0.76rem !important;
+    font-weight: 600;
+    color: #fff !important;
+    border-radius: 999px;
+    background: linear-gradient(90deg, var(--mm-accent), var(--mm-accent-2));
+    box-shadow: 0 8px 18px -8px rgba(91, 79, 224, 0.6);
+    transition: filter 0.2s ease, transform 0.2s ease;
+}
+
+    .mm-aside-btn:hover {
+        filter: brightness(1.07);
+        transform: translateY(-1px);
+    }
+
+.mm-aside-help {
+    display: flex;
+    gap: 0.7rem;
+    width: 100%;
+    margin-top: auto;
+    padding-top: 1.1rem;
+    border-top: 1px solid #d6e2f8;
+    font-size: 0.7rem;
+    line-height: 1.45;
+    color: var(--mm-muted);
+}
+
+    .mm-aside-help strong {
+        display: block;
+        margin-bottom: 0.15rem;
+        font-weight: 600;
+        color: var(--mm-ink);
+    }
+
+    .mm-aside-help a {
+        font-size: inherit !important;
+        font-weight: 600;
+        color: var(--mm-accent-2);
+    }
+
+    .mm-aside-help ::deep .mm-aside-help-icon {
+        flex: 0 0 auto;
+        margin-top: 0.1rem;
+        color: var(--mm-accent);
+    }
+
+/* ---- Responsive ---- */
+@media (max-width: 1199.98px) {
+    .mm-list {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    /* Fewer columns than designed: fall back to row order so the fixed
+       row count doesn't spill into extra columns. */
+    .mm-list--by-column {
+        grid-auto-flow: row;
+        grid-template-rows: none;
+    }
+}
+
+@media (max-width: 991.98px) {
+    /* minmax(0, ...) so wide content can't push the column past the container */
+    .mm-panel {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .mm-header {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .mm-search {
+        flex-basis: auto;
+    }
+
+    .mm-aside-help {
+        margin-top: 1.25rem;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .mm-list {
+        grid-template-columns: 1fr;
+    }
+}

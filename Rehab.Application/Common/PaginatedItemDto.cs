@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Rehab.Application.Dtos
+namespace Rehab.Application.Common
 {
     public class PaginatedItemDto<TEntity> where TEntity : class
     {

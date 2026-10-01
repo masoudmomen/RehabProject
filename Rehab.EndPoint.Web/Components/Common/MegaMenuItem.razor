@@ -1,0 +1,24 @@
+@* One row of a <MegaMenuPanel> list. data-search-text feeds megaMenuSearch.js. *@
+<li class="mm-li" data-search-text="@($"{Name} {Description}".ToLowerInvariant())">
+    <a class="mm-item" href="@Href" target="@Target">
+        <span class="mm-item-icon">
+            <LucideIcon Name="@Icon" Size="16" />
+        </span>
+        <span class="mm-item-text">
+            <span class="mm-item-name">@Name</span>
+            @if (!string.IsNullOrEmpty(Description))
+            {
+                <span class="mm-item-desc">@Description</span>
+            }
+        </span>
+        <LucideIcon Name="chevron-right" Size="15" Class="mm-item-chevron" />
+    </a>
+</li>
+
+@code {
+    [Parameter, EditorRequired] public string Name { get; set; } = "";
+    [Parameter, EditorRequired] public string Href { get; set; } = "#";
+    [Parameter] public string Target { get; set; } = "_self";
+    [Parameter] public string Icon { get; set; } = "circle-help";
+    [Parameter] public string? Description { get; set; }
+}

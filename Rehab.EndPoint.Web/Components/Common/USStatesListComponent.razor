@@ -1,13 +1,106 @@
-﻿@using Web.Data;
-<div class="row">
-    @for (int i = 0; i < USStates.All.Count; i++)
-    {
-        <div class="col-6 col-md-2 mb-2 united-states">
-             <a target="_blank" class="state-link" href="/states/@USStates.All[i].UrlSlug">
-
-                @USStates.All[i].Name
+@using System.Globalization
+@using Web.Data
+@* United States tab of the "Find Treatment By" mega menu: popular states,
+   region filter, A-Z list, and a "Use My Location" sidebar.
+   Filtering: wwwroot/js/megaMenuSearch.js. Location: wwwroot/js/megaMenuLocate.js. *@
+<MegaMenuPanel Title="Browse by State"
+               Subtitle="Find licensed treatment centers and recovery resources in every U.S. state."
+               HeaderIcon="map"
+               ListId="@ListId"
+               SearchPlaceholder="Search a state or abbreviation..."
+               EmptyText="No states match your search."
+               AsideIcon="locate-fixed"
+               AsideTitle="Find care close to home."
+               AsideText="Use your location to see treatment centers near you, or browse by state to compare options.">
+    <BodyContent>
+        <div class="st-popular">
+            <span class="st-popular-label">
+                <LucideIcon Name="trending-up" Size="15" />
+                Popular
+            </span>
+            @foreach (var state in PopularStates)
+            {
+                <a class="st-chip" href="/states/@state.UrlSlug" target="_blank">
+                    <span class="st-abbr">@state.Abbreviation</span>
+                    @state.Name
                 </a>
+            }
         </div>
- 
-    }
-</div>
+
+        <div class="st-toolbar">
+            <div class="st-regions" role="group" aria-label="Filter states by region">
+                @foreach (var region in Regions)
+                {
+                    var value = region == "All States" ? "all" : region;
+                    <button type="button"
+                            class="st-region @(value == "all" ? "active" : "")"
+                            aria-pressed="@(value == "all" ? "true" : "false")"
+                            data-mega-filter="#@ListId"
+                            data-value="@value">
+                        @region
+                    </button>
+                }
+            </div>
+            <span class="st-count">
+                Showing <strong data-search-count>@USStates.All.Count</strong> of @USStates.All.Count states
+            </span>
+        </div>
+
+        <div class="st-groups">
+            @foreach (var group in StatesByLetter)
+            {
+                <div class="st-group" data-search-group>
+                    <div class="st-letter">@group.Key</div>
+                    <ul class="st-list">
+                        @foreach (var state in group)
+                        {
+                            <li class="st-item"
+                                data-search-text="@($"{state.Name} {state.Abbreviation}".ToLowerInvariant())"
+                                data-filter="@state.Region"
+                                data-lat="@state.Latitude.ToString(CultureInfo.InvariantCulture)"
+                                data-lng="@state.Longitude.ToString(CultureInfo.InvariantCulture)">
+                                <a target="_blank" class="state-link" href="/states/@state.UrlSlug">
+                                    <span class="st-item-abbr">@state.Abbreviation</span>
+                                    @state.Name
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            }
+        </div>
+    </BodyContent>
+
+    <AsideActions>
+        <div class="st-aside-actions">
+            <button type="button" class="st-btn st-btn-primary" data-locate-state="#@ListId">
+                <LucideIcon Name="locate-fixed" Size="16" />
+                Use My Location
+            </button>
+            <a class="st-btn st-btn-outline" href="/treatment-centers">
+                Find Treatment Centers
+                <LucideIcon Name="arrow-right" Size="15" />
+            </a>
+            <p class="st-locate-status" data-locate-status hidden></p>
+        </div>
+    </AsideActions>
+</MegaMenuPanel>
+
+@code {
+    private const string ListId = "mm-states-list";
+
+    private static readonly string[] Regions = { "All States", "Northeast", "Midwest", "South", "West" };
+
+    private static readonly string[] PopularAbbreviations = { "CA", "FL", "TX", "NY", "AZ", "PA" };
+
+    private static readonly List<USState> PopularStates = PopularAbbreviations
+        .Select(a => USStates.All.FirstOrDefault(s => s.Abbreviation == a))
+        .Where(s => s is not null)
+        .Select(s => s!)
+        .ToList();
+
+    private static readonly List<IGrouping<char, USState>> StatesByLetter = USStates.All
+        .OrderBy(s => s.Name)
+        .GroupBy(s => s.Name[0])
+        .ToList();
+}

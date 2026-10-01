@@ -3,37 +3,44 @@
     <ul class="nav nav-tabs d-flex justify-content-center" id="treatmentTabs" role="tablist">
         <li class="nav-item" role="presentation">
             <button class="nav-link active" id="states-tab" data-bs-toggle="tab" data-bs-target="#by-states" type="button" role="tab" aria-controls="by-states" aria-selected="true">
+              <span class="tab-icon"><LucideIcon Name="map-pin" Size="15" /></span>
               United States
             </button>
         </li>
         <li class="nav-item" role="presentation">
             <button class="nav-link" id="service-tab" data-bs-toggle="tab" data-bs-target="#by-conditions" type="button" role="tab" aria-controls="by-conditions" aria-selected="false">
+                <span class="tab-icon"><LucideIcon Name="heart-pulse" Size="15" /></span>
                 Conditions
             </button>
         </li>
         <li class="nav-item" role="presentation">
             <button class="nav-link" id="loc-tab" data-bs-toggle="tab" data-bs-target="#by-loc" type="button" role="tab" aria-controls="by-loc" aria-selected="false">
+                <span class="tab-icon"><LucideIcon Name="layers" Size="15" /></span>
                 Levels Of Care
             </button>
         </li>
         <li class="nav-item" role="presentation">
             <button class="nav-link" id="treatments-tab" data-bs-toggle="tab" data-bs-target="#by-treatments" type="button" role="tab" aria-controls="by-treatments" aria-selected="true">
+                <span class="tab-icon"><LucideIcon Name="stethoscope" Size="15" /></span>
                 Treatment Approaches
             </button>
         </li>
 
         <li class="nav-item" role="presentation">
             <button class="nav-link" id="wwt-tab" data-bs-toggle="tab" data-bs-target="#by-wwt" type="button" role="tab" aria-controls="by-wwt" aria-selected="false">
-                Age Groups & Populations
+                <span class="tab-icon"><LucideIcon Name="users" Size="15" /></span>
+                Age Groups &amp; Populations
             </button>
         </li>
         <li class="nav-item" role="presentation">
             <button class="nav-link" id="insurances-tab" data-bs-toggle="tab" data-bs-target="#by-insurances" type="button" role="tab" aria-controls="by-insurances" aria-selected="false">
+                <span class="tab-icon"><LucideIcon Name="shield" Size="15" /></span>
                 Insurance
             </button>
         </li>
         <li class="nav-item" role="presentation">
             <button class="nav-link" id="amenities-tab" data-bs-toggle="tab" data-bs-target="#by-amenities" type="button" role="tab" aria-controls="by-amenities" aria-selected="false">
+                <span class="tab-icon"><LucideIcon Name="sofa" Size="15" /></span>
                 Amenities
             </button>
         </li>
@@ -43,37 +50,26 @@
 
     <div class="tab-content p-3" id="treatmentTabsContent">
         <div class="tab-pane fade show active" id="by-states" role="tabpanel" aria-labelledby="condition-tab">
-            <div class="container">
-                <USStatesListComponent />
-            </div>
+            <USStatesListComponent />
         </div>
         <div class="tab-pane fade" id="by-treatments" role="tabpanel" aria-labelledby="treatments-tab">
             <TreatmentsListComponent />
         </div>
         <div class="tab-pane fade" id="by-conditions" role="tabpanel" aria-labelledby="conditions-tab">
-            <ul class="list-unstyled mb-0">
-                <ConditionComponent></ConditionComponent>
-            </ul>
+            <ConditionMegaMenuComponent />
         </div>
         <div class="tab-pane fade" id="by-amenities" role="tabpanel" aria-labelledby="amenities-tab">
-            <ul class="list-unstyled mb-0">
-                <AmenityComponent></AmenityComponent>
-            </ul>
+            <AmenityComponent />
         </div>
         <div class="tab-pane fade" id="by-insurances" role="tabpanel" aria-labelledby="insurances-tab">
-            <ul class="list-unstyled mb-0">
-                <InsuranceComponent></InsuranceComponent>
-            </ul>
+            <InsuranceComponent />
         </div>
         <div class="tab-pane fade" id="by-loc" role="tabpanel" aria-labelledby="loc-tab">
-            <ul class="list-unstyled mb-0">
-                <LevelOfCareComponent></LevelOfCareComponent>
-            </ul>
+            <LevelOfCareComponent />
+
         </div>
         <div class="tab-pane fade" id="by-wwt" role="tabpanel" aria-labelledby="wwt-tab">
-            <ul class="list-unstyled mb-0">
-                <WWTForMegaMenuComponent/>
-            </ul>
+            <AgeGroupMegaMenuComponent />
         </div>
     </div>
 </div>

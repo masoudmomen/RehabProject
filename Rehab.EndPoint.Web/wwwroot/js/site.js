@@ -46,6 +46,26 @@ window.bootstrap.Lightbox = {
         });
     }
 
+    // Center the clicked "Find Treatment By" tab title in its scrollable strip (mobile only).
+    // Delegated so it keeps working after Blazor re-renders; scrolls only the strip, not the page.
+    document.addEventListener('click', function (e) {
+        if (window.innerWidth > 991.98) {
+            return;
+        }
+
+        const tab = e.target.closest('#treatmentTabs .nav-link');
+        if (!tab) {
+            return;
+        }
+
+        const strip = tab.closest('#treatmentTabs');
+        const stripRect = strip.getBoundingClientRect();
+        const tabRect = tab.getBoundingClientRect();
+        const offset = (tabRect.left + tabRect.width / 2) - (stripRect.left + stripRect.width / 2);
+
+        strip.scrollTo({ left: strip.scrollLeft + offset, behavior: 'smooth' });
+    });
+
     // Close open mega menus when clicking outside (mobile only)
     document.addEventListener('click', function (e) {
         if (window.innerWidth > 991.98) {

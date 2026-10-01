@@ -11,6 +11,34 @@
   <ItemGroup>
     <Content Remove="Components\Pages\Facility.razor" />
     <Content Remove="Components\Pages\FacilityItemDemo.razor" />
+    <Content Remove="wwwroot\images\Conditions\ADHD - ADD.png" />
+    <Content Remove="wwwroot\images\Conditions\Anger.png" />
+    <Content Remove="wwwroot\images\Conditions\Anxiety.png" />
+    <Content Remove="wwwroot\images\Conditions\Bipolar Disorder.png" />
+    <Content Remove="wwwroot\images\Conditions\burnout.png" />
+    <Content Remove="wwwroot\images\Conditions\Chronic Pain Management.png" />
+    <Content Remove="wwwroot\images\Conditions\Co-Occurring Disorders.png" />
+    <Content Remove="wwwroot\images\Conditions\Codependency.png" />
+    <Content Remove="wwwroot\images\Conditions\depression.png" />
+    <Content Remove="wwwroot\images\Conditions\Eating Disorders.png" />
+    <Content Remove="wwwroot\images\Conditions\Gambling.png" />
+    <Content Remove="wwwroot\images\Conditions\Gaming.png" />
+    <Content Remove="wwwroot\images\Conditions\Grief and Loss.png" />
+    <Content Remove="wwwroot\images\Conditions\Internet Addiction.png" />
+    <Content Remove="wwwroot\images\Conditions\Narcissism.png" />
+    <Content Remove="wwwroot\images\Conditions\Neurodiversity.png" />
+    <Content Remove="wwwroot\images\Conditions\Obsessive Compulsive Disorder %28OCD%29.png" />
+    <Content Remove="wwwroot\images\Conditions\Perinatal Mental Health.png" />
+    <Content Remove="wwwroot\images\Conditions\Personality Disorders.png" />
+    <Content Remove="wwwroot\images\Conditions\Pornography Addiction.png" />
+    <Content Remove="wwwroot\images\Conditions\Post-Traumatic Stress Disorder %28PTSD%29.png" />
+    <Content Remove="wwwroot\images\Conditions\Schizophrenia.png" />
+    <Content Remove="wwwroot\images\Conditions\Self-Harm.png" />
+    <Content Remove="wwwroot\images\Conditions\Sex Addiction.png" />
+    <Content Remove="wwwroot\images\Conditions\Shopping Addiction.png" />
+    <Content Remove="wwwroot\images\Conditions\stress.png" />
+    <Content Remove="wwwroot\images\Conditions\Suicidality.png" />
+    <Content Remove="wwwroot\images\Conditions\trauma.png" />
     <Content Remove="wwwroot\js\map\mapdata.js" />
     <Content Remove="wwwroot\js\map\usmap.js" />
   </ItemGroup>
@@ -45,6 +73,7 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\css\fonts\" />
+    <Folder Include="wwwroot\images\Conditions\" />
     <Folder Include="wwwroot\lib\bootstrap\" />
   </ItemGroup>
 

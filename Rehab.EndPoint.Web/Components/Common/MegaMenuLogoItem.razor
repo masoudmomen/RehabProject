@@ -1,0 +1,21 @@
+@* A logo card in a <MegaMenuPanel> list (logo on top, name below).
+   data-search-text feeds megaMenuSearch.js. *@
+<li class="mm-li" data-search-text="@Name.ToLowerInvariant()">
+    <a class="mm-logo-item" href="@Href" target="@Target">
+        <span class="mm-logo-body">
+            <span class="mm-logo">
+                <img src="@Image" alt="@Name logo" loading="lazy"
+                     onerror="this.onerror=null; this.src='/images/nopic.jpg';" />
+            </span>
+            <span class="mm-logo-name">@Name</span>
+        </span>
+        <LucideIcon Name="chevron-right" Size="16" Class="mm-logo-chevron" />
+    </a>
+</li>
+
+@code {
+    [Parameter, EditorRequired] public string Name { get; set; } = "";
+    [Parameter, EditorRequired] public string Href { get; set; } = "#";
+    [Parameter] public string Target { get; set; } = "_self";
+    [Parameter] public string? Image { get; set; }
+}

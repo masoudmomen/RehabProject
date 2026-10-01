@@ -1,0 +1,113 @@
+@* Shared layout for a "Find Treatment By" mega-menu tab:
+   header (icon, title, subtitle) + search box, a list of <MegaMenuItem>s,
+   a "View all" link, and the blue help card on the right.
+   Search filtering is done client-side by wwwroot/js/megaMenuSearch.js. *@
+<div class="mm-panel @(ShowAside ? "" : "mm-panel--no-aside")">
+    <div class="mm-main">
+        <div class="mm-header">
+            <div class="mm-heading">
+                <span class="mm-heading-icon">
+                    <LucideIcon Name="@HeaderIcon" Size="26" />
+                </span>
+                <div>
+                    <h3 class="mm-title">@Title</h3>
+                    <p class="mm-subtitle">@Subtitle</p>
+                </div>
+            </div>
+
+            <label class="mm-search">
+                <LucideIcon Name="search" Size="16" Class="mm-search-icon" />
+                <input type="search"
+                       placeholder="@SearchPlaceholder"
+                       aria-label="@SearchPlaceholder"
+                       autocomplete="off"
+                       data-mega-search="#@ListId" />
+            </label>
+        </div>
+
+        @if (BodyContent is not null)
+        {
+            <div class="mm-body" id="@ListId">
+                @BodyContent
+            </div>
+        }
+        else
+        {
+            <ul class="mm-list @(Rows > 0 ? "mm-list--by-column" : "")" id="@ListId"
+                style="--mm-cols: @Columns; --mm-rows: @Rows; --mm-list-max-h: @ListMaxHeight">
+                @ChildContent
+            </ul>
+        }
+        <p class="mm-empty" data-mega-search-empty hidden>@EmptyText</p>
+
+        @if (!string.IsNullOrEmpty(ViewAllHref))
+        {
+            <a class="mm-view-all" href="@ViewAllHref">
+                @ViewAllText
+                <LucideIcon Name="arrow-right" Size="15" />
+            </a>
+        }
+    </div>
+
+    @if (ShowAside)
+    {
+    <aside class="mm-aside">
+        <span class="mm-aside-icon">
+            <LucideIcon Name="@AsideIcon" Size="24" />
+        </span>
+        <h4 class="mm-aside-title">@AsideTitle</h4>
+        <p class="mm-aside-text">@AsideText</p>
+        @if (AsideActions is not null)
+        {
+            @AsideActions
+        }
+        else
+        {
+            <a class="mm-aside-btn" href="/treatment-centers">
+                Find Treatment Centers
+                <LucideIcon Name="arrow-right" Size="15" />
+            </a>
+        }
+
+        <div class="mm-aside-help">
+            <LucideIcon Name="phone" Size="20" Class="mm-aside-help-icon" />
+            <div>
+                <strong>Need immediate help?</strong>
+                <span>Call <a href="tel:988">988</a> for the Suicide &amp; Crisis Lifeline (24/7).</span>
+            </div>
+        </div>
+    </aside>
+    }
+</div>
+
+@code {
+    [Parameter, EditorRequired] public string Title { get; set; } = "";
+    [Parameter] public string? Subtitle { get; set; }
+    [Parameter] public string HeaderIcon { get; set; } = "circle-help";
+
+    // Must be unique on the page: the search box targets the list by this id.
+    [Parameter, EditorRequired] public string ListId { get; set; } = "";
+    [Parameter] public string SearchPlaceholder { get; set; } = "Search...";
+    [Parameter] public string EmptyText { get; set; } = "No results match your search.";
+    [Parameter] public int Columns { get; set; } = 3;
+    // > 0 fills the list top-to-bottom, column by column, with this many rows.
+    [Parameter] public int Rows { get; set; }
+    // The list scrolls past this height; "none" shows every item.
+    [Parameter] public string ListMaxHeight { get; set; } = "262px";
+
+    [Parameter] public string? ViewAllText { get; set; }
+    [Parameter] public string? ViewAllHref { get; set; }
+
+    [Parameter] public bool ShowAside { get; set; } = true;
+    [Parameter] public string AsideIcon { get; set; } = "heart";
+    [Parameter] public string? AsideTitle { get; set; }
+    [Parameter] public string? AsideText { get; set; }
+
+    // The <li> items of the standard list.
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    // Replaces the standard list with custom markup (wrapped in #ListId, so
+    // the search box still filters any [data-search-text] elements inside it).
+    [Parameter] public RenderFragment? BodyContent { get; set; }
+    // Replaces the sidebar's default "Find Treatment Centers" button.
+    [Parameter] public RenderFragment? AsideActions { get; set; }
+}

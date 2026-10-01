@@ -38,7 +38,7 @@ using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Rehab.Infrastructure.MappingProfile
+namespace Rehab.Application.MappingProfile
 {
     public class CommonMappingProfile: Profile
     {

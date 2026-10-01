@@ -1,12 +1,50 @@
-﻿@using Web.Data
-<div class="amenities-container">
-    @for (int i = 0; i < Amenities.All.Count; i++)
+@using Web.Data
+ <MegaMenuPanel Title="Amenities"
+               Subtitle="Find treatment centers with the amenities and features that matter to you."
+               HeaderIcon="house-plus"
+               ListId="mm-amenities-list"
+               SearchPlaceholder="Search amenities..."
+               EmptyText="No amenities match your search."
+               Columns="3"
+               ListMaxHeight="none"
+               AsideIcon="house-heart"
+               AsideTitle="Comfort. Support. Better outcomes."
+               AsideText="Explore amenities that help you feel safe, supported and focused on recovery.">
+    @foreach (var amenity in OrderedAmenities)
     {
-        <a class="amenity-card" target="_blank" href="/treatment-centers?amenity=@Uri.EscapeDataString(Amenities.All[i].Name)">
-            <div class="amenity-image-container">
-                <img src="/images/Amenities/@Amenities.All[i].Icon" alt="@Amenities.All[i].Name" class="amenity-image" />
-            </div>
-            <div class="amenity-title">@Amenities.All[i].Name</div>
-        </a>
+        <MegaMenuItem Name="@amenity.Name"
+                      Href="@($"/treatment-centers?amenity={Uri.EscapeDataString(amenity.Name)}")"
+                      Target="_blank"
+                      Icon="@IconFor(amenity.Name)" />
     }
-</div>
+</MegaMenuPanel>
+
+@code {
+    private static readonly List<Amenitiescs> OrderedAmenities = Amenities.All
+        .OrderBy(a => a.Order)
+        .ToList();
+
+    // Presentation only: which Lucide icon represents each amenity.
+    private static readonly Dictionary<string, string> Icons = new(StringComparer.OrdinalIgnoreCase)
+    {
+        ["Private Rooms"] = "bed-single",
+        ["Private or Shared Rooms"] = "bed-double",
+        ["Transportation Assistance"] = "bus",
+        ["Airport Transfers"] = "plane-landing",
+        ["Allow Cell Phones"] = "smartphone",
+        ["Internet Access"] = "wifi",
+        ["Childcare Support"] = "baby",
+        ["Fitness Center"] = "dumbbell",
+        ["Wellness Center"] = "heart-pulse",
+        ["Access to Nature"] = "trees",
+        ["Outdoor Space"] = "sun",
+        ["Walking Trails"] = "footprints",
+        ["Pool / Swimming"] = "waves",
+        ["Chef-Prepared Meals"] = "chef-hat",
+        ["Laundry Service"] = "washing-machine",
+        ["Business Center"] = "briefcase",
+    };
+
+    private static string IconFor(string name) =>
+        Icons.TryGetValue(name, out var icon) ? icon : "circle-help";
+}

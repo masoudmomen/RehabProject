@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.DependencyInjection;
 using Rehab.Application.Common;
 using Rehab.Application.Contexts;
-using Rehab.Application.Dtos;
 using Rehab.Application.Tags;
 using Rehab.Domain.Blog;
 using System;
