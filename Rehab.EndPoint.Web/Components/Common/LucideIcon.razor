@@ -1,6 +1,8 @@
 @* Renders a Lucide icon (https://lucide.dev) from the local sprite at
    wwwroot/icons/lucide-sprite.svg. Stroke uses currentColor, so colour it
-   with CSS `color`. To add an icon, append its <symbol> to the sprite. *@
+   with CSS `color`. To add an icon, append its <symbol> to the sprite.
+   In Development, a name missing from the sprite is logged (see Helpers/LucideIcons.cs). *@
+@using Rehab.EndPoint.Web.Helpers
 <svg class="lucide @Class" width="@Size" height="@Size" aria-hidden="true" focusable="false">
     <use href="/icons/lucide-sprite.svg#@Name"></use>
 </svg>
@@ -9,4 +11,6 @@
     [Parameter, EditorRequired] public string Name { get; set; } = "circle-help";
     [Parameter] public string? Class { get; set; }
     [Parameter] public int Size { get; set; } = 18;
+
+    protected override void OnParametersSet() => LucideIcons.CheckName(Name, nameof(LucideIcon));
 }

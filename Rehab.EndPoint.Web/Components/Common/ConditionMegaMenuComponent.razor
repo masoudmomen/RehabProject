@@ -1,4 +1,5 @@
 @using Rehab.EndPoint.Web.Data
+@using Rehab.EndPoint.Web.Helpers
  
 <MegaMenuPanel Title="Conditions"
                Subtitle="Explore conditions, disorders and concerns to find the right support and resources."
@@ -62,5 +63,9 @@
     };
 
     private static string IconFor(string name) =>
-        Icons.TryGetValue(name, out var icon) ? icon : "circle-help";
+        LucideIcons.Resolve(Icons, name, nameof(ConditionMegaMenuComponent));
+
+    // Development startup check (Program.cs): every listed condition has an icon and every icon is in the sprite.
+    internal static void ValidateIcons() =>
+        LucideIcons.ValidateMap(nameof(ConditionMegaMenuComponent), Icons, OrderedConditions.Select(c => c.Name));
 }

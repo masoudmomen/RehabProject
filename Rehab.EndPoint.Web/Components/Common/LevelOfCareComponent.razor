@@ -1,5 +1,6 @@
 @using Web.Data
 @using Rehab.EndPoint.Web.ViewModels
+@using Rehab.EndPoint.Web.Helpers
 @* Levels Of Care tab of the "Find Treatment By" mega menu. *@
 <MegaMenuPanel Title="Levels Of Care"
                Subtitle="Find the right level of care for your needs and situation."
@@ -64,5 +65,9 @@
     };
 
     private static string IconFor(string name) =>
-        Icons.TryGetValue(name, out var icon) ? icon : "circle-help";
+        LucideIcons.Resolve(Icons, name, nameof(LevelOfCareComponent));
+
+    // Development startup check (Program.cs): every level of care has an icon and every icon is in the sprite.
+    internal static void ValidateIcons() =>
+        LucideIcons.ValidateMap(nameof(LevelOfCareComponent), Icons, LevelOfCareList.All.Select(i => i.Name));
 }

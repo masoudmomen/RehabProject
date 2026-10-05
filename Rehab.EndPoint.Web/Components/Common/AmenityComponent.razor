@@ -1,4 +1,5 @@
 @using Web.Data
+@using Rehab.EndPoint.Web.Helpers
  <MegaMenuPanel Title="Amenities"
                Subtitle="Find treatment centers with the amenities and features that matter to you."
                HeaderIcon="house-plus"
@@ -46,5 +47,9 @@
     };
 
     private static string IconFor(string name) =>
-        Icons.TryGetValue(name, out var icon) ? icon : "circle-help";
+        LucideIcons.Resolve(Icons, name, nameof(AmenityComponent));
+
+    // Development startup check (Program.cs): every amenity has an icon and every icon is in the sprite.
+    internal static void ValidateIcons() =>
+        LucideIcons.ValidateMap(nameof(AmenityComponent), Icons, OrderedAmenities.Select(a => a.Name));
 }

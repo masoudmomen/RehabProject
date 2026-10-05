@@ -50,8 +50,8 @@
 @media (min-width: 992px) {
     .filter-sticky {
         position: sticky;
-        top: 10px;
-        max-height: calc(100vh - 100px);
+        top: calc(var(--nav-height, 72px) + 10px);
+        max-height: calc(100vh - var(--nav-height, 72px) - 100px);
         overflow-y: auto;
     }
 }

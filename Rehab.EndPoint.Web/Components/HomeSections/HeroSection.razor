@@ -1,86 +1,405 @@
 ﻿@rendermode InteractiveServer
+@using Rehab.EndPoint.Web.Components.Common
 @inject NavigationManager NavigationManager
-<section id="home" class="hero-section d-flex flex-column justify-content-center">
-    <div class="container">
-        <div class="row justify-content-center text-center">
+@inject IJSRuntime JSRuntime
+@implements IAsyncDisposable
+<section id="home" class="hero-section">
+    @* Decoration is clipped here rather than on the section, so the search dropdowns can extend past the hero. *@
+    <div class="hero-bg" aria-hidden="true">
+    @* Animated scene: sky plate, drifting clouds, glow, the two hands and light motes (hero-scene.js). Decorative only. *@
+    <div class="hero-scene" @ref="sceneRef" aria-hidden="true">
+        <div class="hero-layer hero-sky" data-depth="2"></div>
+        <div class="hero-layer" data-depth="4">
+            <i class="hero-cloud c1"></i><i class="hero-cloud c2"></i><i class="hero-cloud c3"></i>
+        </div>
+        <div class="hero-layer" data-depth="6">
+            <div class="hero-glow"><i class="rays"></i><i class="halo"></i></div>
+        </div>
+        <div class="hero-layer" data-depth="10">
+            <div class="hero-hand l"><div class="intro"><div class="sway"><img src="/images/Hero/hand-left.webp" alt="" width="397" height="317" /></div></div></div>
+            <div class="hero-hand r"><div class="intro"><div class="sway"><img src="/images/Hero/hand-right.webp" alt="" width="465" height="336" /></div></div></div>
+        </div>
+        <div class="hero-layer" data-depth="7">
+            <div class="hero-glow"><i class="core"></i></div>
+        </div>
+        <canvas class="hero-motes"></canvas>
+    </div>
+
+    <i class="hero-blob b-left1" aria-hidden="true"></i>
+    <i class="hero-blob b-left2" aria-hidden="true"></i>
+    <i class="hero-blob b-right2" aria-hidden="true"></i>
+    <i class="hero-blob b-right1" aria-hidden="true"></i>
+    </div>
+
+    <div class="container hero-inner">
+        <div class="row">
             <div class="col-lg-8 hero-content">
-                <h1 class="hero-title mb-4">Find Drug and Alcohol Rehab Centers and Mental Health Treatment Providers</h1>
-                <p class="hero-subtitle mb-5 px-5">RehabNavigator helps you find and compare drug and alcohol rehab centers, mental health treatment providers, detox, residential and outpatient programs, insurance information, facility information, and recovery resources in one place.</p>
+                <p class="hero-eyebrow"><span>GUIDANCE</span><i aria-hidden="true"></i><span>SUPPORT</span><i aria-hidden="true"></i><span>RECOVERY</span></p>
+                <h1 class="hero-title mb-4">Find Drug and Alcohol Rehab Centers and <span class="hero-title-teal">Mental Health</span> <span class="hero-title-violet">Treatment Providers</span></h1>
+                <p class="hero-subtitle mb-0 px-5">RehabNavigator helps you find and compare drug and alcohol rehab centers, mental health treatment providers, detox, residential and outpatient programs, insurance information, facility information, and recovery resources in one place.</p>
             </div>
         </div>
-    </div>
-    <form @onsubmit="GoToFacilitiesPage" class="container-fluid d-flex justify-content-center mt-5">
-        <div class="col-lg-8 hero-search-container">
-            <div class="p-3 rounded-3">
-                <div class="row mt-0 bg-white g-2 justify-content-center rounded-5">
-                    <div class="col-md-4 rounded-5">
-                        <input type="text"
-                               class="form-control border-0 rounded-5 text-center"
-                               @bind="state"
-                               @bind:event="oninput"
-                               placeholder="State"
-                               list="statesList"
-                               autocomplete="on"
-                               spellcheck="true"
-                               autocapitalize="words" />
-                        <datalist id="statesList">
-                            @foreach (var item in States)
-                            {
-                                <option value="@item" />
-                            }
-                        </datalist>
-                    </div>
 
-                    <div class="col-md-4 rounded-5">
-                        <input type="text"
-                               class="form-control border-0 rounded-5 text-center"
-                               @bind="city"
-                               @bind:event="oninput"
-                               placeholder="City"
-                               list="citiesList"
-                               autocomplete="on"
-                               spellcheck="true"
-                               autocapitalize="words" />
-                        <datalist id="citiesList">
-                            @foreach (var item in Cities)
-                            {
-                                <option value="@item" />
-                            }
-                        </datalist>
-                    </div>
-
-                    <div class="col-md-4 rounded-5">
-                        <input type="text"
-                               class="form-control border-0 rounded-5 text-center"
-                               @bind="condition"
-                               @bind:event="oninput"
-                               placeholder="Condition"
-                               list="conditionsList"
-                               autocomplete="on"
-                               spellcheck="true"
-                               autocapitalize="words" />
-                        <datalist id="conditionsList">
-                            @foreach (var item in Conditions)
-                            {
-                                <option value="@item" />
-                            }
-                        </datalist>
-                    </div>
-                </div>
-
-                <div class="row justify-content-center">
-                    <div class="col-md-4">
-                        <button type="submit" class="btn btn-primary-gradient btn-hero btn-lg rounded-5 w-100 mt-3">
-                            <i class="fa-solid fa-magnifying-glass"></i>
-                            Find Treatment Centers
+        <form @onsubmit="GoToFacilitiesPage" class="hero-search" role="search">
+            @* State, City and Condition: custom listboxes (styleable, unlike <datalist>); they still bind to `state` / `city` / `condition`.
+               Free text is kept via "Use “…”". Icons render exactly as before (same LucideIcon, size and wrapper). *@
+            @foreach (var d in dropdowns)
+            {
+                var value = GetValue(d);
+                <div class="hero-field hero-select @(d.Open ? "is-open" : null) @(d.AlignEnd ? "hero-select--end" : null)" @ref="d.Root" @key="d.Key">
+                    <span class="hero-field-icon"><LucideIcon Name="@d.Icon" Size="30" /></span>
+                    <div class="hero-field-body">
+                        <label id="@($"{d.Id}Label")" for="@d.Id">@d.Key</label>
+                        <button id="@d.Id"
+                                @ref="d.Trigger"
+                                type="button"
+                                class="hero-input hero-select-trigger"
+                                aria-haspopup="listbox"
+                                aria-expanded="@(d.Open ? "true" : "false")"
+                                aria-controls="@($"{d.Id}List")"
+                                aria-labelledby="@($"{d.Id}Label {d.Id}")"
+                                @onclick="() => ToggleDropdown(d)">
+                            <span class="hero-select-value @(string.IsNullOrWhiteSpace(value) ? "is-placeholder" : null)">@(string.IsNullOrWhiteSpace(value) ? d.Key : value)</span>
                         </button>
                     </div>
-                </div>
-            </div>
-        </div>
-    </form>
+                    <span class="hero-select-chevron" aria-hidden="true"><LucideIcon Name="chevron-down" Size="18" /></span>
 
+                    @if (d.Open)
+                    {
+                        var options = BuildOptions(d);
+                        <div class="hero-select-panel">
+                            <div class="hero-select-search">
+                                <LucideIcon Name="search" Size="18" />
+                                <input @ref="d.Search"
+                                       type="text"
+                                       role="combobox"
+                                       aria-label="@($"Search {d.Plural}")"
+                                       aria-autocomplete="list"
+                                       aria-expanded="true"
+                                       aria-controls="@($"{d.Id}List")"
+                                       aria-activedescendant="@(d.Active >= 0 ? $"{d.Id}Opt{d.Active}" : null)"
+                                       placeholder="@($"Search {d.All.Count:N0} {d.Plural}")"
+                                       autocomplete="off"
+                                       spellcheck="false"
+                                       @bind="d.Query"
+                                       @bind:event="oninput"
+                                       @bind:after="() => OnQueryChanged(d)"
+                                       @onkeydown="e => OnDropdownKey(d, e)" />
+                            </div>
+
+                            <ul id="@($"{d.Id}List")" class="hero-select-list" role="listbox" aria-labelledby="@($"{d.Id}Label")">
+                                @if (d.Query.Trim().Length > 0 && d.MatchCount == 0)
+                                {
+                                    <li class="hero-select-note" role="presentation">No @d.Plural match “@d.Query.Trim()”</li>
+                                }
+                                @for (var i = 0; i < options.Count; i++)
+                                {
+                                    var opt = options[i];
+                                    var index = i;
+                                    if (opt.Group is not null)
+                                    {
+                                        <li class="hero-select-group" role="presentation">@opt.Group</li>
+                                    }
+                                    <li id="@($"{d.Id}Opt{index}")"
+                                        role="option"
+                                        aria-selected="@(opt.Selected ? "true" : "false")"
+                                        class="hero-select-option @(opt.Selected ? "is-selected" : null) @(index == d.Active ? "is-active" : null)"
+                                        @onmousedown:preventDefault
+                                        @onclick="() => SelectOption(d, opt.Value)">
+                                        <span class="hero-select-text">
+                                            @opt.Text
+                                            @if (opt.Hint is not null)
+                                            {
+                                                <small>@opt.Hint</small>
+                                            }
+                                        </span>
+                                        @if (opt.Selected)
+                                        {
+                                            <LucideIcon Name="check" Size="18" />
+                                        }
+                                    </li>
+                                }
+                                @if (d.MatchCount > DropdownRenderLimit)
+                                {
+                                    <li class="hero-select-note" role="presentation">Showing @DropdownRenderLimit of @d.MatchCount.ToString("N0") — keep typing to narrow down</li>
+                                }
+                            </ul>
+
+                            <div class="hero-select-foot" aria-hidden="true">
+                                <span><kbd>↑</kbd><kbd>↓</kbd> Navigate</span>
+                                <span><kbd>Enter</kbd> Select</span>
+                                <span><kbd>Esc</kbd> Close</span>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+
+            <button type="submit" class="btn btn-primary-gradient hero-go">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                Find Treatment Centers
+            </button>
+        </form>
+
+        <ul class="hero-feats">
+            <li>
+                <span class="hero-feat-icon"><LucideIcon Name="shield-check" Size="34" /></span>
+                <div><b>Trusted Resources</b><span>Verified and reliable providers</span></div>
+            </li>
+            <li>
+                <span class="hero-feat-icon teal"><LucideIcon Name="heart" Size="34" /></span>
+                <div><b>Personalized Support</b><span>Find the right fit for your needs</span></div>
+            </li>
+            <li>
+                <span class="hero-feat-icon"><LucideIcon Name="users" Size="34" /></span>
+                <div><b>Wide Network</b><span>Nationwide treatment centers</span></div>
+            </li>
+            <li>
+                <span class="hero-feat-icon teal"><LucideIcon Name="compass" Size="34" /></span>
+                <div><b>Recovery Starts Here</b><span>You're not alone</span></div>
+            </li>
+        </ul>
+    </div>
 </section>
+@code {
+    // UI only: starts/stops the decorative hero animation (wwwroot/js/hero-scene.js).
+    private ElementReference sceneRef;
+    private IJSObjectReference? heroModule;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            heroModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "/js/hero-scene.js");
+            await heroModule.InvokeVoidAsync("initialize", sceneRef);
+        }
+        await AfterDropdownRender();
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (heroModule != null)
+        {
+            try
+            {
+                await heroModule.InvokeVoidAsync("dispose");
+                await heroModule.DisposeAsync();
+            }
+            catch (JSDisconnectedException) { }
+        }
+        if (selectModule != null)
+        {
+            try
+            {
+                foreach (var d in dropdowns)
+                    await selectModule.InvokeVoidAsync("close", d.Root);
+                await selectModule.DisposeAsync();
+            }
+            catch (JSDisconnectedException) { }
+        }
+        selfRef?.Dispose();
+    }
+}
+@code {
+    // UI only: State, City and Condition dropdown state. Selections are still written to `state` / `city` / `condition`, which GoToFacilitiesPage reads.
+    private const int DropdownRenderLimit = 150;
+
+    private sealed record DropdownOption(string Text, string Value, string? Hint, string? Group, bool Selected);
+
+    private sealed class HeroDropdown
+    {
+        public required string Key;      // label and placeholder: "State" / "City"
+        public required string Icon;     // the field's existing Lucide icon, unchanged
+        public required string Noun;     // "state" / "city"
+        public required string Plural;   // "states" / "cities"
+        public required IEnumerable<string> Source;
+        public required string[] Popular;
+        public required string AnyHint; // subtitle under "Any …"
+        public bool AlignEnd;           // panel opens toward the left edge (last field in the bar)
+
+        public bool Open;
+        public string Query = string.Empty;
+        public int Active = -1;
+        public int MatchCount;
+        public bool JustOpened;
+        public bool ScrollPending;
+        public ElementReference Root;
+        public ElementReference Trigger;
+        public ElementReference Search;
+
+        public string Id => $"hero{Key}";
+
+        private List<string>? all;
+        public List<string> All => all ??= Source
+            .Where(s => !string.IsNullOrWhiteSpace(s))
+            .Select(s => s.Trim())
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .OrderBy(s => s, StringComparer.OrdinalIgnoreCase)
+            .ToList();
+    }
+
+    private HeroDropdown stateDropdown = default!;
+    private HeroDropdown cityDropdown = default!;
+    private HeroDropdown conditionDropdown = default!;
+    private HeroDropdown[] dropdowns = Array.Empty<HeroDropdown>();
+
+    private IJSObjectReference? selectModule;
+    private DotNetObjectReference<HeroSection>? selfRef;
+
+    protected override void OnInitialized()
+    {
+        stateDropdown = new() { Key = "State", Icon = "map-pin", Noun = "state", Plural = "states", Source = States, Popular = new[] { "California", "Florida", "New York", "Texas" }, AnyHint = "Search all locations" };
+        cityDropdown = new() { Key = "City", Icon = "building-2", Noun = "city", Plural = "cities", Source = Cities, Popular = new[] { "New York", "Los Angeles", "Chicago", "Houston" }, AnyHint = "Search all locations" };
+        conditionDropdown = new() { Key = "Condition", Icon = "shield-plus", Noun = "condition", Plural = "conditions", Source = Conditions, Popular = new[] { "Anxiety", "Depression", "Trauma", "Bipolar" }, AnyHint = "Search all conditions", AlignEnd = true };
+        dropdowns = new[] { stateDropdown, cityDropdown, conditionDropdown };
+    }
+
+    private string GetValue(HeroDropdown d) =>
+        (d == stateDropdown ? state : d == cityDropdown ? city : condition) ?? string.Empty;
+
+    private void SetValue(HeroDropdown d, string value)
+    {
+        if (d == stateDropdown) state = value;
+        else if (d == cityDropdown) city = value;
+        else condition = value;
+    }
+
+    private List<DropdownOption> BuildOptions(HeroDropdown d)
+    {
+        var current = GetValue(d).Trim();
+        bool IsSelected(string value) => string.Equals(value, current, StringComparison.OrdinalIgnoreCase);
+        var q = d.Query.Trim();
+        var list = new List<DropdownOption>();
+
+        if (q.Length == 0)
+        {
+            var anyHint = d == cityDropdown && !string.IsNullOrWhiteSpace(state) ? $"Search all of {state.Trim()}" : d.AnyHint;
+            list.Add(new($"Any {d.Noun}", string.Empty, anyHint, null, current.Length == 0));
+
+            var popular = d.Popular.Where(p => d.All.Contains(p, StringComparer.OrdinalIgnoreCase)).ToList();
+            for (var i = 0; i < popular.Count; i++)
+                list.Add(new(popular[i], popular[i], null, i == 0 ? "Popular" : null, IsSelected(popular[i])));
+
+            d.MatchCount = d.All.Count;
+            var shown = d.All.Take(DropdownRenderLimit).ToList();
+            // keep the current value reachable even when it falls past the render limit
+            if (current.Length > 0 && !shown.Contains(current, StringComparer.OrdinalIgnoreCase))
+                shown.Insert(0, current);
+            for (var i = 0; i < shown.Count; i++)
+                list.Add(new(shown[i], shown[i], null, i == 0 ? $"All {d.Plural}" : null, IsSelected(shown[i])));
+        }
+        else
+        {
+            var matches = d.All
+                .Where(s => s.Contains(q, StringComparison.OrdinalIgnoreCase))
+                .OrderBy(s => s.StartsWith(q, StringComparison.OrdinalIgnoreCase) ? 0 : 1)
+                .ToList();
+            d.MatchCount = matches.Count;
+            foreach (var m in matches.Take(DropdownRenderLimit))
+                list.Add(new(m, m, null, null, IsSelected(m)));
+
+            // free text was allowed by the old inputs; keep it
+            if (!matches.Contains(q, StringComparer.OrdinalIgnoreCase))
+                list.Add(new($"Use “{q}”", q, "Search with this text", null, IsSelected(q)));
+        }
+        return list;
+    }
+
+    private async Task ToggleDropdown(HeroDropdown d)
+    {
+        if (d.Open) { await CloseDropdown(d); return; }
+
+        // only one panel open at a time
+        foreach (var other in dropdowns)
+            if (other != d) await CloseDropdown(other);
+
+        d.Query = string.Empty;
+        d.Active = Math.Max(0, BuildOptions(d).FindIndex(o => o.Selected));
+        d.Open = true;
+        d.JustOpened = true;
+        d.ScrollPending = true;
+    }
+
+    private async Task CloseDropdown(HeroDropdown d, bool focusTrigger = false)
+    {
+        if (!d.Open) return;
+        d.Open = false;
+        if (selectModule != null)
+        {
+            try { await selectModule.InvokeVoidAsync("close", d.Root); }
+            catch (JSDisconnectedException) { }
+        }
+        if (focusTrigger)
+            await d.Trigger.FocusAsync();
+    }
+
+    [JSInvokable]
+    public async Task CloseDropdownFromOutside(string key)
+    {
+        var d = dropdowns.FirstOrDefault(x => x.Key == key);
+        if (d == null) return;
+        await CloseDropdown(d);
+        StateHasChanged();
+    }
+
+    private async Task SelectOption(HeroDropdown d, string value)
+    {
+        SetValue(d, value);
+        await CloseDropdown(d, focusTrigger: true);
+    }
+
+    private void OnQueryChanged(HeroDropdown d)
+    {
+        d.Active = BuildOptions(d).Count > 0 ? 0 : -1;
+        d.ScrollPending = true;
+    }
+
+    private async Task OnDropdownKey(HeroDropdown d, KeyboardEventArgs e)
+    {
+        var options = BuildOptions(d);
+        switch (e.Key)
+        {
+            case "ArrowDown":
+                d.Active = Math.Min(d.Active + 1, options.Count - 1);
+                d.ScrollPending = true;
+                break;
+            case "ArrowUp":
+                d.Active = Math.Max(d.Active - 1, 0);
+                d.ScrollPending = true;
+                break;
+            case "Enter":
+                if (d.Active >= 0 && d.Active < options.Count)
+                    await SelectOption(d, options[d.Active].Value);
+                break;
+            case "Escape":
+                await CloseDropdown(d, focusTrigger: true);
+                break;
+            case "Tab":
+                await CloseDropdown(d);
+                break;
+        }
+    }
+
+    private async Task AfterDropdownRender()
+    {
+        foreach (var d in dropdowns)
+        {
+            if (!d.Open) continue;
+            if (d.JustOpened)
+            {
+                d.JustOpened = false;
+                selectModule ??= await JSRuntime.InvokeAsync<IJSObjectReference>("import", "/js/hero-select.js");
+                selfRef ??= DotNetObjectReference.Create(this);
+                await selectModule.InvokeVoidAsync("open", d.Root, d.Search, selfRef, d.Key);
+            }
+            if (d.ScrollPending && selectModule != null)
+            {
+                d.ScrollPending = false;
+                await selectModule.InvokeVoidAsync("scrollActive", d.Root);
+            }
+        }
+    }
+}
 @code {
 
 

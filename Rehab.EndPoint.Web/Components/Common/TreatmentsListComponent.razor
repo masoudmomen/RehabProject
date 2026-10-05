@@ -1,5 +1,6 @@
 @using Web.Data
 @using Rehab.EndPoint.Web.ViewModels
+@using Rehab.EndPoint.Web.Helpers
 @* Treatment Approaches tab of the "Find Treatment By" mega menu. *@
 <MegaMenuPanel Title="Treatment Approaches"
                Subtitle="Explore evidence-based treatment options and approaches for lasting recovery."
@@ -56,5 +57,9 @@
     };
 
     private static string IconFor(string name) =>
-        Icons.TryGetValue(name, out var icon) ? icon : "circle-help";
+        LucideIcons.Resolve(Icons, name, nameof(TreatmentsListComponent));
+
+    // Development startup check (Program.cs): every treatment has an icon and every icon is in the sprite.
+    internal static void ValidateIcons() =>
+        LucideIcons.ValidateMap(nameof(TreatmentsListComponent), Icons, Treatments.All.Select(i => i.Name));
 }

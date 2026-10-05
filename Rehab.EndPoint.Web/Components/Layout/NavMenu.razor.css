@@ -6,9 +6,13 @@ a.go-to-packages{
     backdrop-filter: blur(10px);
     box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
     transition: all 0.3s ease;
-    position: relative;
-    --nav-height: 72px;
-    min-height: var(--nav-height);
+    /* Scoped selector outranks Bootstrap's .fixed-top, so pin it here explicitly */
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1030;
+    min-height: var(--nav-height, 72px);
 }
 
 .navbar-brand {
@@ -25,7 +29,7 @@ a.go-to-packages{
     margin: 0 0.5rem;
     display: flex;
     align-items: center;
-    height: var(--nav-height);
+    height: var(--nav-height, 72px);
     color: var(--color-primary);
     cursor: pointer;
 }
@@ -187,7 +191,7 @@ a.go-to-packages{
         border-top: 1px solid #ecebf7;
         margin: 0 calc(var(--bs-gutter-x, 1.5rem) * -0.5);
         padding: 1rem 1rem 1.5rem;
-        max-height: calc(100vh - var(--nav-height));
+        max-height: calc(100vh - var(--nav-height, 72px));
         overflow-y: auto;
     }
 

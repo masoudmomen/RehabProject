@@ -25,6 +25,8 @@
     --space-sm: 8px;
     --space-md: 16px;
     --space-lg: 32px;
+    /* Fixed top navbar height (NavMenu); content and sticky elements offset by this */
+    --nav-height: 72px;
     /* Font */
     --font-base: 'Roboto', sans-serif;
     --shadow: 0 18px 45px rgba(39, 56, 74, 0.10);
@@ -45,4 +47,9 @@
     --bg: #f8fafc;
     --white: #ffffff;
     --bg-primary-gradient: linear-gradient(135deg, #a157fc, #84c8fd);
+}
+
+/* Keep #anchor jumps from landing under the fixed navbar */
+html {
+    scroll-padding-top: var(--nav-height, 72px);
 }
