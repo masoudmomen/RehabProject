@@ -1,46 +1,100 @@
-﻿<div id="alphabet-filter" ></div>
+<div id="alphabet-filter" ></div>
 <div id="states-list" ></div>
 
+@* Global (not .razor.css): the buttons and links are created by wwwroot/js/stateAlphabetFilter.js, so they carry no scope attribute. *@
 <style>
-    #alphabet-filter{
+    #alphabet-filter {
+        --sba-accent: var(--color-primary, #534AB7);
+        --sba-ink: #14235c;
         display: flex;
         flex-wrap: wrap;
-        gap: 6px; 
+        gap: 8px;
     }
-    button.btn_alphabet {
-        margin: 4px;
-        padding: 8px 12px;
-        border: 1px solid #0056b3;
-        border-radius: 5px;
-        cursor: pointer;
-        background: #f9f9f9;
-        color: #0056b3;
-        width: 36px;
-        height: 36px;
-        padding: 0;
+
+    #alphabet-filter button.btn_alphabet {
+        display: inline-flex;
         align-items: center;
         justify-content: center;
+        min-width: 42px;
+        height: 40px;
+        margin: 0;
+        padding: 0 10px;
+        border: 1px solid #e3e7f3;
+        border-radius: 10px;
+        background: #fff;
+        color: var(--sba-ink);
+        font-size: .9375rem;
+        font-weight: 600;
+        line-height: 1;
+        cursor: pointer;
+        box-shadow: 0 1px 2px rgba(20, 35, 92, .04);
+        transition: background-color .15s ease, border-color .15s ease, color .15s ease, box-shadow .15s ease;
     }
-  
 
-    button.btn_alphabet:hover {
-        background: #0056b3;
-        color:#fff;
-    }
+        #alphabet-filter button.btn_alphabet:hover {
+            background: #f1f0fb;
+            border-color: #c9c5ee;
+            color: var(--sba-accent);
+        }
 
-    button.btn_alphabet.active {
-        background: #0056b3;
-        color: white;
-    }
+        #alphabet-filter button.btn_alphabet:focus-visible {
+            outline: 2px solid var(--sba-accent);
+            outline-offset: 2px;
+        }
+
+        #alphabet-filter button.btn_alphabet.active {
+            background: var(--sba-accent);
+            border-color: var(--sba-accent);
+            color: #fff;
+            box-shadow: 0 4px 12px rgba(83, 74, 183, .28);
+        }
 
     #states-list {
-        margin: 20px 0px;
+        --sba-accent: var(--color-primary, #534AB7);
+        --sba-ink: #14235c;
         display: grid;
-        grid-template-columns: auto auto;
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        gap: 10px;
+        margin: 24px 0 0;
     }
-    .state-link{
-        
-        color: #0056b3;
-        text-decoration: none;
+
+        #states-list:empty {
+            display: none;
+        }
+
+        #states-list .state-link {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            height: 100%;
+            padding: 12px 14px;
+            border: 1px solid #e6e9f4;
+            border-radius: 12px;
+            background: #f7f8fd;
+            color: var(--sba-ink);
+            font-weight: 600;
+            text-decoration: none;
+            transition: background-color .15s ease, border-color .15s ease, color .15s ease;
+        }
+
+            #states-list .state-link i {
+                color: var(--sba-accent);
+            }
+
+            #states-list .state-link:hover {
+                background: #f1f0fb;
+                border-color: #c9c5ee;
+                color: var(--sba-accent);
+            }
+
+            #states-list .state-link:focus-visible {
+                outline: 2px solid var(--sba-accent);
+                outline-offset: 2px;
+            }
+
+    @@media (max-width: 575.98px) {
+        #alphabet-filter { gap: 6px; }
+        #alphabet-filter button.btn_alphabet { min-width: 38px; height: 38px; }
+        #states-list { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
     }
 </style>

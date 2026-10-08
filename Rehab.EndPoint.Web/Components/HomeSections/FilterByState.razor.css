@@ -1,0 +1,87 @@
+.fbs {
+    --fbs-text: #3b4568;
+    --fbs-accent: var(--color-primary, #534AB7);
+    --fbs-border: #e6e9f4;
+    --fbs-radius: 20px;
+    background: #f5f7fc;
+    padding: 72px 0;
+}
+
+.fbs-container {
+    max-width: 1280px;
+}
+
+/* ---------- Header ---------- */
+.fbs-header {
+    text-align: center;
+    max-width: 880px;
+    margin: 0 auto 40px;
+}
+
+.fbs-accent {
+    display: inline-flex;
+    gap: 6px;
+    margin-bottom: 16px;
+}
+
+    .fbs-accent span {
+        display: block;
+        height: 4px;
+        border-radius: 999px;
+        background: var(--fbs-accent);
+    }
+
+        .fbs-accent span:first-child { width: 40px; }
+        .fbs-accent span:last-child { width: 8px; opacity: .3; }
+
+/* Look (gradient, size, weight) comes from the shared h2.section-title style */
+h2.fbs-title {
+    margin: 0 0 12px;
+}
+
+.fbs-subtitle {
+    margin: 0;
+    font-size: 1.0625rem;
+    line-height: 1.6;
+    color: var(--fbs-text);
+}
+
+/* ---------- Cards ---------- */
+.fbs-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
+    align-items: stretch;
+}
+
+.fbs-card {
+    min-width: 0;
+    background: #fff;
+    border: 1px solid var(--fbs-border);
+    border-radius: var(--fbs-radius);
+    box-shadow: 0 1px 2px rgba(20, 35, 92, .04), 0 8px 24px rgba(20, 35, 92, .05);
+    padding: 32px;
+}
+
+.fbs-card-map {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* ---------- Tablet ---------- */
+@media (max-width: 991.98px) {
+    .fbs { padding: 56px 0; }
+    .fbs-header { margin-bottom: 32px; }
+    .fbs-grid { gap: 16px; }
+    .fbs-card { padding: 20px; --fbs-radius: 16px; border-radius: 16px; }
+}
+
+/* ---------- Mobile ---------- */
+@media (max-width: 767.98px) {
+    .fbs { padding: 40px 0; }
+    .fbs-header { margin-bottom: 24px; }
+    .fbs-subtitle { font-size: 1rem; }
+    .fbs-grid { grid-template-columns: minmax(0, 1fr); }
+    .fbs-card { padding: 16px; }
+}

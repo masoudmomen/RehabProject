@@ -95,7 +95,9 @@ a.go-to-packages{
     transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease;
 }
 
-.nav-item-mega:hover ::deep .mega-menu {
+/* .mobile-mega-open is set by the trigger button (click / Enter / Space) at every width */
+.nav-item-mega:hover ::deep .mega-menu,
+.nav-item-mega.mobile-mega-open ::deep .mega-menu {
     display: block !important;
     visibility: visible;
     opacity: 1;

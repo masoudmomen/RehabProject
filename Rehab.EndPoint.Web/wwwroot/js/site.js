@@ -31,20 +31,54 @@ window.bootstrap.Lightbox = {
         });
     }
 
-    // Handle mobile mega menu toggle for Treatment By
-    const treatmentByLink = document.querySelector('.treatment-by-link');
-    const treatmentByNavItem = document.querySelector('#treatment-by-nav-item');
-    
-    if (treatmentByLink && treatmentByNavItem) {
-        treatmentByLink.addEventListener('click', function(e) {
-            // Only prevent default and toggle on mobile (screen width <= 991.98px)
-            if (window.innerWidth <= 991.98) {
-                e.preventDefault();
-                e.stopPropagation();
-                treatmentByNavItem.classList.toggle('mobile-mega-open');
-            }
-        });
+    // "Find Treatment By" trigger: a <button> that opens/closes its mega menu on click,
+    // Enter or Space (desktop also shows it on hover via CSS), keeping aria-expanded in sync.
+    // Escape closes it, and so does tabbing out of it.
+    // Delegated so it keeps working after Blazor re-renders.
+    function setMegaMenuOpen(navItem, open) {
+        navItem.classList.toggle('mobile-mega-open', open);
+        const trigger = navItem.querySelector('.treatment-by-link');
+        if (trigger) {
+            trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+        }
     }
+
+    document.addEventListener('click', function (e) {
+        const trigger = e.target.closest('.treatment-by-link');
+        const navItem = trigger && trigger.closest('#treatment-by-nav-item');
+        if (!navItem) {
+            return;
+        }
+
+        setMegaMenuOpen(navItem, !navItem.classList.contains('mobile-mega-open'));
+    });
+
+    document.addEventListener('keydown', function (e) {
+        if (e.key !== 'Escape') {
+            return;
+        }
+
+        const navItem = document.querySelector('#treatment-by-nav-item.mobile-mega-open');
+        if (!navItem) {
+            return;
+        }
+
+        const hadFocus = navItem.contains(document.activeElement);
+        setMegaMenuOpen(navItem, false);
+        if (hadFocus) {
+            navItem.querySelector('.treatment-by-link').focus();
+        }
+    });
+
+    document.addEventListener('focusout', function (e) {
+        const navItem = e.target.closest && e.target.closest('#treatment-by-nav-item.mobile-mega-open');
+        // relatedTarget is null for clicks on non-focusable content; outside clicks are handled below.
+        if (!navItem || !e.relatedTarget || navItem.contains(e.relatedTarget)) {
+            return;
+        }
+
+        setMegaMenuOpen(navItem, false);
+    });
 
     // Center the clicked "Find Treatment By" tab title in its scrollable strip (mobile only).
     // Delegated so it keeps working after Blazor re-renders; scrolls only the strip, not the page.
@@ -66,22 +100,18 @@ window.bootstrap.Lightbox = {
         strip.scrollTo({ left: strip.scrollLeft + offset, behavior: 'smooth' });
     });
 
-    // Close open mega menus when clicking outside (mobile only)
+    // Close open mega menus when clicking outside
     document.addEventListener('click', function (e) {
-        if (window.innerWidth > 991.98) {
-            return; // desktop: use hover, don't interfere
-        }
-
         // If click is inside any mega nav item, do nothing
         const closestMegaItem = e.target.closest('.nav-item-mega');
         if (closestMegaItem) {
             return;
         }
 
-        // Otherwise, remove mobile-mega-open from all mega nav items
+        // Otherwise, close all mega nav items
         document.querySelectorAll('.nav-item-mega.mobile-mega-open')
             .forEach(function (item) {
-                item.classList.remove('mobile-mega-open');
+                setMegaMenuOpen(item, false);
             });
     });
 

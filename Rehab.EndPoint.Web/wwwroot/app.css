@@ -35,6 +35,16 @@ h2.section-title {
     position: relative;
     margin-bottom: 3rem;
 }
+/* Keyword highlight inside a section title (same teal gradient as the hero's "Mental Health") */
+.section-title .title-highlight {
+    background: linear-gradient(90deg, #22c0d6, #3e8ff0);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+}
 /*.section-title::after {
     content: '';
     position: absolute;

@@ -1,18 +1,22 @@
-﻿@using Rehab.EndPoint.Web.Components.Facility
-<section class="d-flex flex-column justify-content-center bg-light-gray">
-    <div class="container py-5">
-        <h2 class="section-title text-center mt-5 mb-1">Browse Rehab Centers by State</h2>
-        <p class="fs-5 text-center text-dark-subtle">Select a state to explore rehab centers by condition, level of care, insurance information, and facility information.</p>
-        <div class="row">
-            <div class="col-md-7">
+@using Rehab.EndPoint.Web.Components.Facility
+<section class="fbs">
+    <div class="container fbs-container">
+        <header class="fbs-header">
+            <span class="fbs-accent" aria-hidden="true"><span></span><span></span></span>
+            <h2 class="section-title fbs-title">Browse Rehab Centers by <span class="title-highlight">State</span></h2>
+            <p class="fbs-subtitle">Select a state to explore rehab centers by condition, level of care, insurance information, and facility information.</p>
+        </header>
+        <div class="fbs-grid">
+            <div class="fbs-card fbs-card-map">
                 <StatesMap />
             </div>
-            <div class="col-md-5 align-self-center ps-2">
+            <div class="fbs-card fbs-card-browse">
                 <StateByAlphabet></StateByAlphabet>
             </div>
         </div>
     </div>
 </section>
+@* Global on purpose: other home sections (WWT, Treatment, Conditions, ...) rely on these two rules. *@
 <style>
     .bg-light-gray{
         background-color: #eee;
@@ -26,5 +30,5 @@
         animation: fadeInUp 1s ease-out;
     }
 
-    
+
 </style>

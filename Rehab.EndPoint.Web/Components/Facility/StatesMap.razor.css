@@ -1,68 +1,117 @@
-﻿path {
-    fill: #88a4bc;
+.map-layout {
+    --map-fill: #8194dc;
+    --map-active: var(--color-primary, #534AB7);
+    --map-ink: #14235c;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.map-figure {
+    width: 100%;
+}
+
+path {
+    fill: var(--map-fill);
+    stroke: #fff;
+    stroke-width: 1;
+    stroke-linejoin: round;
     pointer-events: all;
+    transition: fill .15s ease;
 }
-  .state-link {
-        color: #0d6efd;
-        text-decoration: none;
-    }
-.state ,.state-shape {
-    fill: #88a4bc;
+
+.state, .state-shape {
+    fill: var(--map-fill);
 }
+
 .borders {
     stroke: #FFFFFF;
     stroke-width: 1
 }
+
 .dccircle {
     display: yes
 }
+
 .separator1 {
     stroke: #B0B0B0;
     stroke-width: 2
 }
 
 path:hover, .state-shape.hovered {
-    fill: #0056b3;
+    fill: var(--map-active);
     cursor: pointer;
 }
+
+/* Keyboard users get the same emphasis as hover */
+a:focus {
+    outline: none;
+}
+
+    a:focus-visible path {
+        fill: var(--map-active);
+        stroke: var(--map-ink);
+        stroke-width: 2;
+    }
+
 .state-label {
-    font-family: sans-serif;
-    font-size: 20px;
+    font-family: inherit;
+    font-size: 17px;
     fill: #fff;
-    font-weight: bold;
+    font-weight: 600;
+    letter-spacing: .02em;
     text-anchor: middle;
     pointer-events: none;
 }
 
-
+/* ---------- Small-state tiles ---------- */
+.map-small-states {
+    border-top: 1px solid #eef0f7;
+    padding-top: 16px;
+}
 
 #state-list {
     display: flex;
     flex-wrap: wrap;
+    justify-content: center;
     gap: 8px;
     list-style-type: none;
+    margin: 0;
     padding: 0;
 }
+
     #state-list li {
-        width: 36px;
-        height: 36px;
-        background-color: #88a4bc;
-        padding: 5px;
-        -moz-border-radius: 5px;
-        border-radius: 5px;
+        min-width: 48px;
+        background-color: #f3f5fc;
+        border: 1px solid #e3e7f3;
+        border-radius: 10px;
         text-align: center;
-    }
-    #state-list a {
-        text-decoration: none;
-        font-size: 12px;
-        color: #fff;
-        display: inline-block;
-        width: 100%;
-        padding: 5px;
-    }
-    #state-list li.hovered {
-        background: #0056b3;
-        font-weight: bold;
+        transition: background-color .15s ease, border-color .15s ease;
     }
 
- 
+    #state-list a {
+        display: block;
+        padding: 7px 10px;
+        font-size: 13px;
+        font-weight: 600;
+        line-height: 1.2;
+        color: var(--map-ink);
+        text-decoration: none;
+        border-radius: 10px;
+    }
+
+        #state-list a:focus-visible {
+            outline: 2px solid var(--map-active);
+            outline-offset: 2px;
+        }
+
+    #state-list li:hover,
+    #state-list li.hovered {
+        background: var(--map-active);
+        border-color: var(--map-active);
+    }
+
+        #state-list li:hover a,
+        #state-list li.hovered a {
+            color: #fff;
+        }

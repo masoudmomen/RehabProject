@@ -90,16 +90,16 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
-//else
-//{
-//    // Report Lucide icons missing from wwwroot/icons/lucide-sprite.svg and unmapped/stale icon mappings.
-//    LucideIcons.EnableValidation(app.Environment.WebRootFileProvider, app.Logger);
-//    AmenityComponent.ValidateIcons();
-//    AgeGroupMegaMenuComponent.ValidateIcons();
-//    ConditionMegaMenuComponent.ValidateIcons();
-//    LevelOfCareComponent.ValidateIcons();
-//    TreatmentsListComponent.ValidateIcons();
-//}
+else
+{
+    // Report Lucide icons missing from wwwroot/icons/lucide-sprite.svg and unmapped/stale icon mappings.
+    LucideIcons.EnableValidation(app.Environment.WebRootFileProvider, app.Logger);
+    AmenityComponent.ValidateIcons();
+    AgeGroupMegaMenuComponent.ValidateIcons();
+    ConditionMegaMenuComponent.ValidateIcons();
+    LevelOfCareComponent.ValidateIcons();
+    TreatmentsListComponent.ValidateIcons();
+}
 
 app.UseHttpsRedirection();
 
