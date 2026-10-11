@@ -58,6 +58,26 @@ a.go-to-packages{
         width: 100%;
     }
 
+/* Blog: light pill on desktop (mobile uses the shared .main-link styles) */
+@media (min-width: 992px) {
+    .navbar-nav ::deep .main-link.blog-link {
+        height: auto;
+        padding: 10px 22px;
+        border-radius: 50px;
+        background: #ebe7fb;
+        transition: background-color 0.3s ease;
+    }
+
+        .navbar-nav ::deep .main-link.blog-link:hover,
+        .navbar-nav ::deep .main-link.blog-link.active {
+            background: #ddd6f7;
+        }
+
+        .navbar-nav ::deep .main-link.blog-link::after {
+            display: none;
+        }
+}
+
 /* Icons are only shown in the mobile menu */
 .nav-icon {
     display: none;

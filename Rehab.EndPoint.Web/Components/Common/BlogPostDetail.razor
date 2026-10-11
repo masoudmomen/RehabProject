@@ -15,7 +15,7 @@
         <div class="d-flex align-items-center gap-2 mb-3 flex-wrap">
             @foreach (var topic in article.Topics)
             {
-                <Topic ContentTopic="topic" ></Topic>
+             @*    <Topic ContentTopic="topic" ></Topic> *@
                 @* <a href="@($"/topics/{article.TopicSlug(topic)}")"
                    class="badge rounded-pill text-decoration-none article-badge-topic px-3 py-2">
                     @topic.Name.ToUpper()

@@ -1,3 +1,4 @@
+@using Rehab.EndPoint.Web.Components.Common
 
 <nav class="navbar navbar-expand-lg navbar-custom fixed-top p-0">
     <div class="container">
@@ -21,6 +22,11 @@
                         <i class="fa-solid fa-magnifying-glass nav-icon" aria-hidden="true"></i>Treatment Centers
                     </NavLink>
                     @* <MegaMenu /> *@
+                </li>
+                <li class="nav-item d-flex align-items-center">
+                    <NavLink class="nav-link main-link blog-link" href="/blog">
+                        <span class="nav-icon"><LucideIcon Name="book-open" Size="20" /></span>Blog
+                    </NavLink>
                 </li>
                 <li class="nav-item nav-item-mega d-flex align-items-center px-1 treatment-item" id="treatment-by-nav-item">
                     <button type="button" class="btn btn-advertise treatment-by-link"

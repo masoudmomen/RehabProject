@@ -1,36 +1,185 @@
-﻿@using Rehab.Application.Blog
+@using Rehab.Application.Blog
+@implements IAsyncDisposable
 @inject IBlogTopicService BlogTopicService
 @inject NavigationManager Navigation
+@inject IJSRuntime JS
 
 <div class="filter-section  px-4 py-3">
     <div class="container">
         <!-- Search Bar -->
-     
-        <!-- Filter Pills -->
-        <div class="d-flex flex-wrap gap-2">
-            <a class="btn filter-pill @(string.IsNullOrEmpty(CurrentTopicSlug) ? "active" : null)" href="/blog/archive">All Articles</a>
-            @foreach (var topic in Topics)
+
+        <!-- Filter Pills: All Articles + the most-used topics; the rest live under "More topics" -->
+        <div class="topic-row">
+            <div class="topic-scroll-wrap" @ref="scrollWrapRef">
+                <div class="topic-scroll">
+                    <a class="btn filter-pill @(string.IsNullOrEmpty(CurrentTopicSlug) ? "active" : null)" href="/blog/archive">All Articles</a>
+                    @foreach (var topic in Topics.Visible)
+                    {
+                        <a class="btn filter-pill @(IsActive(topic) ? "active" : null)" href="/blog/topic/@topic.Slug">@topic.Name</a>
+                    }
+                </div>
+            </div>
+
+            @if (Topics.Hidden.Count > 0)
             {
-                var isActive = string.Equals(topic.Slug, CurrentTopicSlug, StringComparison.OrdinalIgnoreCase);
-                <a class="btn filter-pill @(isActive ? "active" : null)" href="/blog/topic/@topic.Slug">@topic.Name</a>
+                var picked = PickedHiddenTopic;
+                <div class="more-topics" @ref="moreRef">
+                    <button type="button"
+                            id="@ButtonId"
+                            class="btn filter-pill more-topics-btn @(isOpen ? "is-open" : null) @(picked is not null ? "is-picked" : null)"
+                            aria-expanded="@(isOpen ? "true" : "false")"
+                            aria-controls="@PanelId"
+                            aria-label="@(picked is null ? null : $"More topics, current topic: {picked.Name}")"
+                            title="@picked?.Name"
+                            @onclick="ToggleAsync">
+                        @if (picked is null)
+                        {
+                            <span class="more-topics-label">More topics</span>
+                            <span class="more-topics-count">@Topics.Hidden.Count</span>
+                        }
+                        else
+                        {
+                            <span class="more-topics-label">@picked.Name</span>
+                        }
+                        <LucideIcon Name="chevron-down" Size="16" Class="more-topics-chevron" />
+                    </button>
+
+                    @* Bottom-sheet backdrop; only shown below 768px *@
+                    <div class="more-topics-backdrop @(isOpen ? "is-open" : null)" @onclick="() => CloseAsync(true)"></div>
+
+                    @* Links stay in the server-rendered HTML; opening only toggles visibility, so crawlers see every topic. *@
+                    <div id="@PanelId"
+                         class="more-topics-panel @(isOpen ? "is-open" : null)"
+                         role="dialog"
+                         aria-labelledby="@TitleId">
+                        <span class="more-topics-handle" aria-hidden="true"></span>
+                        <div class="more-topics-head">
+                            <div class="more-topics-titles">
+                                <p id="@TitleId" class="more-topics-title">More topics</p>
+                                <p class="more-topics-meta">@Topics.Hidden.Count topics, A to Z</p>
+                            </div>
+                            <button type="button" class="more-topics-close" aria-label="Close more topics" @onclick="() => CloseAsync(true)">
+                                <LucideIcon Name="x" Size="18" />
+                            </button>
+                        </div>
+                        <ul class="more-topics-list">
+                            @foreach (var topic in Topics.Hidden)
+                            {
+                                var active = IsActive(topic);
+                                <li>
+                                    <a class="more-topics-item @(active ? "active" : null)"
+                                       href="/blog/topic/@topic.Slug"
+                                       aria-current="@(active ? "true" : null)"
+                                       @onclick="() => CloseAsync(true)">@topic.Name</a>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                </div>
             }
         </div>
     </div>
 </div>
 
 @code {
-    private List<BlogTopicDto> Topics { get; set; } = new();
+    // How many topics get their own chip; the rest go under "More topics".
+    private const int VisibleTopicCount = 6;
+
+    private const string ButtonId = "blog-more-topics-btn";
+    private const string PanelId = "blog-more-topics";
+    private const string TitleId = "blog-more-topics-title";
+
+    private BlogTopicFilterDto Topics { get; set; } = new();
     private string? CurrentTopicSlug { get; set; }
+
+    private bool isOpen;
+    private bool openPending;
+    private ElementReference scrollWrapRef;
+    private ElementReference moreRef;
+    private IJSObjectReference? module;
+    private DotNetObjectReference<BlogFilterBar>? selfRef;
+
+    private BlogTopicFilterItemDto? PickedHiddenTopic => Topics.Hidden.FirstOrDefault(IsActive);
 
     protected override void OnInitialized()
     {
-        Topics = BlogTopicService.GetList();
+        Topics = BlogTopicService.GetFilterTopics(VisibleTopicCount);
+        Navigation.LocationChanged += OnLocationChanged;
     }
 
     protected override void OnParametersSet()
     {
         CurrentTopicSlug = GetTopicSlugFromUri();
     }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            try
+            {
+                module = await JS.InvokeAsync<IJSObjectReference>("import", "/js/blog-topics.js");
+                selfRef = DotNetObjectReference.Create(this);
+                await module.InvokeVoidAsync("initRow", scrollWrapRef);
+            }
+            catch (JSDisconnectedException) { }
+        }
+
+        if (openPending && module is not null)
+        {
+            openPending = false;
+            try { await module.InvokeVoidAsync("open", moreRef, selfRef); }
+            catch (JSDisconnectedException) { }
+        }
+    }
+
+    private async Task ToggleAsync()
+    {
+        if (isOpen)
+        {
+            await CloseAsync(true);
+            return;
+        }
+        isOpen = true;
+        openPending = true;
+    }
+
+    private async Task CloseAsync(bool returnFocus)
+    {
+        if (!isOpen) return;
+        isOpen = false;
+        openPending = false;
+        if (module is not null)
+        {
+            try { await module.InvokeVoidAsync("close", moreRef, returnFocus); }
+            catch (JSDisconnectedException) { }
+        }
+    }
+
+    // Esc, a click outside, or Tab leaving the popover: the script has already cleaned up and moved focus.
+    [JSInvokable]
+    public void ClosedFromScript()
+    {
+        if (!isOpen) return;
+        isOpen = false;
+        openPending = false;
+        StateHasChanged();
+    }
+
+    // The component sits outside the page's @page parameters, so follow the URL directly
+    // (e.g. /blog/topic/a -> /blog/topic/b reuses this instance).
+    private void OnLocationChanged(object? sender, LocationChangedEventArgs e)
+    {
+        _ = InvokeAsync(async () =>
+        {
+            CurrentTopicSlug = GetTopicSlugFromUri();
+            await CloseAsync(false);
+            StateHasChanged();
+        });
+    }
+
+    private bool IsActive(BlogTopicFilterItemDto topic) =>
+        string.Equals(topic.Slug, CurrentTopicSlug, StringComparison.OrdinalIgnoreCase);
 
     private string? GetTopicSlugFromUri()
     {
@@ -41,8 +190,23 @@
             return null;
         }
 
-        var slug = path[prefix.Length..];
+        var slug = Uri.UnescapeDataString(path[prefix.Length..]);
         var slashIndex = slug.IndexOf('/');
         return slashIndex >= 0 ? slug[..slashIndex] : slug;
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        Navigation.LocationChanged -= OnLocationChanged;
+        if (module is not null)
+        {
+            try
+            {
+                await module.InvokeVoidAsync("dispose", scrollWrapRef, moreRef);
+                await module.DisposeAsync();
+            }
+            catch (JSDisconnectedException) { }
+        }
+        selfRef?.Dispose();
     }
 }

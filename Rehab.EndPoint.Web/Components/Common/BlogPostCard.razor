@@ -5,13 +5,13 @@
         <img src="@(serverUrl + @Article.ImageUrl)" class="article-img" alt="@Article.Title">
     </div>
     <div class="article-card-body">
-        <div class="d-flex align-items-center gap-2 mb-2 flex-wrap">
+   @*      <div class="d-flex align-items-center gap-2 mb-2 flex-wrap">
             @foreach (var topic in Article.Topics)
             {
                <Topic ContentTopic="topic" ></Topic>
             }
             <span class="text-muted small">@Article.PublishedDisplay</span>
-        </div>
+        </div> *@
         <h5 class="article-title">
             <a href="/blog/@Article.Slug" target="_blank">@TextHighlighter.Highlight(Article.Title, HighlightTerm)</a>
 

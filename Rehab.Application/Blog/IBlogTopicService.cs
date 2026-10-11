@@ -11,6 +11,7 @@ namespace Rehab.Application.Blog
     {
         BaseDto<BlogTopicDto> Add(BlogTopicDto blogTopicDto);
         List<BlogTopicDto> GetList();
+        BlogTopicFilterDto GetFilterTopics(int visibleCount);
         BaseDto<BlogTopicDto> Update(BlogTopicDto blogTopicDto);
         BaseDto<BlogTopicDto> Delete(BlogTopicDto blogTopicDto);
         Task<BaseDto<BlogTopicDto>> GetTopicBySlugAsync(string tagSlug);
@@ -49,6 +50,47 @@ namespace Rehab.Application.Blog
                     .BlogPostTopics
                     .OrderBy(t => t.Name)
                     .ToList());
+        }
+
+        // Blog filter bar: the visibleCount topics with the most published posts become chips,
+        // the rest go into "More topics" (A to Z).
+        public BlogTopicFilterDto GetFilterTopics(int visibleCount)
+        {
+            using var scope = _scopeFactory.CreateScope();
+            var context = scope.ServiceProvider.GetRequiredService<IDatabaseContext>();
+
+            var now = DateTime.UtcNow;
+            var topics = context.BlogPostTopics
+                .AsNoTracking()
+                .Select(t => new BlogTopicFilterItemDto
+                {
+                    Id = t.Id,
+                    Name = t.Name,
+                    Slug = t.Slug,
+                    PostCount = t.Posts!.Count(p => !p.IsDeleted && p.IsActive && p.PublisheDate <= now)
+                })
+                .ToList();
+
+            return SplitFilterTopics(topics, visibleCount);
+        }
+
+        public static BlogTopicFilterDto SplitFilterTopics(IEnumerable<BlogTopicFilterItemDto> topics, int visibleCount)
+        {
+            var byPopularity = topics
+                .OrderByDescending(t => t.PostCount)
+                .ThenBy(t => t.Name, StringComparer.OrdinalIgnoreCase)
+                .ThenBy(t => t.Id)
+                .ToList();
+
+            var take = Math.Max(visibleCount, 0);
+            return new BlogTopicFilterDto
+            {
+                Visible = byPopularity.Take(take).ToList(),
+                Hidden = byPopularity.Skip(take)
+                    .OrderBy(t => t.Name, StringComparer.OrdinalIgnoreCase)
+                    .ThenBy(t => t.Id)
+                    .ToList()
+            };
         }
         public BaseDto<BlogTopicDto> Update(BlogTopicDto blogTopic)
         {
@@ -93,5 +135,19 @@ namespace Rehab.Application.Blog
 
         public string Logo { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
+    }
+
+    public class BlogTopicFilterItemDto
+    {
+        public int Id { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public string Slug { get; set; } = string.Empty;
+        public int PostCount { get; set; }
+    }
+
+    public class BlogTopicFilterDto
+    {
+        public List<BlogTopicFilterItemDto> Visible { get; set; } = new();
+        public List<BlogTopicFilterItemDto> Hidden { get; set; } = new();
     }
 }
