@@ -6,7 +6,7 @@
                ListId="mm-age-groups-list"
                SearchPlaceholder="Search age groups & populations..."
                EmptyText="No age groups or populations match your search."
-               Columns="3"
+               Columns="@Columns"
                Rows="@Rows"
                AsideIcon="users-round"
                AsideTitle="Inclusive care for every stage."
@@ -25,7 +25,8 @@
         .OrderBy(g => g.Order)
         .ToList();
 
-    private static readonly int Rows = (int)Math.Ceiling(OrderedGroups.Count / 3.0);
+    private const int Columns = 4;
+    private static readonly int Rows = (int)Math.Ceiling(OrderedGroups.Count / (double)Columns);
 
     private static readonly Dictionary<string, string> Icons = new(StringComparer.OrdinalIgnoreCase)
     {

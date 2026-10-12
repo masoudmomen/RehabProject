@@ -8,14 +8,13 @@
                ListId="mm-loc-list"
                SearchPlaceholder="Search levels of care..."
                EmptyText="No levels of care match your search."
-               Columns="2"
+               Columns="4"
                AsideIcon="layers"
                AsideTitle="Different needs. Different levels."
                AsideText="Explore treatment levels and find the right care for your recovery journey.">
     @foreach (var card in LevelOfCareCards)
     {
         <MegaMenuItem Name="@card.Name"
-                      Description="@card.Description"
                       Href="@card.Link"
                       Target="_blank"
                       Icon="@IconFor(card.Name)" />
@@ -30,7 +29,6 @@
             {
                 Name = i.Name,
                 Image = i.Image,
-                Description = i.Description,
                 Link = "/treatment-centers?loc=" + @Uri.EscapeDataString(i.Name)
 
             }).ToList();
