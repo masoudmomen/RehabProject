@@ -30,439 +30,485 @@
     <div class="sidebar-overlay"></div>
     <div class="row my-4 layout-wrapper" id="facilitypage">
         <div class="content-a">
-            <div class="search-wrapper">
-            <div id="searchbox" class="search-box">
-                <input type="text" @bind-value="FullFacilityFilterItems.SearchText"
-                       class="form-control search-input"
-                       placeholder="Search Treatment Centers by Name..." />
-                <span class="search-icon" @onclick="ApplyFilter">
-                    <i class="fa fa-search"></i>
-                </span>
-            </div>
-            <div class="filter-dropdowns">
+            <section id="searchbox" class="tc-search @(FilterSheetOpen ? "is-sheet-open" : "")" aria-label="Search and filter treatment centers">
 
-                <!-- States Dropdown -->
-                <div class="dropdown filter-dropdown">
-                    <button class="btn dropdown-toggle btn-outline-primary"
-                            type="button"
-                            data-bs-toggle="dropdown"
-                            aria-expanded="false">
-                        States
+                <!-- Search bar: center name + location -->
+                <div class="tc-searchbar">
+                    <label class="tc-field tc-field--name">
+                        <span class="tc-field-icon"><LucideIcon Name="search" Size="20" /></span>
+                        <span class="tc-field-body">
+                            <span class="tc-field-label">Center name</span>
+                            <input type="text" @bind-value="FullFacilityFilterItems.SearchText"
+                                   class="tc-field-input"
+                                   placeholder="Search by name" />
+                        </span>
+                    </label>
+
+                    <!-- Location (States + Cities) Dropdown -->
+                    <div class="dropdown tc-field tc-field--location @(LocationCount > 0 ? "has-value" : "")">
+                        <button class="tc-field-toggle"
+                                type="button"
+                                data-bs-toggle="dropdown"
+                                data-bs-display="static"
+                                data-bs-auto-close="outside"
+                                aria-expanded="false">
+                            <span class="tc-field-icon"><LucideIcon Name="map-pin" Size="20" /></span>
+                            <span class="tc-field-body">
+                                <span class="tc-field-label">Location</span>
+                                <span class="tc-field-value">@(LocationSummary ?? "Any state or city")</span>
+                            </span>
+                            <span class="tc-chevron"><LucideIcon Name="chevron-down" Size="18" /></span>
+                        </button>
+                        <span class="tc-dd-backdrop" aria-hidden="true"></span>
+
+                        <div class="dropdown-menu tc-panel tc-panel--location">
+                            <div class="tc-panel-cols">
+                                <div class="tc-panel-col">
+                                    @PanelHead("State", FullFacilityFilterItems.States.Count)
+                                    @PanelSearch("Search states")
+                                    <ul class="tc-options">
+                                        @if (States != null)
+                                        {
+                                            @foreach (var item in States)
+                                            {
+                                                <li @onmousedown="()=>StateToggleSelectItems(item)">
+                                                    <label class="dropdown-item tc-option">
+                                                        <input type="checkbox" value="@item" id="@item">
+                                                        <span class="tc-option-text">@item</span>
+                                                    </label>
+                                                </li>
+                                            }
+                                        }
+                                    </ul>
+                                </div>
+                                <div class="tc-panel-col">
+                                    @PanelHead(FullFacilityFilterItems.States.Count == 1 ? $"City in {FullFacilityFilterItems.States[0]}" : "City", FullFacilityFilterItems.Cities.Count)
+                                    @PanelSearch("Search cities")
+                                    @if (Cities != null && Cities.Count > 0)
+                                    {
+                                        <ul class="tc-options">
+                                            @foreach (var item in Cities)
+                                            {
+                                                <li @onmousedown="()=>CityToggleSelectItems(item)">
+                                                    <label class="dropdown-item tc-option">
+                                                        <input type="checkbox" value="@item" id="@item">
+                                                        <span class="tc-option-text">@item</span>
+                                                    </label>
+                                                </li>
+                                            }
+                                        </ul>
+                                    }
+                                    else
+                                    {
+                                        <p class="tc-panel-hint">Pick a state to see its cities.</p>
+                                    }
+                                </div>
+                            </div>
+                            @PanelFoot(ClearLocation)
+                        </div>
+
+                        @if (LocationCount > 0)
+                        {
+                            <button type="button" class="tc-field-clear" aria-label="Clear location" @onclick="ClearLocation">
+                                <LucideIcon Name="x" Size="14" />
+                            </button>
+                        }
+                    </div>
+
+                    <button type="button" class="tc-search-btn" @onclick="ApplyFilter">
+                        <LucideIcon Name="search" Size="18" />
+                        <span>Search</span>
+                    </button>
+                </div>
+
+                <!-- Filter buttons (on phones this row becomes the Filters sheet) -->
+                <div class="tc-filter-row">
+                    <div class="tc-sheet-head">
+                        <div>
+                            <h2 class="tc-sheet-title">Filters</h2>
+                            <p class="tc-sheet-meta">@(PickedCount > 0 ? $"{PickedCount} on" : "None picked")</p>
+                        </div>
+                        <button type="button" class="tc-sheet-close" aria-label="Close filters" data-tc-close="true"
+                                @onclick="() => FilterSheetOpen = false">
+                            <LucideIcon Name="x" Size="20" />
+                        </button>
+                    </div>
+
+                    <button type="button" class="tc-filters-btn" @onclick="() => FilterSheetOpen = true">
+                        <LucideIcon Name="sliders-horizontal" Size="18" />
+                        <span>Filters</span>
+                        @if (PickedCount > 0)
+                        {
+                            <span class="tc-count">@PickedCount</span>
+                        }
                     </button>
 
-                    <ul class="dropdown-menu">
-                        <li>
-                         <div class="input-group filter-search-group mb-3 shadow-sm d-flex">
-                            <input type="text" class="form-control filters-search-input" placeholder="Search..." aria-label="State-Search" aria-describedby="button-addon2">
-                            <button class="btn btn-primary btn-filter-search" type="button" id="button-addon2">
-                                 <i class="fas fa-search"></i>
-                            </button>
-                        </div>
-                        </li>
-                        @if(States != null)
-                        {
-                            @foreach (var item in States)
+                    <!-- Conditions Dropdown -->
+                    <div class="dropdown tc-filter @(FullFacilityFilterItems.Conditions.Count > 0 ? "is-active" : "")">
+                        <button class="tc-filter-btn"
+                                type="button"
+                                data-bs-toggle="dropdown"
+                                data-bs-display="static"
+                                data-bs-auto-close="outside"
+                                aria-expanded="false">
+                            <span class="tc-btn-icon"><LucideIcon Name="heart-pulse" Size="18" /></span>
+                            <span class="tc-btn-text">
+                                <span class="tc-btn-label">Condition</span>
+                                <span class="tc-btn-summary">@Summary(FullFacilityFilterItems.Conditions.Select(c => c.Name))</span>
+                            </span>
+                            @if (FullFacilityFilterItems.Conditions.Count > 0)
                             {
-                                <li @onmousedown="()=>StateToggleSelectItems(item)">
-                                    <label class="dropdown-item">
-                                        <input type="checkbox" value="@item" id="@item"> @item
-                                    </label>
-                                </li>
+                                <span class="tc-count">@FullFacilityFilterItems.Conditions.Count</span>
                             }
-                        }
-                    </ul>
-                </div>
+                            <span class="tc-chevron"><LucideIcon Name="chevron-down" Size="16" /></span>
+                        </button>
+                        <span class="tc-dd-backdrop" aria-hidden="true"></span>
 
-
-
-                <!-- City Dropdown -->
-                <div class="dropdown filter-dropdown">
-                    <button class="btn dropdown-toggle btn-outline-primary"
-                            type="button"
-                            data-bs-toggle="dropdown"
-                            aria-expanded="false">
-                        Cities
-                    </button>
-
-                    <ul class="dropdown-menu">
-                        <li>
-                         <div class="input-group filter-search-group mb-3 shadow-sm d-flex">
-                            <input type="text" class="form-control filters-search-input" placeholder="Search..." aria-label="State-Search" aria-describedby="button-addon2">
-                            <button class="btn btn-primary btn-filter-search" type="button" id="button-addon2">
-                                 <i class="fas fa-search"></i>
-                            </button>
+                        <div class="dropdown-menu tc-panel">
+                            @PanelHead("Condition", FullFacilityFilterItems.Conditions.Count)
+                            @PanelSearch("Search conditions")
+                            <ul class="tc-options">
+                                @foreach (var item in Fields.Conditions!)
+                                {
+                                    <li @onmousedown="() => ConditionToggleSelectItems(item)">
+                                        <label class="dropdown-item tc-option">
+                                            <input type="checkbox" value="@item" id="condition-@item.Id" />
+                                            <span class="tc-option-text">@item.Name</span>
+                                        </label>
+                                    </li>
+                                }
+                            </ul>
+                            @PanelFoot(() => ClearGroup(FullFacilityFilterItems.Conditions, c => "condition-" + c.Id))
                         </div>
-                        </li>
-                        @if(Cities != null)
-                        {
-                            @foreach (var item in Cities)
+                    </div>
+
+                    <!-- LevelOfCare Dropdown -->
+                    <div class="dropdown tc-filter @(FullFacilityFilterItems.Locs.Count > 0 ? "is-active" : "")">
+                        <button class="tc-filter-btn"
+                                type="button"
+                                data-bs-toggle="dropdown"
+                                data-bs-display="static"
+                                data-bs-auto-close="outside"
+                                aria-expanded="false">
+                            <span class="tc-btn-icon"><LucideIcon Name="hospital" Size="18" /></span>
+                            <span class="tc-btn-text">
+                                <span class="tc-btn-label">Level of care</span>
+                                <span class="tc-btn-summary">@Summary(FullFacilityFilterItems.Locs.Select(l => l.Name))</span>
+                            </span>
+                            @if (FullFacilityFilterItems.Locs.Count > 0)
                             {
-                                <li @onmousedown="()=>CityToggleSelectItems(item)">
-                                    <label class="dropdown-item">
-                                        <input type="checkbox" value="@item" id="@item"> @item
-                                    </label>
-                                </li>
+                                <span class="tc-count">@FullFacilityFilterItems.Locs.Count</span>
                             }
-                        }
-                    </ul>
-                </div>
+                            <span class="tc-chevron"><LucideIcon Name="chevron-down" Size="16" /></span>
+                        </button>
+                        <span class="tc-dd-backdrop" aria-hidden="true"></span>
 
-
-
-
-                <!-- Conditions Dropdown -->
-                <div class="dropdown filter-dropdown">
-                    <button class="btn dropdown-toggle"
-                            type="button"
-                            data-bs-toggle="dropdown"
-                            aria-expanded="false">
-                        Conditions
-                    </button>
-
-                    <ul class="dropdown-menu">
-                          <li>
-                         <div class="input-group filter-search-group mb-3 shadow-sm d-flex">
-                            <input type="text" class="form-control filters-search-input" placeholder="Search..." aria-label="State-Search" aria-describedby="button-addon2">
-                            <button class="btn btn-primary btn-filter-search" type="button" id="button-addon2">
-                                 <i class="fas fa-search"></i>
-                            </button>
+                        <div class="dropdown-menu tc-panel">
+                            @PanelHead("Level of care", FullFacilityFilterItems.Locs.Count)
+                            @PanelSearch("Search levels of care")
+                            <ul class="tc-options">
+                                @foreach (var item in Fields.Locs!)
+                                {
+                                    <li @onmousedown="() => LocToggleSelectItems(item)">
+                                        <label class="dropdown-item tc-option">
+                                            <input type="checkbox" value="@item" id="loc-@item.Id">
+                                            <span class="tc-option-text">@item.Name</span>
+                                        </label>
+                                    </li>
+                                }
+                            </ul>
+                            @PanelFoot(() => ClearGroup(FullFacilityFilterItems.Locs, l => "loc-" + l.Id))
                         </div>
-                        </li>
-                        @foreach (var item in Fields.Conditions!)
-                        {
-                            <li @onmousedown="() => ConditionToggleSelectItems(item)">
-                                <label class="dropdown-item">
-                                    <input type="checkbox" value="@item" id="condition-@item.Id" />
-                                     @item.Name
-                                </label>
-                            </li>
-                        }
-                    </ul>
-                </div>
-                <!-- LevelOfCare Dropdown -->
-                <div class="dropdown filter-dropdown">
-                    <button class="btn dropdown-toggle"
-                            type="button"
-                            data-bs-toggle="dropdown"
-                            aria-expanded="false">
-                        Level of Care
-                    </button>
+                    </div>
 
-                    <ul class="dropdown-menu">
-                          <li>
-                         <div class="input-group filter-search-group mb-3 shadow-sm d-flex">
-                            <input type="text" class="form-control filters-search-input" placeholder="Search..." aria-label="State-Search" aria-describedby="button-addon2">
-                            <button class="btn btn-primary btn-filter-search" type="button" id="button-addon2">
-                                 <i class="fas fa-search"></i>
-                            </button>
+                    <!-- Insurances DropDown -->
+                    <div class="dropdown tc-filter @(FullFacilityFilterItems.Insurances.Count > 0 ? "is-active" : "")">
+                        <button class="tc-filter-btn"
+                                type="button"
+                                data-bs-toggle="dropdown"
+                                data-bs-display="static"
+                                data-bs-auto-close="outside"
+                                aria-expanded="false">
+                            <span class="tc-btn-icon"><LucideIcon Name="shield-check" Size="18" /></span>
+                            <span class="tc-btn-text">
+                                <span class="tc-btn-label">Insurance</span>
+                                <span class="tc-btn-summary">@Summary(FullFacilityFilterItems.Insurances.Select(i => i.Name))</span>
+                            </span>
+                            @if (FullFacilityFilterItems.Insurances.Count > 0)
+                            {
+                                <span class="tc-count">@FullFacilityFilterItems.Insurances.Count</span>
+                            }
+                            <span class="tc-chevron"><LucideIcon Name="chevron-down" Size="16" /></span>
+                        </button>
+                        <span class="tc-dd-backdrop" aria-hidden="true"></span>
+
+                        <div class="dropdown-menu tc-panel">
+                            @PanelHead("Insurance", FullFacilityFilterItems.Insurances.Count)
+                            @PanelSearch("Search insurance")
+                            <ul class="tc-options">
+                                @foreach (var item in Fields.Insurances!)
+                                {
+                                    <li @onmousedown="() => InsuranceToggleSelectItems(item)">
+                                        <label class="dropdown-item tc-option">
+                                            <input type="checkbox" value="@item" id="insurance-@item.Id">
+                                            <span class="tc-option-text">@item.Name</span>
+                                        </label>
+                                    </li>
+                                }
+                            </ul>
+                            @PanelFoot(() => ClearGroup(FullFacilityFilterItems.Insurances, i => "insurance-" + i.Id))
                         </div>
-                        </li>
-                        @foreach (var item in Fields.Locs!)
-                        {
-                            <li @onmousedown="() => LocToggleSelectItems(item)">
-                                <label class="dropdown-item">
-                                    <input type="checkbox" value="@item" id="loc-@item.Id"> @item.Name
-                                </label>
-                            </li>
-                        }
-                    </ul>
-                </div>
-                <!-- Treatments Dropdown -->
-                <div class="dropdown filter-dropdown">
-                    <button class="btn dropdown-toggle"
-                            type="button"
-                            data-bs-toggle="dropdown"
-                            aria-expanded="false">
-                        Treatments
-                    </button>
+                    </div>
 
-                    <ul class="dropdown-menu">
-                          <li>
-                         <div class="input-group filter-search-group mb-3 shadow-sm d-flex">
-                            <input type="text" class="form-control filters-search-input" placeholder="Search..." aria-label="State-Search" aria-describedby="button-addon2">
-                            <button class="btn btn-primary btn-filter-search" type="button" id="button-addon2">
-                                 <i class="fas fa-search"></i>
-                            </button>
+                    <!-- Who We Treat Dropdown -->
+                    <div class="dropdown tc-filter @(FullFacilityFilterItems.Wwts.Count > 0 ? "is-active" : "")">
+                        <button class="tc-filter-btn"
+                                type="button"
+                                data-bs-toggle="dropdown"
+                                data-bs-display="static"
+                                data-bs-auto-close="outside"
+                                aria-expanded="false">
+                            <span class="tc-btn-icon"><LucideIcon Name="users" Size="18" /></span>
+                            <span class="tc-btn-text">
+                                <span class="tc-btn-label">Age &amp; population</span>
+                                <span class="tc-btn-summary">@Summary(FullFacilityFilterItems.Wwts.Select(w => w.Name))</span>
+                            </span>
+                            @if (FullFacilityFilterItems.Wwts.Count > 0)
+                            {
+                                <span class="tc-count">@FullFacilityFilterItems.Wwts.Count</span>
+                            }
+                            <span class="tc-chevron"><LucideIcon Name="chevron-down" Size="16" /></span>
+                        </button>
+                        <span class="tc-dd-backdrop" aria-hidden="true"></span>
+
+                        <div class="dropdown-menu tc-panel">
+                            @PanelHead("Age & population", FullFacilityFilterItems.Wwts.Count)
+                            @PanelSearch("Search age groups")
+                            <ul class="tc-options">
+                                @foreach (var item in Fields.Wwts!)
+                                {
+                                    <li @onmousedown="() => WwtToggleSelectItems(item)">
+                                        <label class="dropdown-item tc-option">
+                                            <input type="checkbox" value="@item" id="wwt-@item.Id">
+                                            <span class="tc-option-text">@item.Name</span>
+                                        </label>
+                                    </li>
+                                }
+                            </ul>
+                            @PanelFoot(() => ClearGroup(FullFacilityFilterItems.Wwts, w => "wwt-" + w.Id))
                         </div>
-                        </li>
-                        @foreach (var item in Fields.Treatments!)
-                        {
-                            <li @onmousedown="() => TreatmentToggleSelectItems(item)">
-                                <label class="dropdown-item">
-                                    <input type="checkbox" value="@item" id="treatment-@item.Id"> @item.Name
-                                </label>
-                            </li>
-                        }
-                    </ul>
-                </div>
-                <!-- Who We Treat Dropdown -->
-                <div class="dropdown filter-dropdown">
-                    <button class="btn dropdown-toggle"
-                            type="button"
-                            data-bs-toggle="dropdown"
-                            aria-expanded="false">
-                        Age Groups & Populations
-                    </button>
+                    </div>
 
-                    <ul class="dropdown-menu">
-                          <li>
-                         <div class="input-group filter-search-group mb-3 shadow-sm d-flex">
-                            <input type="text" class="form-control filters-search-input" placeholder="Search..." aria-label="State-Search" aria-describedby="button-addon2">
-                            <button class="btn btn-primary btn-filter-search" type="button" id="button-addon2">
-                                 <i class="fas fa-search"></i>
-                            </button>
+                    <!-- More filters: Treatments + Amenities -->
+                    <div class="dropdown tc-filter @(MoreFiltersCount > 0 ? "is-active" : "")">
+                        @* Positioned by Popper (not static) so the wide panel opens under this
+                           button and shifts sideways only if it would leave the screen. *@
+                        <button class="tc-filter-btn"
+                                type="button"
+                                data-bs-toggle="dropdown"
+                                data-bs-auto-close="outside"
+                                data-bs-popper-config='{"modifiers":[{"name":"flip","enabled":false}]}'
+                                aria-expanded="false">
+                            <span class="tc-btn-icon"><LucideIcon Name="sliders-horizontal" Size="18" /></span>
+                            <span class="tc-btn-text">
+                                <span class="tc-btn-label">More filters</span>
+                                <span class="tc-btn-summary">@Summary(FullFacilityFilterItems.Treatments.Select(t => t.Name).Concat(FullFacilityFilterItems.Amenities.Select(a => a.Name)))</span>
+                            </span>
+                            @if (MoreFiltersCount > 0)
+                            {
+                                <span class="tc-count">@MoreFiltersCount</span>
+                            }
+                            <span class="tc-chevron"><LucideIcon Name="chevron-down" Size="16" /></span>
+                        </button>
+                        <span class="tc-dd-backdrop" aria-hidden="true"></span>
+
+                        <div class="dropdown-menu tc-panel tc-panel--more">
+                            <div class="tc-panel-cols">
+                                <!-- Treatments -->
+                                <div class="tc-panel-col">
+                                    @PanelHead("Treatment approach", FullFacilityFilterItems.Treatments.Count)
+                                    @PanelSearch("Search treatments")
+                                    <ul class="tc-options">
+                                        @foreach (var item in Fields.Treatments!)
+                                        {
+                                            <li @onmousedown="() => TreatmentToggleSelectItems(item)">
+                                                <label class="dropdown-item tc-option">
+                                                    <input type="checkbox" value="@item" id="treatment-@item.Id">
+                                                    <span class="tc-option-text">@item.Name</span>
+                                                </label>
+                                            </li>
+                                        }
+                                    </ul>
+                                </div>
+                                <!-- Amenities -->
+                                <div class="tc-panel-col">
+                                    @PanelHead("Amenities", FullFacilityFilterItems.Amenities.Count)
+                                    @PanelSearch("Search amenities")
+                                    <ul class="tc-options">
+                                        @foreach (var item in Fields.Amenities!)
+                                        {
+                                            <li @onmousedown="() => AmenityToggleSelectItems(item)">
+                                                <label class="dropdown-item tc-option">
+                                                    <input type="checkbox" value="@item" id="amenity-@item.Id">
+                                                    <span class="tc-option-text">@item.Name</span>
+                                                </label>
+                                            </li>
+                                        }
+                                    </ul>
+                                </div>
+                            </div>
+                            @PanelFoot(() =>
+                            {
+                                ClearGroup(FullFacilityFilterItems.Treatments, t => "treatment-" + t.Id);
+                                ClearGroup(FullFacilityFilterItems.Amenities, a => "amenity-" + a.Id);
+                            })
                         </div>
-                        </li>
-                        @foreach (var item in Fields.Wwts!)
-                        {
-                            <li @onmousedown="() => WwtToggleSelectItems(item)">
-                                <label class="dropdown-item">
-                                    <input type="checkbox" value="@item" id="wwt-@item.Id"> @item.Name
-                                </label>
-                            </li>
-                        }
-                    </ul>
-                </div>
-                <!-- Insurances DropDown -->
-                <div class="dropdown filter-dropdown">
-                    <button class="btn dropdown-toggle"
-                            type="button"
-                            data-bs-toggle="dropdown"
-                            aria-expanded="false">
-                        Insurances
-                    </button>
+                    </div>
 
-                    <ul class="dropdown-menu">
-                          <li>
-                         <div class="input-group filter-search-group mb-3 shadow-sm d-flex">
-                            <input type="text" class="form-control filters-search-input" placeholder="Search..." aria-label="State-Search" aria-describedby="button-addon2">
-                            <button class="btn btn-primary btn-filter-search" type="button" id="button-addon2">
-                                 <i class="fas fa-search"></i>
-                            </button>
-                        </div>
-                        </li>
-                        @foreach (var item in Fields.Insurances!)
-                        {
-                            <li @onmousedown="() => InsuranceToggleSelectItems(item)">
-                                <label class="dropdown-item">
-                                    <input type="checkbox" value="@item" id="insurance-@item.Id"> @item.Name
-                                </label>
-                            </li>
-                        }
-                    </ul>
-                </div>
-                <!-- Amenities DropDown -->
-                <div class="dropdown filter-dropdown">
-                    <button class="btn dropdown-toggle"
-                            type="button"
-                            data-bs-toggle="dropdown"
-                            aria-expanded="false">
-                        Amenities
-                    </button>
-
-                    <ul class="dropdown-menu">
-                          <li>
-                         <div class="input-group filter-search-group mb-3 shadow-sm d-flex">
-                            <input type="text" class="form-control filters-search-input" placeholder="Search..." aria-label="State-Search" aria-describedby="button-addon2">
-                            <button class="btn btn-primary btn-filter-search" type="button" id="button-addon2">
-                                 <i class="fas fa-search"></i>
-                            </button>
-                        </div>
-                        </li>
-                        @foreach (var item in Fields.Amenities!)
-                        {
-                            <li @onmousedown="() => AmenityToggleSelectItems(item)">
-                                <label class="dropdown-item">
-                                    <input type="checkbox" value="@item" id="amenity-@item.Id"> @item.Name
-                                </label>
-                            </li>
-                        }
-                    </ul>
+                    <div class="tc-sheet-foot">
+                        <button type="button" class="tc-link-btn"
+                                @onclick="() => { FullFacilityFilterItems = new();UnCheckAll();HandleCities(); }">
+                            Clear all
+                        </button>
+                        <button type="button" class="tc-apply-btn tc-apply-btn--lg" data-tc-close="true"
+                                @onclick="async () => { FilterSheetOpen = false; await ApplyFilter(); }">
+                            Show centers
+                        </button>
+                    </div>
                 </div>
 
-            </div>
-            <script src="/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-@*                 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
- *@            <div>
-                 <button class="btn btn-primary-gradient btn-group-lg w-100 text-nowrap" @onclick="ApplyFilter">Apply Filters</button>
-            </div>
-            </div>
-            <div class="results-filters">
-                 <h3 class="fs-3 mt-4">Treatment Centers Matching Your Search</h3>
-                <p class="fs-6 text-muted">Explore facility profiles, locations, services, insurance information, and treatment options.</p>
-                <div class="filters-box">
-               
-                @if (FullFacilityFilterItems.States.Count > 0)
+                @if (FilterSheetOpen)
                 {
-                    <div class="filter-group">
-                        <span class="filter-title">State:</span>
-                        <div class="filter-items">
+                    <div class="tc-sheet-backdrop" data-tc-close="true" @onclick="() => FilterSheetOpen = false"></div>
+                }
+
+                <!-- Picked filters as chips (only once something is picked) -->
+                @if (PickedCount > 0 || FullFacilityFilterItems.Swts.Count > 0)
+                {
+                    <div class="tc-chips">
+                        <ul class="tc-chip-list" aria-label="Picked filters">
                             @foreach (var item in FullFacilityFilterItems.States)
                             {
-                                <span class="filter-tag">
+                                <li class="tc-chip">
                                     @item
-                                    <button type="button" class="remove-button" aria-label="Remove filter"
+                                    <button type="button" class="tc-chip-remove" aria-label="Remove @item"
                                     @onclick="()=>{
                                         FullFacilityFilterItems.States.Remove(item);
-                                        UncheckState(item);}" >×</button>
-                                </span>
+                                        UncheckState(item);}" ><LucideIcon Name="x" Size="14" /></button>
+                                </li>
                             }
-                        </div>
-                    </div>
-                }
 
-                @if (FullFacilityFilterItems.Cities.Count > 0)
-                {
-                    <div class="filter-group">
-                        <span class="filter-title">City:</span>
-                        <div class="filter-items">
                             @foreach (var item in FullFacilityFilterItems.Cities)
                             {
-                                <span class="filter-tag">
+                                <li class="tc-chip">
                                     @item
-                                    <button type="button" class="remove-button" aria-label="Remove filter"
+                                    <button type="button" class="tc-chip-remove" aria-label="Remove @item"
                                     @onclick="()=>{
                                         FullFacilityFilterItems.Cities.Remove(item);
-                                        UncheckState(item);}" >×</button>
-                                </span>
+                                        UncheckState(item);}" ><LucideIcon Name="x" Size="14" /></button>
+                                </li>
                             }
-                        </div>
-                    </div>
-                }
 
-                @if (FullFacilityFilterItems.Conditions.Count > 0)
-                {
-                    <div class="filter-group">
-                        <span class="filter-title">Condition:</span>
-                        <div class="filter-items">
                             @foreach (var item in FullFacilityFilterItems.Conditions)
                             {
                                 string tagId = "condition-" + item.Id.ToString();
-                                <span class="filter-tag">
+                                <li class="tc-chip">
                                     @item.Name
-                                    <button type="button" class="remove-button" aria-label="Remove filter"
+                                    <button type="button" class="tc-chip-remove" aria-label="Remove @item.Name"
                                             @onclick="() => {
                                             FullFacilityFilterItems.Conditions.Remove(item);
                                                 Uncheck(tagId);}">
-                                        ×
+                                        <LucideIcon Name="x" Size="14" />
                                     </button>
-                                </span>
+                                </li>
                             }
-                        </div>
-                    </div>
-                }
 
-                @if (FullFacilityFilterItems.Treatments.Count > 0)
-                {
-                    <div class="filter-group">
-                        <span class="filter-title">Treatment:</span>
-                        <div class="filter-items">
-                            @foreach (var item in FullFacilityFilterItems.Treatments)
-                            {
-                                string tagId = "treatment-" + item.Id.ToString();
-                                <span class="filter-tag">
-                                    @item.Name
-                                    <button type="button" class="remove-button" aria-label="Remove filter"
-                                            @onclick="() => { FullFacilityFilterItems.Treatments.Remove(item);
-                                            Uncheck(tagId);}">
-                                        ×
-                                    </button>
-                                </span>
-                            }
-                        </div>
-                    </div>
-                }
-
-
-                @if (FullFacilityFilterItems.Wwts.Count > 0)
-                {
-                    <div class="filter-group">
-                        <span class="filter-title">Who We Treat:</span>
-                        <div class="filter-items">
-                            @foreach (var item in FullFacilityFilterItems.Wwts)
-                            {
-                                string tagId = "wwt-" + item.Id.ToString();
-                                <span class="filter-tag">
-                                    @item.Name
-                                    <button type="button" class="remove-button" aria-label="Remove filter"
-                                            @onclick="() => { FullFacilityFilterItems.Wwts.Remove(item);
-                                            Uncheck(tagId);}">
-                                        ×
-                                    </button>
-                                </span>
-                            }
-                        </div>
-                    </div>
-                }
-
-                @if (FullFacilityFilterItems.Locs.Count > 0)
-                {
-                    <div class="filter-group">
-                        <span class="filter-title">Level of Care:</span>
-                        <div class="filter-items">
                             @foreach (var item in FullFacilityFilterItems.Locs)
                             {
                                 string tagId = "loc-" + item.Id.ToString();
-                                <span class="filter-tag">
+                                <li class="tc-chip">
                                     @item.Name
-                                    <button type="button" class="remove-button" aria-label="Remove filter"
+                                    <button type="button" class="tc-chip-remove" aria-label="Remove @item.Name"
                                             @onclick="() => { FullFacilityFilterItems.Locs.Remove(item);
                                             Uncheck(tagId);}">
-                                        ×
+                                        <LucideIcon Name="x" Size="14" />
                                     </button>
-                                </span>
+                                </li>
                             }
-                        </div>
-                    </div>
-                }
 
-                @if (FullFacilityFilterItems.Insurances.Count > 0)
-                {
-                    <div class="filter-group">
-                        <span class="filter-title">Insurance:</span>
-                        <div class="filter-items">
                             @foreach (var item in FullFacilityFilterItems.Insurances)
                             {
                                 string tagId = "insurance-" + item.Id.ToString();
-                                <span class="filter-tag">
+                                <li class="tc-chip">
                                     @item.Name
-                                    <button type="button" class="remove-button" aria-label="Remove filter"
+                                    <button type="button" class="tc-chip-remove" aria-label="Remove @item.Name"
                                             @onclick="() => { FullFacilityFilterItems.Insurances.Remove(item);
                                             Uncheck(tagId);}">
-                                        ×
+                                        <LucideIcon Name="x" Size="14" />
                                     </button>
-                                </span>
+                                </li>
                             }
-                        </div>
-                    </div>
-                }
 
-                @if (FullFacilityFilterItems.Amenities.Count > 0)
-                {
-                    <div class="filter-group">
-                        <span class="filter-title">Amenity:</span>
-                        <div class="filter-items">
+                            @foreach (var item in FullFacilityFilterItems.Wwts)
+                            {
+                                string tagId = "wwt-" + item.Id.ToString();
+                                <li class="tc-chip">
+                                    @item.Name
+                                    <button type="button" class="tc-chip-remove" aria-label="Remove @item.Name"
+                                            @onclick="() => { FullFacilityFilterItems.Wwts.Remove(item);
+                                            Uncheck(tagId);}">
+                                        <LucideIcon Name="x" Size="14" />
+                                    </button>
+                                </li>
+                            }
+
+                            @foreach (var item in FullFacilityFilterItems.Treatments)
+                            {
+                                string tagId = "treatment-" + item.Id.ToString();
+                                <li class="tc-chip">
+                                    @item.Name
+                                    <button type="button" class="tc-chip-remove" aria-label="Remove @item.Name"
+                                            @onclick="() => { FullFacilityFilterItems.Treatments.Remove(item);
+                                            Uncheck(tagId);}">
+                                        <LucideIcon Name="x" Size="14" />
+                                    </button>
+                                </li>
+                            }
+
                             @foreach (var item in FullFacilityFilterItems.Amenities)
                             {
                                 string tagId = "amenity-" + item.Id.ToString();
-                                <span class="filter-tag">
+                                <li class="tc-chip">
                                     @item.Name
-                                    <button type="button" class="remove-button" aria-label="Remove filter"
+                                    <button type="button" class="tc-chip-remove" aria-label="Remove @item.Name"
                                             @onclick="() => { FullFacilityFilterItems.Amenities.Remove(item);
                                             Uncheck(tagId);}">
-                                        ×
+                                        <LucideIcon Name="x" Size="14" />
                                     </button>
-                                </span>
+                                </li>
                             }
-                        </div>
+                        </ul>
+
+                        <button class="tc-clear-all" type="button"
+                                @onclick="() => { FullFacilityFilterItems = new();UnCheckAll();HandleCities(); }">
+                            <LucideIcon Name="rotate-ccw" Size="16" />
+                            Clear all
+                        </button>
                     </div>
                 }
-
-                <button class="clear-filters" 
-                        @onclick="() => { FullFacilityFilterItems = new();UnCheckAll();HandleCities(); }">
-                    Clear all
-                </button>
-                </div>
+            </section>
+            <script src="/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+@*                 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+ *@
+            <div class="results-filters tc-results">
+                <h2 class="tc-results-title">
+                    <strong>@TotalCount.ToString("N0") treatment @(TotalCount == 1 ? "center" : "centers")</strong>
+                    @if (ResultsFiltered)
+                    {
+                        <span>match your search</span>
+                    }
+                </h2>
+                <p class="tc-results-sub">Explore facility profiles, locations, services, insurance information, and treatment options.</p>
             </div>
             <div class="container px-0 mb-5">
                 <div class="row g-4">
@@ -599,6 +645,10 @@
             HasMore = false;
 
         FacilityCards.AddRange(mapper.Map<List<FacilityCardViewmodel>>(newItems.Item1));
+        TotalCount = newItems.totalCount;
+        if (page == 1)
+            ResultsFiltered = PickedCount > 0 || FullFacilityFilterItems.Swts.Count > 0
+                || !string.IsNullOrWhiteSpace(FullFacilityFilterItems.SearchText);
         page++;
 
         IsLoading = false;
@@ -788,14 +838,96 @@
     {
          JS.InvokeVoidAsync("UnCheckAllCheckbox");
     }
-   
+
+
+    // Search & filter UI
+    //----------------------------------------------------------
+
+    private int TotalCount;
+    private bool ResultsFiltered;
+    private bool FilterSheetOpen;
+
+    private int LocationCount => FullFacilityFilterItems.States.Count + FullFacilityFilterItems.Cities.Count;
+    private int MoreFiltersCount => FullFacilityFilterItems.Treatments.Count + FullFacilityFilterItems.Amenities.Count;
+    private int PickedCount => LocationCount + MoreFiltersCount
+        + FullFacilityFilterItems.Conditions.Count + FullFacilityFilterItems.Locs.Count
+        + FullFacilityFilterItems.Insurances.Count + FullFacilityFilterItems.Wwts.Count;
+
+    private string? LocationSummary
+    {
+        get
+        {
+            var states = FullFacilityFilterItems.States;
+            var cities = FullFacilityFilterItems.Cities;
+            if (cities.Count == 1 && states.Count == 1) return $"{cities[0]}, {states[0]}";
+            var picks = cities.Count > 0 ? cities : states;
+            if (picks.Count == 0) return null;
+            return picks.Count == 1 ? picks[0] : $"{picks[0]} +{picks.Count - 1}";
+        }
+    }
+
+    private static string Summary(IEnumerable<string> names)
+    {
+        var text = string.Join(", ", names);
+        return text.Length == 0 ? "Any" : text;
+    }
+
+    private void ClearGroup<T>(List<T> picked, Func<T, string> checkboxId)
+    {
+        foreach (var item in picked)
+            Uncheck(checkboxId(item));
+        picked.Clear();
+    }
+
+    private void ClearLocation()
+    {
+        foreach (var item in FullFacilityFilterItems.States.Concat(FullFacilityFilterItems.Cities))
+            HandleCheckboxState(item, false);
+        FullFacilityFilterItems.States.Clear();
+        FullFacilityFilterItems.Cities.Clear();
+        HandleCities();
+    }
+
+    private RenderFragment PanelHead(string title, int selected) => __builder =>
+    {
+        <div class="tc-panel-head">
+            <span class="tc-panel-title">@title</span>
+            @if (selected > 0)
+            {
+                <span class="tc-panel-meta">@selected selected</span>
+            }
+        </div>
+    };
+
+    private RenderFragment PanelSearch(string placeholder) => __builder =>
+    {
+        <div class="tc-panel-search">
+            <LucideIcon Name="search" Size="16" />
+            <input type="text" class="tc-panel-search-input" placeholder="@placeholder" aria-label="@placeholder" />
+        </div>
+    };
+
+    private RenderFragment PanelFoot(Action clear) => __builder =>
+    {
+        <div class="tc-panel-foot">
+            <button type="button" class="tc-link-btn" @onclick="clear">Clear</button>
+            <button type="button" class="tc-apply-btn" data-tc-close="true" @onclick="ApplyFilter">Show centers</button>
+        </div>
+    };
 
 }
 
 
 
 <script>
-    document.querySelectorAll('.dropdown-menu').forEach(menu => {
-        menu.addEventListener('click', e => e.stopPropagation());
-    });
+    // Dropdowns stay open while ticking (data-bs-auto-close="outside");
+    // "Show centers" and the sheet buttons close any that are open.
+    if (!window.tcFiltersCloseBound) {
+        window.tcFiltersCloseBound = true;
+        document.addEventListener('click', e => {
+            if (!e.target.closest('[data-tc-close]') || !window.bootstrap) return;
+            document.querySelectorAll('.tc-search [data-bs-toggle="dropdown"].show').forEach(toggle =>
+                bootstrap.Dropdown.getOrCreateInstance(toggle).hide());
+        });
+    }
 </script>
