@@ -191,12 +191,18 @@
     }
 
 /* ---------- Content ---------- */
-/* width comes from .container + .col-lg-8 (same column as the old hero), aligned with the header */
+/* width comes from .container + .col-lg-8 (same column as the old hero), aligned with the header.
+   Fills the first screen under the fixed nav, title/text/search centered; 68px above and 64px below at 560px tall */
 .hero-inner {
     position: relative;
     z-index: 5;
-    padding-top: 52px;
-    padding-bottom: 44px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: calc(100vh - var(--nav-height, 72px));
+    min-height: calc(100svh - var(--nav-height, 72px));
+    padding-top: clamp(40px, 12vh, 96px);
+    padding-bottom: clamp(40px, 11.5vh, 92px);
 }
 
 .hero-eyebrow {
@@ -219,36 +225,38 @@
         background: var(--hero-accent);
     }
 
+/* two lines: "Find Rehab Centers &" / "Mental Health Providers"; 61px at 1572px wide, 54px at 1366px, 34px on phones.
+   Also capped by height: 56px on a 560px-tall screen, smaller only below ~540px tall */
 .hero-title {
     max-width: min(15.5em, 44vw);
-    font-size: clamp(2.1rem, 3.1vw + .3rem, 3.9rem);
+    margin: 0 0 26px;
+    font-size: clamp(2.125rem, min(3.4vw + .475rem, 10vh), 3.8125rem);
     font-weight: 700;
-    line-height: 1.13;
-    letter-spacing: -.025em;
+    line-height: 1.08;
+    letter-spacing: -.03em;
     text-wrap: balance;
     color: var(--hero-ink);
     animation: fadeInUp 1s ease-out;
 }
 
-    .hero-title-teal,
-    .hero-title-violet {
+    .hero-title-amp { color: #534ab7; }
+
+    .hero-title-grad {
+        display: inline-block; /* gradient spans the words, not the column */
+        background-image: linear-gradient(90deg, #0891b2, #2563eb, #6a2bd8);
         -webkit-background-clip: text;
         background-clip: text;
         -webkit-text-fill-color: transparent;
         color: transparent;
     }
 
-    .hero-title-teal { background-image: linear-gradient(90deg, #22c0d6, #3e8ff0); }
-    .hero-title-violet { background-image: linear-gradient(90deg, #6a2bd8, #5a52ea); }
-
-/* markup keeps its original px-5 utility; the new left-aligned layout doesn't want it */
+/* 20px at 1572px wide, 19px at 1366px, 16px on phones; 19px on a 560px-tall screen */
 .hero-subtitle {
-    max-width: min(41em, 44vw);
-    padding-left: 0 !important;
-    padding-right: 0 !important;
-    font-size: clamp(1.02rem, .5vw + .85rem, 1.32rem);
-    line-height: 1.6;
-    color: var(--text);
+    max-width: min(40em, 44vw);
+    margin: 0 0 46px;
+    font-size: clamp(1rem, min(.485vw + .773rem, 3.4vh), 1.25rem);
+    line-height: 1.7;
+    color: #475569;
     animation: fadeInUp 1s ease-out 0.2s both;
 }
 
@@ -259,6 +267,7 @@
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr)) auto;
     align-items: center;
+    width: 100%; /* flex item in .hero-inner; keeps the full bar width with margin-inline: auto */
     max-width: 1150px;
     margin-inline: auto;
     padding: 10px 12px;
@@ -666,10 +675,20 @@
 
         .hero-scene::after { display: none; }
 
-    .hero-inner { padding-top: 20px; }
+    /* phones: no full-screen height, the hero ends right after the search bar */
+    .hero-inner {
+        min-height: 0;
+        padding-top: 20px;
+        padding-bottom: 32px;
+    }
 
     .hero-title,
     .hero-subtitle { max-width: none; }
+
+    /* the hands sit behind the headline here; a soft white halo keeps it readable */
+    .hero-title { filter: drop-shadow(0 0 2px rgba(255, 255, 255, .9)) drop-shadow(0 0 14px rgba(255, 255, 255, .85)); }
+
+    .hero-subtitle { margin-bottom: 24px; }
 
     .hero-search {
         grid-template-columns: 1fr;

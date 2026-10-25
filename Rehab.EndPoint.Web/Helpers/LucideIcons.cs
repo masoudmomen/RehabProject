@@ -14,6 +14,21 @@ namespace Rehab.EndPoint.Web.Helpers
 
         private static HashSet<string>? _symbols;
         private static ILogger? _logger;
+        private static string? _spriteUrl;
+
+        // Sprite URL with a hash of its contents, so browsers fetch it again after symbols are added
+        // instead of reusing a cached copy that lacks them (which renders the new icons blank).
+        public static string SpriteUrl(IFileProvider webRoot)
+        {
+            if (_spriteUrl is not null) return _spriteUrl;
+
+            var file = webRoot.GetFileInfo(SpritePath);
+            if (!file.Exists) return _spriteUrl = "/" + SpritePath;
+
+            using var stream = file.CreateReadStream();
+            var hash = Convert.ToHexString(System.Security.Cryptography.SHA256.HashData(stream))[..12];
+            return _spriteUrl = $"/{SpritePath}?v={hash}";
+        }
         // Each problem is logged once, not on every render.
         private static readonly ConcurrentDictionary<string, byte> Reported = new();
 

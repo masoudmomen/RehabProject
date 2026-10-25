@@ -34,15 +34,14 @@
     <div class="container hero-inner">
         <div class="row">
             <div class="col-lg-8 hero-content">
-                <p class="hero-eyebrow"><span>GUIDANCE</span><i aria-hidden="true"></i><span>SUPPORT</span><i aria-hidden="true"></i><span>RECOVERY</span></p>
-                <h1 class="hero-title mb-4">Find Drug and Alcohol Rehab Centers and <span class="hero-title-teal">Mental Health</span> <span class="hero-title-violet">Treatment Providers</span></h1>
-                <p class="hero-subtitle mb-0 px-5">RehabNavigator helps you find and compare drug and alcohol rehab centers, mental health treatment providers, detox, residential and outpatient programs, insurance information, facility information, and recovery resources in one place.</p>
+                @* <p class="hero-eyebrow"><span>GUIDANCE</span><i aria-hidden="true"></i><span>SUPPORT</span><i aria-hidden="true"></i><span>RECOVERY</span></p> *@
+                <h1 class="hero-title">Find Rehab Centers <span class="mx-2 hero-title-amp">&amp;</span><span class="hero-title-grad">Mental Health Providers</span></h1>
+                <p class="hero-subtitle">Search and compare drug and alcohol rehab centers, detox programs, and mental health treatment providers. Explore insurance information, levels of care, treatment approaches, and facility details—all in one place.</p>
             </div>
         </div>
 
         <form @onsubmit="GoToFacilitiesPage" class="hero-search" role="search">
-            @* State, City and Condition: custom listboxes (styleable, unlike <datalist>); they still bind to `state` / `city` / `condition`.
-               Free text is kept via "Use “…”". Icons render exactly as before (same LucideIcon, size and wrapper). *@
+            
             @foreach (var d in dropdowns)
             {
                 var value = GetValue(d);
@@ -140,7 +139,7 @@
                 Find Treatment Centers
             </button>
         </form>
-
+@* 
         <ul class="hero-feats">
             <li>
                 <span class="hero-feat-icon"><LucideIcon Name="shield-check" Size="34" /></span>
@@ -158,7 +157,7 @@
                 <span class="hero-feat-icon teal"><LucideIcon Name="compass" Size="34" /></span>
                 <div><b>Recovery Starts Here</b><span>You're not alone</span></div>
             </li>
-        </ul>
+        </ul> *@
     </div>
 </section>
 @code {

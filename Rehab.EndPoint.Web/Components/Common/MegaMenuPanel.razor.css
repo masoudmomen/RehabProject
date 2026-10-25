@@ -111,6 +111,15 @@
     scrollbar-color: #d6d9ee transparent;
 }
 
+/* Custom body (BodyContent) scrolls like the list */
+.mm-body {
+    padding: 0.15rem 0.35rem 0.15rem 0;
+    max-height: var(--mm-list-max-h, 262px);
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #d6d9ee transparent;
+}
+
 /* Column-first order (Rows parameter) */
 .mm-list--by-column {
     grid-auto-flow: column;

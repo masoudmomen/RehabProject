@@ -1,13 +1,11 @@
 @using Rehab.EndPoint.Web.Data
 @using Rehab.EndPoint.Web.Helpers
-<MegaMenuPanel Title="Age Groups & Populations"
-               Subtitle="Find specialized care for different age groups and populations."
+<MegaMenuPanel Subtitle="Find specialized care for different age groups and populations."
                HeaderIcon="users"
                ListId="mm-age-groups-list"
                SearchPlaceholder="Search age groups & populations..."
                EmptyText="No age groups or populations match your search."
-               Columns="@Columns"
-               Rows="@Rows"
+               Columns="5"
                AsideIcon="users-round"
                AsideTitle="Inclusive care for every stage."
                AsideText="Find treatment tailored to your age, identity and life experience.">
@@ -15,7 +13,6 @@
     {
         <MegaMenuItem Name="@group.Name"
                       Href="@($"/treatment-centers?wwt={Uri.EscapeDataString(group.Name)}")"
-                      Target="_blank"
                       Icon="@IconFor(group.Name)" />
     }
 </MegaMenuPanel>
@@ -24,9 +21,6 @@
     private static readonly List<AgeGroup> OrderedGroups = AgeGroupList.All
         .OrderBy(g => g.Order)
         .ToList();
-
-    private const int Columns = 4;
-    private static readonly int Rows = (int)Math.Ceiling(OrderedGroups.Count / (double)Columns);
 
     private static readonly Dictionary<string, string> Icons = new(StringComparer.OrdinalIgnoreCase)
     {

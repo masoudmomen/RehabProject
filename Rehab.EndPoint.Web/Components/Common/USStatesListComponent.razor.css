@@ -1,65 +1,7 @@
-/* United States tab. Header, search, sidebar shell and --mm-* colour tokens
-   come from MegaMenuPanel; this file styles the body and sidebar buttons.
-   Elements toggled with the `hidden` attribute get display:none explicitly,
-   because the display values set below would otherwise override it. */
 .st-item[hidden],
 .st-group[hidden],
 .st-locate-status[hidden] {
     display: none !important;
-}
-
-/* ---- Popular states ---- */
-.st-popular {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.5rem;
-    margin-bottom: 1rem;
-    padding: 0.65rem 0.9rem;
-    background-color: #f8f8fe;
-    border: 1px dashed #d9d6f5;
-    border-radius: 14px;
-}
-
-.st-popular-label {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.35rem;
-    margin-right: 0.25rem;
-    font-size: 0.68rem;
-    font-weight: 700;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--mm-accent);
-}
-
-.st-chip {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.45rem;
-    padding: 0.25rem 0.8rem 0.25rem 0.3rem;
-    font-size: 0.76rem !important;
-    font-weight: 500;
-    color: var(--mm-ink) !important;
-    background-color: #fff;
-    border: 1px solid var(--mm-line);
-    border-radius: 999px;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease, color 0.2s ease;
-}
-
-    .st-chip:hover {
-        color: var(--mm-accent) !important;
-        border-color: #d4d0fb;
-        box-shadow: 0 4px 12px -6px rgba(91, 79, 224, 0.4);
-    }
-
-.st-abbr {
-    padding: 0.1rem 0.4rem;
-    font-size: 0.62rem;
-    font-weight: 700;
-    color: var(--mm-accent);
-    background-color: var(--mm-badge);
-    border-radius: 999px;
 }
 
 /* ---- Region filter + count ---- */

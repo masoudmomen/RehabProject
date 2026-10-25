@@ -1,19 +1,23 @@
-@* Shared layout for a "Find Treatment By" mega-menu tab:
-   header (icon, title, subtitle) + search box, a list of <MegaMenuItem>s,
-   a "View all" link, and the blue help card on the right.
-   Search filtering is done client-side by wwwroot/js/megaMenuSearch.js. *@
+ 
 <div class="mm-panel @(ShowAside ? "" : "mm-panel--no-aside")">
     <div class="mm-main">
+         
         <div class="mm-header">
-            <div class="mm-heading">
-                <span class="mm-heading-icon">
-                    <LucideIcon Name="@HeaderIcon" Size="26" />
-                </span>
-                <div>
-                    <h3 class="mm-title">@Title</h3>
-                    <p class="mm-subtitle">@Subtitle</p>
+            @if (HasTitle)
+            {
+                <div class="mm-heading">
+                    <span class="mm-heading-icon">
+                        <LucideIcon Name="@HeaderIcon" Size="26" />
+                    </span>
+                    <div>
+                        <h3 class="mm-title">@Title</h3>
+                        @if (!string.IsNullOrWhiteSpace(Subtitle))
+                        {
+                            <p class="mm-subtitle">@Subtitle</p>
+                        }
+                    </div>
                 </div>
-            </div>
+            }
 
             <label class="mm-search">
                 <LucideIcon Name="search" Size="16" Class="mm-search-icon" />
@@ -27,7 +31,7 @@
 
         @if (BodyContent is not null)
         {
-            <div class="mm-body" id="@ListId">
+            <div class="mm-body" id="@ListId" style="--mm-list-max-h: @ListMaxHeight">
                 @BodyContent
             </div>
         }
@@ -73,7 +77,9 @@
             <LucideIcon Name="phone" Size="20" Class="mm-aside-help-icon" />
             <div>
                 <strong>Need immediate help?</strong>
-                <span>Call <a href="tel:988">988</a> for the Suicide &amp; Crisis Lifeline (24/7).</span>
+                <span>Call or text <a href="tel:988">988</a> for 24/7 crisis support. &amp; </span>
+                <span>Call  <a href="tel:911">911</a> for life-threatening emergencies. &amp;  </span>
+                <span> For treatment referrals, call   <a href="tel:1-800-662-4357">SAMHSA at 1-800-662-4357 </a>.</span>
             </div>
         </div>
     </aside>
@@ -81,11 +87,11 @@
 </div>
 
 @code {
-    [Parameter, EditorRequired] public string Title { get; set; } = "";
+     [Parameter] public string? Title { get; set; }
     [Parameter] public string? Subtitle { get; set; }
     [Parameter] public string HeaderIcon { get; set; } = "circle-help";
 
-    // Must be unique on the page: the search box targets the list by this id.
+   
     [Parameter, EditorRequired] public string ListId { get; set; } = "";
     [Parameter] public string SearchPlaceholder { get; set; } = "Search...";
     [Parameter] public string EmptyText { get; set; } = "No results match your search.";
@@ -102,12 +108,9 @@
     [Parameter] public string AsideIcon { get; set; } = "heart";
     [Parameter] public string? AsideTitle { get; set; }
     [Parameter] public string? AsideText { get; set; }
-
-    // The <li> items of the standard list.
     [Parameter] public RenderFragment? ChildContent { get; set; }
-    // Replaces the standard list with custom markup (wrapped in #ListId, so
-    // the search box still filters any [data-search-text] elements inside it).
     [Parameter] public RenderFragment? BodyContent { get; set; }
-    // Replaces the sidebar's default "Find Treatment Centers" button.
     [Parameter] public RenderFragment? AsideActions { get; set; }
+
+    private bool HasTitle => !string.IsNullOrWhiteSpace(Title);
 }

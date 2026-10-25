@@ -2,13 +2,12 @@
 @using Rehab.EndPoint.Web.ViewModels
 @using Rehab.EndPoint.Web.Helpers
 @* Treatment Approaches tab of the "Find Treatment By" mega menu. *@
-<MegaMenuPanel Title="Treatment Approaches"
-               Subtitle="Explore evidence-based treatment options and approaches for lasting recovery."
+<MegaMenuPanel Subtitle="Explore evidence-based treatment options and approaches for lasting recovery."
                HeaderIcon="sprout"
                ListId="mm-treatments-list"
                SearchPlaceholder="Search treatment approaches..."
                EmptyText="No treatment approaches match your search."
-               Columns="4"
+               Columns="5"
                ViewAllText="View all treatment approaches"
                ViewAllHref="/TreatmentsList"
                AsideIcon="flower"
@@ -18,7 +17,6 @@
     {
         <MegaMenuItem Name="@card.Name"
                       Href="@card.Link"
-                      Target="_blank"
                       Icon="@IconFor(card.Name)" />
     }
 </MegaMenuPanel>

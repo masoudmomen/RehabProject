@@ -1,42 +1,162 @@
 ﻿
+/* ---------- Popular sidebar: open ---------- */
 .sidebar-wrapper {
-    background-color: #f1f3f5 !important;
-    border-radius: 10px;
+    --sb-ink: #24213f;
+    --sb-muted: #6e6a8c;
+    --sb-line: #e8e6f1;
+    --sb-tile: #f1effb;
+    --sb-tint: #f4f2fc;
+    background-color: #fff;
+    border: 1px solid var(--sb-line);
+    border-radius: 16px;
+    box-shadow: 0 1px 3px rgba(36, 33, 63, .06);
+    padding: 8px;
 }
-h3.sidebar-header {
-    margin: 10px 0px;
-    padding:0px 10px;
-    font-size: 1.0rem;
+
+.sidebar-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    color: var(--sb-ink);
+    padding: 6px 4px 12px 6px;
+    margin: 0 0 4px;
+    border-bottom: 1px solid var(--sb-line);
+    cursor: pointer;
+}
+
+    /* app.css lifts every .sidebar-toggle on hover; this header stays put */
+    .sidebar-toggle:hover {
+        transform: none;
+        box-shadow: none;
+    }
+
+    .sidebar-toggle .hamburger {
+        display: none;
+    }
+
+    .sidebar-toggle .open-text,
+    .sidebar-toggle .hamburger {
+        width: 32px;
+        height: 32px;
+        flex: 0 0 32px;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid #dcd8ee;
+        border-radius: 8px;
+        background: #fff;
+        color: var(--sb-muted);
+        transition: background-color .2s, color .2s;
+    }
+
+    .sidebar-toggle .open-text {
+        display: inline-flex;
+    }
+
+    .sidebar-toggle:hover .open-text,
+    .sidebar-toggle:hover .hamburger {
+        background: var(--sb-tint);
+        color: var(--color-primary);
+    }
+
+.sidebar-title {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.05rem;
     font-weight: bold;
-    border-bottom: solid 2px #eeee;
 }
+
+.sidebar-title-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: var(--color-primary);
+    color: #fff;
+}
+
+.sidebar + .sidebar {
+    border-top: 1px solid var(--sb-line);
+}
+
+.sidebar {
+    padding: 10px 0 6px;
+}
+
+h3.sidebar-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin: 0 0 4px;
+    padding: 0 8px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--sb-muted);
+}
+
+    h3.sidebar-header ::deep svg {
+        color: var(--color-primary);
+        opacity: .75;
+    }
 
 .sidebar ul {
     list-style: none;
     padding-left: 0;
+    margin: 0;
 }
+
     .sidebar ul li a {
-        margin-bottom: 5px;
         display: flex;
         align-items: center;
-        gap: 10px;
-        padding: 10px 12px;
+        gap: 12px;
+        min-height: 44px;
+        padding: 5px 8px;
+        border-radius: 10px;
+        color: var(--sb-ink);
         text-decoration: none;
-        color: var(--color-primary);
-        text-decoration: none;
-        font-size: 0.8rem;
-        transition: all .25s;
-        border-bottom: solid 1px rgb(223 217 231);
- 
+        font-size: 14px;
+        line-height: 1.25;
+        position: relative;
+        transition: background-color .2s;
     }
 
         .sidebar ul li a:hover {
-            background-color: #fff !important;
+            background-color: var(--sb-tint);
         }
 
-.sidebar i {
-    font-size: 18px;
+        .sidebar ul li a:focus-visible {
+            outline: 2px solid var(--color-primary);
+            outline-offset: -2px;
+        }
+
+.sidebar-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    flex: 0 0 34px;
+    border-radius: 8px;
+    background: var(--sb-tile);
+    color: var(--color-primary);
+    transition: background-color .2s, color .2s;
 }
+
+.sidebar ul li a:hover .sidebar-icon {
+    background: var(--color-primary);
+    color: #fff;
+}
+
+/* State codes only show in the collapsed column */
+.sidebar-code {
+    display: none;
+}
+
 /* smooth animation */
 .layout-wrapper > div {
     transition: all 0.3s ease;
@@ -54,63 +174,6 @@ h3.sidebar-header {
     box-sizing: border-box;
 }
 
-.sidebar-toggle {
-    display: flex;
-    justify-content: space-between;
-    /*  align-items: center;
-    justify-content: center;*/
-    background: var(--bg-gradient);
-    color: #fff;
-    padding: 10px 16px;
-    border-top-right-radius: 10px;
-    border-top-left-radius: 10px;
-    cursor: pointer;
-    font-weight: 500;
-    margin-bottom: 20px;
-    transition: all .3s ease;
-}
-
-    .sidebar-toggle .hamburger {
-        display: none;
-    }
-.sidebar-title {
-    font-size: 1.1rem;
-    font-weight: bold;
-}
-#sidebarToggle:checked ~ .layout-wrapper .sidebar-toggle {
-    /*  position: absolute;
-    right: 18px;
-    top: 95px;*/
-    align-items:center;
-    align-self: center;
-    /*width: 48px !important;*/
-    height: 48px;
-    justify-content: center !important;
-    padding: 0;
-    /*    border-radius: 50%;*/
-    z-index: 1000;
-    box-shadow: 0 10px 25px rgba(0,0,0,.15);
-}
-/* hide text when collapsed */
-#sidebarToggle:checked ~ .layout-wrapper .open-text {
-    display: none;
-}
-#sidebarToggle:checked ~ .layout-wrapper .sidebar-title{
-    display:none;
-}
-
-
-
-
-
-#sidebarToggle:checked ~ .layout-wrapper .sidebar-toggle .hamburger {
-    display: block;
-}
-
-.sidebar-toggle:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(0,0,0,.18);
-}
 /* WHEN CHECKED → sidebar collapses */
 #sidebarToggle:checked ~ .layout-wrapper .content-a {
     flex: 0 0 91.6667%;
@@ -121,56 +184,139 @@ h3.sidebar-header {
     flex: 0 0 8.3333%;
     max-width: 8.3333%;
 }
-/* Hide headers when collapsed */
+
+/* ---------- Popular sidebar: collapsed ---------- */
+#sidebarToggle:checked ~ .layout-wrapper .sidebar-wrapper {
+    padding: 8px 0;
+    align-items: center;
+}
+
+#sidebarToggle:checked ~ .layout-wrapper .sidebar-toggle {
+    justify-content: center;
+    padding: 0 0 8px;
+}
+
+#sidebarToggle:checked ~ .layout-wrapper .sidebar-title,
+#sidebarToggle:checked ~ .layout-wrapper .open-text {
+    display: none;
+}
+
+#sidebarToggle:checked ~ .layout-wrapper .sidebar-toggle .hamburger {
+    display: inline-flex;
+}
+
 #sidebarToggle:checked ~ .layout-wrapper .sidebar-header {
     display: none;
 }
 
-/* Center icons */
-#sidebarToggle:checked ~ .layout-wrapper .sidebar a {
-    justify-content: center;
-    border-bottom:none;
+#sidebarToggle:checked ~ .layout-wrapper .sidebar {
+    width: 100%;
+    padding: 6px 0;
 }
 
-    /* Hide text */
-    #sidebarToggle:checked ~ .layout-wrapper .sidebar a span {
-        display: none;
+    #sidebarToggle:checked ~ .layout-wrapper .sidebar ul {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
     }
 
-/* Make items round buttons */
-/*#sidebarToggle:checked ~ .layout-wrapper .sidebar li {
-    margin-bottom: 10px;
-}*/
-
 #sidebarToggle:checked ~ .layout-wrapper .sidebar a {
- /*   width: 42px;
-    height: 42px;*/
-    margin: auto;
-   /* border-radius: 50%;*/
-    position: relative;
+    flex-direction: column;
+    justify-content: center;
+    gap: 4px;
+    min-height: 0;
+    padding: 2px;
+    border-radius: 12px;
 }
-#sidebarToggle:checked ~ .layout-wrapper .sidebar {
-    border-bottom: solid 1px rgb(223 217 231);
+
+    #sidebarToggle:checked ~ .layout-wrapper .sidebar a:hover {
+        background: none;
+    }
+
+    #sidebarToggle:checked ~ .layout-wrapper .sidebar a:focus-visible {
+        outline-offset: 0;
+    }
+
+#sidebarToggle:checked ~ .layout-wrapper .sidebar-icon {
+    width: 40px;
+    height: 40px;
+    flex-basis: 40px;
+    border-radius: 10px;
 }
-/* Tooltip on hover */
-#sidebarToggle:checked ~ .layout-wrapper .sidebar a::after {
-    content: attr(title);
+
+    #sidebarToggle:checked ~ .layout-wrapper .sidebar-icon ::deep svg {
+        width: 20px;
+        height: 20px;
+    }
+
+#sidebarToggle:checked ~ .layout-wrapper .sidebar-code {
+    display: block;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: .08em;
+    line-height: 1;
+    color: var(--sb-muted);
+    padding-bottom: 2px;
+}
+
+/* Labels stay readable to screen readers while hidden */
+#sidebarToggle:checked ~ .layout-wrapper .sidebar-label {
     position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
     white-space: nowrap;
-    left: 40px;
-    background: var(--color-primary);
-    color: #fff;
-    padding: 4px 8px;
-    font-size: 12px;
-    border-radius: 6px;
+}
+
+/* Name opens to the left, over the page, on hover and keyboard focus */
+#sidebarToggle:checked ~ .layout-wrapper .sidebar a::before,
+#sidebarToggle:checked ~ .layout-wrapper .sidebar a::after {
+    position: absolute;
+    top: 22px;
     opacity: 0;
     pointer-events: none;
-    transition: .2s;
+    transition: opacity .15s;
+    z-index: 1000;
 }
 
-    #sidebarToggle:checked ~ .layout-wrapper .sidebar a:hover::after {
-        opacity: 1;
-    }
+#sidebarToggle:checked ~ .layout-wrapper .sidebar a::after {
+    content: attr(title);
+    right: calc(100% + 10px);
+    transform: translateY(-50%);
+    white-space: nowrap;
+    background: var(--color-primary);
+    color: #fff;
+    padding: 7px 12px;
+    font-size: 14px;
+    line-height: 1.2;
+    border-radius: 8px;
+    box-shadow: 0 6px 16px rgba(36, 33, 63, .18);
+}
+
+/* the arrow */
+#sidebarToggle:checked ~ .layout-wrapper .sidebar a::before {
+    content: "";
+    right: calc(100% + 5px);
+    width: 10px;
+    height: 10px;
+    background: var(--color-primary);
+    transform: translateY(-50%) rotate(45deg);
+}
+
+#sidebarToggle:checked ~ .layout-wrapper .sidebar a:hover::before,
+#sidebarToggle:checked ~ .layout-wrapper .sidebar a:hover::after,
+#sidebarToggle:checked ~ .layout-wrapper .sidebar a:focus-visible::before,
+#sidebarToggle:checked ~ .layout-wrapper .sidebar a:focus-visible::after {
+    opacity: 1;
+}
+
+#sidebarToggle:checked ~ .layout-wrapper .sidebar a:focus-visible .sidebar-icon {
+    background: var(--color-primary);
+    color: #fff;
+}
+
 #sidebarToggle:checked ~ .layout-wrapper .provider-card{
     display:none;
 }

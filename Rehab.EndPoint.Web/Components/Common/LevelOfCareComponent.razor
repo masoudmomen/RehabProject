@@ -2,13 +2,12 @@
 @using Rehab.EndPoint.Web.ViewModels
 @using Rehab.EndPoint.Web.Helpers
 @* Levels Of Care tab of the "Find Treatment By" mega menu. *@
-<MegaMenuPanel Title="Levels Of Care"
-               Subtitle="Find the right level of care for your needs and situation."
+<MegaMenuPanel Subtitle="Find the right level of care for your needs and situation."
                HeaderIcon="stethoscope"
                ListId="mm-loc-list"
                SearchPlaceholder="Search levels of care..."
                EmptyText="No levels of care match your search."
-               Columns="4"
+               Columns="5"
                AsideIcon="layers"
                AsideTitle="Different needs. Different levels."
                AsideText="Explore treatment levels and find the right care for your recovery journey.">
@@ -16,7 +15,6 @@
     {
         <MegaMenuItem Name="@card.Name"
                       Href="@card.Link"
-                      Target="_blank"
                       Icon="@IconFor(card.Name)" />
     }
 </MegaMenuPanel>

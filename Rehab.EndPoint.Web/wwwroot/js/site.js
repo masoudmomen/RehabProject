@@ -100,6 +100,37 @@ window.bootstrap.Lightbox = {
         strip.scrollTo({ left: strip.scrollLeft + offset, behavior: 'smooth' });
     });
 
+    // Mobile only: following a link in the "Find Treatment By" mega menu closes the mega menu
+    // and the hamburger panel, since Blazor navigation doesn't re-render the navbar.
+    // Skips tel:/mailto:, in-page "#" links, new-tab links and clicks that were cancelled.
+    document.addEventListener('click', function (e) {
+        if (window.innerWidth > 991.98 || e.defaultPrevented || e.button !== 0
+            || e.ctrlKey || e.metaKey || e.shiftKey || e.altKey) {
+            return;
+        }
+
+        const link = e.target.closest('#treatment-by-menu a');
+        if (!link) {
+            return;
+        }
+
+        const href = link.getAttribute('href') || link.getAttribute('xlink:href') || '';
+        if (!href || href.startsWith('#') || /^(tel|mailto|sms|javascript):/i.test(href)
+            || (link.getAttribute('target') || '').toLowerCase() === '_blank') {
+            return;
+        }
+
+        const navItem = link.closest('#treatment-by-nav-item');
+        if (navItem) {
+            setMegaMenuOpen(navItem, false);
+        }
+
+        const panel = document.getElementById('navbarNav');
+        if (panel && panel.classList.contains('show') && window.bootstrap && window.bootstrap.Collapse) {
+            window.bootstrap.Collapse.getOrCreateInstance(panel, { toggle: false }).hide();
+        }
+    });
+
     // Close open mega menus when clicking outside
     document.addEventListener('click', function (e) {
         // If click is inside any mega nav item, do nothing

@@ -116,12 +116,22 @@ a.go-to-packages{
 }
 
 /* .mobile-mega-open is set by the trigger button (click / Enter / Space) at every width */
-.nav-item-mega:hover ::deep .mega-menu,
 .nav-item-mega.mobile-mega-open ::deep .mega-menu {
     display: block !important;
     visibility: visible;
     opacity: 1;
     transform: translateY(0);
+}
+
+/* Hover-to-open is desktop only: touch browsers keep :hover "stuck" on the last
+   tapped element, which would stop the button from closing the menu. */
+@media (min-width: 992px) and (hover: hover) {
+    .nav-item-mega:hover ::deep .mega-menu {
+        display: block !important;
+        visibility: visible;
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 .mega-title {
     font-weight: 700;
@@ -162,7 +172,6 @@ a.go-to-packages{
         box-shadow: none;
         border: 0;
     }
-    .nav-item-mega:hover ::deep .mega-menu,
     .nav-item-mega.mobile-mega-open ::deep .mega-menu {
         display: block !important;
     }

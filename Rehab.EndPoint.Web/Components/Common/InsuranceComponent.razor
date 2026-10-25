@@ -1,13 +1,12 @@
 @using Web.Data
 @using Rehab.EndPoint.Web.ViewModels
 @* Insurance tab of the "Find Treatment By" mega menu: logo cards + help card. *@
-<MegaMenuPanel Title="Insurance"
-               Subtitle="Find treatment centers that accept your insurance and fit your budget. Explore coverage from top providers."
+<MegaMenuPanel Subtitle="Find treatment centers that accept your insurance and fit your budget. Explore coverage from top providers."
                HeaderIcon="shield"
                ListId="mm-insurance-list"
                SearchPlaceholder="Search insurance providers..."
                EmptyText="No insurance providers match your search."
-               Columns="4"
+               Columns="5"
                ListMaxHeight="none"
                AsideIcon="shield-check"
                AsideTitle="More coverage. More options."
@@ -16,7 +15,6 @@
     {
         <MegaMenuLogoItem Name="@card.Name"
                           Href="@card.Link"
-                          Target="_blank"
                           Image="@(string.IsNullOrWhiteSpace(card.Image) ? "/images/nopic.jpg" : $"/images/Insurances/{card.Image}")" />
     }
 </MegaMenuPanel>

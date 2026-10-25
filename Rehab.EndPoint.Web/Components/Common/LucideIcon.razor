@@ -3,8 +3,9 @@
    with CSS `color`. To add an icon, append its <symbol> to the sprite.
    In Development, a name missing from the sprite is logged (see Helpers/LucideIcons.cs). *@
 @using Rehab.EndPoint.Web.Helpers
+@inject IWebHostEnvironment Env
 <svg class="lucide @Class" width="@Size" height="@Size" aria-hidden="true" focusable="false">
-    <use href="/icons/lucide-sprite.svg#@Name"></use>
+    <use href="@($"{LucideIcons.SpriteUrl(Env.WebRootFileProvider)}#{Name}")"></use>
 </svg>
 
 @code {

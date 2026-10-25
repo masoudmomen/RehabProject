@@ -28,7 +28,8 @@
     <input type="checkbox" id="sidebarToggle" hidden />
   @*   <input type="checkbox" id="sidebarToggle" hidden /> *@
     <div class="sidebar-overlay"></div>
-    <div class="row my-4 layout-wrapper" id="facilitypage">
+    <div class="row my-4 layout-wrapper"
+         id="facilitypage">
         <div class="content-a">
             <section id="searchbox" class="tc-search @(FilterSheetOpen ? "is-sheet-open" : "")" aria-label="Search and filter treatment centers">
 
@@ -71,9 +72,11 @@
                                         {
                                             @foreach (var item in States)
                                             {
-                                                <li @onmousedown="()=>StateToggleSelectItems(item)">
+                                                <li>
                                                     <label class="dropdown-item tc-option">
-                                                        <input type="checkbox" value="@item" id="@item">
+                                                        <input type="checkbox" value="@item" id="@item"
+                                                               checked="@FullFacilityFilterItems.States.Contains(item)"
+                                                               @onchange="()=>StateToggleSelectItems(item)">
                                                         <span class="tc-option-text">@item</span>
                                                     </label>
                                                 </li>
@@ -89,9 +92,11 @@
                                         <ul class="tc-options">
                                             @foreach (var item in Cities)
                                             {
-                                                <li @onmousedown="()=>CityToggleSelectItems(item)">
+                                                <li>
                                                     <label class="dropdown-item tc-option">
-                                                        <input type="checkbox" value="@item" id="@item">
+                                                        <input type="checkbox" value="@item" id="@item"
+                                                               checked="@FullFacilityFilterItems.Cities.Contains(item)"
+                                                               @onchange="()=>CityToggleSelectItems(item)">
                                                         <span class="tc-option-text">@item</span>
                                                     </label>
                                                 </li>
@@ -109,7 +114,7 @@
 
                         @if (LocationCount > 0)
                         {
-                            <button type="button" class="tc-field-clear" aria-label="Clear location" @onclick="ClearLocation">
+                            <button type="button" class="tc-field-clear" aria-label="Clear location" @onclick="async () => { ClearLocation(); await ApplyFilter(); }">
                                 <LucideIcon Name="x" Size="14" />
                             </button>
                         }
@@ -170,9 +175,11 @@
                             <ul class="tc-options">
                                 @foreach (var item in Fields.Conditions!)
                                 {
-                                    <li @onmousedown="() => ConditionToggleSelectItems(item)">
+                                    <li>
                                         <label class="dropdown-item tc-option">
-                                            <input type="checkbox" value="@item" id="condition-@item.Id" />
+                                            <input type="checkbox" value="@item" id="condition-@item.Id"
+                                                   checked="@IsPicked(item)"
+                                                   @onchange="() => ConditionToggleSelectItems(item)" />
                                             <span class="tc-option-text">@item.Name</span>
                                         </label>
                                     </li>
@@ -209,9 +216,11 @@
                             <ul class="tc-options">
                                 @foreach (var item in Fields.Locs!)
                                 {
-                                    <li @onmousedown="() => LocToggleSelectItems(item)">
+                                    <li>
                                         <label class="dropdown-item tc-option">
-                                            <input type="checkbox" value="@item" id="loc-@item.Id">
+                                            <input type="checkbox" value="@item" id="loc-@item.Id"
+                                                   checked="@IsPicked(item)"
+                                                   @onchange="() => LocToggleSelectItems(item)">
                                             <span class="tc-option-text">@item.Name</span>
                                         </label>
                                     </li>
@@ -243,14 +252,16 @@
                         <span class="tc-dd-backdrop" aria-hidden="true"></span>
 
                         <div class="dropdown-menu tc-panel">
-                            @PanelHead("Insurance", FullFacilityFilterItems.Insurances.Count)
+                               @PanelHead("Insurance", FullFacilityFilterItems.Insurances.Count)
                             @PanelSearch("Search insurance")
                             <ul class="tc-options">
                                 @foreach (var item in Fields.Insurances!)
                                 {
-                                    <li @onmousedown="() => InsuranceToggleSelectItems(item)">
+                                    <li>
                                         <label class="dropdown-item tc-option">
-                                            <input type="checkbox" value="@item" id="insurance-@item.Id">
+                                            <input type="checkbox" value="@item" id="insurance-@item.Id"
+                                                   checked="@IsPicked(item)"
+                                                   @onchange="() => InsuranceToggleSelectItems(item)">
                                             <span class="tc-option-text">@item.Name</span>
                                         </label>
                                     </li>
@@ -287,9 +298,11 @@
                             <ul class="tc-options">
                                 @foreach (var item in Fields.Wwts!)
                                 {
-                                    <li @onmousedown="() => WwtToggleSelectItems(item)">
+                                    <li>
                                         <label class="dropdown-item tc-option">
-                                            <input type="checkbox" value="@item" id="wwt-@item.Id">
+                                            <input type="checkbox" value="@item" id="wwt-@item.Id"
+                                                   checked="@IsPicked(item)"
+                                                   @onchange="() => WwtToggleSelectItems(item)">
                                             <span class="tc-option-text">@item.Name</span>
                                         </label>
                                     </li>
@@ -301,8 +314,7 @@
 
                     <!-- More filters: Treatments + Amenities -->
                     <div class="dropdown tc-filter @(MoreFiltersCount > 0 ? "is-active" : "")">
-                        @* Positioned by Popper (not static) so the wide panel opens under this
-                           button and shifts sideways only if it would leave the screen. *@
+                         
                         <button class="tc-filter-btn"
                                 type="button"
                                 data-bs-toggle="dropdown"
@@ -331,9 +343,11 @@
                                     <ul class="tc-options">
                                         @foreach (var item in Fields.Treatments!)
                                         {
-                                            <li @onmousedown="() => TreatmentToggleSelectItems(item)">
+                                            <li>
                                                 <label class="dropdown-item tc-option">
-                                                    <input type="checkbox" value="@item" id="treatment-@item.Id">
+                                                    <input type="checkbox" value="@item" id="treatment-@item.Id"
+                                                           checked="@IsPicked(item)"
+                                                           @onchange="() => TreatmentToggleSelectItems(item)">
                                                     <span class="tc-option-text">@item.Name</span>
                                                 </label>
                                             </li>
@@ -347,9 +361,11 @@
                                     <ul class="tc-options">
                                         @foreach (var item in Fields.Amenities!)
                                         {
-                                            <li @onmousedown="() => AmenityToggleSelectItems(item)">
+                                            <li>
                                                 <label class="dropdown-item tc-option">
-                                                    <input type="checkbox" value="@item" id="amenity-@item.Id">
+                                                    <input type="checkbox" value="@item" id="amenity-@item.Id"
+                                                           checked="@IsPicked(item)"
+                                                           @onchange="() => AmenityToggleSelectItems(item)">
                                                     <span class="tc-option-text">@item.Name</span>
                                                 </label>
                                             </li>
@@ -392,9 +408,10 @@
                                 <li class="tc-chip">
                                     @item
                                     <button type="button" class="tc-chip-remove" aria-label="Remove @item"
-                                    @onclick="()=>{
+                                    @onclick="async ()=>{
                                         FullFacilityFilterItems.States.Remove(item);
-                                        UncheckState(item);}" ><LucideIcon Name="x" Size="14" /></button>
+                                        UncheckState(item);
+                                        await ApplyFilter();}" ><LucideIcon Name="x" Size="14" /></button>
                                 </li>
                             }
 
@@ -403,9 +420,10 @@
                                 <li class="tc-chip">
                                     @item
                                     <button type="button" class="tc-chip-remove" aria-label="Remove @item"
-                                    @onclick="()=>{
+                                    @onclick="async ()=>{
                                         FullFacilityFilterItems.Cities.Remove(item);
-                                        UncheckState(item);}" ><LucideIcon Name="x" Size="14" /></button>
+                                        UncheckState(item);
+                                        await ApplyFilter();}" ><LucideIcon Name="x" Size="14" /></button>
                                 </li>
                             }
 
@@ -415,9 +433,10 @@
                                 <li class="tc-chip">
                                     @item.Name
                                     <button type="button" class="tc-chip-remove" aria-label="Remove @item.Name"
-                                            @onclick="() => {
+                                            @onclick="async () => {
                                             FullFacilityFilterItems.Conditions.Remove(item);
-                                                Uncheck(tagId);}">
+                                                Uncheck(tagId);
+                                                await ApplyFilter();}">
                                         <LucideIcon Name="x" Size="14" />
                                     </button>
                                 </li>
@@ -429,8 +448,9 @@
                                 <li class="tc-chip">
                                     @item.Name
                                     <button type="button" class="tc-chip-remove" aria-label="Remove @item.Name"
-                                            @onclick="() => { FullFacilityFilterItems.Locs.Remove(item);
-                                            Uncheck(tagId);}">
+                                            @onclick="async () => { FullFacilityFilterItems.Locs.Remove(item);
+                                            Uncheck(tagId);
+                                            await ApplyFilter();}">
                                         <LucideIcon Name="x" Size="14" />
                                     </button>
                                 </li>
@@ -442,8 +462,9 @@
                                 <li class="tc-chip">
                                     @item.Name
                                     <button type="button" class="tc-chip-remove" aria-label="Remove @item.Name"
-                                            @onclick="() => { FullFacilityFilterItems.Insurances.Remove(item);
-                                            Uncheck(tagId);}">
+                                            @onclick="async () => { FullFacilityFilterItems.Insurances.Remove(item);
+                                            Uncheck(tagId);
+                                            await ApplyFilter();}">
                                         <LucideIcon Name="x" Size="14" />
                                     </button>
                                 </li>
@@ -455,8 +476,9 @@
                                 <li class="tc-chip">
                                     @item.Name
                                     <button type="button" class="tc-chip-remove" aria-label="Remove @item.Name"
-                                            @onclick="() => { FullFacilityFilterItems.Wwts.Remove(item);
-                                            Uncheck(tagId);}">
+                                            @onclick="async () => { FullFacilityFilterItems.Wwts.Remove(item);
+                                            Uncheck(tagId);
+                                            await ApplyFilter();}">
                                         <LucideIcon Name="x" Size="14" />
                                     </button>
                                 </li>
@@ -468,8 +490,9 @@
                                 <li class="tc-chip">
                                     @item.Name
                                     <button type="button" class="tc-chip-remove" aria-label="Remove @item.Name"
-                                            @onclick="() => { FullFacilityFilterItems.Treatments.Remove(item);
-                                            Uncheck(tagId);}">
+                                            @onclick="async () => { FullFacilityFilterItems.Treatments.Remove(item);
+                                            Uncheck(tagId);
+                                            await ApplyFilter();}">
                                         <LucideIcon Name="x" Size="14" />
                                     </button>
                                 </li>
@@ -481,8 +504,9 @@
                                 <li class="tc-chip">
                                     @item.Name
                                     <button type="button" class="tc-chip-remove" aria-label="Remove @item.Name"
-                                            @onclick="() => { FullFacilityFilterItems.Amenities.Remove(item);
-                                            Uncheck(tagId);}">
+                                            @onclick="async () => { FullFacilityFilterItems.Amenities.Remove(item);
+                                            Uncheck(tagId);
+                                            await ApplyFilter();}">
                                         <LucideIcon Name="x" Size="14" />
                                     </button>
                                 </li>
@@ -490,22 +514,19 @@
                         </ul>
 
                         <button class="tc-clear-all" type="button"
-                                @onclick="() => { FullFacilityFilterItems = new();UnCheckAll();HandleCities(); }">
+                                @onclick="async () => { FullFacilityFilterItems = new();UnCheckAll();HandleCities(); await ApplyFilter(); }">
                             <LucideIcon Name="rotate-ccw" Size="16" />
                             Clear all
                         </button>
                     </div>
                 }
             </section>
-            <script src="/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-@*                 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
- *@
             <div class="results-filters tc-results">
                 <h2 class="tc-results-title">
                     <strong>@TotalCount.ToString("N0") treatment @(TotalCount == 1 ? "center" : "centers")</strong>
                     @if (ResultsFiltered)
                     {
-                        <span>match your search</span>
+                        <span class="mx-1">match your search</span>
                     }
                 </h2>
                 <p class="tc-results-sub">Explore facility profiles, locations, services, insurance information, and treatment options.</p>
@@ -766,44 +787,51 @@
     }
     private async Task ConditionToggleSelectItems(ConditionViewModel selectedItem)
     {
-        if (FullFacilityFilterItems.Conditions.Contains(selectedItem)){
-            FullFacilityFilterItems.Conditions.Remove(selectedItem);
-        }
-        else{
+        if (FullFacilityFilterItems.Conditions.RemoveAll(c => SameItem(c.Id, c.Name, selectedItem.Id, selectedItem.Name)) == 0)
             FullFacilityFilterItems.Conditions.Add(selectedItem);
-        }
 
     }
     private void TreatmentToggleSelectItems(TreatmentViewmodel selectedItem)
     {
-        if (FullFacilityFilterItems.Treatments.Contains(selectedItem)) FullFacilityFilterItems.Treatments.Remove(selectedItem);
-        else FullFacilityFilterItems.Treatments.Add(selectedItem);
+        if (FullFacilityFilterItems.Treatments.RemoveAll(t => SameItem(t.Id, t.Name, selectedItem.Id, selectedItem.Name)) == 0)
+            FullFacilityFilterItems.Treatments.Add(selectedItem);
 
     }
     private void WwtToggleSelectItems(WwtViewModel selectedItem)
     {
-        if (FullFacilityFilterItems.Wwts.Contains(selectedItem)) FullFacilityFilterItems.Wwts.Remove(selectedItem);
-        else FullFacilityFilterItems.Wwts.Add(selectedItem);
+        if (FullFacilityFilterItems.Wwts.RemoveAll(w => SameItem(w.Id, w.Name, selectedItem.Id, selectedItem.Name)) == 0)
+            FullFacilityFilterItems.Wwts.Add(selectedItem);
 
     }
     private void LocToggleSelectItems(LocViewmodel selectedItem)
     {
-        if (FullFacilityFilterItems.Locs.Contains(selectedItem)) FullFacilityFilterItems.Locs.Remove(selectedItem);
-        else FullFacilityFilterItems.Locs.Add(selectedItem);
+        if (FullFacilityFilterItems.Locs.RemoveAll(l => SameItem(l.Id, l.Name, selectedItem.Id, selectedItem.Name)) == 0)
+            FullFacilityFilterItems.Locs.Add(selectedItem);
 
     }
     private void InsuranceToggleSelectItems(InsuranceViewModel selectedItem)
     {
-        if (FullFacilityFilterItems.Insurances.Contains(selectedItem)) FullFacilityFilterItems.Insurances.Remove(selectedItem);
-        else FullFacilityFilterItems.Insurances.Add(selectedItem);
+        if (FullFacilityFilterItems.Insurances.RemoveAll(i => SameItem(i.Id, i.Name, selectedItem.Id, selectedItem.Name)) == 0)
+            FullFacilityFilterItems.Insurances.Add(selectedItem);
 
     }
     private void AmenityToggleSelectItems(AmenityViewmodel selectedItem)
     {
-        if (FullFacilityFilterItems.Amenities.Contains(selectedItem)) FullFacilityFilterItems.Amenities.Remove(selectedItem);
-        else FullFacilityFilterItems.Amenities.Add(selectedItem);
+        if (FullFacilityFilterItems.Amenities.RemoveAll(a => SameItem(a.Id, a.Name, selectedItem.Id, selectedItem.Name)) == 0)
+            FullFacilityFilterItems.Amenities.Add(selectedItem);
 
     }
+
+    // Picked items are matched by Id; ones seeded from the query string only carry a Name (Id 0).
+    private static bool SameItem(int pickedId, string pickedName, int id, string name) =>
+        pickedId != 0 ? pickedId == id : string.Equals(pickedName, name, StringComparison.OrdinalIgnoreCase);
+
+    private bool IsPicked(ConditionViewModel item) => FullFacilityFilterItems.Conditions.Any(c => SameItem(c.Id, c.Name, item.Id, item.Name));
+    private bool IsPicked(TreatmentViewmodel item) => FullFacilityFilterItems.Treatments.Any(t => SameItem(t.Id, t.Name, item.Id, item.Name));
+    private bool IsPicked(WwtViewModel item) => FullFacilityFilterItems.Wwts.Any(w => SameItem(w.Id, w.Name, item.Id, item.Name));
+    private bool IsPicked(LocViewmodel item) => FullFacilityFilterItems.Locs.Any(l => SameItem(l.Id, l.Name, item.Id, item.Name));
+    private bool IsPicked(InsuranceViewModel item) => FullFacilityFilterItems.Insurances.Any(i => SameItem(i.Id, i.Name, item.Id, item.Name));
+    private bool IsPicked(AmenityViewmodel item) => FullFacilityFilterItems.Amenities.Any(a => SameItem(a.Id, a.Name, item.Id, item.Name));
     async Task ApplyFilter()
     {
         FacilityCards = new();
@@ -928,6 +956,20 @@
             if (!e.target.closest('[data-tc-close]') || !window.bootstrap) return;
             document.querySelectorAll('.tc-search [data-bs-toggle="dropdown"].show').forEach(toggle =>
                 bootstrap.Dropdown.getOrCreateInstance(toggle).hide());
+        });
+    }
+
+    // Panel search boxes filter the options in their own column (or panel).
+    if (!window.tcPanelSearchBound) {
+        window.tcPanelSearchBound = true;
+        document.addEventListener('input', e => {
+            if (!e.target.matches('.tc-panel-search-input')) return;
+            const q = e.target.value.trim().toLowerCase();
+            const scope = e.target.closest('.tc-panel-col') || e.target.closest('.tc-panel');
+            scope.querySelectorAll('.tc-options > li').forEach(li => {
+                const text = li.querySelector('.tc-option-text')?.textContent.toLowerCase() ?? '';
+                li.hidden = q !== '' && !text.includes(q);
+            });
         });
     }
 </script>

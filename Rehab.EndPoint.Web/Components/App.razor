@@ -42,7 +42,8 @@
     </script>
     
     <script src="_framework/blazor.web.js"></script>
-    <script src="lib/bootstrap/dist/js/bootstrap.min.js?v=@version"></script>
+    @* Load Bootstrap once, site-wide: a second copy doubles every data-bs-toggle click (e.g. the hamburger never closes). *@
+    <script src="lib/bootstrap/dist/js/bootstrap.bundle.min.js?v=@version"></script>
     <script src="/js/site.js?v=@version"></script>
     <script src="/js/gallery.js?v=@version"></script>
     <script src="/js/modal-helpers.js"></script>

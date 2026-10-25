@@ -64,6 +64,11 @@ a:focus {
     pointer-events: none;
 }
 
+/* Labels set beside their shape (on the white card) instead of on it */
+.state-label-ink {
+    fill: var(--map-ink);
+}
+
 /* ---------- Small-state tiles ---------- */
 .map-small-states {
     border-top: 1px solid #eef0f7;

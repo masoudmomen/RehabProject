@@ -1,13 +1,12 @@
 @using Rehab.EndPoint.Web.Data
 @using Rehab.EndPoint.Web.Helpers
  
-<MegaMenuPanel Title="Conditions"
-               Subtitle="Explore conditions, disorders and concerns to find the right support and resources."
+<MegaMenuPanel Subtitle="Explore conditions, disorders and concerns to find the right support and resources."
                HeaderIcon="heart-handshake"
                ListId="mm-conditions-list"
                SearchPlaceholder="Search conditions..."
                EmptyText="No conditions match your search."
-               Columns="4"
+               Columns="5"
                ViewAllText="View all conditions"
                ViewAllHref="/conditionslist"
                AsideIcon="heart"
@@ -17,7 +16,6 @@
     {
         <MegaMenuItem Name="@condition.Name"
                       Href="@($"/treatment-centers?condition={Uri.EscapeDataString(condition.Name)}")"
-                      Target="_blank"
                       Icon="@IconFor(condition.Name)" />
     }
 </MegaMenuPanel>

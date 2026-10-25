@@ -1,12 +1,11 @@
 @using Web.Data
 @using Rehab.EndPoint.Web.Helpers
- <MegaMenuPanel Title="Amenities"
-               Subtitle="Find treatment centers with the amenities and features that matter to you."
+ <MegaMenuPanel Subtitle="Find treatment centers with the amenities and features that matter to you."
                HeaderIcon="house-plus"
                ListId="mm-amenities-list"
                SearchPlaceholder="Search amenities..."
                EmptyText="No amenities match your search."
-               Columns="4"
+               Columns="5"
                ListMaxHeight="none"
                AsideIcon="house-heart"
                AsideTitle="Comfort. Support. Better outcomes."
@@ -15,7 +14,6 @@
     {
         <MegaMenuItem Name="@amenity.Name"
                       Href="@($"/treatment-centers?amenity={Uri.EscapeDataString(amenity.Name)}")"
-                      Target="_blank"
                       Icon="@IconFor(amenity.Name)" />
     }
 </MegaMenuPanel>
