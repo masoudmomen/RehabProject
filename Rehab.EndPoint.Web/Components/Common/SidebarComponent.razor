@@ -123,7 +123,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="/treatment-centers?loc=Residential Treatment target="_blank" aria-label="View facilities with Residntial level of care" title="Residential">
+                    <a href="/treatment-centers?loc=Residential Treatment" target="_blank" aria-label="View facilities with Residntial level of care" title="Residential">
                         <span class="sidebar-icon"><LucideIcon Name="house" /></span>
                         <span class="sidebar-label">Residential</span>
                     </a>
@@ -158,35 +158,60 @@
         </nav>
     </div>
 
-    <div class="popular-centers sidebar">
-        <h3 class="sidebar-header">
-            <LucideIcon Name="map-pin" Size="14" />
-            States
-        </h3>
-        <ul>
-            <li>
-                <a href="/states/california" target="_blank" title="Facilities In California" class="sidebar-state">
-                    <span class="sidebar-icon"><LucideIcon Name="state-ca" /></span>
-                    <span class="sidebar-code" aria-hidden="true">CA</span>
-                    <span class="sidebar-label">Facilities In California</span>
-                </a>
-            </li>
-            <li>
-                <a href="/states/Florida" target="_blank" title="Facilities In Florida" class="sidebar-state">
-                    <span class="sidebar-icon"><LucideIcon Name="state-fl" /></span>
-                    <span class="sidebar-code" aria-hidden="true">FL</span>
-                    <span class="sidebar-label">Facilities In Florida</span>
-                </a>
-            </li>
-            <li>
-                <a href="/states/texas" target="_blank" title="Facilities In Texas" class="sidebar-state">
-                    <span class="sidebar-icon"><LucideIcon Name="state-tx" /></span>
-                    <span class="sidebar-code" aria-hidden="true">TX</span>
-                    <span class="sidebar-label">Facilities In Texas</span>
-                </a>
-            </li>
-        </ul>
-    </div>
+    @if (CurrentState is not null && RegionStates.Count > 0)
+    {
+        <div class="popular-centers sidebar">
+            <h3 class="sidebar-header">
+                <LucideIcon Name="map-pin" Size="14" />
+                @CurrentState.Region States
+            </h3>
+            <nav aria-label="Other states in the @CurrentState.Region">
+                <ul>
+                    @foreach (var state in RegionStates)
+                    {
+                        <li>
+                            <a href="/states/@state.UrlSlug" target="_blank" title="Facilities In @state.Name" class="sidebar-state">
+                                <span class="sidebar-icon sidebar-icon-code" aria-hidden="true">@state.Abbreviation</span>
+                                <span class="sidebar-label">@state.Name</span>
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </nav>
+        </div>
+    }
+    else
+    {
+        <div class="popular-centers sidebar">
+            <h3 class="sidebar-header">
+                <LucideIcon Name="map-pin" Size="14" />
+                States
+            </h3>
+            <ul>
+                <li>
+                    <a href="/states/california" target="_blank" title="Facilities In California" class="sidebar-state">
+                        <span class="sidebar-icon"><LucideIcon Name="state-ca" /></span>
+                        <span class="sidebar-code" aria-hidden="true">CA</span>
+                        <span class="sidebar-label">Facilities In California</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/states/Florida" target="_blank" title="Facilities In Florida" class="sidebar-state">
+                        <span class="sidebar-icon"><LucideIcon Name="state-fl" /></span>
+                        <span class="sidebar-code" aria-hidden="true">FL</span>
+                        <span class="sidebar-label">Facilities In Florida</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/states/texas" target="_blank" title="Facilities In Texas" class="sidebar-state">
+                        <span class="sidebar-icon"><LucideIcon Name="state-tx" /></span>
+                        <span class="sidebar-code" aria-hidden="true">TX</span>
+                        <span class="sidebar-label">Facilities In Texas</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    }
 
 
 
@@ -197,3 +222,27 @@
     @*     <button class="btn-primary">Claim Your Profile</button>
  *@    <a href="/advertise-with-us/plans" class="btn-primary text-decoration-none"  target="_blank">Advertise With Us</a>
 </div>
+
+@code {
+    // Set on a state page (name or URL slug) to swap the popular states for the other states in its region
+    [Parameter]
+    public string? State { get; set; }
+
+    private Rehab.EndPoint.Web.Data.USState? CurrentState;
+    private List<Rehab.EndPoint.Web.Data.USState> RegionStates = new();
+
+    protected override void OnParametersSet()
+    {
+        var name = State?.Trim().Replace("-", " ");
+        CurrentState = string.IsNullOrWhiteSpace(name)
+            ? null
+            : Rehab.EndPoint.Web.Data.USStates.All.FirstOrDefault(s => s.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+
+        RegionStates = CurrentState is null
+            ? new()
+            : Rehab.EndPoint.Web.Data.USStates.All
+                .Where(s => s.Region == CurrentState.Region && s != CurrentState)
+                .OrderBy(s => s.Name)
+                .ToList();
+    }
+}

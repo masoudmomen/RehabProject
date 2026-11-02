@@ -1,0 +1,722 @@
+@using Rehab.EndPoint.Web.Components.Common
+@using Rehab.EndPoint.Web.ViewModels
+@inject IJSRuntime JS
+
+<section id="searchbox" class="tc-search @(FilterSheetOpen ? "is-sheet-open" : "")" aria-label="Search and filter treatment centers">
+
+    <!-- Search bar: center name + location -->
+    <div class="tc-searchbar">
+        <label class="tc-field tc-field--name">
+            <span class="tc-field-icon"><LucideIcon Name="search" Size="20" /></span>
+            <span class="tc-field-body">
+                <span class="tc-field-label">Center name</span>
+                <input type="text" @bind-value="Filters.SearchText"
+                       class="tc-field-input"
+                       placeholder="Search by name" />
+            </span>
+        </label>
+
+        <!-- Location (States + Cities) Dropdown -->
+        <div class="dropdown tc-field tc-field--location @(LocationCount > 0 ? "has-value" : "")">
+            <button class="tc-field-toggle"
+                    type="button"
+                    data-bs-toggle="dropdown"
+                    data-bs-display="static"
+                    data-bs-auto-close="outside"
+                    aria-expanded="false">
+                <span class="tc-field-icon"><LucideIcon Name="map-pin" Size="20" /></span>
+                <span class="tc-field-body">
+                    <span class="tc-field-label">Location</span>
+                    <span class="tc-field-value">@(LocationSummary ?? "Any state or city")</span>
+                </span>
+                <span class="tc-chevron"><LucideIcon Name="chevron-down" Size="18" /></span>
+            </button>
+            <span class="tc-dd-backdrop" aria-hidden="true"></span>
+
+            <div class="dropdown-menu tc-panel tc-panel--location">
+                <div class="tc-panel-cols">
+                    <div class="tc-panel-col">
+                        @PanelHead("State", Filters.States.Count)
+                        @PanelSearch("Search states")
+                        <ul class="tc-options">
+                            @if (States != null)
+                            {
+                                @foreach (var item in States)
+                                {
+                                    <li>
+                                        <label class="dropdown-item tc-option">
+                                            <input type="checkbox" value="@item" id="@item"
+                                                   checked="@Filters.States.Contains(item)"
+                                                   @onchange="()=>StateToggleSelectItems(item)">
+                                            <span class="tc-option-text">@item</span>
+                                        </label>
+                                    </li>
+                                }
+                            }
+                        </ul>
+                    </div>
+                    <div class="tc-panel-col">
+                        @PanelHead(Filters.States.Count == 1 ? $"City in {Filters.States[0]}" : "City", Filters.Cities.Count)
+                        @PanelSearch("Search cities")
+                        @if (Cities != null && Cities.Count > 0)
+                        {
+                            <ul class="tc-options">
+                                @foreach (var item in Cities)
+                                {
+                                    <li>
+                                        <label class="dropdown-item tc-option">
+                                            <input type="checkbox" value="@item" id="@item"
+                                                   checked="@Filters.Cities.Contains(item)"
+                                                   @onchange="()=>CityToggleSelectItems(item)">
+                                            <span class="tc-option-text">@item</span>
+                                        </label>
+                                    </li>
+                                }
+                            </ul>
+                        }
+                        else
+                        {
+                            <p class="tc-panel-hint">Pick a state to see its cities.</p>
+                        }
+                    </div>
+                </div>
+                @PanelFoot(ClearLocation)
+            </div>
+
+            @if (LocationCount > 0)
+            {
+                <button type="button" class="tc-field-clear" aria-label="Clear location" @onclick="async () => { await ClearLocation(); await Search(); }">
+                    <LucideIcon Name="x" Size="14" />
+                </button>
+            }
+        </div>
+
+        <button type="button" class="tc-search-btn" @onclick="Search">
+            <LucideIcon Name="search" Size="18" />
+            <span>Search</span>
+        </button>
+    </div>
+
+    <!-- Filter buttons (on phones this row becomes the Filters sheet) -->
+    <div class="tc-filter-row">
+        <div class="tc-sheet-head">
+            <div>
+                <h2 class="tc-sheet-title">Filters</h2>
+                <p class="tc-sheet-meta">@(PickedCount > 0 ? $"{PickedCount} on" : "None picked")</p>
+            </div>
+            <button type="button" class="tc-sheet-close" aria-label="Close filters" data-tc-close="true"
+                    @onclick="() => FilterSheetOpen = false">
+                <LucideIcon Name="x" Size="20" />
+            </button>
+        </div>
+
+        <button type="button" class="tc-filters-btn" @onclick="() => FilterSheetOpen = true">
+            <LucideIcon Name="sliders-horizontal" Size="18" />
+            <span>Filters</span>
+            @if (PickedCount > 0)
+            {
+                <span class="tc-count">@PickedCount</span>
+            }
+        </button>
+
+        <!-- Conditions Dropdown -->
+        <div class="dropdown tc-filter @(Filters.Conditions.Count > 0 ? "is-active" : "")">
+            <button class="tc-filter-btn"
+                    type="button"
+                    data-bs-toggle="dropdown"
+                    data-bs-display="static"
+                    data-bs-auto-close="outside"
+                    aria-expanded="false">
+                <span class="tc-btn-icon"><LucideIcon Name="heart-pulse" Size="18" /></span>
+                <span class="tc-btn-text">
+                    <span class="tc-btn-label">Condition</span>
+                    <span class="tc-btn-summary">@Summary(Filters.Conditions.Select(c => c.Name))</span>
+                </span>
+                @if (Filters.Conditions.Count > 0)
+                {
+                    <span class="tc-count">@Filters.Conditions.Count</span>
+                }
+                <span class="tc-chevron"><LucideIcon Name="chevron-down" Size="16" /></span>
+            </button>
+            <span class="tc-dd-backdrop" aria-hidden="true"></span>
+
+            <div class="dropdown-menu tc-panel">
+                @PanelHead("Condition", Filters.Conditions.Count)
+                @PanelSearch("Search conditions")
+                <ul class="tc-options">
+                    @foreach (var item in Fields.Conditions!)
+                    {
+                        <li>
+                            <label class="dropdown-item tc-option">
+                                <input type="checkbox" value="@item" id="condition-@item.Id"
+                                       checked="@IsPicked(item)"
+                                       @onchange="() => ConditionToggleSelectItems(item)" />
+                                <span class="tc-option-text">@item.Name</span>
+                            </label>
+                        </li>
+                    }
+                </ul>
+                @PanelFoot(() => ClearGroup(Filters.Conditions, c => "condition-" + c.Id))
+            </div>
+        </div>
+
+        <!-- LevelOfCare Dropdown -->
+        <div class="dropdown tc-filter @(Filters.Locs.Count > 0 ? "is-active" : "")">
+            <button class="tc-filter-btn"
+                    type="button"
+                    data-bs-toggle="dropdown"
+                    data-bs-display="static"
+                    data-bs-auto-close="outside"
+                    aria-expanded="false">
+                <span class="tc-btn-icon"><LucideIcon Name="hospital" Size="18" /></span>
+                <span class="tc-btn-text">
+                    <span class="tc-btn-label">Level of care</span>
+                    <span class="tc-btn-summary">@Summary(Filters.Locs.Select(l => l.Name))</span>
+                </span>
+                @if (Filters.Locs.Count > 0)
+                {
+                    <span class="tc-count">@Filters.Locs.Count</span>
+                }
+                <span class="tc-chevron"><LucideIcon Name="chevron-down" Size="16" /></span>
+            </button>
+            <span class="tc-dd-backdrop" aria-hidden="true"></span>
+
+            <div class="dropdown-menu tc-panel">
+                @PanelHead("Level of care", Filters.Locs.Count)
+                @PanelSearch("Search levels of care")
+                <ul class="tc-options">
+                    @foreach (var item in Fields.Locs!)
+                    {
+                        <li>
+                            <label class="dropdown-item tc-option">
+                                <input type="checkbox" value="@item" id="loc-@item.Id"
+                                       checked="@IsPicked(item)"
+                                       @onchange="() => LocToggleSelectItems(item)">
+                                <span class="tc-option-text">@item.Name</span>
+                            </label>
+                        </li>
+                    }
+                </ul>
+                @PanelFoot(() => ClearGroup(Filters.Locs, l => "loc-" + l.Id))
+            </div>
+        </div>
+
+        <!-- Insurances DropDown -->
+        <div class="dropdown tc-filter @(Filters.Insurances.Count > 0 ? "is-active" : "")">
+            <button class="tc-filter-btn"
+                    type="button"
+                    data-bs-toggle="dropdown"
+                    data-bs-display="static"
+                    data-bs-auto-close="outside"
+                    aria-expanded="false">
+                <span class="tc-btn-icon"><LucideIcon Name="shield-check" Size="18" /></span>
+                <span class="tc-btn-text">
+                    <span class="tc-btn-label">Insurance</span>
+                    <span class="tc-btn-summary">@Summary(Filters.Insurances.Select(i => i.Name))</span>
+                </span>
+                @if (Filters.Insurances.Count > 0)
+                {
+                    <span class="tc-count">@Filters.Insurances.Count</span>
+                }
+                <span class="tc-chevron"><LucideIcon Name="chevron-down" Size="16" /></span>
+            </button>
+            <span class="tc-dd-backdrop" aria-hidden="true"></span>
+
+            <div class="dropdown-menu tc-panel">
+                @PanelHead("Insurance", Filters.Insurances.Count)
+                @PanelSearch("Search insurance")
+                <ul class="tc-options">
+                    @foreach (var item in Fields.Insurances!)
+                    {
+                        <li>
+                            <label class="dropdown-item tc-option">
+                                <input type="checkbox" value="@item" id="insurance-@item.Id"
+                                       checked="@IsPicked(item)"
+                                       @onchange="() => InsuranceToggleSelectItems(item)">
+                                <span class="tc-option-text">@item.Name</span>
+                            </label>
+                        </li>
+                    }
+                </ul>
+                @PanelFoot(() => ClearGroup(Filters.Insurances, i => "insurance-" + i.Id))
+            </div>
+        </div>
+
+        <!-- Who We Treat Dropdown -->
+        <div class="dropdown tc-filter @(Filters.Wwts.Count > 0 ? "is-active" : "")">
+            <button class="tc-filter-btn"
+                    type="button"
+                    data-bs-toggle="dropdown"
+                    data-bs-display="static"
+                    data-bs-auto-close="outside"
+                    aria-expanded="false">
+                <span class="tc-btn-icon"><LucideIcon Name="users" Size="18" /></span>
+                <span class="tc-btn-text">
+                    <span class="tc-btn-label">Age &amp; population</span>
+                    <span class="tc-btn-summary">@Summary(Filters.Wwts.Select(w => w.Name))</span>
+                </span>
+                @if (Filters.Wwts.Count > 0)
+                {
+                    <span class="tc-count">@Filters.Wwts.Count</span>
+                }
+                <span class="tc-chevron"><LucideIcon Name="chevron-down" Size="16" /></span>
+            </button>
+            <span class="tc-dd-backdrop" aria-hidden="true"></span>
+
+            <div class="dropdown-menu tc-panel">
+                @PanelHead("Age & population", Filters.Wwts.Count)
+                @PanelSearch("Search age groups")
+                <ul class="tc-options">
+                    @foreach (var item in Fields.Wwts!)
+                    {
+                        <li>
+                            <label class="dropdown-item tc-option">
+                                <input type="checkbox" value="@item" id="wwt-@item.Id"
+                                       checked="@IsPicked(item)"
+                                       @onchange="() => WwtToggleSelectItems(item)">
+                                <span class="tc-option-text">@item.Name</span>
+                            </label>
+                        </li>
+                    }
+                </ul>
+                @PanelFoot(() => ClearGroup(Filters.Wwts, w => "wwt-" + w.Id))
+            </div>
+        </div>
+
+        <!-- More filters: Treatments + Amenities -->
+        <div class="dropdown tc-filter @(MoreFiltersCount > 0 ? "is-active" : "")">
+
+            <button class="tc-filter-btn"
+                    type="button"
+                    data-bs-toggle="dropdown"
+                    data-bs-auto-close="outside"
+                    data-bs-popper-config='{"modifiers":[{"name":"flip","enabled":false}]}'
+                    aria-expanded="false">
+                <span class="tc-btn-icon"><LucideIcon Name="sliders-horizontal" Size="18" /></span>
+                <span class="tc-btn-text">
+                    <span class="tc-btn-label">More filters</span>
+                    <span class="tc-btn-summary">@Summary(Filters.Treatments.Select(t => t.Name).Concat(Filters.Amenities.Select(a => a.Name)))</span>
+                </span>
+                @if (MoreFiltersCount > 0)
+                {
+                    <span class="tc-count">@MoreFiltersCount</span>
+                }
+                <span class="tc-chevron"><LucideIcon Name="chevron-down" Size="16" /></span>
+            </button>
+            <span class="tc-dd-backdrop" aria-hidden="true"></span>
+
+            <div class="dropdown-menu tc-panel tc-panel--more">
+                <div class="tc-panel-cols">
+                    <!-- Treatments -->
+                    <div class="tc-panel-col">
+                        @PanelHead("Treatment approach", Filters.Treatments.Count)
+                        @PanelSearch("Search treatments")
+                        <ul class="tc-options">
+                            @foreach (var item in Fields.Treatments!)
+                            {
+                                <li>
+                                    <label class="dropdown-item tc-option">
+                                        <input type="checkbox" value="@item" id="treatment-@item.Id"
+                                               checked="@IsPicked(item)"
+                                               @onchange="() => TreatmentToggleSelectItems(item)">
+                                        <span class="tc-option-text">@item.Name</span>
+                                    </label>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                    <!-- Amenities -->
+                    <div class="tc-panel-col">
+                        @PanelHead("Amenities", Filters.Amenities.Count)
+                        @PanelSearch("Search amenities")
+                        <ul class="tc-options">
+                            @foreach (var item in Fields.Amenities!)
+                            {
+                                <li>
+                                    <label class="dropdown-item tc-option">
+                                        <input type="checkbox" value="@item" id="amenity-@item.Id"
+                                               checked="@IsPicked(item)"
+                                               @onchange="() => AmenityToggleSelectItems(item)">
+                                        <span class="tc-option-text">@item.Name</span>
+                                    </label>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+                @PanelFoot(() =>
+                {
+                    ClearGroup(Filters.Treatments, t => "treatment-" + t.Id);
+                    ClearGroup(Filters.Amenities, a => "amenity-" + a.Id);
+                })
+            </div>
+        </div>
+
+        <div class="tc-sheet-foot">
+            <button type="button" class="tc-link-btn"
+                    @onclick="ClearAll">
+                Clear all
+            </button>
+            <button type="button" class="tc-apply-btn tc-apply-btn--lg" data-tc-close="true"
+                    @onclick="async () => { FilterSheetOpen = false; await Search(); }">
+                Show centers
+            </button>
+        </div>
+    </div>
+
+    @if (FilterSheetOpen)
+    {
+        <div class="tc-sheet-backdrop" data-tc-close="true" @onclick="() => FilterSheetOpen = false"></div>
+    }
+
+    <!-- Picked filters as chips (only once something is picked) -->
+    @if (PickedCount > 0 || Filters.Swts.Count > 0)
+    {
+        <div class="tc-chips">
+            <ul class="tc-chip-list" aria-label="Picked filters">
+                @foreach (var item in Filters.States)
+                {
+                    <li class="tc-chip">
+                        @item
+                        <button type="button" class="tc-chip-remove" aria-label="Remove @item"
+                        @onclick="async ()=>{
+                            Filters.States.Remove(item);
+                            await UncheckState(item);
+                            await Search();}" ><LucideIcon Name="x" Size="14" /></button>
+                    </li>
+                }
+
+                @foreach (var item in Filters.Cities)
+                {
+                    <li class="tc-chip">
+                        @item
+                        <button type="button" class="tc-chip-remove" aria-label="Remove @item"
+                        @onclick="async ()=>{
+                            Filters.Cities.Remove(item);
+                            await UncheckState(item);
+                            await Search();}" ><LucideIcon Name="x" Size="14" /></button>
+                    </li>
+                }
+
+                @foreach (var item in Filters.Conditions)
+                {
+                    string tagId = "condition-" + item.Id.ToString();
+                    <li class="tc-chip">
+                        @item.Name
+                        <button type="button" class="tc-chip-remove" aria-label="Remove @item.Name"
+                                @onclick="async () => {
+                                Filters.Conditions.Remove(item);
+                                    Uncheck(tagId);
+                                    await Search();}">
+                            <LucideIcon Name="x" Size="14" />
+                        </button>
+                    </li>
+                }
+
+                @foreach (var item in Filters.Locs)
+                {
+                    string tagId = "loc-" + item.Id.ToString();
+                    <li class="tc-chip">
+                        @item.Name
+                        <button type="button" class="tc-chip-remove" aria-label="Remove @item.Name"
+                                @onclick="async () => { Filters.Locs.Remove(item);
+                                Uncheck(tagId);
+                                await Search();}">
+                            <LucideIcon Name="x" Size="14" />
+                        </button>
+                    </li>
+                }
+
+                @foreach (var item in Filters.Insurances)
+                {
+                    string tagId = "insurance-" + item.Id.ToString();
+                    <li class="tc-chip">
+                        @item.Name
+                        <button type="button" class="tc-chip-remove" aria-label="Remove @item.Name"
+                                @onclick="async () => { Filters.Insurances.Remove(item);
+                                Uncheck(tagId);
+                                await Search();}">
+                            <LucideIcon Name="x" Size="14" />
+                        </button>
+                    </li>
+                }
+
+                @foreach (var item in Filters.Wwts)
+                {
+                    string tagId = "wwt-" + item.Id.ToString();
+                    <li class="tc-chip">
+                        @item.Name
+                        <button type="button" class="tc-chip-remove" aria-label="Remove @item.Name"
+                                @onclick="async () => { Filters.Wwts.Remove(item);
+                                Uncheck(tagId);
+                                await Search();}">
+                            <LucideIcon Name="x" Size="14" />
+                        </button>
+                    </li>
+                }
+
+                @foreach (var item in Filters.Treatments)
+                {
+                    string tagId = "treatment-" + item.Id.ToString();
+                    <li class="tc-chip">
+                        @item.Name
+                        <button type="button" class="tc-chip-remove" aria-label="Remove @item.Name"
+                                @onclick="async () => { Filters.Treatments.Remove(item);
+                                Uncheck(tagId);
+                                await Search();}">
+                            <LucideIcon Name="x" Size="14" />
+                        </button>
+                    </li>
+                }
+
+                @foreach (var item in Filters.Amenities)
+                {
+                    string tagId = "amenity-" + item.Id.ToString();
+                    <li class="tc-chip">
+                        @item.Name
+                        <button type="button" class="tc-chip-remove" aria-label="Remove @item.Name"
+                                @onclick="async () => { Filters.Amenities.Remove(item);
+                                Uncheck(tagId);
+                                await Search();}">
+                            <LucideIcon Name="x" Size="14" />
+                        </button>
+                    </li>
+                }
+            </ul>
+
+            <button class="tc-clear-all" type="button"
+                    @onclick="async () => { await ClearAll(); await Search(); }">
+                <LucideIcon Name="rotate-ccw" Size="16" />
+                Clear all
+            </button>
+        </div>
+    }
+</section>
+
+@code {
+    // Picked search/filter values; owned by the parent, use @bind-Filters ("Clear all" replaces the instance).
+    [Parameter, EditorRequired] public FullFacilityFilterItemsViewmodel Filters { get; set; } = new();
+    [Parameter] public EventCallback<FullFacilityFilterItemsViewmodel> FiltersChanged { get; set; }
+
+    // Options to pick from, loaded by the parent.
+    [Parameter, EditorRequired] public FacilityFieldsViewmodel Fields { get; set; } = new();
+    [Parameter] public List<string>? States { get; set; }
+    [Parameter] public List<string>? Cities { get; set; }
+
+    // Raised when the picked states change, so the parent can reload Cities for them.
+    [Parameter] public EventCallback<List<string>> OnStatesChanged { get; set; }
+
+    // Raised by Search / "Show centers" / removing a chip / clearing, so the parent can run the search.
+    [Parameter] public EventCallback<FullFacilityFilterItemsViewmodel> OnSearch { get; set; }
+
+    private bool FilterSheetOpen;
+
+    private Task Search() => OnSearch.InvokeAsync(Filters);
+
+    private Task HandleCities() => OnStatesChanged.InvokeAsync(Filters.States);
+
+    private async Task ClearAll()
+    {
+        Filters = new();
+        await FiltersChanged.InvokeAsync(Filters);
+        UnCheckAll();
+        await HandleCities();
+    }
+
+    private async Task StateToggleSelectItems(string selectedItem)
+    {
+        if (Filters.States.Contains(selectedItem)) Filters.States.Remove(selectedItem);
+        else Filters.States.Add(selectedItem);
+
+        await HandleCities();
+    }
+
+    private void CityToggleSelectItems(string selectedItem)
+    {
+        if (Filters.Cities.Contains(selectedItem)) Filters.Cities.Remove(selectedItem);
+        else Filters.Cities.Add(selectedItem);
+
+    }
+    private void ConditionToggleSelectItems(ConditionViewModel selectedItem)
+    {
+        if (Filters.Conditions.RemoveAll(c => SameItem(c.Id, c.Name, selectedItem.Id, selectedItem.Name)) == 0)
+            Filters.Conditions.Add(selectedItem);
+
+    }
+    private void TreatmentToggleSelectItems(TreatmentViewmodel selectedItem)
+    {
+        if (Filters.Treatments.RemoveAll(t => SameItem(t.Id, t.Name, selectedItem.Id, selectedItem.Name)) == 0)
+            Filters.Treatments.Add(selectedItem);
+
+    }
+    private void WwtToggleSelectItems(WwtViewModel selectedItem)
+    {
+        if (Filters.Wwts.RemoveAll(w => SameItem(w.Id, w.Name, selectedItem.Id, selectedItem.Name)) == 0)
+            Filters.Wwts.Add(selectedItem);
+
+    }
+    private void LocToggleSelectItems(LocViewmodel selectedItem)
+    {
+        if (Filters.Locs.RemoveAll(l => SameItem(l.Id, l.Name, selectedItem.Id, selectedItem.Name)) == 0)
+            Filters.Locs.Add(selectedItem);
+
+    }
+    private void InsuranceToggleSelectItems(InsuranceViewModel selectedItem)
+    {
+        if (Filters.Insurances.RemoveAll(i => SameItem(i.Id, i.Name, selectedItem.Id, selectedItem.Name)) == 0)
+            Filters.Insurances.Add(selectedItem);
+
+    }
+    private void AmenityToggleSelectItems(AmenityViewmodel selectedItem)
+    {
+        if (Filters.Amenities.RemoveAll(a => SameItem(a.Id, a.Name, selectedItem.Id, selectedItem.Name)) == 0)
+            Filters.Amenities.Add(selectedItem);
+
+    }
+
+    // Picked items are matched by Id; ones seeded from the query string only carry a Name (Id 0).
+    private static bool SameItem(int pickedId, string pickedName, int id, string name) =>
+        pickedId != 0 ? pickedId == id : string.Equals(pickedName, name, StringComparison.OrdinalIgnoreCase);
+
+    private bool IsPicked(ConditionViewModel item) => Filters.Conditions.Any(c => SameItem(c.Id, c.Name, item.Id, item.Name));
+    private bool IsPicked(TreatmentViewmodel item) => Filters.Treatments.Any(t => SameItem(t.Id, t.Name, item.Id, item.Name));
+    private bool IsPicked(WwtViewModel item) => Filters.Wwts.Any(w => SameItem(w.Id, w.Name, item.Id, item.Name));
+    private bool IsPicked(LocViewmodel item) => Filters.Locs.Any(l => SameItem(l.Id, l.Name, item.Id, item.Name));
+    private bool IsPicked(InsuranceViewModel item) => Filters.Insurances.Any(i => SameItem(i.Id, i.Name, item.Id, item.Name));
+    private bool IsPicked(AmenityViewmodel item) => Filters.Amenities.Any(a => SameItem(a.Id, a.Name, item.Id, item.Name));
+
+    private void Uncheck(string id)
+    {
+        HandleCheckbox(id, false);
+    }
+
+
+    private void HandleCheckbox(string id, bool state)
+    {
+        JS.InvokeVoidAsync("setCheckboxState", id, state);
+    }
+
+    private async Task UncheckState(string id)
+    {
+        HandleCheckboxState(id, false);
+        await HandleCities();
+    }
+    private void HandleCheckboxState(string id, bool state)
+    {
+         JS.InvokeVoidAsync("setCheckboxState", id, state);
+    }
+
+    private void UnCheckAll()
+    {
+         JS.InvokeVoidAsync("UnCheckAllCheckbox");
+    }
+
+
+    // Counts & summaries
+    //----------------------------------------------------------
+
+    // Number of picked filter values (location + every filter group; excludes search text and Swts).
+    public static int CountPicked(FullFacilityFilterItemsViewmodel filters) =>
+        filters.States.Count + filters.Cities.Count
+        + filters.Treatments.Count + filters.Amenities.Count
+        + filters.Conditions.Count + filters.Locs.Count
+        + filters.Insurances.Count + filters.Wwts.Count;
+
+    private int LocationCount => Filters.States.Count + Filters.Cities.Count;
+    private int MoreFiltersCount => Filters.Treatments.Count + Filters.Amenities.Count;
+    private int PickedCount => CountPicked(Filters);
+
+    private string? LocationSummary
+    {
+        get
+        {
+            var states = Filters.States;
+            var cities = Filters.Cities;
+            if (cities.Count == 1 && states.Count == 1) return $"{cities[0]}, {states[0]}";
+            var picks = cities.Count > 0 ? cities : states;
+            if (picks.Count == 0) return null;
+            return picks.Count == 1 ? picks[0] : $"{picks[0]} +{picks.Count - 1}";
+        }
+    }
+
+    private static string Summary(IEnumerable<string> names)
+    {
+        var text = string.Join(", ", names);
+        return text.Length == 0 ? "Any" : text;
+    }
+
+    private void ClearGroup<T>(List<T> picked, Func<T, string> checkboxId)
+    {
+        foreach (var item in picked)
+            Uncheck(checkboxId(item));
+        picked.Clear();
+    }
+
+    private async Task ClearLocation()
+    {
+        foreach (var item in Filters.States.Concat(Filters.Cities))
+            HandleCheckboxState(item, false);
+        Filters.States.Clear();
+        Filters.Cities.Clear();
+        await HandleCities();
+    }
+
+    private RenderFragment PanelHead(string title, int selected) => __builder =>
+    {
+        <div class="tc-panel-head">
+            <span class="tc-panel-title">@title</span>
+            @if (selected > 0)
+            {
+                <span class="tc-panel-meta">@selected selected</span>
+            }
+        </div>
+    };
+
+    private RenderFragment PanelSearch(string placeholder) => __builder =>
+    {
+        <div class="tc-panel-search">
+            <LucideIcon Name="search" Size="16" />
+            <input type="text" class="tc-panel-search-input" placeholder="@placeholder" aria-label="@placeholder" />
+        </div>
+    };
+
+    private RenderFragment PanelFoot(Action clear) => PanelFoot(() => { clear(); return Task.CompletedTask; });
+
+    private RenderFragment PanelFoot(Func<Task> clear) => __builder =>
+    {
+        <div class="tc-panel-foot">
+            <button type="button" class="tc-link-btn" @onclick="clear">Clear</button>
+            <button type="button" class="tc-apply-btn" data-tc-close="true" @onclick="Search">Show centers</button>
+        </div>
+    };
+
+}
+
+
+
+<script>
+    // Dropdowns stay open while ticking (data-bs-auto-close="outside");
+    // "Show centers" and the sheet buttons close any that are open.
+    if (!window.tcFiltersCloseBound) {
+        window.tcFiltersCloseBound = true;
+        document.addEventListener('click', e => {
+            if (!e.target.closest('[data-tc-close]') || !window.bootstrap) return;
+            document.querySelectorAll('.tc-search [data-bs-toggle="dropdown"].show').forEach(toggle =>
+                bootstrap.Dropdown.getOrCreateInstance(toggle).hide());
+        });
+    }
+
+    // Panel search boxes filter the options in their own column (or panel).
+    if (!window.tcPanelSearchBound) {
+        window.tcPanelSearchBound = true;
+        document.addEventListener('input', e => {
+            if (!e.target.matches('.tc-panel-search-input')) return;
+            const q = e.target.value.trim().toLowerCase();
+            const scope = e.target.closest('.tc-panel-col') || e.target.closest('.tc-panel');
+            scope.querySelectorAll('.tc-options > li').forEach(li => {
+                const text = li.querySelector('.tc-option-text')?.textContent.toLowerCase() ?? '';
+                li.hidden = q !== '' && !text.includes(q);
+            });
+        });
+    }
+</script>

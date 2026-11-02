@@ -5,10 +5,13 @@
 @using Rehab.EndPoint.Web.Components.Facility
 @using Rehab.EndPoint.Web.Data
 @using Rehab.Application.Facilities
+@using Rehab.EndPoint.AdminPanel.CommonService
 
 @inject IFacilityService FacilityService
 @inject AutoMapper.IMapper mapper
 @inject IJSRuntime JS
+@inject IConfiguration Config
+@inject InternalLocationService InternalLocationService
 
 @using Rehab.Application.Seo
 @inject ISeoService SeoService
@@ -22,163 +25,30 @@
 <div class="container  rounded-2 py-2">
     <BreadCrumbComponent Items="@breadCrumbItems"></BreadCrumbComponent>
 </div>
-<PageCover CustomImageUrl="@GetStateImagePath()"
-           PageTitle=@("Drug & Alcohol Recovery Centers and Rehabs in " + statename) />
+<div class="container">
+    <section class="state-hero">
+        <div class="state-hero-media">
+            <img src="@(serverUrl + GetStateImagePath())" alt="" />
+        </div>
+        <div class="state-hero-content">
+            <h1 class="state-hero-title">Drug &amp; Alcohol Recovery Centers and Rehabs in @statename</h1>
+            <p class="state-hero-subtitle">@GetStateDescription()</p>
+        </div>
+    </section>
+</div>
 <div class="container mt-3">
-    <div class="row">
-        <div class="col-md-9">
-            <SearchComponent searchTextFromComponent="@searchText" ApplySearchTextCallback="ApplySearch"></SearchComponent>
+    <input type="checkbox" id="sidebarToggle" hidden />
+    <div class="sidebar-overlay"></div>
+    <div class="row layout-wrapper">
+        <div class="content-a">
+            <TreatmentCenterFilter @bind-Filters="FullFacilityFilterItems"
+                                   Fields="Fields"
+                                   States="StateOptions"
+                                   Cities="Cities"
+                                   OnStatesChanged="HandleCities"
+                                   OnSearch="ApplyFilter" />
 
-            @* report of filtering *@
-            <div class="results-filters">
-                <h5 class="mt-2">Filtered Items:</h5>
-
-
-                @if (FullFacilityFilterItems.Conditions.Count > 0)
-                {
-                    <div class="filter-group">
-                        <span class="filter-title">Condition:</span>
-                        <div class="filter-items">
-                            @foreach (var item in FullFacilityFilterItems.Conditions)
-                            {
-                                string tagId = "condition-" + item.Id.ToString();
-                                <span class="filter-tag">
-                                    @item.Name
-                                    <button type="button" class="remove-button" aria-label="Remove filter"
-                                            @onclick="() => {
-                                            FullFacilityFilterItems.Conditions.Remove(item);
-                                                Uncheck(tagId);}">
-                                        ×
-                                    </button>
-                                </span>
-                            }
-                        </div>
-                    </div>
-                }
-
-                @if (FullFacilityFilterItems.Treatments.Count > 0)
-                {
-                    <div class="filter-group">
-                        <span class="filter-title">Treatment:</span>
-                        <div class="filter-items">
-                            @foreach (var item in FullFacilityFilterItems.Treatments)
-                            {
-                                string tagId = "treatment-" + item.Id.ToString();
-                                <span class="filter-tag">
-                                    @item.Name
-                                    <button type="button" class="remove-button" aria-label="Remove filter"
-                                            @onclick="() => { FullFacilityFilterItems.Treatments.Remove(item);
-                                            Uncheck(tagId);}">
-                                        ×
-                                    </button>
-                                </span>
-                            }
-                        </div>
-                    </div>
-                }
-
-
-                @if (FullFacilityFilterItems.Wwts.Count > 0)
-                {
-                    <div class="filter-group">
-                        <span class="filter-title">Who We Treat:</span>
-                        <div class="filter-items">
-                            @foreach (var item in FullFacilityFilterItems.Wwts)
-                            {
-                                string tagId = "wwt-" + item.Id.ToString();
-                                <span class="filter-tag">
-                                    @item.Name
-                                    <button type="button" class="remove-button" aria-label="Remove filter"
-                                            @onclick="() => { FullFacilityFilterItems.Wwts.Remove(item);
-                                            Uncheck(tagId);}">
-                                        ×
-                                    </button>
-                                </span>
-                            }
-                        </div>
-                    </div>
-                }
-
-                @if (FullFacilityFilterItems.Locs.Count > 0)
-                {
-                    <div class="filter-group">
-                        <span class="filter-title">Level of Care:</span>
-                        <div class="filter-items">
-                            @foreach (var item in FullFacilityFilterItems.Locs)
-                            {
-                                string tagId = "loc-" + item.Id.ToString();
-                                <span class="filter-tag">
-                                    @item.Name
-                                    <button type="button" class="remove-button" aria-label="Remove filter"
-                                            @onclick="() => { FullFacilityFilterItems.Locs.Remove(item);
-                                            Uncheck(tagId);}">
-                                        ×
-                                    </button>
-                                </span>
-                            }
-                        </div>
-                    </div>
-                }
-
-                @if (FullFacilityFilterItems.Insurances.Count > 0)
-                {
-                    <div class="filter-group">
-                        <span class="filter-title">Insurance:</span>
-                        <div class="filter-items">
-                            @foreach (var item in FullFacilityFilterItems.Insurances)
-                            {
-                                string tagId = "insurance-" + item.Id.ToString();
-                                <span class="filter-tag">
-                                    @item.Name
-                                    <button type="button" class="remove-button" aria-label="Remove filter"
-                                            @onclick="() => { FullFacilityFilterItems.Insurances.Remove(item);
-                                            Uncheck(tagId);}">
-                                        ×
-                                    </button>
-                                </span>
-                            }
-                        </div>
-                    </div>
-                }
-
-                @if (FullFacilityFilterItems.Amenities.Count > 0)
-                {
-                    <div class="filter-group">
-                        <span class="filter-title">Amenity:</span>
-                        <div class="filter-items">
-                            @foreach (var item in FullFacilityFilterItems.Amenities)
-                            {
-                                string tagId = "amenity-" + item.Id.ToString();
-                                <span class="filter-tag">
-                                    @item.Name
-                                    <button type="button" class="remove-button" aria-label="Remove filter"
-                                            @onclick="() => { FullFacilityFilterItems.Amenities.Remove(item);
-                                            Uncheck(tagId);}">
-                                        ×
-                                    </button>
-                                </span>
-                            }
-                        </div>
-                    </div>
-                }
-
-                <button class="clear-filters" 
-                        @onclick="() => { 
-                            FullFacilityFilterItems = new();
-                            FullFacilityFilterItems.States.Add(statename);
-                            UnCheckAll();
-                            searchText = string.Empty;
-                            }">
-                    Clear all
-                </button>
-            </div>
-            
             <div class="container mt-3 mb-5 featured-centers ">
-                <div class="d-md-none mb-3">
-                    <div class="border border-1 px-3 rounded-3">
-                        @* <FacilityFilter /> *@
-                    </div>
-                </div>
                 <div class="d-flex align-items-center py-2" style="border-bottom: solid 2px #93e2f1;">
                     <h5 class=" mb-0">Our recovery centers in @statename</h5>
                 </div>
@@ -200,11 +70,8 @@
                 <div id="scrollTrigger"></div>
             </div>
         </div>
-        <div class="col-md-3 d-md-block">
-            <div class="border border-1 px-3 rounded-3 ">
-                <FacilityFilter ApplyFilterCallback="ApplyFilter" FullFacilityFilterItems="FullFacilityFilterItems"  />
-            </div>
-
+        <div class="content-b">
+            <SidebarComponent State="@statename" />
         </div>
     </div>
 </div>
@@ -224,7 +91,7 @@
         breadCrumbItems = new()
         {
             new() {Text="Home" , Href="/"},
-            new() {Text="States" , Href="/"},
+            new() {Text="Treatment Centers" , Href="/treatment-centers"},
             new() {Text= statename?? "Unknown" ,IsActive=true}
 
         };
@@ -285,12 +152,24 @@
             Description = Meta.Description;
         }
     }
+    private string? serverUrl;
+    private FacilityFieldsViewmodel Fields { get; set; } = new();
+    private List<string>? StateOptions;
+    private List<string>? Cities = new();
+
     protected override async Task OnInitializedAsync()
     {
+        serverUrl = Config["AppSettings:AdminServerUrl"];
         LoadMeta();
 
+        StateOptions = await InternalLocationService.GetStateWithoutHttpAsync(serverUrl!)!;
+        Fields = mapper.Map<FacilityFieldsViewmodel>(FacilityService.GetListFacilityFields());
+
         if (statename.Contains("-")) statename = statename.Replace("-", " ");
+        // use the list's spelling so the state's Location checkbox shows as ticked
+        statename = StateOptions?.FirstOrDefault(s => s.Equals(statename, StringComparison.OrdinalIgnoreCase)) ?? statename;
         FullFacilityFilterItems.States.Add(statename);
+        await HandleCities(FullFacilityFilterItems.States);
 
         //await LoadMore();
     }
@@ -346,37 +225,14 @@
         HasMore = true;
         await LoadMore();
     }
+    private async Task HandleCities(List<string> states)
+    {
+        Cities = await InternalLocationService.GetCitiesByStatesAsync(serverUrl!, states);
+    }
+
     async Task ApplySearch(string searchTextFromComponent)
     {
         searchText = FullFacilityFilterItems.SearchText = searchTextFromComponent;
         await ApplyFilter(FullFacilityFilterItems);
-    }
-
-
-
-
-    private void Uncheck(string id)
-    {
-        HandleCheckbox(id, false);
-    }
-    
-
-    private void HandleCheckbox(string id, bool state)
-    {
-         JS.InvokeVoidAsync("setCheckboxState", id, state);
-    }
-
-    private void UncheckState(string id)
-    {
-        HandleCheckboxState(id, false);
-    }
-    private void HandleCheckboxState(string id, bool state)
-    {
-         JS.InvokeVoidAsync("setCheckboxState", id, state);
-    }
-
-    private void UnCheckAll()
-    {
-         JS.InvokeVoidAsync("UnCheckAllCheckbox");
     }
 }
