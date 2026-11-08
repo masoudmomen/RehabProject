@@ -1,4 +1,31 @@
-﻿::deep .row {
+﻿/* ---------- Redesign — section 1: breadcrumb + header card ---------- */
+.facility-page-top {
+    background: var(--bg);
+    padding-bottom: 24px;
+}
+
+.facility-page-top ::deep .breadcrumb {
+    --bs-breadcrumb-divider: '›';
+    --bs-breadcrumb-item-padding-x: 6px;
+    --bs-breadcrumb-divider-color: var(--muted);
+    margin: 0;
+    padding: 14px 0 12px;
+    font-size: 0.8rem;
+}
+
+.facility-page-top ::deep .breadcrumb a {
+    color: var(--color-primary);
+    text-decoration: none;
+}
+
+.facility-page-top ::deep .breadcrumb a:hover {
+    text-decoration: underline;
+}
+
+.facility-page-top ::deep .breadcrumb-item.active {
+    color: var(--text);
+}
+::deep .row {
     margin-left: 0px !important;
     margin-right: 0px !important;
 }

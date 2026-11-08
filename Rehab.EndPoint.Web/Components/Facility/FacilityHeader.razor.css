@@ -1,0 +1,439 @@
+/* Facility page header card */
+
+.fd-header {
+    --fd-primary: var(--color-primary);           /* #534AB7 */
+    --fd-primary-hover: #463ea0;
+    --fd-lavender: var(--color-soft-purple);      /* #ede9ff */
+    --fd-radius: 16px;
+
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(260px, 34%);
+    gap: 20px;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--fd-radius);
+    box-shadow: 0 6px 24px rgba(30, 27, 75, 0.06);
+    padding: 6px;
+    margin-top: 4px;
+}
+
+.fd-header.no-gallery {
+    grid-template-columns: minmax(0, 1fr);
+}
+
+.fd-header-body {
+    padding: 16px 0 16px 16px;
+    min-width: 0;
+}
+
+.fd-header.no-gallery .fd-header-body {
+    padding-right: 16px;
+}
+
+/* ---------- Logo + name ---------- */
+.fd-identity {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.fd-logo {
+    flex: 0 0 auto;
+    width: 56px;
+    height: 56px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.fd-logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 4px;
+}
+
+.fd-logo-initials {
+    font-family: Georgia, "Times New Roman", serif;
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: #6b4f2a;
+    letter-spacing: 0.02em;
+}
+
+.fd-identity-text {
+    min-width: 0;
+}
+
+.fd-name {
+    font-size: 1.6rem;
+    line-height: 1.2;
+    font-weight: 700;
+    color: var(--navy);
+    margin: 0;
+    overflow-wrap: anywhere;
+}
+
+.fd-address {
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+    margin: 4px 0 0;
+    font-size: 0.875rem;
+    color: var(--muted);
+}
+
+.fd-address-icon {
+    color: var(--fd-primary);
+    display: inline-flex;
+    padding-top: 2px;
+}
+
+/* ---------- Facts row ---------- */
+.fd-facts {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(0, 1fr);     /* missing cells drop out, the rest widen */
+    margin: 18px 0 0;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+}
+
+.fd-fact {
+    padding: 10px 12px;
+    min-width: 0;
+}
+
+.fd-fact + .fd-fact {
+    border-left: 1px solid var(--border);
+}
+
+.fd-fact dt {
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 0 0 4px;
+}
+
+.fd-fact dd {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin: 0;
+    min-width: 0;
+}
+
+.fd-fact-value {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--navy);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.fd-fact-more {
+    flex: 0 0 auto;
+    font-size: 0.72rem;
+    font-weight: 600;
+    line-height: 1;
+    padding: 4px 7px;
+    border-radius: 999px;
+    background: var(--fd-lavender);
+    color: var(--fd-primary);
+    text-decoration: none;
+}
+
+.fd-fact-more:hover,
+.fd-fact-more:focus-visible {
+    background: var(--fd-primary);
+    color: var(--white);
+}
+
+/* ---------- Description ---------- */
+.fd-description {
+    margin: 18px 0 0;
+    font-size: 0.9rem;
+    line-height: 1.7;
+    color: #475569;
+    overflow-wrap: anywhere;
+}
+
+.fd-read-more {
+    border: 0;
+    background: none;
+    padding: 0;
+    margin-left: 2px;
+    font: inherit;
+    font-weight: 600;
+    color: var(--fd-primary);
+    cursor: pointer;
+}
+
+.fd-read-more:hover {
+    text-decoration: underline;
+}
+
+/* ---------- Call / Email ---------- */
+.fd-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.fd-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 44px;
+    padding: 0 20px;
+    border-radius: 999px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background-color .15s ease, color .15s ease, border-color .15s ease;
+}
+
+.fd-btn-primary {
+    background: var(--fd-primary);
+    color: var(--white);
+    border: 1px solid var(--fd-primary);
+}
+
+.fd-btn-primary:hover,
+.fd-btn-primary:focus-visible {
+    background: var(--fd-primary-hover);
+    border-color: var(--fd-primary-hover);
+    color: var(--white);
+}
+
+.fd-btn-outline {
+    background: var(--white);
+    color: var(--fd-primary);
+    border: 1px solid #c9c4ec;
+}
+
+.fd-btn-outline:hover,
+.fd-btn-outline:focus-visible {
+    background: var(--fd-lavender);
+    border-color: var(--fd-primary);
+    color: var(--fd-primary);
+}
+
+/* ---------- Gallery ---------- */
+.fd-gallery {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 0;
+}
+
+.fd-gallery button {
+    border: 0;
+    padding: 0;
+    background: var(--fd-lavender);
+    cursor: pointer;
+    overflow: hidden;
+    display: block;
+    width: 100%;
+}
+
+.fd-gallery img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform .3s ease;
+}
+
+.fd-gallery button:hover img {
+    transform: scale(1.04);
+}
+
+.fd-gallery button:focus-visible {
+    outline: 3px solid var(--fd-primary);
+    outline-offset: 2px;
+}
+
+.fd-gallery-main {
+    flex: 1 1 auto;
+    min-height: 200px;
+    border-radius: 12px 12px 6px 6px;
+}
+
+.fd-header .fd-gallery-main:only-child {
+    border-radius: 12px;
+}
+
+.fd-gallery-thumbs {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 6px;
+}
+
+.fd-gallery-thumb {
+    aspect-ratio: 1.15 / 1;
+    border-radius: 6px;
+}
+
+.fd-gallery-thumbs .fd-gallery-thumb:last-child {
+    border-bottom-right-radius: 12px;
+}
+
+.fd-gallery-thumbs .fd-gallery-thumb:first-child {
+    border-bottom-left-radius: 12px;
+}
+
+.fd-gallery .fd-gallery-more {
+    background: var(--navy);
+    color: var(--white);
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+.fd-gallery .fd-gallery-more:hover {
+    background: var(--fd-primary);
+}
+
+/* ---------- Lightbox ---------- */
+.fd-lightbox .modal-content {
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+    position: relative;
+}
+
+.fd-lightbox img {
+    display: block;
+    width: 100%;
+    max-height: 80vh;
+    object-fit: contain;
+    border-radius: 12px;
+}
+
+.fd-lightbox-close {
+    position: absolute;
+    top: -44px;
+    right: 0;
+    width: 36px;
+    height: 36px;
+    border: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.9);
+    color: var(--navy);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.fd-lightbox-nav {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 12px;
+}
+
+.fd-lightbox-nav button {
+    border: 0;
+    border-radius: 999px;
+    padding: 8px 18px;
+    background: rgba(255, 255, 255, 0.9);
+    color: var(--navy);
+    font-weight: 600;
+}
+
+/* ---------- Desktop / tablet: Call & Email pinned to the bottom of the left column ---------- */
+@media (min-width: 768px) {
+    .fd-header-body {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .fd-actions {
+        margin-top: auto;
+        padding-top: 20px;   /* keeps the gap when the text column is the taller one */
+    }
+}
+
+/* ---------- Tablet ---------- */
+@media (max-width: 991.98px) {
+    .fd-header {
+        grid-template-columns: minmax(0, 1fr) minmax(240px, 38%);
+    }
+
+    .fd-name {
+        font-size: 1.4rem;
+    }
+}
+
+/* ---------- Phone: gallery on top, then text; facts as rows; full-width buttons ---------- */
+@media (max-width: 767.98px) {
+    .fd-header {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 0;
+    }
+
+    .fd-gallery {
+        order: -1;
+    }
+
+    .fd-gallery-main {
+        min-height: 0;
+        aspect-ratio: 16 / 10;
+    }
+
+    .fd-gallery-thumbs .fd-gallery-thumb:first-child,
+    .fd-gallery-thumbs .fd-gallery-thumb:last-child {
+        border-radius: 6px;
+    }
+
+    .fd-header-body,
+    .fd-header.no-gallery .fd-header-body {
+        padding: 18px 10px 10px;
+    }
+
+    .fd-name {
+        font-size: 1.25rem;
+    }
+
+    .fd-facts {
+        grid-auto-flow: row;
+        grid-auto-columns: auto;
+    }
+
+    .fd-fact {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+    }
+
+    .fd-fact + .fd-fact {
+        border-left: 0;
+        border-top: 1px solid var(--border);
+    }
+
+    .fd-fact dt {
+        margin: 0;
+        flex: 0 0 auto;
+    }
+
+    .fd-fact dd {
+        justify-content: flex-end;
+    }
+
+    .fd-actions {
+        flex-direction: column;
+    }
+
+    .fd-btn {
+        width: 100%;
+    }
+}

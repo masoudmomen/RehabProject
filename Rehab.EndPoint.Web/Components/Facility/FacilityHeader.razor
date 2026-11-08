@@ -1,0 +1,250 @@
+@using Rehab.EndPoint.Web.ViewModels
+@using Rehab.EndPoint.Web.Components.Common
+@inject NavigationManager Nav
+
+<section class="fd-header @(Photos.Count == 0 ? "no-gallery" : "")" aria-labelledby="fd-name">
+    <div class="fd-header-body">
+        <div class="fd-identity">
+            <div class="fd-logo">
+                @if (!string.IsNullOrWhiteSpace(Facility.Logo))
+                {
+                    <img src="@(ServerUrl + Facility.Logo)" alt="@Facility.Name logo" />
+                }
+                else
+                {
+                    <span class="fd-logo-initials" aria-hidden="true">@Initials</span>
+                }
+            </div>
+            <div class="fd-identity-text">
+                <h1 id="fd-name" class="fd-name">@Facility.Name</h1>
+                @if (!string.IsNullOrWhiteSpace(Facility.Address))
+                {
+                    <p class="fd-address">
+                        <span class="fd-address-icon"><LucideIcon Name="map-pin" Size="14" /></span>
+                        <span>@Facility.Address.Trim()</span>
+                    </p>
+                }
+            </div>
+        </div>
+
+        @if (facts.Count > 0)
+        {
+            <dl class="fd-facts">
+                @foreach (var fact in facts)
+                {
+                    <div class="fd-fact">
+                        <dt>@fact.Label</dt>
+                        <dd>
+                            <span class="fd-fact-value" title="@fact.FullText">@fact.Value</span>
+                            @if (fact.More > 0)
+                            {
+                                <a class="fd-fact-more" href="@FacilityServicesRow.SectionLink(Nav, fact.TargetId!)"
+                                   aria-label="@($"Show all {fact.Label.ToLowerInvariant()}: {fact.More} more")">+@fact.More</a>
+                            }
+                        </dd>
+                    </div>
+                }
+            </dl>
+        }
+
+        @if (!string.IsNullOrWhiteSpace(Facility.Description))
+        {
+            <p class="fd-description" id="fd-description">
+                @(descriptionExpanded || !IsDescriptionLong ? Facility.Description.Trim() : ShortDescription)
+                @if (IsDescriptionLong)
+                {
+                    <button type="button" class="fd-read-more" aria-expanded="@(descriptionExpanded ? "true" : "false")"
+                            aria-controls="fd-description" @onclick="() => descriptionExpanded = !descriptionExpanded">
+                        @(descriptionExpanded ? "Show less" : "Read more")
+                    </button>
+                }
+            </p>
+        }
+
+        @if (HasPhone || HasEmail)
+        {
+            <div class="fd-actions">
+                @if (HasPhone)
+                {
+                    <a class="fd-btn fd-btn-primary" href="@($"tel:{TelNumber}")">
+                        <LucideIcon Name="phone" Size="16" />
+                        <span>Call @Facility.PhoneNumber.Trim()</span>
+                    </a>
+                }
+                @if (HasEmail)
+                {
+                    <a class="fd-btn fd-btn-outline" href="@($"mailto:{Facility.Email.Trim()}")">
+                        <LucideIcon Name="mail" Size="16" />
+                        <span>Email</span>
+                    </a>
+                }
+            </div>
+        }
+    </div>
+
+    @if (Photos.Count > 0)
+    {
+        <div class="fd-gallery" id="@galleryId" data-images="@PhotosJson">
+            <button type="button" class="fd-gallery-main" onclick="openLightbox('@galleryId', 0)"
+                    aria-label="@($"View photos of {Facility.Name} (1 of {Photos.Count})")">
+                <img src="@Photos[0].Url" alt="@Photos[0].Alt" />
+            </button>
+
+            @if (Photos.Count > 1)
+            {
+                <div class="fd-gallery-thumbs">
+                    @for (int i = 1; i < Math.Min(Photos.Count, MaxThumbs + 1); i++)
+                    {
+                        var index = i;
+                        <button type="button" class="fd-gallery-thumb" onclick="openLightbox('@galleryId', @index)"
+                                aria-label="@($"View photo {index + 1} of {Photos.Count}")">
+                            <img src="@Photos[index].Url" alt="@Photos[index].Alt" />
+                        </button>
+                    }
+                    @if (HiddenPhotoCount > 0)
+                    {
+                        <button type="button" class="fd-gallery-thumb fd-gallery-more"
+                                onclick="openLightbox('@galleryId', @(MaxThumbs + 1))"
+                                aria-label="@($"View {HiddenPhotoCount} more photos")">
+                            +@HiddenPhotoCount
+                        </button>
+                    }
+                </div>
+            }
+        </div>
+
+        @* Lightbox used by gallery.js (it looks up #lightboxModal / #lightboxImage). *@
+        <div class="modal fade fd-lightbox" id="lightboxModal" tabindex="-1" aria-label="@($"{Facility.Name} photos")" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content">
+                    <button type="button" class="fd-lightbox-close" data-bs-dismiss="modal" aria-label="Close photos">
+                        <LucideIcon Name="x" Size="20" />
+                    </button>
+                    <img id="lightboxImage" src="" alt="" />
+                    @if (Photos.Count > 1)
+                    {
+                        <div class="fd-lightbox-nav">
+                            <button type="button" onclick="prevImage()" aria-label="Previous photo">‹ Prev</button>
+                            <button type="button" onclick="nextImage()" aria-label="Next photo">Next ›</button>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+</section>
+
+@code {
+    [Parameter, EditorRequired] public FacilityViewModel Facility { get; set; } = default!;
+    [Parameter] public string ServerUrl { get; set; } = string.Empty;
+
+    // Anchors of the sections that "+N" jumps to (the sections are added in a later step).
+    public const string WhoWeTreatSectionId = "fd-who-we-treat";
+    public const string AccreditationSectionId = "fd-accreditation";
+
+    private const int DescriptionLimit = 450;   // characters shown before "Read more"
+    private const int WhoWeTreatFitChars = 22;  // two names are shown only if they fit in about this many characters
+    private const int MaxThumbs = 3;            // thumbnails under the main photo, then the "+N" tile
+
+    private record Fact(string Label, string Value, int More, string FullText, string? TargetId);
+    private record Photo(string Url, string Alt);
+
+    private readonly string galleryId = $"fdGallery_{Guid.NewGuid():N}";
+    private List<Fact> facts = new();
+    private List<Photo> Photos = new();
+    private string PhotosJson = "[]";
+    private bool descriptionExpanded;
+
+    private int HiddenPhotoCount => Math.Max(0, Photos.Count - (MaxThumbs + 1));
+    private bool HasPhone => !string.IsNullOrWhiteSpace(Facility.PhoneNumber);
+    private bool HasEmail => !string.IsNullOrWhiteSpace(Facility.Email);
+    private string TelNumber => new(Facility.PhoneNumber.Where(c => char.IsDigit(c) || c == '+').ToArray());
+    private bool IsDescriptionLong => Facility.Description.Trim().Length > DescriptionLimit;
+
+    private string ShortDescription
+    {
+        get
+        {
+            var text = Facility.Description.Trim();
+            var cut = text.LastIndexOf(' ', DescriptionLimit);
+            if (cut < DescriptionLimit / 2) cut = DescriptionLimit;
+            return text[..cut].TrimEnd(' ', ',', ';', ':', '.') + "…";
+        }
+    }
+
+    private string Initials
+    {
+        get
+        {
+            var words = Facility.Name.Split(' ', StringSplitOptions.RemoveEmptyEntries)
+                .Where(w => char.IsLetter(w[0]))
+                .Take(3)
+                .Select(w => char.ToUpperInvariant(w[0]));
+            var initials = new string(words.ToArray());
+            return initials.Length > 0 ? initials : "?";
+        }
+    }
+
+    protected override void OnParametersSet()
+    {
+        facts = BuildFacts();
+        Photos = BuildPhotos();
+        PhotosJson = System.Text.Json.JsonSerializer.Serialize(
+            Photos.Select(p => new { imageAddress = p.Url, title = p.Alt }));
+    }
+
+    private List<Fact> BuildFacts()
+    {
+        var list = new List<Fact>();
+
+        var wwt = Names(Facility.Wwts?.Select(w => w.Name));
+        if (wwt.Count > 0)
+        {
+            // Up to two names when they fit, then "+N".
+            var shown = wwt.Count >= 2 && $"{wwt[0]}, {wwt[1]}".Length <= WhoWeTreatFitChars ? 2 : 1;
+            list.Add(new Fact("Who we treat", string.Join(", ", wwt.Take(shown)), wwt.Count - shown,
+                string.Join(", ", wwt), WhoWeTreatSectionId));
+        }
+
+        var accreditations = Names(Facility.Accreditations?.Select(a => a.Name));
+        if (accreditations.Count > 0)
+        {
+            list.Add(new Fact("Accreditation", accreditations[0], accreditations.Count - 1,
+                string.Join(", ", accreditations), AccreditationSectionId));
+        }
+
+        if (Facility.Founded > 0)
+        {
+            list.Add(new Fact("Founded", Facility.Founded.ToString(), 0, Facility.Founded.ToString(), null));
+        }
+
+        return list;
+    }
+
+    // Photos[0] is the large image: the facility's Cover (Facilities.Cover).
+    // The thumbnails and "+N" come from the gallery (FacilityImages), in their stored order.
+    // The lightbox walks the same list, so it opens on the cover and continues through the gallery.
+    // If there is no cover, the first gallery image takes the large slot.
+    private List<Photo> BuildPhotos()
+    {
+        var photos = new List<Photo>();
+
+        if (!string.IsNullOrWhiteSpace(Facility.Cover))
+        {
+            photos.Add(new Photo(ServerUrl + Facility.Cover.Trim(), $"{Facility.Name} cover photo"));
+        }
+
+        var gallery = (Facility.FacilitysImages ?? new())
+            .Where(i => !string.IsNullOrWhiteSpace(i.ImageAddress))
+            .Select((img, i) => new Photo(ServerUrl + img.ImageAddress.Trim(),
+                string.IsNullOrWhiteSpace(img.Title) ? $"{Facility.Name} photo {i + 1}" : img.Title));
+
+        // Skip a gallery row that is the same file as the cover, so it isn't shown twice.
+        photos.AddRange(gallery.Where(g => photos.All(p => p.Url != g.Url)));
+
+        return photos;
+    }
+
+    private static List<string> Names(IEnumerable<string>? names) =>
+        names?.Where(n => !string.IsNullOrWhiteSpace(n)).Select(n => n.Trim()).ToList() ?? new();
+}

@@ -1,0 +1,31 @@
+ @using Rehab.EndPoint.Web.Components.Common
+
+<details class="fd-section" id="@Id" open="@Open">
+    <summary class="fd-section-head">
+        <span class="fd-section-icon"><LucideIcon Name="@Icon" Size="18" /></span>
+        <h2 class="fd-section-title">@Title</h2>
+        @if (Count > 0)
+        {
+            <span class="fd-section-count" aria-label="@($"{Count} items")">@Count</span>
+        }
+        @if (!string.IsNullOrWhiteSpace(Summary))
+        {
+            <span class="fd-section-summary" title="@Summary">@Summary</span>
+        }
+        <span class="fd-section-chevron"><LucideIcon Name="chevron-down" Size="18" /></span>
+    </summary>
+    <div class="fd-section-body">
+        @ChildContent
+    </div>
+</details>
+
+@code {
+    [Parameter, EditorRequired] public string Id { get; set; } = string.Empty;
+    [Parameter, EditorRequired] public string Title { get; set; } = string.Empty;
+    [Parameter, EditorRequired] public string Icon { get; set; } = "circle-help";
+    [Parameter] public int Count { get; set; }
+    /// <summary>Shown on the right of the header while the section is collapsed (e.g. "Women only").</summary>
+    [Parameter] public string? Summary { get; set; }
+    [Parameter] public bool Open { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+}

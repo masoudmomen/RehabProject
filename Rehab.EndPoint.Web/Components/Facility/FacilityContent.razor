@@ -1,0 +1,182 @@
+@using System.Net
+@using System.Text.RegularExpressions
+@using Rehab.EndPoint.Web.ViewModels
+@using Rehab.EndPoint.Web.Components.Common
+
+@if (sections.Count > 0 || insurances.Count > 0)
+{
+    <div class="fd-content @(insurances.Count == 0 ? "no-aside" : "")">
+        @if (sections.Count > 0)
+        {
+            <div class="fd-content-main">
+                @foreach (var s in sections)
+                {
+                    <FacilitySection Id="@s.Id" Title="@s.Title" Icon="@s.Icon" Count="@s.Items.Count"
+                                     Summary="@s.Summary" Open="@s.Open">
+                        @if (s.AsCards)
+                        {
+                            @LevelOfCareCards(s)
+                        }
+                        else
+                        {
+                            @TagList(s)
+                        }
+                    </FacilitySection>
+                }
+            </div>
+        }
+
+        @if (insurances.Count > 0)
+        {
+            <aside class="fd-content-aside" aria-labelledby="fd-insurance-title">
+                <div class="fd-insurance fd-more-scope">
+                    <h2 id="fd-insurance-title" class="fd-insurance-title">Insurance accepted</h2>
+                    <ul class="fd-insurance-grid">
+                        @for (int i = 0; i < insurances.Count; i++)
+                        {
+                            var ins = insurances[i];
+                            <li class="fd-insurance-tile @(i >= InsuranceLimit ? "fd-extra" : "")" title="@ins.Name">
+                                @if (!string.IsNullOrWhiteSpace(ins.Logo))
+                                {
+                                    <img src="@(ServerUrl + ins.Logo.Trim())" alt="@ins.Name" loading="lazy" />
+                                }
+                                else
+                                {
+                                    <span class="fd-insurance-name">@ins.Name</span>
+                                }
+                            </li>
+                        }
+                    </ul>
+                    @MoreButton(insurances.Count - InsuranceLimit)
+                </div>
+            </aside>
+        }
+    </div>
+}
+
+@code {
+    [Parameter, EditorRequired] public FacilityViewModel Facility { get; set; } = default!;
+    [Parameter] public string ServerUrl { get; set; } = string.Empty;
+
+    // Section anchors. The header's "+N" pills and the quick answers row link to these.
+    public const string LevelsOfCareId = FacilityServicesRow.LevelsOfCareSectionId;
+    public const string WhoWeTreatId = FacilityHeader.WhoWeTreatSectionId;
+    public const string AccreditationId = FacilityHeader.AccreditationSectionId;
+
+    private const int CardLimit = 4;        // level-of-care cards shown before "Show N more"
+    private const int TagLimit = 6;         // tags shown before "Show N more"
+    private const int InsuranceLimit = 8;   // insurance logos shown before "Show N more"
+    private const int ReadMoreChars = 70;   // card descriptions longer than this get "Read more"
+
+    private record Item(string Name, string Description, string Icon);
+    private record Section(string Id, string Title, string Icon, List<Item> Items, bool Open, bool AsCards, string? Summary);
+
+    private List<Section> sections = new();
+    private List<InsuranceViewModel> insurances = new();
+
+    protected override void OnParametersSet()
+    {
+        sections = new List<Section?>
+        {
+            // Open by default, as in the design: the long lists people scan first.
+            Build(LevelsOfCareId, "Levels of care", "layers", Facility.Locs?.Select(x => (x.Name, x.Description)),
+                  open: true, asCards: true, iconFor: LevelOfCareIcon),
+            Build("fd-treatments", "Treatments", "stethoscope", Facility.Treatments?.Select(x => (x.Name, x.Description)), open: true),
+            Build("fd-substances", "Substances treated", "pill", Facility.Swts?.Select(x => (x.Name, x.Description)), open: true),
+            Build("fd-conditions", "Conditions treated", "brain", Facility.Conditions?.Select(x => (x.Name, x.Description)), open: true),
+            // Collapsed by default, with a summary of what's inside.
+            Build(WhoWeTreatId, "Who we treat", "users", Facility.Wwts?.Select(x => (x.Name, x.Description)), open: false),
+            Build(AccreditationId, "Accreditation", "award", Facility.Accreditations?.Select(x => (x.Name, x.Description)), open: false),
+            Build("fd-amenities", "Amenities", "sparkles", Facility.Amenities?.Select(x => (x.Name, x.Description)), open: false),
+            Build("fd-highlights", "Highlights", "medal", Facility.Highlights?.Select(x => (x.Name, x.Description)), open: false),
+        }.OfType<Section>().ToList();
+
+        insurances = (Facility.Insurances ?? new()).Where(i => !string.IsNullOrWhiteSpace(i.Name)).ToList();
+    }
+
+    // A list of (name, description) items -> a section, or null when it has no items.
+    private static Section? Build(string id, string title, string icon, IEnumerable<(string Name, string Description)>? source,
+                                  bool open, bool asCards = false, Func<string, string>? iconFor = null)
+    {
+        var items = (source ?? Enumerable.Empty<(string Name, string Description)>())
+            .Where(x => !string.IsNullOrWhiteSpace(x.Name))
+            .Select(x => new Item(x.Name.Trim(), PlainText(x.Description), iconFor?.Invoke(x.Name.Trim()) ?? icon))
+            .ToList();
+        if (items.Count == 0) return null;
+
+        // Collapsed summary: the first two names, e.g. "Pool, Luxury".
+        var summary = open ? null : string.Join(", ", items.Take(2).Select(i => i.Name));
+        return new Section(id, title, icon, items, open, asCards, summary);
+    }
+
+    // Card icon: the mega menu's icon for that exact level of care, else the quick-answer icon its name
+    // matches (e.g. "Detox"), else the section's layers icon — never the "?" fallback.
+    private static string LevelOfCareIcon(string name) =>
+        LevelOfCareComponent.TryGetIcon(name, out var icon) ? icon
+        : FacilityServicesRow.IconByKeyword(name) ?? "layers";
+
+    // Descriptions can hold imported HTML; cards show them as plain text.
+    private static string PlainText(string? html)
+    {
+        if (string.IsNullOrWhiteSpace(html)) return string.Empty;
+        var text = WebUtility.HtmlDecode(Regex.Replace(html, "<[^>]+>", " "));
+        return Regex.Replace(text, @"\s+", " ").Trim();
+    }
+
+    private RenderFragment LevelOfCareCards(Section s) => __builder =>
+    {
+        <div class="fd-more-scope">
+            <ul class="fd-loc-grid">
+                @for (int i = 0; i < s.Items.Count; i++)
+                {
+                    var item = s.Items[i];
+                    var descId = $"{s.Id}-desc-{i}";
+                    <li class="fd-loc-card @(i >= CardLimit ? "fd-extra" : "")">
+                        <span class="fd-loc-icon"><LucideIcon Name="@item.Icon" Size="18" /></span>
+                        <div class="fd-loc-text">
+                            <h3 class="fd-loc-name">@item.Name</h3>
+                            @if (!string.IsNullOrEmpty(item.Description))
+                            {
+                                <p class="fd-loc-desc" id="@descId">@item.Description</p>
+                                @if (item.Description.Length > ReadMoreChars)
+                                {
+                                    <button type="button" class="fd-loc-readmore" aria-expanded="false" aria-controls="@descId">Read more</button>
+                                }
+                            }
+                        </div>
+                    </li>
+                }
+            </ul>
+            @MoreButton(s.Items.Count - CardLimit)
+        </div>
+    };
+
+    private RenderFragment TagList(Section s) => __builder =>
+    {
+        <div class="fd-more-scope">
+            <ul class="fd-tags">
+                @for (int i = 0; i < s.Items.Count; i++)
+                {
+                    <li class="fd-tag @(i >= TagLimit ? "fd-extra" : "")">
+                        <LucideIcon Name="@s.Icon" Size="14" />
+                        <span>@s.Items[i].Name</span>
+                    </li>
+                }
+            </ul>
+            @MoreButton(s.Items.Count - TagLimit)
+        </div>
+    };
+
+    // "Show N more" / "Show less" toggle for the extra items in the enclosing .fd-more-scope.
+    private RenderFragment MoreButton(int hidden) => __builder =>
+    {
+        if (hidden > 0)
+        {
+            <button type="button" class="fd-more-btn" aria-expanded="false"
+                    data-more-label="@($"Show {hidden} more")" data-less-label="Show less">
+                <span class="fd-more-label">Show @hidden more</span>
+                <LucideIcon Name="chevron-down" Size="14" />
+            </button>
+        }
+    };
+}

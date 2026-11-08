@@ -12,192 +12,28 @@
     @if (facility != null)
     {
 
-        <PageCover CustomImageUrl="@facility.Cover"
-                   CustomLogoURL="@facility.Logo"
-                   PageTitle="@facility.Name" />
+        <PageTitle>@facility.Name</PageTitle>
 
-        <div class="shadow position-relative py-5">
+        @* Redesign (final design, option C) — section 1: breadcrumb + header card *@
+        <div class="facility-page-top">
             <div class="container">
-                <div class="row">
-                    <div class="col-md-6">
-                        <FacilityGeneralInfo MaxLength="600" Facility="@facility" />
-                    </div>
-                    <div class="col-md-6">
-                        <FacilityGallery Facility="@facility" />
-                    </div>
+                <BreadCrumbComponent Items="@breadCrumbItems" />
+                <FacilityHeader @rendermode="InteractiveServer" Facility="@facility" ServerUrl="@(serverUrl ?? string.Empty)" />
 
-                </div>
+                @* Section 2: quick answers row *@
+                <FacilityServicesRow Facility="@facility" />
+
+                @* Section 3: main content row — collapsible sections + "Insurance accepted" sidebar *@
+                <FacilityContent Facility="@facility" ServerUrl="@(serverUrl ?? string.Empty)" />
             </div>
         </div>
-
-        @if (facility.Insurances.Count > 0)
-        {
-            <div class="bg-white shadow position-relative z  py-5">
-                <h2 class="section-title">Insurances</h2>
-                <div class="container px-3  insurance">
-
-                    <div class="cards-grid">
-                        @foreach (var item in facility.Insurances)
-                        {
-                            <Card Title="@item.Name"
-                                  Image="@(serverUrl + item.Logo)"
-                                  Description="@item.Description"
-                                  CharacterLimit="100"
-                                  CardLink="#" />
-                        }
-                    </div>
-                </div>
-            </div>
-        }
-
-        @if (facility.Amenities.Count > 0)
-        {
-            <div class="Accreditations py-5">
-                <div class="container px-3  mt-5  ">
-                    <h2 class="section-title sticky-title"> Amenities </h2>
-                    @foreach (var item in facility.Amenities)
-                    {
-                        <ItemRowComponent Title="@item.Name"
-                                          Image="@(serverUrl + item.Logo)"
-                                          Description="@item.Description"
-                                          IconClass="fa-solid fa-person-swimming" />
-                    }
-                </div>
-
-            </div>
-        }
-        @if (facility.Accreditations.Count > 0)
-        {
-            <div class="bg-white shadow position-relative py-5">
-                <div class="container px-3  ">
-                    <h2 class="section-title"> Accreditations </h2>
-                    <div class="cards-grid">
-                        @foreach (var item in facility.Accreditations)
-                        {
-                            <CardNotLinked Title="@item.Name"
-                                           Image="@(serverUrl + item.Logo)"
-                                           Description="@item.Description"
-                                           CharacterLimit="50"
-                                           IconClass="fa-solid fa-certificate" />
-                        }
-                    </div>
-                </div>
-            </div>
-        }
-
-        @if (facility.Highlights.Count > 0)
-        {
-            <div class="py-5">
-                <h2 class="section-title"> Highlights </h2>
-                <div class="container px-3  mt-5  ">
-                    @foreach (var item in facility.Highlights)
-                    {
-                        <ItemRowComponent Title="@item.Name"
-                                          Image="@(serverUrl + item.Logo)"
-                                          Description="@item.Description"
-                                          IconClass="fa-solid fa-star" />
-                    }
-                </div>
-            </div>
-        }
-
-        @if (facility.Wwts.Count > 0)
-        {
-            <div class="bg-white shadow position-relative py-5">
-                <div class="container px-3 ">
-                    <h2 class="section-title"> Who We Treat </h2>
-                    <div class="cards-grid">
-                        @foreach (var item in facility.Wwts)
-                        {
-                            <CardNotLinked Title="@item.Name"
-                                           Image="@(serverUrl + item.Logo)"
-                                           Description="@item.Description"
-                                           CharacterLimit="50"
-                                           IconClass="fa-solid fa-hands-helping" />
-                        }
-                    </div>
-                </div>
-            </div>
-        }
-
-        @if (facility.Treatments.Count > 0)
-        {
-            <div class="container px-3  py-5">
-                <h2 class="section-title"> Treatments </h2>
-                @foreach (var item in facility.Treatments)
-                {
-                    <ItemRowComponent Title="@item.Name"
-                                      Image="@(serverUrl + item.Logo)"
-                                      Description="@item.Description"
-                                      IconClass="fa-solid fa-hand-holding-medical" />
-                }
-            </div>
-        }
-
-        @if (facility.Locs.Count > 0)
-        {
-            <div class="bg-white shadow position-relative py-5">
-                <div class="container px-3  ">
-                    <h2 class="section-title"> Level Of Cares </h2>
-                    <div class="cards-grid loc">
-                        @foreach (var item in facility.Locs)
-                        {
-                            <CardNotLinked Title="@item.Name"
-                                  CharacterLimit="50"
-                                  Image="@(serverUrl + item.Logo)"
-                                  Description="@item.Description"
-                                  IconClass="fa-solid fa-layer-group" />
-                        }
-                    </div>
-                </div>
-            </div>
-        }
-
-        @if (facility.Conditions.Count > 0)
-        {
-            <div class="container px-3  py-5">
-                <h2 class="section-title"> Conditions </h2>
-
-                @foreach (var item in facility.Conditions)
-                {
-                    <ItemRowComponent Title="@item.Name"
-                                      Image="@(serverUrl + item.Logo)"
-                                      Description="@item.Description"
-                                      IconClass="fa-solid fa-notes-medical" />
-                }
-
-            </div>
-        }
-
-        @if (facility.Swts.Count > 0)
-        {
-            <div class="bg-white shadow position-relative py-5">
-                <div class="container px-3">
-                    <h2 class="section-title"> Substances We Treat</h2>
-                    @foreach (var item in facility.Swts)
-                    {
-                        <ItemRowComponent Title="@item.Name"
-                                          Image="@(serverUrl + item.Logo)"
-                                          Description="@item.Description"
-                                          IconClass="fa-solid fa-pills" />
-                    }
-
-                </div>
-            </div>
-        }
-
     }
 </div>
-<script src="/js/stickyTitle.js" />
 @code {
     [Parameter] public string slug { get; set; } = string.Empty;
     // [Parameter] public string id { get; set; } = string.Empty;
     private FacilityViewModel? facility;
     private bool isLoading = true;
-    private TabControl? tabControl1;
-    private TabControl? tabControl2;
-    private TabControl? tabControl3;
-    private TabControl? tabControl4;
 
     [Inject] IConfiguration Config { get; set; } = default!;
 
@@ -227,6 +63,26 @@
         }
         isLoading = false;
         serverUrl = Config["AppSettings:AdminServerUrl"];
+        breadCrumbItems = BuildBreadCrumb(facility);
+    }
+
+    private List<BreadCrumbComponent.BreadCrumbItem> breadCrumbItems = new();
+
+    // Home › Treatment Centers › State › Center (state is skipped when the center has none)
+    private static List<BreadCrumbComponent.BreadCrumbItem> BuildBreadCrumb(FacilityViewModel? f)
+    {
+        var items = new List<BreadCrumbComponent.BreadCrumbItem>
+        {
+            new() { Text = "Home", Href = "/" },
+            new() { Text = "Treatment Centers", Href = "/treatment-centers" },
+        };
+        if (f is null) return items;
+
+        if (!string.IsNullOrWhiteSpace(f.State))
+            items.Add(new() { Text = f.State, Href = $"/States/{Uri.EscapeDataString(f.State)}" });
+
+        items.Add(new() { Text = f.Name, IsActive = true });
+        return items;
     }
 
     // private static string ToSlug(string? value)
@@ -237,27 +93,3 @@
 
 }
 
-<style>
-    h2.section-title {
-        text-align: center
-    }
-
-    .cards-grid {
-        display: grid !important;
-        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-        gap: 1rem;
-    }
-
-    .insurance .cards-grid {
-        grid-template-columns: repeat(auto-fit, minmax(200px, 200px));
-        justify-content: center;
-    }
-
-    .insurance .card-content {
-        padding: 5px;
-    }
-
-    .cards-grid.loc {
-        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    }
-</style>

@@ -63,6 +63,11 @@
     private static string IconFor(string name) =>
         LucideIcons.Resolve(Icons, name, nameof(LevelOfCareComponent));
 
+    // Exact-name lookup without the unmapped-name fallback/warning; used by the facility page's
+    // level-of-care cards (Components/Facility/FacilityContent.razor), which fall back on their own.
+    internal static bool TryGetIcon(string name, out string icon) =>
+        Icons.TryGetValue(name, out icon!);
+
     // Development startup check (Program.cs): every level of care has an icon and every icon is in the sprite.
     internal static void ValidateIcons() =>
         LucideIcons.ValidateMap(nameof(LevelOfCareComponent), Icons, LevelOfCareList.All.Select(i => i.Name));

@@ -1,0 +1,119 @@
+@* Facility page — quick answers row (second row, under the header card).
+   Up to 5 tiles: services in a fixed order, then Insurance (always last when the center has any).
+   Services that apply but don't fit end the row with a "+N more" pill to the Levels of care section.
+   0 or 1 tiles: the row is not rendered at all. *@
+@using Rehab.EndPoint.Web.ViewModels
+@using Rehab.EndPoint.Web.Components.Common
+@inject NavigationManager Nav
+
+@if (tiles.Count > 1)
+{
+    <section class="fd-services" aria-label="Quick answers">
+        <ul class="fd-services-tiles" style="--fd-tile-count: @tiles.Count">
+            @foreach (var tile in tiles)
+            {
+                <li class="fd-service">
+                    <span class="fd-service-icon"><LucideIcon Name="@tile.Icon" Size="18" /></span>
+                    <span class="fd-service-text">
+                        <span class="fd-service-title">@tile.Title</span>
+                        <span class="fd-service-sub">@tile.Subtitle</span>
+                    </span>
+                </li>
+            }
+        </ul>
+        @if (hiddenServices > 0)
+        {
+            <a class="fd-services-more" href="@SectionLink(Nav, LevelsOfCareSectionId)"
+               aria-label="@($"{hiddenServices} more services: see levels of care")">+@hiddenServices more</a>
+        }
+    </section>
+}
+
+@code {
+    [Parameter, EditorRequired] public FacilityViewModel Facility { get; set; } = default!;
+
+    public const string LevelsOfCareSectionId = "levels-of-care";
+
+    // In-page link to a section. A bare "#id" would resolve against <base href="/"> and open the home page,
+    // so the link is built from the current page URL (query kept, any old fragment dropped).
+    internal static string SectionLink(NavigationManager nav, string sectionId) =>
+        $"{new Uri(nav.Uri).GetLeftPart(UriPartial.Query)}#{sectionId}";
+    private const int MaxTiles = 5;
+
+    private record Tile(string Title, string Subtitle, string Icon);
+
+    // A service applies when any of the center's items (by name) contains one of its keywords.
+    private record Service(string Title, string Subtitle, string Icon, Source Sources, string[] Keywords);
+
+    [Flags] private enum Source { Locs = 1, Swts = 2, Conditions = 4 }
+
+    // Fixed display order. Icons match the level-of-care icons used in the mega menu (LevelOfCareComponent).
+    private static readonly Service[] Services =
+    {
+        new("Detox",           "Withdrawal management",  "droplets",           Source.Locs, new[] { "detox", "withdrawal" }),
+        new("Residential treatment",    "Residential treatment",  "house",              Source.Locs, new[] { "residential", "inpatient" }),
+        new("Day treatment",   "Partial hospitalization","calendar-days",      Source.Locs, new[] { "day treatment", "partial hospitalization", "(php)" }),
+        new("Outpatient care", "Outpatient programs",    "calendar-clock",     Source.Locs, new[] { "outpatient", "(iop)" }),
+        new("Dual diagnosis",  "Co-occurring disorders", "git-merge",          Source.Locs | Source.Swts | Source.Conditions, new[] { "co-occurring", "dual diagnosis" }),
+        new("Virtual care",    "Online sessions",        "monitor-smartphone", Source.Locs, new[] { "virtual", "telehealth", "online" }),
+        new("Sober living",    "Supportive housing",     "house-plus",         Source.Locs, new[] { "sober living", "recovery housing" }),
+    };
+
+    private List<Tile> tiles = new();
+    private int hiddenServices;
+
+    protected override void OnParametersSet()
+    {
+        var locs = Names(Facility.Locs?.Select(x => x.Name));
+        var swts = Names(Facility.Swts?.Select(x => x.Name));
+        var conditions = Names(Facility.Conditions?.Select(x => x.Name));
+
+        var applying = Services
+            .Where(s => Matches(s, locs, swts, conditions))
+            .Select(s => new Tile(s.Title, s.Title == "Outpatient care" ? OutpatientSubtitle(locs) : s.Subtitle, s.Icon))
+            .ToList();
+
+        var insuranceCount = Facility.Insurances?.Count(i => !string.IsNullOrWhiteSpace(i.Name)) ?? 0;
+        var serviceSlots = insuranceCount > 0 ? MaxTiles - 1 : MaxTiles;
+
+        tiles = applying.Take(serviceSlots).ToList();
+        hiddenServices = Math.Max(0, applying.Count - serviceSlots);   // insurance never counts toward N
+
+        if (insuranceCount > 0)
+        {
+            tiles.Add(new Tile("Insurance", $"{insuranceCount} {(insuranceCount == 1 ? "plan" : "plans")} accepted", "shield-check"));
+        }
+    }
+
+    // Icon of the first service whose keywords appear in a level-of-care name (e.g. "Detox" -> droplets), or null.
+    internal static string? IconByKeyword(string name) =>
+        Services.FirstOrDefault(s => s.Keywords.Any(k => name.Contains(k, StringComparison.OrdinalIgnoreCase)))?.Icon;
+
+    private static bool Matches(Service s, List<string> locs, List<string> swts, List<string> conditions)
+    {
+        IEnumerable<string> pool = Enumerable.Empty<string>();
+        if (s.Sources.HasFlag(Source.Locs)) pool = pool.Concat(locs);
+        if (s.Sources.HasFlag(Source.Swts)) pool = pool.Concat(swts);
+        if (s.Sources.HasFlag(Source.Conditions)) pool = pool.Concat(conditions);
+        return pool.Any(name => s.Keywords.Any(k => name.Contains(k, StringComparison.OrdinalIgnoreCase)));
+    }
+
+    // "IOP, treatment and therapy" — lists which outpatient options the center has.
+    private static string OutpatientSubtitle(List<string> locs)
+    {
+        var parts = new List<string>();
+        if (locs.Any(n => n.Contains("(iop)", StringComparison.OrdinalIgnoreCase) || n.Contains("intensive outpatient", StringComparison.OrdinalIgnoreCase))) parts.Add("IOP");
+        if (locs.Any(n => n.Contains("outpatient treatment", StringComparison.OrdinalIgnoreCase))) parts.Add("treatment");
+        if (locs.Any(n => n.Contains("outpatient therapy", StringComparison.OrdinalIgnoreCase))) parts.Add("therapy");
+
+        return parts.Count switch
+        {
+            0 => "Outpatient programs",
+            1 => parts[0] == "IOP" ? "Intensive outpatient (IOP)" : $"Outpatient {parts[0]}",
+            _ => string.Join(", ", parts.Take(parts.Count - 1)) + " and " + parts[^1],
+        };
+    }
+
+    private static List<string> Names(IEnumerable<string>? names) =>
+        names?.Where(n => !string.IsNullOrWhiteSpace(n)).Select(n => n.Trim()).ToList() ?? new();
+}

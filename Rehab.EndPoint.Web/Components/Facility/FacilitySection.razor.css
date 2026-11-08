@@ -1,0 +1,128 @@
+/* Facility page — collapsible section card */
+
+.fd-section {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 0;   /* resets the site-wide FAQ details/summary styles (wwwroot/css/static-pages.css) */
+    scroll-margin-top: calc(var(--nav-height, 72px) + 12px);   /* in-page links land below the sticky navbar */
+}
+
+.fd-section-head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+    cursor: pointer;
+    list-style: none;
+    border-radius: 14px;
+    user-select: none;
+}
+
+.fd-section-head::-webkit-details-marker {
+    display: none;
+}
+
+/* The FAQ page's global summary::after draws a "+"/"−" bubble; this card has its own chevron. */
+.fd-section-head::after {
+    content: none;
+    display: none;
+}
+
+.fd-section-head:focus-visible {
+    outline: 3px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+.fd-section[open] > .fd-section-head {
+    border-bottom: 1px solid var(--border);
+    border-radius: 14px 14px 0 0;
+}
+
+.fd-section-icon {
+    flex: 0 0 auto;
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-soft-purple);
+    color: var(--color-primary);
+}
+
+.fd-section-title {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--navy);
+    white-space: nowrap;
+}
+
+.fd-section-count {
+    flex: 0 0 auto;
+    min-width: 22px;
+    padding: 2px 7px;
+    border-radius: 999px;
+    background: #f1f0f9;
+    color: var(--muted);
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-align: center;
+}
+
+.fd-section-summary {
+    flex: 1 1 auto;
+    min-width: 0;
+    text-align: right;
+    font-size: 0.8rem;
+    color: var(--muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* The summary only describes a collapsed section */
+.fd-section[open] .fd-section-summary {
+    visibility: hidden;
+}
+
+.fd-section-chevron {
+    flex: 0 0 auto;
+    margin-left: auto;
+    display: inline-flex;
+    color: var(--muted);
+    transition: transform .2s ease;
+}
+
+.fd-section-summary + .fd-section-chevron {
+    margin-left: 0;
+}
+
+.fd-section[open] .fd-section-chevron {
+    transform: rotate(180deg);
+}
+
+.fd-section-body {
+    padding: 16px;
+}
+
+@media (max-width: 767.98px) {
+    .fd-section-head {
+        padding: 12px 14px;
+        gap: 10px;
+    }
+
+    .fd-section-body {
+        padding: 14px;
+    }
+
+    /* Phone design: collapsed sections show only the count, not the summary */
+    .fd-section-summary {
+        display: none;
+    }
+
+    .fd-section-summary + .fd-section-chevron {
+        margin-left: auto;   /* summary is hidden, so the chevron goes back to the right edge */
+    }
+}
