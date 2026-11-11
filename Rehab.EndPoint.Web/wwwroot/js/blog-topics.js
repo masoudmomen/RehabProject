@@ -7,36 +7,139 @@ const opened = new WeakMap();
 const rows = new WeakMap();
 
 const isSheet = () => window.matchMedia(SHEET_QUERY).matches;
-const items = root => Array.from(root.querySelectorAll('.more-topics-item'));
+const isShown = el => el.getClientRects().length > 0;
+// panel items whose row is hidden (chip topics that did not overflow) are skipped
+const items = root => Array.from(root.querySelectorAll('.more-topics-item')).filter(isShown);
 const button = root => root.querySelector('.more-topics-btn');
 const panel = root => root.querySelector('.more-topics-panel');
 
-// ---- chip row: fade before the pinned button while there is more to scroll ----
+// ---- chip row ----
+// 768px and up: chips that don't fit on the line are hidden (data-overflow) and their entry in the
+//   "More topics" panel is shown instead, so no chip is ever cut off. The active chip always stays.
+// Below 768px: every chip stays in a sideways-scrolling row, faded at the end while there is more.
+// Only data-* attributes are touched here; Blazor never renders them, so a re-render keeps them.
 
 export function initRow(wrap) {
     const scroller = wrap && wrap.querySelector('.topic-scroll');
-    if (!scroller || rows.has(wrap)) return;
+    const row = wrap && wrap.parentElement;
+    if (!scroller || !row || rows.has(wrap)) return;
 
-    const update = () => {
-        const more = scroller.scrollWidth - scroller.clientWidth - scroller.scrollLeft > 1;
-        wrap.classList.toggle('can-scroll-end', more);
-    };
-    scroller.addEventListener('scroll', update, { passive: true });
-    const ro = new ResizeObserver(update);
-    ro.observe(scroller);
-
-    // keep the active chip in view on narrow screens
-    const active = scroller.querySelector('.filter-pill.active');
-    if (active && active !== scroller.firstElementChild) {
-        const left = active.offsetLeft - scroller.offsetLeft;
-        if (left + active.offsetWidth > scroller.clientWidth) scroller.scrollLeft = left - 16;
-    }
-    update();
+    const fade = () => updateFade(wrap, scroller);
+    const relayout = () => layout(wrap);
+    scroller.addEventListener('scroll', fade, { passive: true });
+    // observe the row, whose width does not depend on how many chips are shown
+    const ro = new ResizeObserver(relayout);
+    ro.observe(row);
+    // web fonts change chip widths once they arrive
+    document.fonts?.ready.then(() => { if (rows.has(wrap)) relayout(); });
 
     rows.set(wrap, () => {
-        scroller.removeEventListener('scroll', update);
+        scroller.removeEventListener('scroll', fade);
         ro.disconnect();
     });
+
+    relayout();
+
+    // keep the active chip in view on narrow screens
+    if (isSheet()) {
+        const active = scroller.querySelector('.filter-pill.active');
+        if (active && active !== scroller.firstElementChild) {
+            const left = active.offsetLeft - scroller.offsetLeft;
+            if (left + active.offsetWidth > scroller.clientWidth) scroller.scrollLeft = left - 16;
+        }
+        fade();
+    }
+}
+
+export function layout(wrap) {
+    const scroller = wrap && wrap.querySelector('.topic-scroll');
+    const row = wrap && wrap.parentElement;
+    if (!scroller || !row) return;
+
+    const more = row.querySelector('.more-topics');
+    const chips = Array.from(scroller.querySelectorAll('.filter-pill[data-slug]'));
+    const base = Number(more?.dataset.base || 0);
+
+    // measure with every chip shown
+    chips.forEach(c => c.removeAttribute('data-overflow'));
+
+    if (isSheet() || !more) {
+        applyOverflow(row, more, chips, new Set(), base);
+        updateFade(wrap, scroller);
+        return;
+    }
+
+    scroller.scrollLeft = 0;
+    const gap = parseFloat(getComputedStyle(scroller).columnGap) || 0;
+    const rowGap = parseFloat(getComputedStyle(row).columnGap) || 0;
+    const width = el => el.getBoundingClientRect().width;
+    const lead = width(scroller.firstElementChild); // "All Articles" always stays
+    const widths = chips.map(width);
+    const rowWidth = row.clientWidth;
+    const allChips = lead + widths.reduce((sum, w) => sum + gap + w, 0);
+
+    // everything fits and the panel would be empty: no "More topics" button at all
+    if (base === 0 && allChips <= rowWidth + 0.5) {
+        applyOverflow(row, more, chips, new Set(), base);
+        updateFade(wrap, scroller);
+        return;
+    }
+
+    const activeIndex = chips.findIndex(c => c.classList.contains('active'));
+    const pick = available => {
+        const overflow = new Set();
+        let used = lead + (activeIndex >= 0 ? gap + widths[activeIndex] : 0);
+        let full = false;
+        chips.forEach((_, i) => {
+            if (i === activeIndex) return;
+            // once one chip doesn't fit, the rest go too, so the visible chips keep their order
+            if (!full && used + gap + widths[i] <= available + 0.5) used += gap + widths[i];
+            else { full = true; overflow.add(i); }
+        });
+        return overflow;
+    };
+
+    // the button's width depends on its count, so settle it in a couple of passes
+    setCount(row, more, Math.max(base, 1));
+    let overflow = new Set();
+    for (let pass = 0; pass < 3; pass++) {
+        overflow = pick(rowWidth - width(more) - rowGap);
+        const before = more.dataset.count;
+        setCount(row, more, base + overflow.size);
+        if (more.dataset.count === before) break;
+    }
+
+    applyOverflow(row, more, chips, overflow, base);
+    updateFade(wrap, scroller);
+}
+
+function applyOverflow(row, more, chips, overflow, base) {
+    const hiddenSlugs = new Set();
+    chips.forEach((chip, i) => {
+        if (overflow.has(i)) {
+            chip.setAttribute('data-overflow', '');
+            hiddenSlugs.add(chip.dataset.slug);
+        } else {
+            chip.removeAttribute('data-overflow');
+        }
+    });
+    if (!more) return;
+    more.querySelectorAll('.more-topics-list li[data-chip]').forEach(li => {
+        li.toggleAttribute('data-overflow', hiddenSlugs.has(li.dataset.slug));
+    });
+    setCount(row, more, base + hiddenSlugs.size);
+}
+
+function setCount(row, more, count) {
+    if (!more) return;
+    const value = String(count);
+    more.dataset.count = value;
+    row.querySelectorAll('.more-topics-count, .more-topics-total').forEach(el => { el.dataset.count = value; });
+}
+
+function updateFade(wrap, scroller) {
+    const more = scroller.scrollWidth - scroller.clientWidth - scroller.scrollLeft > 1;
+    wrap.classList.toggle('can-scroll-end', more);
 }
 
 // ---- popover / sheet ----
@@ -78,7 +181,7 @@ export function open(root, dotnet) {
         // the sheet is modal: keep Tab inside it
         if (e.key === 'Tab' && sheet) {
             const p = panel(root);
-            const focusables = Array.from(p.querySelectorAll('a[href], button'));
+            const focusables = Array.from(p.querySelectorAll('a[href], button')).filter(isShown);
             if (!focusables.length) return;
             const first = focusables[0], last = focusables[focusables.length - 1];
             if (e.shiftKey && (document.activeElement === first || !p.contains(document.activeElement))) {
