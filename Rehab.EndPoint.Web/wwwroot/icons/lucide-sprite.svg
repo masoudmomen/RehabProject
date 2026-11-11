@@ -105,5 +105,6 @@
   <!-- Not Lucide: state outlines traced from Components/Facility/StatesMap.razor, drawn on Lucide's 24px grid and 2px line. -->
   <symbol id="state-ca" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3l4.5 1.5-1 5 6 9-1.5 2.5h-3.5l-1-2.5-2.5-2-.5-6-1.5-2z" /></symbol>
   <symbol id="state-fl" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6l12 .5 1-1 5 8.5v4.5l-1 1-2.5-1-3-4.5v-3l-2.5-2.5-3.5 1-2.5-1.5-2.5.5z" /></symbol>
+  <symbol id="mail" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7" /><rect x="2" y="4" width="20" height="16" rx="2" /></symbol>
   <symbol id="state-tx" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5h5l.5-7.5 4 .5V7l3.5 1 2.5-.5 1.5 1 1 3.5-.5 2.5-4 2-1 2v2.5l-2.5-1-3-6H8.5L7 15.5z" /></symbol>
 </svg>

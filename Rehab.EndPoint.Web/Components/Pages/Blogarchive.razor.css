@@ -17,7 +17,9 @@
     text-decoration: none;
 }
 .page-head h1 {
-    font-size: 42px;
+    /* 28px on small phones, scaling up to the original 42px on desktop */
+    font-size: clamp(1.75rem, 1.2rem + 2.4vw, 42px);
+    overflow-wrap: anywhere;
 }
 
 .page-head p {
@@ -25,13 +27,43 @@
     color: #6b6a80;
     font-size: 15px;
     line-height: 1.6;
+    overflow-wrap: anywhere;
 }
 
+/* minmax(0, 1fr) lets tracks shrink below their content's min width,
+   so long titles / nowrap card meta can't push the grid past the viewport */
 .archive-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     grid-column-gap:10px;
     grid-row-gap:10px;
+}
+
+@media (max-width: 1199.98px) {
+    .archive-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 991.98px) {
+    .archive-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 767.98px) {
+    .archive-grid {
+        grid-template-columns: minmax(0, 1fr);
+        grid-row-gap: 16px;
+    }
+}
+
+/* Empty-state message spans the full row instead of a single column */
+.archive-grid .empty-state {
+    grid-column: 1 / -1;
+    padding: 3rem 1rem;
+    text-align: center;
+    color: #6b6a80;
 }
 .pager {
     display: flex;
@@ -42,6 +74,7 @@
 .pager-list {
     display: flex;
     align-items: center;
+    max-width: 100%;
     gap: 0.4rem;
     list-style: none;
     margin: 0;
@@ -106,6 +139,13 @@
     .pager-list {
         flex-wrap: wrap;
         justify-content: center;
+        gap: 0.3rem;
+        /* a full pill looks distorted once the list wraps onto two rows */
+        border-radius: 1.25rem;
+    }
+
+    .pager-nav {
+        padding: 0 0.75rem;
     }
 
     .pager-btn {

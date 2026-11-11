@@ -41,9 +41,15 @@ h5.footer-section-title {
 }
 
     .footer ul li {
-        padding: 5px 10px;
+        padding: 0;
         cursor: pointer;
     }
+
+        .footer ul li > a {
+            display: block;
+            width: 100%;
+            padding: 5px 10px;
+        }
 
         .footer ul li:hover {
             background-color: #534ab7;

@@ -2,7 +2,9 @@
 @using Rehab.EndPoint.Web.Helpers
 <div class="article-card">
     <div class="article-img-wrapper">
-        <img src="@(serverUrl + @Article.ImageUrl)" class="article-img" alt="@Article.Title">
+        <a href="/blog/@Article.Slug" target="_blank" class="article-img-link" tabindex="-1" aria-hidden="true">
+            <img src="@(serverUrl + @Article.ImageUrl)" class="article-img" alt="@Article.Title">
+        </a>
     </div>
     <div class="article-card-body">
    @*      <div class="d-flex align-items-center gap-2 mb-2 flex-wrap">
@@ -16,7 +18,9 @@
             <a href="/blog/@Article.Slug" target="_blank">@TextHighlighter.Highlight(Article.Title, HighlightTerm)</a>
 
          </h5>
-        <p class="article-desc text-muted">@TextHighlighter.Highlight(Article.Description, HighlightTerm)</p>
+        <p class="article-desc text-muted">
+            <a href="/blog/@Article.Slug" target="_blank" class="article-desc-link" tabindex="-1">@TextHighlighter.Highlight(Article.Description, HighlightTerm)</a>
+        </p>
         <div class="article-card-footer">
             <hr class="article-divider">
             <div class="d-flex align-items-center justify-content-between">

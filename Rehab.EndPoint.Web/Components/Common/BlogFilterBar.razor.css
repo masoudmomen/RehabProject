@@ -29,7 +29,7 @@
         border: none;
     }
 
-/* Topic row: one line; chips scroll sideways, "More topics" stays pinned at the end */
+/ 
 .topic-row {
     display: flex;
     align-items: center;
@@ -42,22 +42,11 @@
     min-width: 0;
 }
 
-    /* fade just before the pinned button while more chips are hidden to the right */
-    .topic-scroll-wrap::after {
-        content: "";
-        position: absolute;
-        top: 0;
-        right: -4px; /* covers the scroller's focus-ring padding too */
-        bottom: 0;
-        width: 52px;
-        background: linear-gradient(to right, rgba(250, 251, 252, 0), #fafbfc);
-        pointer-events: none;
-        opacity: 0;
-        transition: opacity 0.15s ease;
-    }
-
-    .topic-scroll-wrap.can-scroll-end::after {
-        opacity: 1;
+    /* fade the end of the row while more chips are scrolled out of view to the right;
+       a mask, so it works on any page background */
+    .topic-scroll-wrap.can-scroll-end .topic-scroll {
+        -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 48px), transparent);
+        mask-image: linear-gradient(to right, #000 calc(100% - 48px), transparent);
     }
 
 .topic-scroll {
@@ -79,11 +68,27 @@
         white-space: nowrap;
     }
 
+        /* moved into "More topics" because it doesn't fit on the line */
+        .topic-scroll > .filter-pill[data-overflow] {
+            display: none;
+        }
+
+@media (min-width: 768px) {
+    .topic-scroll {
+        overflow-x: hidden;
+    }
+}
+
 /* More topics button */
 .more-topics {
     position: relative;
     flex: 0 0 auto;
 }
+
+    /* nothing to list: every topic fits as a chip */
+    .more-topics[data-count="0"] {
+        display: none;
+    }
 
 .filter-pill.more-topics-btn {
     display: inline-flex;
@@ -151,6 +156,12 @@
     font-weight: 700;
     line-height: 1;
 }
+
+    /* the numbers come from data-count, which blog-topics.js keeps up to date */
+    .more-topics-count::before,
+    .more-topics-total::before {
+        content: attr(data-count);
+    }
 
 .more-topics-btn ::deep .more-topics-chevron {
     flex-shrink: 0;
@@ -242,6 +253,11 @@
         break-inside: avoid;
         margin-bottom: 2px;
     }
+
+        /* a chip topic is listed only while its chip is overflowed */
+        .more-topics-list li[data-chip]:not([data-overflow]) {
+            display: none;
+        }
 
 .more-topics-item {
     display: flex;
@@ -413,7 +429,6 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .topic-scroll-wrap::after,
     .more-topics-panel,
     .more-topics-panel.is-open,
     .more-topics-backdrop,

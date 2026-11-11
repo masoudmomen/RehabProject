@@ -8,22 +8,23 @@
     <div class="container">
         <!-- Search Bar -->
 
-        <!-- Filter Pills: All Articles + the most-used topics; the rest live under "More topics" -->
+ 
         <div class="topic-row">
             <div class="topic-scroll-wrap" @ref="scrollWrapRef">
                 <div class="topic-scroll">
                     <a class="btn filter-pill @(string.IsNullOrEmpty(CurrentTopicSlug) ? "active" : null)" href="/blog/archive">All Articles</a>
                     @foreach (var topic in Topics.Visible)
                     {
-                        <a class="btn filter-pill @(IsActive(topic) ? "active" : null)" href="/blog/topic/@topic.Slug">@topic.Name</a>
+                        <a class="btn filter-pill @(IsActive(topic) ? "active" : null)" href="/blog/topic/@topic.Slug" data-slug="@topic.Slug">@topic.Name</a>
                     }
                 </div>
             </div>
 
-            @if (Topics.Hidden.Count > 0)
+            @if (PanelTopics.Count > 0)
             {
                 var picked = PickedHiddenTopic;
-                <div class="more-topics" @ref="moreRef">
+                @* data-count = topics currently in the panel; the script raises it when chips overflow. 0 hides the button. *@
+                <div class="more-topics" @ref="moreRef" data-base="@Topics.Hidden.Count" data-count="@Topics.Hidden.Count">
                     <button type="button"
                             id="@ButtonId"
                             class="btn filter-pill more-topics-btn @(isOpen ? "is-open" : null) @(picked is not null ? "is-picked" : null)"
@@ -35,7 +36,8 @@
                         @if (picked is null)
                         {
                             <span class="more-topics-label">More topics</span>
-                            <span class="more-topics-count">@Topics.Hidden.Count</span>
+                            @* number drawn from data-count via CSS so the script can update it without touching Blazor's DOM *@
+                            <span class="more-topics-count" data-count="@Topics.Hidden.Count"></span>
                         }
                         else
                         {
@@ -56,17 +58,18 @@
                         <div class="more-topics-head">
                             <div class="more-topics-titles">
                                 <p id="@TitleId" class="more-topics-title">More topics</p>
-                                <p class="more-topics-meta">@Topics.Hidden.Count topics, A to Z</p>
+                                <p class="more-topics-meta"><span class="more-topics-total" data-count="@Topics.Hidden.Count"></span> topics, A to Z</p>
                             </div>
                             <button type="button" class="more-topics-close" aria-label="Close more topics" @onclick="() => CloseAsync(true)">
                                 <LucideIcon Name="x" Size="18" />
                             </button>
                         </div>
                         <ul class="more-topics-list">
-                            @foreach (var topic in Topics.Hidden)
+                            @* Chip topics are listed too (data-chip) but stay hidden unless their chip overflowed. *@
+                            @foreach (var (topic, isChip) in PanelTopics)
                             {
                                 var active = IsActive(topic);
-                                <li>
+                                <li data-slug="@(isChip ? topic.Slug : null)" data-chip="@isChip">
                                     <a class="more-topics-item @(active ? "active" : null)"
                                        href="/blog/topic/@topic.Slug"
                                        aria-current="@(active ? "true" : null)"
@@ -90,6 +93,8 @@
     private const string TitleId = "blog-more-topics-title";
 
     private BlogTopicFilterDto Topics { get; set; } = new();
+    // Every topic the panel can list, A to Z: the hidden ones plus the chip topics (shown only when their chip overflows).
+    private List<(BlogTopicFilterItemDto Topic, bool IsChip)> PanelTopics { get; set; } = new();
     private string? CurrentTopicSlug { get; set; }
 
     private bool isOpen;
@@ -104,6 +109,11 @@
     protected override void OnInitialized()
     {
         Topics = BlogTopicService.GetFilterTopics(VisibleTopicCount);
+        PanelTopics = Topics.Visible.Select(t => (t, true))
+            .Concat(Topics.Hidden.Select(t => (t, false)))
+            .OrderBy(x => x.Item1.Name, StringComparer.OrdinalIgnoreCase)
+            .ThenBy(x => x.Item1.Id)
+            .ToList();
         Navigation.LocationChanged += OnLocationChanged;
     }
 
@@ -122,6 +132,12 @@
                 selfRef = DotNetObjectReference.Create(this);
                 await module.InvokeVoidAsync("initRow", scrollWrapRef);
             }
+            catch (JSDisconnectedException) { }
+        }
+        else if (module is not null)
+        {
+            // the active chip may have changed (it must never be the one moved into the panel)
+            try { await module.InvokeVoidAsync("layout", scrollWrapRef); }
             catch (JSDisconnectedException) { }
         }
 
