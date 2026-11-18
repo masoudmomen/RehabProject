@@ -229,7 +229,7 @@
             await EmailService.SendEmailAsync(
                 to: [FormModel.WorkEmail],
                 subject: "We received your claim request – RehabNavigator",
-                body: BuildClaimConfirmation(FormModel.ContactName)
+                body: BuildContactUsConfirmationBody(FormModel.ContactName)
             );
 
             SuccessMessage = "Your request has been submitted. We'll be in touch soon!";

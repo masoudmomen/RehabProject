@@ -1,19 +1,14 @@
 ﻿@rendermode InteractiveServer
-<div class="search-wrapper d-flex align-items-center mb-3">
+<form class="search-wrapper d-flex align-items-center mb-3" @onsubmit="HandleSearch">
     <input type="search"
            class="form-control search-input"
            placeholder="@Placeholder"
-           value="@SearchTerm"
-           @oninput="HandleInput"
-           @onkeydown="HandleKeyDown"
+           @bind="SearchTerm"
            aria-label="Search" />
-    <button class="btn search-btn ms-2"
-            type="button"
-            @onclick="HandleSearch"
-            disabled="@string.IsNullOrWhiteSpace(SearchTerm)">
+    <button class="btn search-btn ms-2" type="submit">
         Search
     </button>
-</div>
+</form>
 @code {
     [Parameter]
     public string? InitialValue { get; set; }
@@ -27,21 +22,15 @@
 
     private string SearchTerm { get; set; } = string.Empty;
 
+    private string? _lastInitialValue;
+
     protected override void OnParametersSet()
     {
-        SearchTerm = InitialValue ?? string.Empty;
-    }
-
-    private void HandleInput(ChangeEventArgs e)
-    {
-        SearchTerm = e.Value?.ToString() ?? string.Empty;
-    }
-
-    private async Task HandleKeyDown(KeyboardEventArgs e)
-    {
-        if (e.Key == "Enter")
+    
+        if (InitialValue != _lastInitialValue)
         {
-            await HandleSearch();
+            _lastInitialValue = InitialValue;
+            SearchTerm = InitialValue ?? string.Empty;
         }
     }
 
@@ -84,13 +73,8 @@
         border: none;
     }
 
-        .search-btn:hover:not(:disabled) {
+        .search-btn:hover {
             opacity: 0.92;
             color: #fff;
-        }
-
-        .search-btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
         }
 </style>

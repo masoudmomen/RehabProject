@@ -311,6 +311,23 @@ namespace Rehab.Application.Common
         ";
 
         }
+        public static string BuildContactUsConfirmationBody(string? fullName)
+        {
+            var firstName = fullName?.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries).FirstOrDefault();
+            var greeting = string.IsNullOrWhiteSpace(firstName)
+                ? "Hi there,"
+                : $"Hi {System.Net.WebUtility.HtmlEncode(firstName)},";
+
+            return $@"
+            <div style=""font-family:sans-serif; max-width:600px; margin:auto;"">
+                <p>{greeting}</p>
+                <p>Thanks so much for reaching out to RehabNavigator! We’re happy to hear from you and appreciate you taking the time to connect with us.</p>
+                <p>We’ve received your message, and a member of our team will be in touch soon. We look forward to learning more about how we can help!</p>
+                <p>Warmly,</p>
+                <p>The RehabNavigator Team</p>
+            </div>
+        ";
+        }
         public static string BuildClaim(ClaimForModelDto dto)
         {
             string Row(string label, string? value) =>
@@ -364,27 +381,6 @@ namespace Rehab.Application.Common
                         <a href=""mailto:{dto.WorkEmail}"">{dto.WorkEmail}</a>.
                     </p>
                 </div>";
-        }
-        public static string BuildClaimConfirmation(string contactName)
-        {
-            return $@"
-    <div style=""font-family:sans-serif; max-width:600px; margin:auto;"">
-
-        <h2 style=""color:#2c3e50;"">Thank you, {contactName}!</h2>
-        <p>We've received your claim request and our team will review it shortly.</p>
-        <p>Here's what happens next:</p>
-
-        <ol style=""font-size:14px; line-height:2;"">
-            <li>Our team reviews your submission</li>
-            <li>We verify your connection to the facility</li>
-            <li>You'll receive a follow-up email with next steps</li>
-        </ol>
-
-        <p>If you have any urgent questions, feel free to reply to this email.</p>
-        <br/>
-        <p style=""color:#888; font-size:13px;"">— The RehabNavigator Team</p>
-
-    </div>";
         }
         public static string BuildSubscriptionCanceledEmailBody(string fname, string packageName, DateTime canceledAt)
         {

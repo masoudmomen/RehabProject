@@ -189,7 +189,7 @@
             var confirmationEmailTask = EmailService.SendEmailAsync(
                 to: [FormModel.Email],
                 subject: "We received your message – RehabNavigator",
-                body: BuildAdvertiseContactConfirmationBody(FormModel.Name)
+                body: BuildContactUsConfirmationBody(FormModel.Name)
                 );
             await Task.WhenAll(adminEmailTask, confirmationEmailTask);
 
