@@ -191,7 +191,7 @@
             if (!string.IsNullOrWhiteSpace(admin))
             {
                 await EmailService.SendEmailAsync(
-                    to: [admin, "maghsoudloo.h.a@gmail.com", "maryam.s.nabavi@gmail.com", "masoudmomen@hotmail.com"],
+                    to: [admin, "maghsoudloo.h.a@gmail.com", "maryam.s.nabavi@gmail.com", "masoudmomen@hotmail.com","Brian@rehabnavigator.com"],
                     subject: "New Package Request",
                     body: EmailTemplates.BuildPaymentConfirmationAdminEmailBody(model.FirstName, model.LastName, PackageType.ToString(), model.PhoneNumber, model.Email, model.CenterName, model.Message)
                 );
