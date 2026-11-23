@@ -19,7 +19,7 @@
             new Condition { Name = "Trauma", Order = 3, Image = "" },
             new Condition { Name = "Post-Traumatic Stress Disorder (PTSD)", Order = 4, Image = "" },
             new Condition { Name = "Co-Occurring Disorders", Order = 5, Image = "" },
-            new Condition { Name = "Bipolar Disorder", Order = 6, Image = "" },
+            new Condition { Name = "Bipolar", Order = 6, Image = "" },
             new Condition { Name = "ADHD / ADD", Order = 7, Image = "" },
             new Condition { Name = "Obsessive Compulsive Disorder (OCD)", Order = 8, Image = "" },
             new Condition { Name = "Eating Disorders", Order = 9, Image = "" },

@@ -12,7 +12,7 @@
     {
         public static List<LevelOfCare> All = new List<LevelOfCare>
         {
-            new LevelOfCare { Name = "Detox / Withdrawal Management", Order = 1, Image = "", Description = "24/7 medical" },
+            new LevelOfCare { Name = "Detox", Order = 1, Image = "", Description = "24/7 medical" },
             new LevelOfCare { Name = "Residential Treatment", Order = 2, Image = "", Description = "Live-in · 24/7" },
             new LevelOfCare { Name = "Intensive Inpatient Treatment", Order = 3, Image = "", Description = "Hospital-level care" },
             new LevelOfCare { Name = "Day Treatment / Partial Hospitalization Program (PHP)", Order = 4, Image = "", Description = "Structured full days" },

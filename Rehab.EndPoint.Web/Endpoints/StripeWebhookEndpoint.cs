@@ -85,7 +85,7 @@ namespace Rehab.EndPoint.Web.Endpoints
 
                                     string admin = config["Email:ToAdmin"];
                                     await email.SendEmailAsync(
-                                        [admin!, "maghsoudloo.h.a@gmail.com", "maryam.s.nabavi@gmail.com", "masoudmomen@hotmail.com"],
+                                        [admin!, "maghsoudloo.h.a@gmail.com", "maryam.s.nabavi@gmail.com", "masoudmomen@hotmail.com","Brian@rehabnavigator.com"],
                                         "New Subscription Payment",
                                         EmailTemplates.BuildPaymentSuccessAdminEmailBody(linkResult.Data, request.Data.PackageType.ToString(), request.Data.FirstName, request.Data.Email, request.Data.PhoneNumber)
                                      );
@@ -114,7 +114,7 @@ namespace Rehab.EndPoint.Web.Endpoints
                                  );
                                 string admin = config["Email:ToAdmin"];
                                 await email.SendEmailAsync(
-                                    [admin!, "maghsoudloo.h.a@gmail.com", "maryam.s.nabavi@gmail.com", "masoudmomen@hotmail.com"],
+                                    [admin!, "maghsoudloo.h.a@gmail.com", "maryam.s.nabavi@gmail.com", "masoudmomen@hotmail.com","Brian@rehabnavigator.com"],
                                     "Payment Confirmation",
                                     EmailTemplates.BuildPaymentSuccessAdminEmailBody(linkResult.Data, request.Data.PackageType.ToString(), request.Data.FirstName, request.Data.Email, request.Data.PhoneNumber)
                                  );
